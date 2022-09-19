@@ -201,4 +201,4 @@ class KnW():
                 weight[:,:,jz,jt] *= zweight[jz]
             weight[:,:,:,jt]*=tweight[jt]
 
-        return weight
+        return np.squeeze(weight)

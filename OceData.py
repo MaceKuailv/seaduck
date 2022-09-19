@@ -1,6 +1,4 @@
-Prof. Dennice Gayme (JHU - MechE)
-
-“What are we Learning fimport xarray as xr
+import xarray as xr
 import numpy as np
 import pandas as pd
 from topology import topology
@@ -107,7 +105,7 @@ class OceData():
         if self.too_large:
             print('cKD created')
 
-    def find_rel_2d(self,x,y):
+    def find_rel_h(self,x,y):
         # give find_rel_h a new cover
         faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,
                                                      self.XC,self.YC,
@@ -115,6 +113,14 @@ class OceData():
                                                      self.CS,self.SN,
                                                      self.tree)
         return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
+    
+    def find_rel_v(self,z):
+        iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
+        return iz,rz,dz,bz 
+    
+    def find_rel_t(self,t):
+        it,rt,dt,bt = find_rel_time(t,self.ts)
+        return it,rt,dt,bt
     
     def find_rel_3d(self,x,y,z):
         faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,

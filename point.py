@@ -1,4 +1,4 @@
-••••••••••from OceData import OceData
+from OceData import OceData
 from kernelNweight import KnW
 import numpy as np
 from kernel_and_weight import translate_to_tendency
@@ -60,17 +60,18 @@ def ind_broadcast(x,ind):
     return R
 
 class point():
-    self.ind_h_dict = {}
-    def from_latlon(self,*arg):
+#     self.ind_h_dict = {}
+    def from_latlon(self,**kwarg):
         try:
             self.ocedata
         except AttributeError:
-            self.ocedata = arg[-1]
-            arg = arg[:-1]
+            if 'data' not in kwarg.keys():
+                raise Exception('data not provided')
+            self.ocedata = kwarg['data']
         self.tp = self.ocedata.tp
-        self.lon = arg[0]
-        self.lat = arg[1]
-        if len(arg) == 2:
+        if 'x' in kwarg.keys() and 'y' in kwarg.keys():
+            self.lon = kwarg['x']
+            self.lat = kwarg['y']
             (
                  self.face,
                  self.iy,
@@ -83,47 +84,54 @@ class point():
                  self.dy,
                  self.bx,
                  self.by
-            ) = self.ocedata.find_rel_2d(*arg)
-        elif len(arg) == 3:
+            ) = self.ocedata.find_rel_h(kwarg['x'],kwarg['y'])
+        else:
+            self.lon  = None
+            self.lat  = None
+            self.face = None
+            self.iy   = None
+            self.ix   = None
+            self.rx   = None
+            self.ry   = None
+            self.cs   = None
+            self.sn   = None
+            self.dx   = None
+            self.dy   = None
+            self.bx   = None
+            self.by   = None
+        if 'z' in kwarg.keys():
             (
-                 self.iz,
-                 self.face,
-                 self.iy,
-                 self.ix,
-                 self.rx,
-                 self.ry,
-                 self.rz,
-                 self.cs,
-                 self.sn,
-                 self.dx,
-                 self.dy,
-                 self.dz,
-                 self.bx,
-                 self.by,
-                 self.bz
-            ) = self.ocedata.find_rel_3d(*arg)
-            self.dep = arg[2]
-        elif len(arg) ==4:
+                self.iz,
+                self.rz,
+                self.dz,
+                self.bz 
+            ) = self.ocedata.find_rel_v(kwarg['z'])
+            self.dep = kwarg['z']
+        else:
             (
-                 self.iz,
-                 self.face,
-                 self.iy,
-                 self.ix,
-                 self.rx,
-                 self.ry,
-                 self.rz,
-                 self.cs,
-                 self.sn,
-                 self.dx,
-                 self.dy,
-                 self.dz,
-                 self.bx,
-                 self.by,
-                 self.bz,
-                 self.bt
-            ) = self.ocedata.find_rel_4d(*arg)
-            self.dep = arg[2]
-            self.tim = arg[3]
+                self.iz,
+                self.rz,
+                self.dz,
+                self.bz,
+                self.dep
+            ) = [None for i in range(5)]
+            
+        if 't' in kwarg.keys():
+            (
+                self.it,
+                self.rt,
+                self.dt,
+                self.bt 
+            ) = self.ocedata.find_rel_t(kwarg['t'])
+            self.tim = kwarg['t']
+        else:
+            (
+                self.it,
+                self.rt,
+                self.dt,
+                self.bt,
+                self.tim
+            ) = [None for i in range(5)]
         return self
              
     def fatten_h(self,knw):
@@ -203,15 +211,15 @@ class point():
         ffc,fiy,fix = self.fatten_h(knw)
         fiz = self.fatten_v(knw)
         fit = self.fatten_t(knw)
-        if ffc:
+        if ffc is not None:
             R = (ffc,fiy,fix)
         else:
             R = (fiy,fix)
             
-        if fiz:
+        if fiz is not None:
             R = ind_broadcast(fiz,R)
             
-        if fit:
+        if fit is not None:
             R = ind_broadcast(fit,R)
             
         return R
