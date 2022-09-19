@@ -1,0 +1,5 @@
+# notebooks
+*.ipynb
+*ipy*/
+*.pyc
+
