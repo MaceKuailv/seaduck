@@ -1,7 +1,10 @@
 from OceData import OceData
 from kernelNweight import KnW
 import numpy as np
-from kernel_and_weight import translate_to_tendency
+from kernel_and_weight import translate_to_tendency,find_pk_4d
+from smart_read import smart_read as sread
+import copy
+from get_masks import get_masked
 
 def to_180(x):
     '''
@@ -38,12 +41,14 @@ def get_combination(lst,select):
         return the_lst
     
 def ind_broadcast(x,ind):
+    n = x.shape[0]
+    if len(x.shape) ==1:
+        x = x.reshape((n,1))
     xsp = x.shape
     ysp = ind[0].shape
-    n = x.shape[0]
     final_shape = [n]+list(ysp[1:])+list(xsp[1:])
     
-    R = [np.zeros(final_shape) for i in range(len(ind)+1)]
+    R = [np.zeros(final_shape,int) for i in range(len(ind)+1)]
     
     dims = len(final_shape)
     ydim = len(ysp)-1
@@ -58,6 +63,25 @@ def ind_broadcast(x,ind):
         R[i][:] = ind[i-1].T
         R[i] = R[i].T
     return R
+
+def partial_flatten(ind):
+    if isinstance(ind,tuple):
+        shape = ind[0].shape
+        
+        num_neighbor = 1
+        for i in range(1,len(shape)):
+            num_neighbor*=shape[i]
+        R = []
+        for i in range(len(ind)):
+            R.append(ind[i].reshape(shape[0],num_neighbor))
+        return tuple(R)
+    elif isinstance(ind,np.ndarray):
+        shape = ind.shape
+        
+        num_neighbor = 1
+        for i in range(1,len(shape)):
+            num_neighbor*=shape[i]
+        return ind.reshape(shape[0],num_neighbor)
 
 class point():
 #     self.ind_h_dict = {}
@@ -191,9 +215,9 @@ class point():
         if self.iz is None:
             return None
         if knw.vkernel == 'nearest':
-            return copy.deepcopy(self.iz)
+            return copy.deepcopy(self.iz.astype(int))
         elif knw.vkernel in ['dz','interp']:
-            return np.vstack([self.iz,self.iz-1]).T
+            return np.vstack([self.iz.astype(int),self.iz.astype(int)-1]).T
         else:
             raise Exception('vkernel not supported')
             
@@ -201,13 +225,13 @@ class point():
         if self.it is None:
             return None
         if knw.tkernel == 'nearest':
-            return copy.deepcopy(self.it)
+            return copy.deepcopy(self.it.astype(int))
         elif knw.tkernel in ['dt','interp']:
-            return np.vstack([self.it,self.it+1]).T
+            return np.vstack([self.it.astype(int),self.it.astype(int)+1]).T
         else:
             raise Exception('vkernel not supported')
     
-    def fatten(self,knw):
+    def fatten(self,knw,fourD = False):
         ffc,fiy,fix = self.fatten_h(knw)
         fiz = self.fatten_v(knw)
         fit = self.fatten_t(knw)
@@ -218,8 +242,54 @@ class point():
             
         if fiz is not None:
             R = ind_broadcast(fiz,R)
+        elif fourD:
+            R = [np.expand_dims(R[i],axis = -1) for i in range(len(R))]
             
         if fit is not None:
             R = ind_broadcast(fit,R)
+        elif fourD:
+            R = [np.expand_dims(R[i],axis = -1) for i in range(len(R))]
             
+        return R
+    
+    def get_needed(self,varName,knw):
+        ind = self.fatten(knw)
+        if len(ind)!= len(self.ocedata[varName].dims):
+            raise Exception("""dimension mismatch.
+                            Please check if the point objects have all the dimensions needed""")
+        return sread(self.ocedata[varName],ind)
+    
+    def get_masked(self,knw,gridtype = 'C'):
+        ind = self.fatten(knw,fourD = True)
+        if self.it is not None:
+            ind = ind[1:]
+        if len(ind)!=len(self.ocedata['maskC'].dims):
+            raise Exception("""dimension mismatch.
+                            Please check if the point objects have all the dimensions needed""")
+        return get_masked(self.ocedata,ind,gridtype = gridtype)
+    
+    def find_pk4d(self,knw,gridtype = 'C'):
+        masked = self.get_masked(knw,gridtype = 'C')
+        pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
+        return pk4d
+    
+    def interpolate(self,varName,knw):
+        needed = self.get_needed(varName,knw)
+        pk4d = self.find_pk4d(knw)
+        if self.rz is not None:
+            rz = self.rz
+        else:
+            rz = 0
+            
+        if self.rt is not None:
+            rt = self.rt
+        else:
+            rt = 0
+
+        weight = knw.get_weight(self.rx,self.ry,rz = rz,rt = rt,pk4d = pk4d)
+
+        needed = partial_flatten(needed)
+        weight = partial_flatten(weight)
+        
+        R = np.einsum('nj,nj->n',needed,weight)
         return R

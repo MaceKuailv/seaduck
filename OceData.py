@@ -48,7 +48,10 @@ class OceData():
 
     def __setitem__(self, key, item):
         if isinstance(item,xr.DataArray):
-            self._ds[key] = item
+            if key in self.alias.keys():
+                self._ds[self.alias[key]] = item
+            else:
+                self._ds[key] = item
         else:
             self.__dict__[key] = item
 
@@ -56,7 +59,10 @@ class OceData():
         if key in self.__dict__.keys():
             return self.__dict__[key]
         else:
-            return self._ds[self.alias[key]]
+            if key in self.alias.keys():
+                return self._ds[self.alias[key]]
+            else:
+                return self._ds[key]
     
     def check_readiness(self):
         return True,[]
