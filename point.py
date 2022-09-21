@@ -284,9 +284,6 @@ class point():
             raise Exception('vkernel not supported')
     
     def fatten(self,knw,fourD = False,required = 'all'):
-        # TODO: which = []
-        if which is None:
-            which = np.ones(self.N).astype(bool)
         if required!='all' and isinstance(required,str):
             required = [required]
         #TODO: register the kernel shape
@@ -348,11 +345,8 @@ class point():
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
-    def interpolate(self,varName,knw,vec_transform = True,which = None):
-        # implement which
+    def interpolate(self,varName,knw,vec_transform = True):
         # implement shortcut u,v,w
-        if which is None:
-            which = np.ones(self.N).astype(bool)
         if self.rz is not None:
             rz = self.rz
         else:
