@@ -74,7 +74,7 @@ class KnW(object):
                  hkernel = 'interp',# dx,dy
                  vkernel = "nearest",# interp,dz
                  tkernel = "nearest",# interp,dt
-                 h_order = 0,# depend on 
+                 h_order = 0,# depend on hkernel type
                 ):
         ksort = np.abs(kernel+np.array([0.01,0.00618])).sum(axis = 1).argsort()
         ksort_inv = ksort.argsort()

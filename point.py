@@ -168,7 +168,7 @@ class point():
                 self.dt,
                 self.bt 
             ) = self.ocedata.find_rel_t(kwarg['t'])
-            self.tim = kwarg['t']
+            self.t = kwarg['t']
         else:
             (
                 self.it,
@@ -178,7 +178,18 @@ class point():
                 self.tim
             ) = [None for i in range(5)]
         return self
-             
+    def subset(self,which):
+        p = point()
+        keys = self.__dict__.keys()
+        for i in keys:
+            item = self.__dict__[i]
+            if isinstance(item,np.ndarray):
+                p.__dict__[i] = item[which]
+            else:
+                p.__dict__[i] = item
+        p.N = max([_general_len(i) for i in p.__dict__.values()])
+        return p
+        
     def fatten_h(self,knw):
         '''
         faces,iys,ixs is now 1d arrays of size n. 
@@ -274,6 +285,8 @@ class point():
     
     def fatten(self,knw,fourD = False,required = 'all'):
         # TODO: which = []
+        if which is None:
+            which = np.ones(self.N).astype(bool)
         if required!='all' and isinstance(required,str):
             required = [required]
         #TODO: register the kernel shape
@@ -335,9 +348,11 @@ class point():
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
-    def interpolate(self,varName,knw):
+    def interpolate(self,varName,knw,vec_transform = True,which = None):
         # implement which
         # implement shortcut u,v,w
+        if which is None:
+            which = np.ones(self.N).astype(bool)
         if self.rz is not None:
             rz = self.rz
         else:
@@ -420,6 +435,7 @@ class point():
                     warnings.warn('the vertical value of vector is between cells, may result in wrong masking')
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
                     this_bottom_scheme = None
+                    rz = self.rzl
                 elif 'Z' in dims:
                     # something like salt
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
@@ -440,8 +456,10 @@ class point():
                  VfromUvel,
                  VfromVvel) = self.ocedata.tp.four_matrix_for_uv(ind_dic['face'][0,0])
                 
-                temp_n_u = np.einsum('nijk,ni->nijk',n_u,UfromUvel)+np.einsum('nijk,ni->nijk',n_v,UfromVvel)
-                temp_n_v = np.einsum('nijk,ni->nijk',n_u,VfromUvel)+np.einsum('nijk,ni->nijk',n_v,VfromVvel)
+                temp_n_u = (np.einsum('nijk,ni->nijk',n_u,UfromUvel)
+                           +np.einsum('nijk,ni->nijk',n_v,UfromVvel))
+                temp_n_v = (np.einsum('nijk,ni->nijk',n_u,VfromUvel)
+                           +np.einsum('nijk,ni->nijk',n_v,VfromVvel))
                 
                 n_u = temp_n_u
                 n_v = temp_n_v
@@ -462,5 +480,6 @@ class point():
 #             vweight = partial_flatten(veight)
             u = np.einsum('nijk,nijk->n',n_u,uweight)
             v = np.einsum('nijk,nijk->n',n_v,vweight)
-            u,v = local_to_latlon(u,v,self.cs,self.sn)
+            if vec_transform:
+                u,v = local_to_latlon(u,v,self.cs,self.sn)
             return u,v

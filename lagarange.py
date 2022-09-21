@@ -61,44 +61,33 @@ vdoll = [[0,2]]
 wdoll = [[0]]
 ktype = 'interp'
 h_order = 0
+wknw = kw.KnW(kernel = wkernel,inheritance = None,vkernel = 'interp')
+uknw = kw.KnW(kernel = ukernel,inheritance = udoll)
+vknw = kw.KnW(kernel = vkernel,inheritance = vdoll)
+dwknw = kw.KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
+duknw = kw.KnW(kernel = ukernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
+dvknw = kw.KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dx',h_order = 1)
 
-class particle():
-    def __init__(self,od,x,y,z,t,
-                tkernel = 'linear',#'dt','nearest'
-                zkernel = 'nearest',#'dz','nearest'
-                bottom_scheme = 'no flux',# None
+class particle(point):
+    def __init__(self,
                 memory_limit = 1e7,# 10MB
                 uname = 'UVELMASS',
                 vname = 'VVELMASS',
                 wname = 'WVELMASS',
+                 dont_fly = True,
+                **kwarg
                 ):
-        if isinstance(x,float):
-            x = np.array([1.0])*x
-            y = np.array([1.0])*y
-            z = np.array([1.0])*z
-            t = np.array([1.0])*t
-        self.lon = copy.deepcopy(x)
-        self.lat = copy.deepcopy(y)
-        self.dep = copy.deepcopy(z)
-        self.t   = copy.deepcopy(t)
-        self.od  = od 
+        self.from_latlon(**kwarg)
         
-        self.N = len(x)
-        self.tkernel = tkernel
-        self.zkernel = zkernel
-        self.bottom_scheme = bottom_scheme
         self.uname = uname
         self.vname = vname
         self.wname = wname
         
         # whether or not setting the w at the surface
         # just to prevent particles taking off
-        self.dont_fly = True
-        self.too_large = od._ds['XC'].nbytes>memory_limit
+        self.dont_fly = dont_fly
+        self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
-        self.tp = topology(od)
-        self.grid2array(od)
-        self.special_4d(x,y,z,t)
         if self.too_large:
             pass
         else:
@@ -112,70 +101,6 @@ class particle():
             self.dw
         ) = [np.zeros(self.N).astype(float) for i in range(6)]
         self.fillna()
-    def grid2array(self,od,all_of_them = False):
-        if self.too_large:
-            print("Loading grid into memory, it's a large dataset please be patient")
-        self.Z = np.array(od._ds['Z'])
-        self.dZ = np.array(od._ds['drC'])
-        self.Zl = np.array(od._ds['Zl'])
-        self.dZl = np.array(od._ds['drF'])
-        
-        # special treatment for dZl
-        self.dZl = np.roll(self.dZl,1)
-        self.dZl[0] = 1e-10
-
-        self.dXC = np.array(od._ds['dxC']).astype('float32')
-        self.dYC = np.array(od._ds['dyC']).astype('float32')
-
-        self.XC = np.array(od._ds.XC).astype('float32')
-        self.YC = np.array(od._ds.YC).astype('float32')
-
-        if all_of_them:
-            self.dXG = np.array(od._ds['dxG']).astype('float32')
-            self.dYG = np.array(od._ds['dyG']).astype('float32')
-            self.XG = np.array(od._ds.XG).astype('float32')
-            self.YG = np.array(od._ds.YG).astype('float32')
-
-        self.CS = np.array(od._ds.CS).astype('float32')
-        self.SN = np.array(od._ds.SN).astype('float32')
-        self.ts = np.array(od._ds['time'])
-        self.ts = (self.ts-self.ts[0]).astype(float)/1e9
-        if self.too_large:
-            print('numpy arrays of grid loaded into memory')
-        self.tree = create_tree(self.XC,self.YC)  
-        if self.too_large:
-            print('cKD created')
-    def special_4d(self,x,y,z,t):
-
-        self.iz,self.rz,self.dz = find_rel_z(z,self.Z ,self.dZ)
-        self.izl,self.rzl,self.dzl = find_rel_z(z,self.Zl,self.dZl)
-        (
-            self.face,
-            self.iy,
-            self.ix,
-            self.rx,
-            self.ry,
-            self.cs,
-            self.sn,
-            self.dx,
-            self.dy
-        ) = find_rel_h(
-            x,y,self.XC,self.YC,
-            self.dXC,self.dYC,
-            self.CS,self.SN,
-            self.tree
-        )
-        self.it,self.rt,self.dt = find_rel_time(t,self.ts)
-        self.iz = self.iz.astype(int)
-        self.izl = self.izl.astype(int)
-        self.it = self.it.astype(int)
-        if self.face is not None:
-            self.bx = self.XC[self.face,self.iy,self.ix]
-            self.by = self.YC[self.face,self.iy,self.ix]
-        else:
-            self.bx = self.XC[self.iy,self.ix]
-            self.by = self.YC[self.iy,self.ix]
-        self.bz = self.Zl[self.izl]        
         
     def update_uvw_array(self,od
                         ):
@@ -197,6 +122,14 @@ class particle():
         if self.dont_fly:
             # I think it's fine
             self.warray[:,0] = 0.0
+            
+    def get_u_du_direct(self,which = None):
+        if which is None:
+            which = np.ones(self.N).astype(bool)
+        u,v   = self.interpolate(['UVELMASS','VVELMASS'],[uknw,vknw])
+        du,dv = self.interpolate(['UVELMASS','VVELMASS'],[duknw,dvknw])
+        w     = self.interpolate('WVELMASS',wknw)
+        dw    = self.interpolate('WVELMASS',dwknw)
         
     def get_u_du(self,which = None):
         if which is None:

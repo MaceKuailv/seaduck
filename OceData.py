@@ -36,7 +36,7 @@ class OceData():
         elif isinstance(alias,dict):
             self.alias = alias
             
-        self.too_large = False
+        self.too_large = self._ds['XC'].nbytes>memory_limit
         ready,missing = self.check_readiness()
         if ready:
             self.grid2array()
@@ -65,8 +65,10 @@ class OceData():
                 return self._ds[key]
     
     def check_readiness(self):
+        # TODO:
         return True,[]
     def add_missing_grid(self):
+        # TODO:
         '''
         we need to add at least the following variables here,
         XC,YC,dxG,dyG,Z,Zl,

@@ -123,7 +123,8 @@ def interpolate(od,varList,
                 doll = 'auto',
                 tkernel = 'linear',#'dt','nearest'
                 zkernel = 'linear',#'dz','nearest'
-                bottom_scheme = 'no flux'# None
+                bottom_scheme = 'no flux',# None
+                vec_transform = True
                  ):
     ## TODO: implement interpolating Z
     N = len(x)
@@ -289,6 +290,7 @@ def interpolate(od,varList,
                      )
             u = np.einsum('nijk,nijk->n',n_u,uweight)
             v = np.einsum('nijk,nijk->n',n_v,vweight)
-            u,v = local_to_latlon(u,v,cs,st at 0x7f691d90a850>n)
+            if vec_transform:
+                u,v = local_to_latlon(u,v,cs,sn)
             returns.append([u,v])
     return returns
