@@ -68,7 +68,7 @@ def auto_doll(kernel,hkernel = 'interp'):
             doll.append(last)
     return doll      
 
-class KnW():
+class KnW(object):
     def __init__(self,kernel = default_kernel,
                  inheritance = 'auto',#None, or list of lists
                  hkernel = 'interp',# dx,dy
@@ -201,4 +201,4 @@ class KnW():
                 weight[:,:,jz,jt] *= zweight[jz]
             weight[:,:,:,jt]*=tweight[jt]
 
-        return np.squeeze(weight)
+        return weight

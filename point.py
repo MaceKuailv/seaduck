@@ -5,6 +5,7 @@ from kernel_and_weight import translate_to_tendency,find_pk_4d
 from smart_read import smart_read as sread
 import copy
 from get_masks import get_masked
+from utils import local_to_latlon
 
 def to_180(x):
     '''
@@ -231,7 +232,8 @@ class point():
         else:
             raise Exception('vkernel not supported')
     
-    def fatten(self,knw,fourD = False):
+    def fatten(self,knw,fourD = False,dic = False):
+        #TODO: register the kernel shape
         ffc,fiy,fix = self.fatten_h(knw)
         fiz = self.fatten_v(knw)
         fit = self.fatten_t(knw)
@@ -249,11 +251,24 @@ class point():
             R = ind_broadcast(fit,R)
         elif fourD:
             R = [np.expand_dims(R[i],axis = -1) for i in range(len(R))]
-            
+        
+        if dic:
+            if ffc is not None:
+                keys = ['face','Y','X']
+            else:
+                keys = ['Y','X']
+
+            if fiz is not None:
+                keys.insert(0,'Z')
+                
+            if fit is not None:
+                keys.insert(0,'time')
+
+            R = dict(zip(keys,R))
         return R
     
-    def get_needed(self,varName,knw):
-        ind = self.fatten(knw)
+    def get_needed(self,varName,knw,**kwarg):
+        ind = self.fatten(knw,**kwarg)
         if len(ind)!= len(self.ocedata[varName].dims):
             raise Exception("""dimension mismatch.
                             Please check if the point objects have all the dimensions needed""")
@@ -274,8 +289,6 @@ class point():
         return pk4d
     
     def interpolate(self,varName,knw):
-        needed = self.get_needed(varName,knw)
-        pk4d = self.find_pk4d(knw)
         if self.rz is not None:
             rz = self.rz
         else:
@@ -285,11 +298,57 @@ class point():
             rt = self.rt
         else:
             rt = 0
+        if isinstance(varName,str):
+            needed = self.get_needed(varName,knw)
+            pk4d = self.find_pk4d(knw)
 
-        weight = knw.get_weight(self.rx,self.ry,rz = rz,rt = rt,pk4d = pk4d)
+            weight = knw.get_weight(self.rx,self.ry,rz = rz,rt = rt,pk4d = pk4d)
 
-        needed = partial_flatten(needed)
-        weight = partial_flatten(weight)
-        
-        R = np.einsum('nj,nj->n',needed,weight)
-        return R
+            needed = partial_flatten(needed)
+            weight = partial_flatten(weight)
+
+            R = np.einsum('nj,nj->n',needed,weight)
+            return R
+        elif isinstance(varName,list):
+            if len(varName)!=2:
+                raise Exception('list varName can only have length 2, representing horizontal vectors')
+            uname,vname = varName
+            uknw,vknw = knw
+            if not uknw.same_size(vknw):
+                raise Exception('u,v kernel needs to have same size')
+            umask = self.get_masked(uknw,gridtype = 'U')
+            vmask = self.get_masked(vknw,gridtype = 'V')
+            n_u = self.get_needed(uname,uknw,fourD = True)
+            n_v = self.get_needed(vname,vknw,fourD = True)
+            ind = self.fatten(uknw,dic = True,fourD = True)
+            if self.face is not None:
+#                 hface = ind4d[2][:,:,0,0]
+                (UfromUvel,
+                 UfromVvel,
+                 VfromUvel,
+                 VfromVvel) = self.ocedata.tp.four_matrix_for_uv(ind['face'][0,0])
+                
+                temp_n_u = np.einsum('nijk,ni->nijk',n_u,UfromUvel)+np.einsum('nijk,ni->nijk',n_v,UfromVvel)
+                temp_n_v = np.einsum('nijk,ni->nijk',n_u,VfromUvel)+np.einsum('nijk,ni->nijk',n_v,VfromVvel)
+                
+                n_u = temp_n_u
+                n_v = temp_n_v
+                
+                umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
+                                 np.einsum('nijk,ni->nijk',vmask,UfromVvel))
+                vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
+                                 np.einsum('nijk,ni->nijk',vmask,VfromVvel))
+                
+            upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
+            vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
+            uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
+            vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = upk4d)
+            
+#             n_u    = partial_flatten(n_u   )
+#             uweight = partial_flatten(uweight)
+#             n_v    = partial_flatten(n_v   )
+#             vweight = partial_flatten(veight)
+            u = np.einsum('nijk,nijk->n',n_u,uweight)
+            v = np.einsum('nijk,nijk->n',n_v,vweight)
+            u,v = local_to_latlon(u,v,self.cs,self.sn)
+            return u,v
