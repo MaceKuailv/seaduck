@@ -295,7 +295,7 @@ class point():
                 R = ind_broadcast(fiz,R)
                 keys.insert(0,'Z')
         elif _in_required('Zl',required):
-            fizl = self.fatten_v(knw)
+            fizl = self.fatten_vl(knw)
             if fizl is not None:
                 R = ind_broadcast(fizl,R)
                 keys.insert(0,'Zl')
@@ -364,6 +364,7 @@ class point():
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
                     masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'Wvel')
                     this_bottom_scheme = None
+                    rz = self.rzl
                 elif 'Z' in dims:
                     # something like salt
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
@@ -408,7 +409,7 @@ class point():
             ind = self.fatten(uknw,required = dims)
             ind_dic = dict(zip(dims,ind))
             n_u = sread(self.ocedata[uname],ind)
-            n_v = sread(self.ocedata[uname],ind)
+            n_v = sread(self.ocedata[vname],ind)
             
             if not ('X' in dims and 'Y' in dims):
                 # if it does not have a horizontal dimension, then we don't have to mask
@@ -453,7 +454,7 @@ class point():
             upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
             vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
             uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
-            vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = upk4d)
+            vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = vpk4d)
             
 #             n_u    = partial_flatten(n_u   )
 #             uweight = partial_flatten(uweight)

@@ -289,6 +289,6 @@ def interpolate(od,varList,
                      )
             u = np.einsum('nijk,nijk->n',n_u,uweight)
             v = np.einsum('nijk,nijk->n',n_v,vweight)
-            u,v = local_to_latlon(u,v,cs,sn)
+            u,v = local_to_latlon(u,v,cs,st at 0x7f691d90a850>n)
             returns.append([u,v])
     return returns
