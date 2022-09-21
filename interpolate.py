@@ -246,7 +246,6 @@ def interpolate(od,varList,
             vmask = get_masked(od,tuple([i for i in ind4d[1:] if i is not None]),gridtype = 'V')
             n_u = sread(od._ds[uname],[dic_ind[var] for var in od._ds[uname].dims])
             n_v = sread(od._ds[vname],[dic_ind[var] for var in od._ds[vname].dims])
-            
             if ind4d[2] is not None:
 #                 hface = ind4d[2][:,:,0,0]
                 UfromUvel,UfromVvel,VfromUvel, VfromVvel = tp.four_matrix_for_uv(hface)

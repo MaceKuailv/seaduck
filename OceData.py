@@ -120,8 +120,12 @@ class OceData():
                                                      self.tree)
         return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
     
-    def find_rel_v(self,z):
+    def find_rel_vl(self,z):
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
+        return iz,rz,dz,bz 
+    
+    def find_rel_v(self,z):
+        iz,rz,dz,bz = find_rel_z(z,self.Z,self.dZ)
         return iz,rz,dz,bz 
     
     def find_rel_t(self,t):

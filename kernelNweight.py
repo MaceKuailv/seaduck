@@ -89,13 +89,13 @@ class KnW(object):
             raise Exception('Unknown type of inherirance')
             
         self.kernel = kernel[ksort]
-        self.inheritance = [[ksort_inv[i] for i in heir] for heir in inheritance]
+        self.inheritance = [sorted([ksort_inv[i] for i in heir]) for heir in inheritance]
         self.hkernel = hkernel
         self.vkernel = vkernel
         self.tkernel = tkernel
         self.h_order = h_order
         
-        self.kernels = [np.array([kernel[i] for i in doll]) for doll in inheritance]
+        self.kernels = [np.array([self.kernel[i] for i in doll]) for doll in self.inheritance]
         self.hfuncs = [
             get_func(kernel = a_kernel,
                      hkernel = self.hkernel,
