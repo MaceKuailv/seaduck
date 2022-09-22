@@ -4,15 +4,17 @@ from kernelNweight import KnW
 from point import point
 from numba import njit
 
+deg2m = 6271e3*np.pi/180
+
 @njit
-def rel2latlon(rx,ry,rzl,cs,sn,dx,dy,dzl,dt,bx,by,bz):
+def rel2latlon(rx,ry,rzl,cs,sn,dx,dy,dzl,dt,bx,by,bzl):
     temp_x = rx*dx/deg2m
     temp_y = ry*dy/deg2m
     dlon = (temp_x*cs-temp_y*sn)/np.cos(by*np.pi/180)
     dlat = (temp_x*sn+temp_y*cs)
     lon = dlon+bx
     lat = dlat+by
-    dep = bz+dzl*rzl
+    dep = bzl+dzl*rzl
     return lon,lat,dep
 
 @njit
@@ -61,12 +63,12 @@ vdoll = [[0,2]]
 wdoll = [[0]]
 ktype = 'interp'
 h_order = 0
-wknw = kw.KnW(kernel = wkernel,inheritance = None,vkernel = 'interp')
-uknw = kw.KnW(kernel = ukernel,inheritance = udoll)
-vknw = kw.KnW(kernel = vkernel,inheritance = vdoll)
-dwknw = kw.KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
-duknw = kw.KnW(kernel = ukernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
-dvknw = kw.KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dx',h_order = 1)
+wknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'interp')
+uknw = KnW(kernel = ukernel,inheritance = udoll)
+vknw = KnW(kernel = vkernel,inheritance = vdoll)
+dwknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
+duknw = KnW(kernel = ukernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
+dvknw = KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dx',h_order = 1)
 
 class particle(point):
     def __init__(self,
@@ -88,10 +90,10 @@ class particle(point):
         self.dont_fly = dont_fly
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
-        if self.too_large:
-            pass
-        else:
-            self.update_uvw_array(od)
+#         if self.too_large:
+#             pass
+#         else:
+#             self.update_uvw_array(self.ocedata)
         (
             self.u,
             self.v,
@@ -102,181 +104,186 @@ class particle(point):
         ) = [np.zeros(self.N).astype(float) for i in range(6)]
         self.fillna()
         
-    def update_uvw_array(self,od
-                        ):
-        uname = self.uname
-        vname = self.vname
-        wname = self.wname
-        self.itmin = np.min(self.it)
-        self.itmax = np.max(self.it)
-        if self.tkernel == 'linear':
-            self.itmax+=1
-        if self.itmax!=self.itmin:
-            self.uarray = np.array(od._ds[uname][self.itmin:self.itmax+1])
-            self.varray = np.array(od._ds[vname][self.itmin:self.itmax+1])
-            self.warray = np.array(od._ds[wname][self.itmin:self.itmax+1])
-        else:
-            self.uarray = np.array(od._ds[uname][[self.itmin]])
-            self.varray = np.array(od._ds[vname][[self.itmin]])
-            self.warray = np.array(od._ds[wname][[self.itmin]])
-        if self.dont_fly:
-            # I think it's fine
-            self.warray[:,0] = 0.0
+#     def update_uvw_array(self,od
+#                         ):
+#         uname = self.uname
+#         vname = self.vname
+#         wname = self.wname
+#         self.itmin = np.min(self.it)
+#         self.itmax = np.max(self.it)
+#         if self.itmax!=self.itmin:
+#             self.uarray = np.array(od._ds[uname][self.itmin:self.itmax+1])
+#             self.varray = np.array(od._ds[vname][self.itmin:self.itmax+1])
+#             self.warray = np.array(od._ds[wname][self.itmin:self.itmax+1])
+#         else:
+#             self.uarray = np.array(od._ds[uname][[self.itmin]])
+#             self.varray = np.array(od._ds[vname][[self.itmin]])
+#             self.warray = np.array(od._ds[wname][[self.itmin]])
+#         if self.dont_fly:
+#             # I think it's fine
+#             self.warray[:,0] = 0.0
             
-    def get_u_du_direct(self,which = None):
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        u,v   = self.interpolate(['UVELMASS','VVELMASS'],[uknw,vknw])
-        du,dv = self.interpolate(['UVELMASS','VVELMASS'],[duknw,dvknw])
-        w     = self.interpolate('WVELMASS',wknw)
-        dw    = self.interpolate('WVELMASS',dwknw)
-        
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
-        if self.face is None:
-            _,uiy,uix = fatten_ind_h(self.face,self.iy[which],self.ix[which],self.tp,kernel = ukernel)
-            _,viy,vix = fatten_ind_h(self.face,self.iy[which],self.ix[which],self.tp,kernel = vkernel)
-            _,wiy,wix = fatten_ind_h(self.face,self.iy[which],self.ix[which],self.tp,kernel = wkernel)
+        u,v   = self.subset(which).interpolate(['UVELMASS','VVELMASS'],[uknw,vknw],vec_transform = False)
+        du,dv = self.subset(which).interpolate(['UVELMASS','VVELMASS'],[duknw,dvknw],vec_transform = False)
+        w     = self.subset(which).interpolate('WVELMASS',wknw)
+        dw    = self.subset(which).interpolate('WVELMASS',dwknw)
         
-            uind4d = (uiy,uix)
-            vind4d = (viy,vix)
-            wind4d = (wiy,wix)
-        else:
-            uface,uiy,uix = fatten_ind_h(self.face[which],self.iy[which],self.ix[which],self.tp,kernel = ukernel)
-            vface,viy,vix = fatten_ind_h(self.face[which],self.iy[which],self.ix[which],self.tp,kernel = vkernel)
-            wface,wiy,wix = fatten_ind_h(self.face[which],self.iy[which],self.ix[which],self.tp,kernel = wkernel)
+        self.u [which] =  u/self.dx[which]
+        self.v [which] =  v/self.dy[which]
+        self.w [which] =  w/self.dzl[which]
+        self.du[which] = du/self.dx[which]
+        self.dv[which] = dv/self.dy[which]
+        self.dw[which] = dw/self.dzl[which]
         
-            uind4d = (uface,uiy,uix)
-            vind4d = (vface,viy,vix)
-            wind4d = (wface,wiy,wix)
+#     def get_u_du(self,which = None):
+#         if which is None:
+#             which = np.ones(self.N).astype(bool)
+#         if self.face is None:
+#             _,uiy,uix = fatten_ind_h(self.face,self.iy[which],self.ix[which],self.tp,kernel = ukernel)
+#             _,viy,vix = fatten_ind_h(self.face,self.iy[which],self.ix[which],self.tp,kernel = vkernel)
+#             _,wiy,wix = fatten_ind_h(self.face,self.iy[which],self.ix[which],self.tp,kernel = wkernel)
+        
+#             uind4d = (uiy,uix)
+#             vind4d = (viy,vix)
+#             wind4d = (wiy,wix)
+#         else:
+#             uface,uiy,uix = fatten_ind_h(self.face[which],self.iy[which],self.ix[which],self.tp,kernel = ukernel)
+#             vface,viy,vix = fatten_ind_h(self.face[which],self.iy[which],self.ix[which],self.tp,kernel = vkernel)
+#             wface,wiy,wix = fatten_ind_h(self.face[which],self.iy[which],self.ix[which],self.tp,kernel = wkernel)
+        
+#             uind4d = (uface,uiy,uix)
+#             vind4d = (vface,viy,vix)
+#             wind4d = (wface,wiy,wix)
 
-        uind4d = fatten_linear_dim(self.izl[which]-1,uind4d,minimum = 0,kernel_type = self.zkernel)
-        vind4d = fatten_linear_dim(self.izl[which]-1,vind4d,minimum = 0,kernel_type = self.zkernel)
-        wind4d = fatten_linear_dim(self.izl[which]  ,wind4d,minimum = 0,kernel_type = 'linear')
+#         uind4d = fatten_linear_dim(self.izl[which]-1,uind4d,minimum = 0,kernel_type = self.zkernel)
+#         vind4d = fatten_linear_dim(self.izl[which]-1,vind4d,minimum = 0,kernel_type = self.zkernel)
+#         wind4d = fatten_linear_dim(self.izl[which]  ,wind4d,minimum = 0,kernel_type = 'linear')
         
-        if self.too_large:
-            uind4d = fatten_linear_dim(self.it[which],
-                                       uind4d,maximum = self.tp.itmax,
-                                       kernel_type = self.tkernel)
-            vind4d = fatten_linear_dim(self.it[which],
-                                       vind4d,maximum = self.tp.itmax,
-                                       kernel_type = self.tkernel)
-            wind4d = fatten_linear_dim(self.it[which],
-                                       wind4d,maximum = self.tp.itmax,
-                                       kernel_type = self.tkernel)
-        else:
-            uind4d = fatten_linear_dim(self.it[which]-self.itmin,
-                                       uind4d,maximum = self.tp.itmax,
-                                       kernel_type = self.tkernel)
-            vind4d = fatten_linear_dim(self.it[which]-self.itmin,
-                                       vind4d,maximum = self.tp.itmax,
-                                       kernel_type = self.tkernel)
-            wind4d = fatten_linear_dim(self.it[which]-self.itmin,
-                                       wind4d,maximum = self.tp.itmax,
-                                       kernel_type = self.tkernel)
-#         self.wind4d = wind4d
-        self.uind4d = uind4d
-        umask = get_masked(self.od,tuple([i for i in uind4d[1:] if i is not None]),gridtype = 'U')
-        vmask = get_masked(self.od,tuple([i for i in uind4d[1:] if i is not None]),gridtype = 'V')
-        wmask = get_masked(self.od,tuple([i for i in wind4d[1:] if i is not None]),gridtype = 'Wvel')
+#         if self.too_large:
+#             uind4d = fatten_linear_dim(self.it[which],
+#                                        uind4d,maximum = self.tp.itmax,
+#                                        kernel_type = self.tkernel)
+#             vind4d = fatten_linear_dim(self.it[which],
+#                                        vind4d,maximum = self.tp.itmax,
+#                                        kernel_type = self.tkernel)
+#             wind4d = fatten_linear_dim(self.it[which],
+#                                        wind4d,maximum = self.tp.itmax,
+#                                        kernel_type = self.tkernel)
+#         else:
+#             uind4d = fatten_linear_dim(self.it[which]-self.itmin,
+#                                        uind4d,maximum = self.tp.itmax,
+#                                        kernel_type = self.tkernel)
+#             vind4d = fatten_linear_dim(self.it[which]-self.itmin,
+#                                        vind4d,maximum = self.tp.itmax,
+#                                        kernel_type = self.tkernel)
+#             wind4d = fatten_linear_dim(self.it[which]-self.itmin,
+#                                        wind4d,maximum = self.tp.itmax,
+#                                        kernel_type = self.tkernel)
+# #         self.wind4d = wind4d
+#         self.uind4d = uind4d
+#         umask = get_masked(self.od,tuple([i for i in uind4d[1:] if i is not None]),gridtype = 'U')
+#         vmask = get_masked(self.od,tuple([i for i in uind4d[1:] if i is not None]),gridtype = 'V')
+#         wmask = get_masked(self.od,tuple([i for i in wind4d[1:] if i is not None]),gridtype = 'Wvel')
         
-        # it would be better to make a global variable
-        if self.too_large:
-            n_u = sread(self.od._ds[self.uname],uind4d)
-            n_v = sread(self.od._ds[self.vname],vind4d)
-            n_w = sread(self.od._ds[self.wname],wind4d)
-        else:
-            n_u = np.nan_to_num(self.uarray[uind4d])
-            n_v = np.nan_to_num(self.varray[vind4d])
-            n_w = np.nan_to_num(self.warray[wind4d])
+#         # it would be better to make a global variable
+#         if self.too_large:
+#             n_u = sread(self.od._ds[self.uname],uind4d)
+#             n_v = sread(self.od._ds[self.vname],vind4d)
+#             n_w = sread(self.od._ds[self.wname],wind4d)
+#         else:
+#             n_u = np.nan_to_num(self.uarray[uind4d])
+#             n_v = np.nan_to_num(self.varray[vind4d])
+#             n_w = np.nan_to_num(self.warray[wind4d])
             
-        if self.face is not None:
+#         if self.face is not None:
 
-            UfromUvel,UfromVvel,VfromUvel, VfromVvel = self.tp.four_matrix_for_uv(uface)
+#             UfromUvel,UfromVvel,VfromUvel, VfromVvel = self.tp.four_matrix_for_uv(uface)
 
-            temp_n_u = np.einsum('nijk,ni->nijk',n_u,UfromUvel)+np.einsum('nijk,ni->nijk',n_v,UfromVvel)
-            temp_n_v = np.einsum('nijk,ni->nijk',n_u,VfromUvel)+np.einsum('nijk,ni->nijk',n_v,VfromVvel)
+#             temp_n_u = np.einsum('nijk,ni->nijk',n_u,UfromUvel)+np.einsum('nijk,ni->nijk',n_v,UfromVvel)
+#             temp_n_v = np.einsum('nijk,ni->nijk',n_u,VfromUvel)+np.einsum('nijk,ni->nijk',n_v,VfromVvel)
 
-            n_u = temp_n_u
-            n_v = temp_n_v
+#             n_u = temp_n_u
+#             n_v = temp_n_v
 
-            temp_umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
-                             np.einsum('nijk,ni->nijk',vmask,UfromVvel))
-            temp_vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
-                             np.einsum('nijk,ni->nijk',vmask,VfromVvel))
+#             temp_umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
+#                              np.einsum('nijk,ni->nijk',vmask,UfromVvel))
+#             temp_vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
+#                              np.einsum('nijk,ni->nijk',vmask,VfromVvel))
 
-            umask = temp_umask
-            vmask = temp_vmask
+#             umask = temp_umask
+#             vmask = temp_vmask
 
-        upk4d = find_pk_4d(umask,russian_doll = udoll)
-        vpk4d = find_pk_4d(vmask,russian_doll = vdoll)
-        wpk4d = find_pk_4d(wmask,russian_doll = wdoll)
+#         upk4d = find_pk_4d(umask,russian_doll = udoll)
+#         vpk4d = find_pk_4d(vmask,russian_doll = vdoll)
+#         wpk4d = find_pk_4d(wmask,russian_doll = wdoll)
         
-        rx,ry,rz,rzl,rt = (
-            self.rx[which],
-            self.ry[which],
-            self.rz[which],
-            self.rzl[which],
-            self.rt[which]
-        )
+#         rx,ry,rz,rzl,rt = (
+#             self.rx[which],
+#             self.ry[which],
+#             self.rz[which],
+#             self.rzl[which],
+#             self.rt[which]
+#         )
 
-        uweight = get_weight_4d(rx+1/2,ry,rz,rt,upk4d,
-                  hkernel = ukernel,
-                  russian_doll = udoll,
-                  funcs = ufuncs,
-                  tkernel = self.tkernel,
-                  zkernel = self.zkernel
-                 )
-        duweight = get_weight_4d(rx+1/2,ry,rz,rt,upk4d,
-                  hkernel = ukernel,
-                  russian_doll = udoll,
-                  funcs = dufuncs,
-                  tkernel = self.tkernel,
-                  zkernel = self.zkernel
-                 )
-        vweight = get_weight_4d(rx,ry+1/2,rz,rt,vpk4d,
-                  hkernel = vkernel,
-                  russian_doll = vdoll,
-                  funcs = vfuncs,
-                  tkernel = self.tkernel,
-                  zkernel = self.zkernel
-                 )
-        dvweight = get_weight_4d(rx,ry+1/2,rz,rt,vpk4d,
-                  hkernel = vkernel,
-                  russian_doll = vdoll,
-                  funcs = dvfuncs,
-                  tkernel = self.tkernel,
-                  zkernel = self.zkernel
-                 )
-        wweight = get_weight_4d(rx,ry,rzl,rt,wpk4d,
-                  hkernel = wkernel,
-                  russian_doll = wdoll,
-                  funcs = wfuncs,
-                  tkernel = self.tkernel,
-                  zkernel = 'linear',
-                  bottom_scheme = None
-                 )
-        dwweight = get_weight_4d(rx,ry,rzl,rt,wpk4d,
-                  hkernel = wkernel,
-                  russian_doll = wdoll,
-                  funcs = wfuncs,
-                  tkernel = self.tkernel,
-                  zkernel = 'dz'
-                 )
-        np.nan_to_num( uweight,copy = False)
-        np.nan_to_num(duweight,copy = False)
-        np.nan_to_num( vweight,copy = False)
-        np.nan_to_num(dvweight,copy = False)
-        np.nan_to_num( wweight,copy = False)
-        np.nan_to_num(dwweight,copy = False)
+#         uweight = get_weight_4d(rx+1/2,ry,rz,rt,upk4d,
+#                   hkernel = ukernel,
+#                   russian_doll = udoll,
+#                   funcs = ufuncs,
+#                   tkernel = self.tkernel,
+#                   zkernel = self.zkernel
+#                  )
+#         duweight = get_weight_4d(rx+1/2,ry,rz,rt,upk4d,
+#                   hkernel = ukernel,
+#                   russian_doll = udoll,
+#                   funcs = dufuncs,
+#                   tkernel = self.tkernel,
+#                   zkernel = self.zkernel
+#                  )
+#         vweight = get_weight_4d(rx,ry+1/2,rz,rt,vpk4d,
+#                   hkernel = vkernel,
+#                   russian_doll = vdoll,
+#                   funcs = vfuncs,
+#                   tkernel = self.tkernel,
+#                   zkernel = self.zkernel
+#                  )
+#         dvweight = get_weight_4d(rx,ry+1/2,rz,rt,vpk4d,
+#                   hkernel = vkernel,
+#                   russian_doll = vdoll,
+#                   funcs = dvfuncs,
+#                   tkernel = self.tkernel,
+#                   zkernel = self.zkernel
+#                  )
+#         wweight = get_weight_4d(rx,ry,rzl,rt,wpk4d,
+#                   hkernel = wkernel,
+#                   russian_doll = wdoll,
+#                   funcs = wfuncs,
+#                   tkernel = self.tkernel,
+#                   zkernel = 'linear',
+#                   bottom_scheme = None
+#                  )
+#         dwweight = get_weight_4d(rx,ry,rzl,rt,wpk4d,
+#                   hkernel = wkernel,
+#                   russian_doll = wdoll,
+#                   funcs = wfuncs,
+#                   tkernel = self.tkernel,
+#                   zkernel = 'dz'
+#                  )
+#         np.nan_to_num( uweight,copy = False)
+#         np.nan_to_num(duweight,copy = False)
+#         np.nan_to_num( vweight,copy = False)
+#         np.nan_to_num(dvweight,copy = False)
+#         np.nan_to_num( wweight,copy = False)
+#         np.nan_to_num(dwweight,copy = False)
         
-        self.u [which] = np.einsum('nijk,nijk->n',n_u, uweight)/self.dx[which]
-        self.v [which] = np.einsum('nijk,nijk->n',n_v, vweight)/self.dy[which]
-        self.w [which] = np.einsum('nijk,nijk->n',n_w, wweight)/self.dzl[which]
-        self.du[which] = np.einsum('nijk,nijk->n',n_u,duweight)/self.dx[which]
-        self.dv[which] = np.einsum('nijk,nijk->n',n_v,dvweight)/self.dy[which]
-        self.dw[which] = np.einsum('nijk,nijk->n',n_w,dwweight)/self.dzl[which]
+#         self.u [which] = np.einsum('nijk,nijk->n',n_u, uweight)/self.dx[which]
+#         self.v [which] = np.einsum('nijk,nijk->n',n_v, vweight)/self.dy[which]
+#         self.w [which] = np.einsum('nijk,nijk->n',n_w, wweight)/self.dzl[which]
+#         self.du[which] = np.einsum('nijk,nijk->n',n_u,duweight)/self.dx[which]
+#         self.dv[which] = np.einsum('nijk,nijk->n',n_v,dvweight)/self.dy[which]
+#         self.dw[which] = np.einsum('nijk,nijk->n',n_w,dwweight)/self.dzl[which]
         
 #         self.w = np.zeros_like(self.u)
 #         self.dw = np.zeros_like(self.u)
@@ -392,39 +399,38 @@ class particle(point):
         self.t[out] += contract_time
         
     def update_after_cell_change(self):
-        self.iz,self.rz,self.dz = find_rel_z(self.dep,self.Z ,self.dZ)
-        self.iz = self.iz.astype(int)
+        self.iz,self.rz,self.dz,self.bz = self.ocedata.find_rel_v(self.dep)
         if self.face is not None:
-            self.bx,self.by,self.bz = (
-                self.XC[self.face,self.iy,self.ix],
-                self.YC[self.face,self.iy,self.ix],
-                self.Zl[self.izl]
+            self.bx,self.by,self.bzl = (
+                self.ocedata.XC[self.face,self.iy,self.ix],
+                self.ocedata.YC[self.face,self.iy,self.ix],
+                self.ocedata.Zl[self.izl]
             )
             self.cs,self.sn = (
-                self.CS[self.face,self.iy,self.ix],
-                self.SN[self.face,self.iy,self.ix]
+                self.ocedata.CS[self.face,self.iy,self.ix],
+                self.ocedata.SN[self.face,self.iy,self.ix]
             )
             self.dx,self.dy,self.dz,self.dzl = (
-                self.dXC[self.face,self.iy,self.ix],
-                self.dYC[self.face,self.iy,self.ix],
-                self.dZ[self.iz],
-                self.dZl[self.izl]
+                self.ocedata.dX[self.face,self.iy,self.ix],
+                self.ocedata.dY[self.face,self.iy,self.ix],
+                self.ocedata.dZ[self.iz],
+                self.ocedata.dZl[self.izl]
             )
         else:
-            self.bx,self.by,self.bz = (
-                self.XC[self.iy,self.ix],
-                self.YC[self.iy,self.ix],
-                self.Zl[self.izl]
+            self.bx,self.by,self.bzl = (
+                self.ocedata.XC[self.iy,self.ix],
+                self.ocedata.YC[self.iy,self.ix],
+                self.ocedata.Zl[self.izl]
             )
             self.cs,self.sn = (
-                self.CS[self.iy,self.ix],
-                self.SN[self.iy,self.ix]
+                self.ocedata.CS[self.iy,self.ix],
+                self.ocedata.SN[self.iy,self.ix]
             )
             self.dx,self.dy,self.dz,self.dzl = (
-                self.dXC[self.iy,self.ix],
-                self.dYC[self.iy,self.ix],
-                self.dZ[self.iz],
-                self.dZl[self.izl]
+                self.ocedata.dX[self.iy,self.ix],
+                self.ocedata.dY[self.iy,self.ix],
+                self.ocedata.dZ[self.iz],
+                self.ocedata.dZl[self.izl]
             )
 
         dlon = to_180(self.lon - self.bx)
@@ -432,7 +438,7 @@ class particle(point):
 
         self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
         self.ry = (dlat*self.cs-dlon*self.sn*np.cos(self.by*np.pi/180))*deg2m/self.dy
-        self.rzl= (self.dep - self.bz)/self.dzl
+        self.rzl= (self.dep - self.bzl)/self.dzl
         
     def analytical_step(self,tf,which = None):
         
@@ -469,7 +475,7 @@ class particle(point):
         self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl,
                                                    self.cs,self.sn,
                                                      self.dx,self.dy,self.dzl,
-                                       self.dt,self.bx,self.by,self.bz)
+                                       self.dt,self.bx,self.by,self.bzl)
         
         type1 = tend<=3
         translate = {
@@ -537,5 +543,5 @@ class particle(point):
         if i ==200:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
-        self.it,self.rt,self.dt = find_rel_time(self.t,self.ts)
+        self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
         self.it = self.it.astype(int)

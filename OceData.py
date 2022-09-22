@@ -124,15 +124,15 @@ class OceData():
     
     def find_rel_vl(self,z):
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
-        return iz,rz,dz,bz 
+        return iz.astype(int),rz,dz,bz 
     
     def find_rel_v(self,z):
         iz,rz,dz,bz = find_rel_z(z,self.Z,self.dZ)
-        return iz,rz,dz,bz 
+        return iz.astype(int),rz,dz,bz 
     
     def find_rel_t(self,t):
         it,rt,dt,bt = find_rel_time(t,self.ts)
-        return it,rt,dt,bt
+        return it.astype(int),rt,dt,bt
     
     def find_rel_3d(self,x,y,z):
         faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,
@@ -142,7 +142,7 @@ class OceData():
                                                      self.tree)
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
         iz = iz.astype(int)
-        return iz,faces,iys,ixs,rx,ry,rz,cs,sn,dx,dy,dz,bx,by,bz
+        return iz.astype(int),faces,iys,ixs,rx,ry,rz,cs,sn,dx,dy,dz,bx,by,bz
     
     def find_rel_4d(self,x,y,z,t):
         faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,
@@ -154,7 +154,7 @@ class OceData():
         iz = iz.astype(int)
         it,rt,dt,bt = find_rel_time(t,self.ts)
         it = it.astype(int)
-        return iz,faces,iys,ixs,rx,ry,rz,cs,sn,dx,dy,dz,bx,by,bz,bt
+        return it.astype(int),iz.astype(int),faces,iys,ixs,rx,ry,rz,rt,cs,sn,dx,dy,dz,dt,bx,by,bz,bt
     
     def find_rel(self,*arg):
         if len(arg) ==2:
