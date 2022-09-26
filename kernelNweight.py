@@ -72,8 +72,8 @@ class KnW(object):
     def __init__(self,kernel = default_kernel,
                  inheritance = 'auto',#None, or list of lists
                  hkernel = 'interp',# dx,dy
-                 vkernel = "nearest",# interp,dz
-                 tkernel = "nearest",# interp,dt
+                 vkernel = "nearest",# linear,dz
+                 tkernel = "nearest",# linear,dt
                  h_order = 0,# depend on hkernel type
                 ):
         ksort = np.abs(kernel+np.array([0.01,0.00618])).sum(axis = 1).argsort()
@@ -110,7 +110,7 @@ class KnW(object):
     def same_size(self,other):
         only_size = {
             'dz':2,
-            'interp':2,
+            'linear':2,
             'dt':2,
             'nearest':1
         }
@@ -141,7 +141,7 @@ class KnW(object):
     def size_hash(self):
         only_size = {
             'dz':2,
-            'interp':2,
+            'linear':2,
             'dt':2,
             'nearest':1
         }
@@ -162,7 +162,7 @@ class KnW(object):
         nt = len(pk4d)
         nz = len(pk4d[0])
 
-        if self.tkernel == 'interp':
+        if self.tkernel == 'linear':
             rp = copy.deepcopy(rt)
             tweight = [(1-rp).reshape((len(rp),1,1)),rp.reshape((len(rp),1,1))]
         elif self.tkernel == 'dt':
@@ -170,7 +170,7 @@ class KnW(object):
         elif self.tkernel == 'nearest':
             tweight = [1]
 
-        if self.vkernel == 'interp':
+        if self.vkernel == 'linear':
             rp = copy.deepcopy(rz)
             zweight = [(1-rp).reshape((len(rp),1)),rp.reshape((len(rp),1))]
         elif self.vkernel == 'dz':

@@ -252,11 +252,16 @@ class point():
             return None
         if knw.vkernel == 'nearest':
             return copy.deepcopy(self.iz.astype(int))
-        elif knw.vkernel in ['dz','interp']:
+        elif knw.vkernel in ['dz','linear']:
             try:
                 self.iz_lin
             except AttributeError:
-                self.iz_lin = self.ocedata.find_rel_v_lin(self.dep)
+                (
+                    self.iz_lin,
+                    self.rz_lin,
+                    self.dz_bin,
+                    self.bz_lin
+                ) = self.ocedata.find_rel_v_lin(self.dep)
             return np.vstack([self.iz_lin.astype(int),self.iz_lin.astype(int)-1]).T
         else:
             raise Exception('vkernel not supported')
@@ -267,11 +272,16 @@ class point():
             return None
         if knw.vkernel == 'nearest':
             return copy.deepcopy(self.izl.astype(int))
-        elif knw.vkernel in ['dz','interp']:
+        elif knw.vkernel in ['dz','linear']:
             try:
                 self.izl_lin
             except AttributeError:
-                self.izl_lin = self.ocedata.find_rel_vl_lin(self.dep)
+                (
+                    self.izl_lin,
+                    self.rzl_lin,
+                    self.dzl_bin,
+                    self.bzl_lin
+                ) = self.ocedata.find_rel_vl_lin(self.dep)
             return np.vstack([self.izl_lin.astype(int),
                               self.izl_lin.astype(int)-1]).T
         else:
@@ -282,11 +292,16 @@ class point():
             return None
         if knw.tkernel == 'nearest':
             return copy.deepcopy(self.it.astype(int))
-        elif knw.tkernel in ['dt','interp']:
+        elif knw.tkernel in ['dt','linear']:
             try:
                 self.it_lin
             except AttributeError:
-                self.it_lin = self.ocedata.find_rel_tl_lin(self.tim)
+                (
+                    self.it_lin,
+                    self.rt_lin,
+                    self.dt_bin,
+                    self.bt_lin
+                ) = self.ocedata.find_rel_tl_lin(self.tim)
             return np.vstack([self.it_lin.astype(int),self.it_lin.astype(int)+1]).T
         else:
             raise Exception('vkernel not supported')
@@ -355,15 +370,6 @@ class point():
     
     def interpolate(self,varName,knw,vec_transform = True):
         # implement shortcut u,v,w
-        if self.rz is not None:
-            rz = self.rz
-        else:
-            rz = 0
-            
-        if self.rt is not None:
-            rt = self.rt
-        else:
-            rt = 0
         if isinstance(varName,str):
             dims = self.ocedata[varName].dims
             if 'Xp1' in dims or 'Yp1' in dims:
@@ -371,6 +377,33 @@ class point():
             ind = self.fatten(knw,required = dims)
             ind_dic = dict(zip(dims,ind))
             needed = sread(self.ocedata[varName],ind)
+            
+            if 'Z' in dims:
+                if self.rz is not None:
+                    if knw.vkernel == 'nearest':
+                        rz = self.rz
+                    else:
+                        rz = self.rz_lin
+                else:
+                    rz = 0
+            elif 'Zl' in dims:
+                if self.rz is not None:
+                    if knw.vkernel == 'nearest':
+                        rz = self.rzl
+                    else:
+                        rz = self.rzl_lin
+                else:
+                    rz = 0
+            else:
+                rz = 0
+
+            if self.rt is not None:
+                if knw.tkernel == 'nearest':
+                    rt = self.rt
+                else:
+                    rt = self.rt_lin
+            else:
+                rt = 0
             
             if not ('X' in dims and 'Y' in dims):
                 # if it does not have a horizontal dimension, then we don't have to mask
@@ -381,7 +414,6 @@ class point():
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
                     masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'Wvel')
                     this_bottom_scheme = None
-                    rz = self.rzl
                 elif 'Z' in dims:
                     # something like salt
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
@@ -414,7 +446,7 @@ class point():
             uknw,vknw = knw
             if not uknw.same_size(vknw):
                 raise Exception('u,v kernel needs to have same size, use a kernel that include both of the uv kernels')
-            
+                
             old_dims = self.ocedata[uname].dims
             dims = []
             for i in old_dims:
@@ -423,6 +455,34 @@ class point():
                 else:
                     dims.append(i)
             dims = tuple(dims)
+            
+            if 'Z' in dims:
+                if self.rz is not None:
+                    if uknw.vkernel == 'nearest':
+                        rz = self.rz
+                    else:
+                        rz = self.rz_lin
+                else:
+                    rz = 0
+            elif 'Zl' in dims:
+                if self.rz is not None:
+                    if uknw.vkernel == 'nearest':
+                        rz = self.rzl
+                    else:
+                        rz = self.rzl_lin
+                else:
+                    rz = 0
+            else:
+                rz = 0
+                
+            if self.rt is not None:
+                if uknw.tkernel == 'nearest':
+                    rt = self.rt
+                else:
+                    rt = self.rt_lin
+            else:
+                rt = 0
+            
             ind = self.fatten(uknw,required = dims)
             ind_dic = dict(zip(dims,ind))
             n_u = sread(self.ocedata[uname],ind)
@@ -439,7 +499,10 @@ class point():
                     warnings.warn('the vertical value of vector is between cells, may result in wrong masking')
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
                     this_bottom_scheme = None
-                    rz = self.rzl
+                    if knw.vkernel == 'nearest':
+                        rz = self.rzl
+                    else:
+                        rz = self.rzl_lin
                 elif 'Z' in dims:
                     # something like salt
                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])

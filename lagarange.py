@@ -63,7 +63,7 @@ vdoll = [[0,2]]
 wdoll = [[0]]
 ktype = 'interp'
 h_order = 0
-wknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'interp')
+wknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'linear')
 uknw = KnW(kernel = ukernel,inheritance = udoll)
 vknw = KnW(kernel = vkernel,inheritance = vdoll)
 dwknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
