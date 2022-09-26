@@ -122,7 +122,11 @@ class OceData():
                                                      self.tree)
         return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
     
-    def find_rel_vl(self,z):
+    def find_rel_vl(self,t):
+        iz,rz,dz,bz = find_rel_nearest(t,self.Zl)
+        return iz.astype(int),rz,dz,bz
+    
+    def find_rel_vl_lin(self,z):
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
         return iz.astype(int),rz,dz,bz 
     
@@ -130,7 +134,15 @@ class OceData():
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
         return (iz-1).astype(int),rz-0.5,dz,bz 
     
+    def find_rel_v_lin(self,z):
+        iz,rz,dz,bz = find_rel_z(z,self.Z,self.dZ)
+        return iz.astype(int),rz,dz,bz 
+    
     def find_rel_t(self,t):
+        it,rt,dt,bt = find_rel_nearest(t,self.ts)
+        return it.astype(int),rt,dt,bt
+    
+    def find_rel_t_lin(self,t):
         it,rt,dt,bt = find_rel_time(t,self.ts)
         return it.astype(int),rt,dt,bt
     

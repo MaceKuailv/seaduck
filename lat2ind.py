@@ -97,6 +97,31 @@ def find_ind_h(Xs,Ys,tree,h_shape):
     return faces,iys,ixs
 
 @njit
+def find_rel_nearest(value,ts):
+    its = np.zeros_like(value)
+    rts = np.ones_like(value)*0.0#the way to create zeros with float32 type
+    dts = np.ones_like(value)*0.0
+    bts = np.ones_like(value)*0.0
+    
+    DT = np.zeros(len(ts)+1)
+    DT[1:-1] = ts[1:] - ts[:-1]
+    DT[0] = DT[1]
+    DT[-1] = DT[-2]
+    for i,t in enumerate(value):
+        it,bt = find_ind_nearest(ts,t)
+        delta_t = t-bt
+        if delta_t*DT[i]>0:   
+            Delta_t = DT[it+1]
+        else:
+            Delta_t = DT[it]
+        rt = delta_t/abs(Delta_t)
+        its[i] = it 
+        rts[i] = rt
+        dts[i] = abs(Delta_t)
+        bts[i] = bt
+    return its,rts,dts,bts
+
+@njit
 def find_rel_z(depth,some_z,some_dz):
     '''
     iz = the index

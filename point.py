@@ -158,8 +158,12 @@ class point():
                 self.rz,
                 self.dz,
                 self.bz,
+                self.izl,
+                self.rzl,
+                self.dzl,
+                self.bzl,
                 self.dep
-            ) = [None for i in range(5)]
+            ) = [None for i in range(9)]
             
         if 't' in kwarg.keys():
             (
@@ -249,7 +253,11 @@ class point():
         if knw.vkernel == 'nearest':
             return copy.deepcopy(self.iz.astype(int))
         elif knw.vkernel in ['dz','interp']:
-            return np.vstack([self.iz.astype(int),self.iz.astype(int)-1]).T
+            try:
+                self.iz_lin
+            except AttributeError:
+                self.iz_lin = self.ocedata.find_rel_v_lin(self.dep)
+            return np.vstack([self.iz_lin.astype(int),self.iz_lin.astype(int)-1]).T
         else:
             raise Exception('vkernel not supported')
             
@@ -260,7 +268,12 @@ class point():
         if knw.vkernel == 'nearest':
             return copy.deepcopy(self.izl.astype(int))
         elif knw.vkernel in ['dz','interp']:
-            return np.vstack([self.izl.astype(int),self.izl.astype(int)-1]).T
+            try:
+                self.izl_lin
+            except AttributeError:
+                self.izl_lin = self.ocedata.find_rel_vl_lin(self.dep)
+            return np.vstack([self.izl_lin.astype(int),
+                              self.izl_lin.astype(int)-1]).T
         else:
             raise Exception('vkernel not supported')
             
@@ -270,7 +283,11 @@ class point():
         if knw.tkernel == 'nearest':
             return copy.deepcopy(self.it.astype(int))
         elif knw.tkernel in ['dt','interp']:
-            return np.vstack([self.it.astype(int),self.it.astype(int)+1]).T
+            try:
+                self.it_lin
+            except AttributeError:
+                self.it_lin = self.ocedata.find_rel_tl_lin(self.tim)
+            return np.vstack([self.it_lin.astype(int),self.it_lin.astype(int)+1]).T
         else:
             raise Exception('vkernel not supported')
     
