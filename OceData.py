@@ -127,8 +127,8 @@ class OceData():
         return iz.astype(int),rz,dz,bz 
     
     def find_rel_v(self,z):
-        iz,rz,dz,bz = find_rel_z(z,self.Z,self.dZ)
-        return iz.astype(int),rz,dz,bz 
+        iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
+        return (iz-1).astype(int),rz-0.5,dz,bz 
     
     def find_rel_t(self,t):
         it,rt,dt,bt = find_rel_time(t,self.ts)

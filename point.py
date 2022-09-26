@@ -253,15 +253,6 @@ class point():
         else:
             raise Exception('vkernel not supported')
             
-    def fatten_v(self,knw):
-        if self.iz is None:
-            return None
-        if knw.vkernel == 'nearest':
-            return copy.deepcopy(self.iz.astype(int))
-        elif knw.vkernel in ['dz','interp']:
-            return np.vstack([self.iz.astype(int),self.iz.astype(int)-1]).T
-        else:
-            raise Exception('vkernel not supported')
             
     def fatten_vl(self,knw):
         if self.izl is None:
@@ -405,7 +396,7 @@ class point():
             uname,vname = varName
             uknw,vknw = knw
             if not uknw.same_size(vknw):
-                raise Exception('u,v kernel needs to have same size')
+                raise Exception('u,v kernel needs to have same size, use a kernel that include both of the uv kernels')
             
             old_dims = self.ocedata[uname].dims
             dims = []
@@ -419,6 +410,8 @@ class point():
             ind_dic = dict(zip(dims,ind))
             n_u = sread(self.ocedata[uname],ind)
             n_v = sread(self.ocedata[vname],ind)
+            np.nan_to_num(n_u,copy = False)
+            np.nan_to_num(n_v,copy = False)
             
             if not ('X' in dims and 'Y' in dims):
                 # if it does not have a horizontal dimension, then we don't have to mask
