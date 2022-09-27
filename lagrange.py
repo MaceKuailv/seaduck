@@ -542,12 +542,10 @@ class particle(point):
             self.iy[which],self.ix[which],self.izl[which] = tiy,tix,tiz
         
     def to_next_stop(self,t1):
-        tol = 1
+        tol = 0.5
         tf = t1 - self.t
         todo = abs(tf)>tol
         for i in range(200):
-            if abs(tf).max()<tol:
-                break
             
             self.trim()
             print(sum(todo),'left',end = ' ')
@@ -555,6 +553,8 @@ class particle(point):
             self.update_after_cell_change()
             tf = t1 - self.t
             todo = abs(tf)>tol
+            if abs(tf).max()<tol:
+                break
             self.get_u_du(todo)
 #             self.contract()
         if i ==200:
@@ -571,8 +571,10 @@ class particle(point):
         self.get_u_du()
         R = []
         for i,tl in enumerate(stops):
+            print(tl)
+            print()
             self.to_next_stop(tl)
             if update[i]:
                 self.get_u_du()
             R.append(copy.deepcopy(self))
-        return R
+        return stops,R

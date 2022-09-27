@@ -23,7 +23,7 @@ no_alias = {
     'SN':'SN',
 }
 
-class OceData():
+class OceData(object):
     def __init__(self,data,
                  alias = None,
                  memory_limit = 1e7):

@@ -308,7 +308,12 @@ class point():
     
     def fatten(self,knw,fourD = False,required = 'all'):
         if required!='all' and isinstance(required,str):
-            required = [required]
+            required = tuple([required])
+        if required =='all' or isinstance(required,tuple):
+            pass
+        else:
+            required = tuple(required)
+        
         #TODO: register the kernel shape
         if _in_required('X',required) or _in_required('Y',required) or _in_required('face',required):
             ffc,fiy,fix = self.fatten_h(knw)
@@ -368,7 +373,7 @@ class point():
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
-    def interpolate(self,varName,knw,vec_transform = True):
+    def interpolate(self,varName,knw,vec_transform = True,prefetched = None,itmin = 0):
         # implement shortcut u,v,w
         if isinstance(varName,str):
             dims = self.ocedata[varName].dims
@@ -376,7 +381,17 @@ class point():
                 raise NotImplementedError("Wall variables' scalar style interpolation is ambiguous and thus not implemented")
             ind = self.fatten(knw,required = dims)
             ind_dic = dict(zip(dims,ind))
-            needed = sread(self.ocedata[varName],ind)
+            if prefetched is not None:
+                temp_ind = []
+                for dim in dims:
+                    a_ind = ind_dic[dim]
+                    if dim == 'time':
+                        a_ind-=itmin
+                    temp_ind.append(a_ind)
+                temp_ind = tuple(temp_ind)
+                needed = prefetched[temp_ind]
+            else:
+                needed = sread(self.ocedata[varName],ind)
             
             if 'Z' in dims:
                 if self.rz is not None:
