@@ -3,6 +3,7 @@ import copy
 from kernelNweight import KnW
 from point import point
 from numba import njit
+from lat2ind import find_rel_time
 
 deg2m = 6271e3*np.pi/180
 
@@ -44,6 +45,23 @@ def stationary_time(u,du,x0):
         tl[no_gradient] = (-x0[no_gradient]-0.5)/u[no_gradient]
         tr[no_gradient] = (0.5-x0[no_gradient])/u[no_gradient]
     return tl,tr
+
+def time2wall(xs,us,dus):
+    ts = []
+    for i in range(3):
+        tl,tr = stationary_time(us[i],dus[i],xs[i])
+        ts.append(tl)
+        ts.append(tr)
+    return ts
+
+def which_early(tf,ts):
+    ts.append(np.ones(len(ts[0]))*tf)#float or array both ok
+    t_directed = np.array(ts)*np.sign(tf)
+    t_directed[np.isnan(t_directed)] = np.inf
+    t_directed[t_directed<=0] = np.inf
+    tend = t_directed.argmin(axis = 0)
+    the_t = np.array([ts[te][i] for i,te in enumerate(tend)])
+    return tend,the_t
 
 ukernel = np.array([
     [0,0],
@@ -439,38 +457,34 @@ class particle(point):
         self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
         self.ry = (dlat*self.cs-dlon*self.sn*np.cos(self.by*np.pi/180))*deg2m/self.dy
         self.rzl= (self.dep - self.bzl)/self.dzl
-        
+    
     def analytical_step(self,tf,which = None):
         
         if which is None:
             which = np.ones(self.N).astype(bool)
         if isinstance(tf,float):
             tf = np.array([tf for i in range(self.N)])
-    
-        self.fillna()
         
         tf = tf[which]
 
         xs = [self.rx[which],self.ry[which],self.rzl[which]-1/2]
         us = [self.u[which],self.v[which],self.w[which]]
         dus= [self.du[which],self.dv[which],self.dw[which]]
-        ts = []
-        for i in range(3):
-            tl,tr = stationary_time(us[i],dus[i],xs[i])
-            ts.append(tl)
-            ts.append(tr)
+        
+        ts = time2wall(xs,us,dus)
             
-        ts.append(np.ones_like(self.rx[which])*tf)#float or array both ok
-        t_directed = np.array(ts)*np.sign(tf)
-        t_directed[np.isnan(t_directed)] = np.inf
-        t_directed[t_directed<=0] = np.inf
-        tend = t_directed.argmin(axis = 0)
-        the_t = np.array([ts[te][i] for i,te in enumerate(tend)])
+        tend,the_t = which_early(tf,ts)
         self.t[which] +=the_t
+        
         new_x = []
+        new_u = []
         for i in range(3):
-            new_x.append(stationary(the_t,us[i],dus[i],xs[i]))
+            x_move = stationary(the_t,us[i],dus[i],0)
+            new_u.append(us[i]+dus[i]*x_move)
+            new_x.append(x_move+xs[i])
+            
         self.rx[which],self.ry[which],self.rzl[which] = new_x
+        self.u[which],self.v[which],self.w[which] = new_u
         self.rzl[which] +=1/2
         self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl,
                                                    self.cs,self.sn,
@@ -529,19 +543,36 @@ class particle(point):
         
     def to_next_stop(self,t1):
         tol = 1
+        tf = t1 - self.t
+        todo = abs(tf)>tol
         for i in range(200):
-            tf = t1 - self.t
-            todo = abs(tf)>tol
             if abs(tf).max()<tol:
                 break
-            self.get_u_du(todo)
-#             self.contract()
+            
             self.trim()
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
             self.update_after_cell_change()
+            tf = t1 - self.t
+            todo = abs(tf)>tol
+            self.get_u_du(todo)
+#             self.contract()
         if i ==200:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
         self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
-        self.it = self.it.astype(int)
+        
+    def to_list_of_time(self,normal_stops,update_stops,**kwarg):
+        temp = (list(zip(normal_stops,np.zeros_like(normal_stops)))+
+                list(zip(update_stops,np.ones_like(update_stops))))
+        temp.sort(key = lambda x:abs(x[0]-self.t[0]))
+        stops,update = list(zip(*temp))
+#         return stops,update
+        self.get_u_du()
+        R = []
+        for i,tl in enumerate(stops):
+            self.to_next_stop(tl)
+            if update[i]:
+                self.get_u_du()
+            R.append(copy.deepcopy(self))
+        return R
