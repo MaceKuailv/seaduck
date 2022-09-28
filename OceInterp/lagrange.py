@@ -1,9 +1,10 @@
 import numpy as np
 import copy
-from kernelNweight import KnW
-from point import point
 from numba import njit
-from lat2ind import find_rel_time
+
+from OceInterp.kernelNweight import KnW
+from OceInterp.point import point
+from OceInterp.lat2ind import find_rel_time
 
 deg2m = 6271e3*np.pi/180
 

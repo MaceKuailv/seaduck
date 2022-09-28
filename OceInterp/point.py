@@ -1,12 +1,13 @@
-from OceData import OceData
-from kernelNweight import KnW
-import numpy as np
-from kernel_and_weight import translate_to_tendency,find_pk_4d
-from smart_read import smart_read as sread
-import copy
-from get_masks import get_masked
-from utils import local_to_latlon
+from OceInterp.OceData import OceData
+from OceInterp.kernelNweight import KnW
+from OceInterp.kernel_and_weight import translate_to_tendency,find_pk_4d
+from OceInterp.smart_read import smart_read as sread
+from OceInterp.get_masks import get_masked
+from OceInterp.utils import local_to_latlon
+
 import warnings
+import numpy as np
+import copy
 
 def to_180(x):
     '''

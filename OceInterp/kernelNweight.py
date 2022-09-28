@@ -1,10 +1,11 @@
 import numpy as np
 from numba import njit
-from utils import get_combination
-from topology import topology
 import matplotlib.pyplot as plt
 import copy
-from kernel_and_weight import kernel_weight,get_weight_cascade
+
+from OceInterp.kernel_and_weight import kernel_weight,get_weight_cascade
+from OceInterp.topology import topology
+from OceInterp.utils import get_combination
 
 default_kernel = np.array([
     [0,0],

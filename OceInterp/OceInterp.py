@@ -1,7 +1,8 @@
-from lagrange import particle,uknw,vknw
-from point import point
-from OceData import OceData
-from kernelNweight import KnW
+from OceInterp.lagrange import particle,uknw,vknw
+from OceInterp.point import point
+from OceInterp.OceData import OceData
+from OceInterp.kernelNweight import KnW
+
 import numpy as np
 import warnings
 

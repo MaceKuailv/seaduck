@@ -1,4 +1,4 @@
-import pandas as pd
+# import pandas as pd
 import numpy as np
 from numba import njit
 import copy
@@ -6,11 +6,24 @@ import copy
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
 
-llc_face_connect = pd.read_csv('face_connect.csv')
-llc_face_connect = llc_face_connect.drop(columns = 'Unnamed: 0',axis = 1).fillna(42).astype(int)
+# llc_face_connect = pd.read_csv('llc_face_connect.csv')
+# llc_face_connect = llc_face_connect.drop(columns = 'Unnamed: 0',axis = 1).fillna(42).astype(int)
 tends = [0,1,2,3]#up,down,left,right #list(llc_face_connect.columns)
 
-llc_face_connect = np.array(llc_face_connect)
+# llc_face_connect = np.array(llc_face_connect)
+llc_face_connect = np.array([[ 1, 42, 12,  3],
+       [ 2,  0, 11,  4],
+       [ 6,  1, 10,  5],
+       [ 4, 42,  0,  9],
+       [ 5,  3,  1,  8],
+       [ 6,  4,  2,  7],
+       [10,  5,  2,  7],
+       [10,  5,  6,  8],
+       [11,  4,  7,  9],
+       [12,  3,  8, 42],
+       [ 2,  7,  6, 11],
+       [ 1,  8, 10, 12],
+       [ 0,  9, 11, 42]])
 
 directions = np.array([np.pi/2,-np.pi/2,np.pi,0])
 

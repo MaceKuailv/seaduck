@@ -2,8 +2,8 @@ import numpy as np
 import xarray as xr 
 import copy
 import warnings
-from topology import topology
-from smart_read import smart_read
+from OceInterp.topology import topology
+from OceInterp.smart_read import smart_read
 
 def mask_u_node(maskC,tp):
     '''

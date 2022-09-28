@@ -1,9 +1,10 @@
 import numpy as np
 from numba import njit
-from utils import get_combination
-from topology import topology
 import matplotlib.pyplot as plt
 import copy
+
+from OceInterp.utils import get_combination
+from OceInterp.topology import topology
 
 # default kernel for interpolation.
 default_kernel = np.array([

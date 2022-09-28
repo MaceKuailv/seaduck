@@ -1,9 +1,10 @@
 import xarray as xr
 import numpy as np
 import pandas as pd
-from topology import topology
-from utils import create_tree
-from lat2ind import *
+
+from OceInterp.topology import topology
+from OceInterp.utils import create_tree
+from OceInterp.lat2ind import *
 
 no_alias = {
     'XC':'XC',
