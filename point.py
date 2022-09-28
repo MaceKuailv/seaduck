@@ -379,7 +379,7 @@ class point():
             dims = self.ocedata[varName].dims
             if 'Xp1' in dims or 'Yp1' in dims:
                 raise NotImplementedError("Wall variables' scalar style interpolation is ambiguous and thus not implemented")
-            ind = self.fatten(knw,required = dims)
+            ind = self.fatten(knw,required = dims,fourD = True)
             ind_dic = dict(zip(dims,ind))
             if prefetched is not None:
                 temp_ind = []
@@ -435,7 +435,7 @@ class point():
                     masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'C')
                     this_bottom_scheme = 'no_flux'
                 else:
-                    # something like 
+                    # something like etan
                     ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
                     ind_for_mask.insert(0,np.zeros_like(ind[0]))
                     ind_for_mask = ind_for_mask
@@ -498,7 +498,7 @@ class point():
             else:
                 rt = 0
             
-            ind = self.fatten(uknw,required = dims)
+            ind = self.fatten(uknw,required = dims,fourD = True)
             ind_dic = dict(zip(dims,ind))
             n_u = sread(self.ocedata[uname],ind)
             n_v = sread(self.ocedata[vname],ind)

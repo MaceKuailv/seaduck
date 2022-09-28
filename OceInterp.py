@@ -48,5 +48,6 @@ def OceInterp(od,varList,x,y,z,t,kernelList = None,lagrangian = False,lagrange_k
             raise Exception('There needs to be at least two time steps to run the lagrangian particle')
         t_start = t[0]
         t_nec = t[1:]
-        pt = particle(x = x,y=y,z=z,t=t,data = od,**lagrange_kwarg)
+        pt = particle(x = x,y=y,z=z,t=np.ones_like(x)*t_start,data = od,**lagrange_kwarg)
+        
         
