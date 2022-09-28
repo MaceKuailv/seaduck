@@ -229,7 +229,7 @@ class point():
         redo = np.array(np.where(illegal)).T
         for num,loc in enumerate(redo):
             j,i = loc
-            if faces is not None:
+            if self.face is not None:
                 ind = (self.face[j],self.iy[j],self.ix[j])
             else:
                 ind = (self.iy[j],self.ix[j])
@@ -238,7 +238,7 @@ class point():
             # moves is a list of operations to get to a single point
             #[2,2] means move to the left and then move to the left again.
             n_ind = tp.ind_moves(ind,moves)
-            if faces is not None:
+            if self.face is not None:
                 n_faces[j,i],n_iys[j,i],n_ixs[j,i] = n_ind
             else:
                 n_iys[j,i],n_ixs[j,i] = n_ind
