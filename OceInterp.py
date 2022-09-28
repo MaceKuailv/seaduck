@@ -2,8 +2,19 @@ from lagrange import particle,uknw,vknw
 from point import point
 from OceData import OceData
 from kernelNweight import KnW
+import numpy as np
+import warnings
 
-def OceInterp(od,varList,x,y,z,t,kernelList = None,lagrangian = False,lagrange_kwarg = {},**kwarg):
+lagrange_token = '__particle.'
+
+def OceInterp(od,varList,x,y,z,t,
+              kernelList = None,
+              lagrangian = False,
+              lagrange_kwarg = {},
+              update_stops = 'default',
+              return_in_between  =True,
+              return_pt_time = True,
+              **kernel_kwarg):
     if not isinstance(od,OceData):
         od = OceData(od)
 
@@ -22,12 +33,12 @@ def OceInterp(od,varList,x,y,z,t,kernelList = None,lagrangian = False,lagrange_k
         pass
     elif kernelList is None:
         kernelList = []
-        the_kernel = KnW(**kwarg)
+        the_kernel = KnW(**kernel_kwarg)
         for i in varList:
             if isinstance(i,str):
                 kernelList.append(the_kernel)
             elif isinstance(i,list):
-                if kwarg != dict():
+                if kernel_kwarg != dict():
                     kernelList.append([the_kernel,the_kernel])
                 else:
                     kernelList.append([uknw,vknw])
@@ -36,7 +47,7 @@ def OceInterp(od,varList,x,y,z,t,kernelList = None,lagrangian = False,lagrange_k
         pt.from_latlon(x = x,y=y,z=z,t=t,data = od)
         R = []
         for i,var in enumerate(varList):
-            if "__particle" in var:
+            if lagrange_token in var:
                 raise AttributeError('__particle variables is only available for Lagrangian particles')
             R.append(pt.interpolate(var,kernelList[i]))
         return R
@@ -49,5 +60,27 @@ def OceInterp(od,varList,x,y,z,t,kernelList = None,lagrangian = False,lagrange_k
         t_start = t[0]
         t_nec = t[1:]
         pt = particle(x = x,y=y,z=z,t=np.ones_like(x)*t_start,data = od,**lagrange_kwarg)
-        
-        
+        stops,raw = pt.to_list_of_time(t_nec,
+                                       update_stops = update_stops,
+                                       return_in_between = return_in_between)
+        R = []
+        for i,var in enumerate(varList):
+            if var == lagrange_token+'raw':
+                R.append(raw)
+            elif lagrange_token in var:
+                sublist = []
+                for snap in raw:
+                    sublist.append(snap.__dict__[var[len(lagrange_token):]])
+                R.append(sublist)
+            else:
+                sublist = []
+                for snap in raw:
+                    sublist.append(snap.interpolate(var,kernelList[i]))
+                R.append(sublist)
+                
+        if return_pt_time:
+            return stops,R
+        else:
+            if return_in_between:
+                warnings.warn('Some of the returns is not on the times you specified.')
+            return R

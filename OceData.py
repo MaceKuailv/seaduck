@@ -97,8 +97,11 @@ class OceData(object):
 
         self.CS = np.array(self['CS']).astype('float32')
         self.SN = np.array(self['SN']).astype('float32')
+        
+        self.t_base = 0
         self.ts = np.array(self['time'])
-        self.ts = (self.ts-self.ts[0]).astype(float)/1e9
+        self.ts = (self.ts).astype(float)/1e9
+        self.time_midp = (self.ts[1:]+self.ts[:-1])/2
         
         # add optional ones here
         for var in ['XG','YG','dXG','dYG']:

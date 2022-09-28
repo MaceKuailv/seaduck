@@ -144,10 +144,10 @@ class particle(point):
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
-        u,v   = self.subset(which).interpolate(['UVELMASS','VVELMASS'],[uknw,vknw],vec_transform = False)
-        du,dv = self.subset(which).interpolate(['UVELMASS','VVELMASS'],[duknw,dvknw],vec_transform = False)
-        w     = self.subset(which).interpolate('WVELMASS',wknw)
-        dw    = self.subset(which).interpolate('WVELMASS',dwknw)
+        u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
+        du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
+        w     = self.subset(which).interpolate(self.wname,wknw)
+        dw    = self.subset(which).interpolate(self.wname,dwknw)
         
         self.u [which] =  u/self.dx[which]
         self.v [which] =  v/self.dy[which]
@@ -562,7 +562,17 @@ class particle(point):
         self.t = np.ones(self.N)*t1
         self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
         
-    def to_list_of_time(self,normal_stops,update_stops,**kwarg):
+    def to_list_of_time(self,normal_stops,update_stops = 'default',return_in_between  =True):
+        t_min = np.min(normal_stops)
+        t_max = np.max(normal_stops)
+        data_tmin = self.ocedata.ts.min()
+        data_tmax = self.ocedata.ts.max()
+        if t_min<data_tmin or t_max>data_tmax:
+            raise Exception(f'time range not within bound({data_tmin},{data_tmax})')
+        if update_stops == 'default':
+            update_stops = self.ocedata.time_midp[np.logical_and(t_min<self.ocedata.time_midp,
+                                                         self.ocedata.time_midp<t_max)]
+        
         temp = (list(zip(normal_stops,np.zeros_like(normal_stops)))+
                 list(zip(update_stops,np.ones_like(update_stops))))
         temp.sort(key = lambda x:abs(x[0]-self.t[0]))
@@ -571,10 +581,11 @@ class particle(point):
         self.get_u_du()
         R = []
         for i,tl in enumerate(stops):
-            print(tl)
+            print(np.datetime64(round(tl),'s'))
             print()
             self.to_next_stop(tl)
             if update[i]:
                 self.get_u_du()
-            R.append(copy.deepcopy(self))
+            else:
+                R.append(copy.deepcopy(self))
         return stops,R

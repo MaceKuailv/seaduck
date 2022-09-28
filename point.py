@@ -107,7 +107,7 @@ class point():
                 raise Exception('data not provided')
             self.ocedata = kwarg['data']
         self.tp = self.ocedata.tp
-        self.N = max([_general_len(i) for i in kwarg.values()])
+        self.N = max([_general_len(kwarg[i]) for i in kwarg.keys()])
         if 'x' in kwarg.keys() and 'y' in kwarg.keys():
             self.lon = kwarg['x']
             self.lat = kwarg['y']

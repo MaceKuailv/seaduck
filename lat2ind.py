@@ -107,7 +107,8 @@ def find_rel_nearest(value,ts):
     DT[1:-1] = ts[1:] - ts[:-1]
     DT[0] = DT[1]
     DT[-1] = DT[-2]
-    for i,t in enumerate(value):
+    for i in range(len(value)):
+        t = value[i]
         it,bt = find_ind_nearest(ts,t)
         delta_t = t-bt
         if delta_t*DT[i]>0:   

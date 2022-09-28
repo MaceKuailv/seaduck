@@ -102,7 +102,7 @@ class KnW(object):
                      h_order = self.h_order) 
             for a_kernel in self.kernels]
     def same_hsize(self,other):
-        type_same = isinstance(other, KnW)
+        type_same = isinstance(other, type(self))
         if not type_same:
             raise TypeError('the argument is not a KnW object')
         return (self.kernel == other.kernel).all()
@@ -121,7 +121,7 @@ class KnW(object):
         
         
     def __eq__(self,other):
-        type_same = isinstance(other, KnW)
+        type_same = isinstance(other, type(self))
         if not type_same:
             return False
         shpe_same = ((self.kernel == other.kernel).all() and self.inheritance == other.inheritance)
