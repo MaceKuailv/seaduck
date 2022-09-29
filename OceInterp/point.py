@@ -302,7 +302,7 @@ class point():
                     self.rt_lin,
                     self.dt_bin,
                     self.bt_lin
-                ) = self.ocedata.find_rel_tl_lin(self.tim)
+                ) = self.ocedata.find_rel_t_lin(self.t)
             return np.vstack([self.it_lin.astype(int),self.it_lin.astype(int)+1]).T
         else:
             raise Exception('vkernel not supported')
@@ -455,7 +455,7 @@ class point():
 
             R = np.einsum('nj,nj->n',needed,weight)
             return R
-        elif isinstance(varName,list):
+        elif isinstance(varName,list) or isinstance(varName,tuple):
             if len(varName)!=2:
                 raise Exception('list varName can only have length 2, representing horizontal vectors')
             uname,vname = varName
@@ -471,6 +471,9 @@ class point():
                 else:
                     dims.append(i)
             dims = tuple(dims)
+            ind = self.fatten(uknw,required = dims,fourD = True)
+            ind_dic = dict(zip(dims,ind))
+            
             
             if 'Z' in dims:
                 if self.rz is not None:
@@ -499,8 +502,6 @@ class point():
             else:
                 rt = 0
             
-            ind = self.fatten(uknw,required = dims,fourD = True)
-            ind_dic = dict(zip(dims,ind))
             n_u = sread(self.ocedata[uname],ind)
             n_v = sread(self.ocedata[vname],ind)
             np.nan_to_num(n_u,copy = False)
@@ -537,7 +538,7 @@ class point():
                 (UfromUvel,
                  UfromVvel,
                  VfromUvel,
-                 VfromVvel) = self.ocedata.tp.four_matrix_for_uv(ind_dic['face'][0,0])
+                 VfromVvel) = self.ocedata.tp.four_matrix_for_uv(ind_dic['face'][:,:,0,0])
                 
                 temp_n_u = (np.einsum('nijk,ni->nijk',n_u,UfromUvel)
                            +np.einsum('nijk,ni->nijk',n_v,UfromVvel))
@@ -566,3 +567,5 @@ class point():
             if vec_transform:
                 u,v = local_to_latlon(u,v,self.cs,self.sn)
             return u,v
+        else:
+            raise Exception('varList type not supported.')

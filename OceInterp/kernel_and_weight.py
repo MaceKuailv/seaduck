@@ -543,6 +543,8 @@ def kernel_weight(kernel,ktype = 'interp',order = 0):
     mx = len(set(kernel[:,0]))
     my = len(set(kernel[:,1]))
     if len(kernel) == mx+my-1:
+        if 'd' in ktype:
+            ktype = ktype[1:]
         return kernel_weight_x(kernel,ktype = ktype,order = order)
     elif len(kernel) == mx*my:# mx*my == mx+my-1 only when mx==1 or my ==1
         if ktype == 'interp':
