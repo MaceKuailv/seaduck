@@ -564,8 +564,8 @@ class particle(point):
         self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
         
     def to_list_of_time(self,normal_stops,update_stops = 'default',return_in_between  =True):
-        t_min = np.min(normal_stops)
-        t_max = np.max(normal_stops)
+        t_min = np.minimum(np.min(normal_stops),self.t[0])
+        t_max = np.maximum(np.max(normal_stops),self.t[0])
         data_tmin = self.ocedata.ts.min()
         data_tmax = self.ocedata.ts.max()
         if t_min<data_tmin or t_max>data_tmax:
@@ -573,7 +573,6 @@ class particle(point):
         if update_stops == 'default':
             update_stops = self.ocedata.time_midp[np.logical_and(t_min<self.ocedata.time_midp,
                                                          self.ocedata.time_midp<t_max)]
-        
         temp = (list(zip(normal_stops,np.zeros_like(normal_stops)))+
                 list(zip(update_stops,np.ones_like(update_stops))))
         temp.sort(key = lambda x:abs(x[0]-self.t[0]))
@@ -582,11 +581,13 @@ class particle(point):
         self.get_u_du()
         R = []
         for i,tl in enumerate(stops):
-            print(np.datetime64(round(tl),'s'))
             print()
+            print(np.datetime64(round(tl),'s'))
             self.to_next_stop(tl)
             if update[i]:
                 self.get_u_du()
+                if return_in_between:
+                    R.append(copy.deepcopy(self))
             else:
                 R.append(copy.deepcopy(self))
         return stops,R
