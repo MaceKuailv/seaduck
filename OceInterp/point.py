@@ -108,7 +108,7 @@ class point():
                 raise Exception('data not provided')
             self.ocedata = kwarg['data']
         self.tp = self.ocedata.tp
-        self.N = max([_general_len(kwarg[i]) for i in kwarg.keys()])
+        self.N = max([_general_len(i) for i in [x,y,z,t]])
         if isinstance(x,float):
             x = np.array([1.0])*x
         if isinstance(y,float):
