@@ -100,7 +100,7 @@ def _general_len(thing):
 
 class point():
 #     self.ind_h_dict = {}
-    def from_latlon(self,**kwarg):
+    def from_latlon(self,x = None,y = None,z = None,t = None,**kwarg):
         try:
             self.ocedata
         except AttributeError:
@@ -109,9 +109,18 @@ class point():
             self.ocedata = kwarg['data']
         self.tp = self.ocedata.tp
         self.N = max([_general_len(kwarg[i]) for i in kwarg.keys()])
-        if 'x' in kwarg.keys() and 'y' in kwarg.keys():
-            self.lon = kwarg['x']
-            self.lat = kwarg['y']
+        if isinstance(x,float):
+            x = np.array([1.0])*x
+        if isinstance(y,float):
+            y = np.array([1.0])*y
+        if isinstance(z,float):
+            z = np.array([1.0])*t
+        if isinstance(z,float):
+            t = np.array([1.0])*t
+
+        if (x is not None) and (y is not None):
+            self.lon = x
+            self.lat = y
             (
                  self.face,
                  self.iy,
@@ -124,7 +133,7 @@ class point():
                  self.dy,
                  self.bx,
                  self.by
-            ) = self.ocedata.find_rel_h(kwarg['x'],kwarg['y'])
+            ) = self.ocedata.find_rel_h(x,y)
         else:
             self.lon  = None
             self.lat  = None
@@ -139,20 +148,20 @@ class point():
             self.dy   = None
             self.bx   = None
             self.by   = None
-        if 'z' in kwarg.keys():
+        if (z is not None):
             (
                 self.iz,
                 self.rz,
                 self.dz,
                 self.bz 
-            ) = self.ocedata.find_rel_v(kwarg['z'])
+            ) = self.ocedata.find_rel_v(z)
             (
                 self.izl,
                 self.rzl,
                 self.dzl,
                 self.bzl 
-            ) = self.ocedata.find_rel_vl(kwarg['z'])
-            self.dep = kwarg['z']
+            ) = self.ocedata.find_rel_vl(z)
+            self.dep = z
         else:
             (
                 self.iz,
@@ -166,14 +175,14 @@ class point():
                 self.dep
             ) = [None for i in range(9)]
             
-        if 't' in kwarg.keys():
+        if (t is not None):
             (
                 self.it,
                 self.rt,
                 self.dt,
                 self.bt 
-            ) = self.ocedata.find_rel_t(kwarg['t'])
-            self.t = kwarg['t']
+            ) = self.ocedata.find_rel_t(t)
+            self.t = t
         else:
             (
                 self.it,
@@ -183,6 +192,7 @@ class point():
                 self.tim
             ) = [None for i in range(5)]
         return self
+    
     def subset(self,which):
         p = point()
         keys = self.__dict__.keys()

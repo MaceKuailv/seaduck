@@ -96,6 +96,7 @@ class particle(point):
                 vname = 'VVELMASS',
                 wname = 'WVELMASS',
                  dont_fly = True,
+                 save_raw = False,
                 **kwarg
                 ):
         self.from_latlon(**kwarg)
@@ -123,6 +124,17 @@ class particle(point):
         ) = [np.zeros(self.N).astype(float) for i in range(6)]
         self.fillna()
         
+        self.save_raw = save_raw
+        if self.save_raw:
+            self.itlist = [[] for i in range(self.N)]
+            self.fclist = [[] for i in range(self.N)]
+            self.iylist = [[] for i in range(self.N)]
+            self.izlist = [[] for i in range(self.N)]
+            self.ixlist = [[] for i in range(self.N)]
+            self.rxlist = [[] for i in range(self.N)]
+            self.rylist = [[] for i in range(self.N)]
+            self.rzlist = [[] for i in range(self.N)]
+            self.ttlist = [[] for i in range(self.N)]
 #     def update_uvw_array(self,od
 #                         ):
 #         uname = self.uname
@@ -318,6 +330,37 @@ class particle(point):
         np.nan_to_num(self.dv,copy = False)
         np.nan_to_num(self.dw,copy = False)
         
+    def note_taking(self,which = None):
+        if which is None:
+            which = np.ones(self.N).astype(bool)
+        where = np.where(which)[0]
+        try:
+            self.ttlist
+        except AttributeError:
+            raise AttributeError('This is not a particle_rawlist object')
+        for i in where:
+            self.itlist[i].append(self.it[i])
+            self.fclist[i].append(self.face[i])
+            self.iylist[i].append(self.iy[i])
+            self.izlist[i].append(self.izl[i])
+            self.ixlist[i].append(self.ix[i])
+            self.rxlist[i].append(self.rx[i])
+            self.rylist[i].append(self.ry[i])
+            self.rzlist[i].append(self.rzl[i])
+            self.ttlist[i].append(self.t[i])
+            
+    def empty_lists(self):
+        
+        self.itlist = [[] for i in range(self.N)]
+        self.fclist = [[] for i in range(self.N)]
+        self.iylist = [[] for i in range(self.N)]
+        self.izlist = [[] for i in range(self.N)]
+        self.ixlist = [[] for i in range(self.N)]
+        self.rxlist = [[] for i in range(self.N)]
+        self.rylist = [[] for i in range(self.N)]
+        self.rzlist = [[] for i in range(self.N)]
+        self.ttlist = [[] for i in range(self.N)]
+        
     def out_of_bound(self):
         x_out = np.logical_or(self.rx >0.5,self.rx < -0.5)
         y_out = np.logical_or(self.ry >0.5,self.ry < -0.5)
@@ -491,7 +534,8 @@ class particle(point):
                                                    self.cs,self.sn,
                                                      self.dx,self.dy,self.dzl,
                                        self.dt,self.bx,self.by,self.bzl)
-        
+        if self.save_raw:
+            self.note_taking(which)
         type1 = tend<=3
         translate = {
             0:2,#left
@@ -541,6 +585,7 @@ class particle(point):
             self.face[which],self.iy[which],self.ix[which],self.izl[which] = tface,tiy,tix,tiz
         else:
             self.iy[which],self.ix[which],self.izl[which] = tiy,tix,tiz
+            
         
     def to_next_stop(self,t1):
         tol = 0.5
@@ -552,6 +597,8 @@ class particle(point):
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
             self.update_after_cell_change()
+            if self.save_raw:
+                self.note_taking(todo)
             tf = t1 - self.t
             todo = abs(tf)>tol
             if abs(tf).max()<tol:
@@ -583,6 +630,8 @@ class particle(point):
         for i,tl in enumerate(stops):
             print()
             print(np.datetime64(round(tl),'s'))
+            if self.save_raw:
+                self.note_taking()
             self.to_next_stop(tl)
             if update[i]:
                 self.get_u_du()
@@ -590,4 +639,5 @@ class particle(point):
                     R.append(copy.deepcopy(self))
             else:
                 R.append(copy.deepcopy(self))
+            self.empty_lists()
         return stops,R
