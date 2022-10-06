@@ -104,7 +104,7 @@ class particle(point):
         (
             self.izl_lin,
             self.rzl_lin,
-            self.dzl_bin,
+            self.dzl_lin,
             self.bzl_lin
         ) = self.ocedata.find_rel_vl_lin(self.dep)
         
