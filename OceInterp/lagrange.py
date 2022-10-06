@@ -115,6 +115,8 @@ class particle(point):
         # whether or not setting the w at the surface
         # just to prevent particles taking off
         self.dont_fly = dont_fly
+        if dont_fly:
+            oce['WVELMASS'].loc[dict(Zl = 0)] = 0
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
 #         if self.too_large:
