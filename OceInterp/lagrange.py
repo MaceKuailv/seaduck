@@ -101,6 +101,13 @@ class particle(point):
                 ):
         self.from_latlon(**kwarg)
         
+        (
+            self.izl_lin,
+            self.rzl_lin,
+            self.dzl_bin,
+            self.bzl_lin
+        ) = self.ocedata.find_rel_vl_lin(self.dep)
+        
         self.uname = uname
         self.vname = vname
         self.wname = wname
@@ -164,10 +171,10 @@ class particle(point):
         
         self.u [which] =  u/self.dx[which]
         self.v [which] =  v/self.dy[which]
-        self.w [which] =  w/self.dzl[which]
+        self.w [which] =  w/self.dzl_lin[which]
         self.du[which] = du/self.dx[which]
         self.dv[which] = dv/self.dy[which]
-        self.dw[which] = dw/self.dzl[which]
+        self.dw[which] = dw/self.dzl_lin[which]
         
 #     def get_u_du(self,which = None):
 #         if which is None:
@@ -342,11 +349,11 @@ class particle(point):
             self.itlist[i].append(self.it[i])
             self.fclist[i].append(self.face[i])
             self.iylist[i].append(self.iy[i])
-            self.izlist[i].append(self.izl[i])
+            self.izlist[i].append(self.izl_lin[i])
             self.ixlist[i].append(self.ix[i])
             self.rxlist[i].append(self.rx[i])
             self.rylist[i].append(self.ry[i])
-            self.rzlist[i].append(self.rzl[i])
+            self.rzlist[i].append(self.rzl_lin[i])
             self.ttlist[i].append(self.t[i])
             
     def empty_lists(self):
@@ -364,7 +371,7 @@ class particle(point):
     def out_of_bound(self):
         x_out = np.logical_or(self.rx >0.5,self.rx < -0.5)
         y_out = np.logical_or(self.ry >0.5,self.ry < -0.5)
-        z_out = np.logical_or(self.rzl>1  ,self.rzl< 0   )
+        z_out = np.logical_or(self.rzl_lin>1  ,self.rzl_lin< 0   )
         return np.logical_or(np.logical_or(x_out,y_out),z_out)
 
     
@@ -374,8 +381,8 @@ class particle(point):
         xmin = np.min(self.rx)
         ymax = np.max(self.ry)
         ymin = np.min(self.ry)
-        zmax = np.max(self.rzl)
-        zmin = np.min(self.rzl)
+        zmax = np.max(self.rzl_lin)
+        zmin = np.min(self.rzl_lin)
         if xmax>=0.5-tol:
             where = self.rx>=0.5-tol
             cdx = (0.5-tol)-self.rx[where]
@@ -405,16 +412,16 @@ class particle(point):
             if verbose:
                 print(f'converting {ymin} to -0.5')
         if zmax>=1.-tol:
-            where = self.rzl>=1.-tol
-            cdx = (1.-tol)-self.rzl[where]
-            self.rzl[where]+=cdx
+            where = self.rzl_lin>=1.-tol
+            cdx = (1.-tol)-self.rzl_lin[where]
+            self.rzl_lin[where]+=cdx
             self.w[where] += self.dw[where]*cdx
             if verbose:
                 print(f'converting {zmax} to 1')
         if zmin<=-0.+tol:
-            where = self.rzl<=-0.+tol
-            cdx = (-0.+tol)-self.rzl[where]
-            self.rzl[where]+=cdx
+            where = self.rzl_lin<=-0.+tol
+            cdx = (-0.+tol)-self.rzl_lin[where]
+            self.rzl_lin[where]+=cdx
             self.w[where] += self.dw[where]*cdx
             if verbose:
                 print(f'converting {zmin} to 0')
@@ -423,7 +430,7 @@ class particle(point):
         max_time = 1e3
         out = self.out_of_bound()
         # out = np.logical_and(out,u!=0)
-        xs = [self.rx[out],self.ry[out],self.rzl[out]-1/2]
+        xs = [self.rx[out],self.ry[out],self.rzl_lin[out]-1/2]
         us = [self.u[out],self.v[out],self.w[out]]
         dus= [self.du[out],self.dv[out],self.dw[out]]
         tmin = -np.ones_like(self.rx[out])*np.inf
@@ -452,7 +459,7 @@ class particle(point):
         
         self.rx[out] += cdx
         self.ry[out] += cdy
-        self.rzl[out]+= cdz
+        self.rzl_lin[out]+= cdz
         
         self.u[out]+=cdx*self.du[out]
         self.v[out]+=cdy*self.dv[out]
@@ -463,36 +470,36 @@ class particle(point):
     def update_after_cell_change(self):
         self.iz,self.rz,self.dz,self.bz = self.ocedata.find_rel_v(self.dep)
         if self.face is not None:
-            self.bx,self.by,self.bzl = (
+            self.bx,self.by,self.bzl_lin = (
                 self.ocedata.XC[self.face,self.iy,self.ix],
                 self.ocedata.YC[self.face,self.iy,self.ix],
-                self.ocedata.Zl[self.izl]
+                self.ocedata.Zl[self.izl_lin]
             )
             self.cs,self.sn = (
                 self.ocedata.CS[self.face,self.iy,self.ix],
                 self.ocedata.SN[self.face,self.iy,self.ix]
             )
-            self.dx,self.dy,self.dz,self.dzl = (
+            self.dx,self.dy,self.dz,self.dzl_lin = (
                 self.ocedata.dX[self.face,self.iy,self.ix],
                 self.ocedata.dY[self.face,self.iy,self.ix],
                 self.ocedata.dZ[self.iz],
-                self.ocedata.dZl[self.izl]
+                self.ocedata.dZl[self.izl_lin]
             )
         else:
-            self.bx,self.by,self.bzl = (
+            self.bx,self.by,self.bzl_lin = (
                 self.ocedata.XC[self.iy,self.ix],
                 self.ocedata.YC[self.iy,self.ix],
-                self.ocedata.Zl[self.izl]
+                self.ocedata.Zl[self.izl_lin]
             )
             self.cs,self.sn = (
                 self.ocedata.CS[self.iy,self.ix],
                 self.ocedata.SN[self.iy,self.ix]
             )
-            self.dx,self.dy,self.dz,self.dzl = (
+            self.dx,self.dy,self.dz,self.dzl_lin = (
                 self.ocedata.dX[self.iy,self.ix],
                 self.ocedata.dY[self.iy,self.ix],
                 self.ocedata.dZ[self.iz],
-                self.ocedata.dZl[self.izl]
+                self.ocedata.dZl[self.izl_lin]
             )
 
         dlon = to_180(self.lon - self.bx)
@@ -500,7 +507,7 @@ class particle(point):
 
         self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
         self.ry = (dlat*self.cs-dlon*self.sn*np.cos(self.by*np.pi/180))*deg2m/self.dy
-        self.rzl= (self.dep - self.bzl)/self.dzl
+        self.rzl_lin= (self.dep - self.bzl_lin)/self.dzl_lin
     
     def analytical_step(self,tf,which = None):
         
@@ -511,7 +518,7 @@ class particle(point):
         
         tf = tf[which]
 
-        xs = [self.rx[which],self.ry[which],self.rzl[which]-1/2]
+        xs = [self.rx[which],self.ry[which],self.rzl_lin[which]-1/2]
         us = [self.u[which],self.v[which],self.w[which]]
         dus= [self.du[which],self.dv[which],self.dw[which]]
         
@@ -527,13 +534,13 @@ class particle(point):
             new_u.append(us[i]+dus[i]*x_move)
             new_x.append(x_move+xs[i])
             
-        self.rx[which],self.ry[which],self.rzl[which] = new_x
+        self.rx[which],self.ry[which],self.rzl_lin[which] = new_x
         self.u[which],self.v[which],self.w[which] = new_u
-        self.rzl[which] +=1/2
-        self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl,
+        self.rzl_lin[which] +=1/2
+        self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl_lin,
                                                    self.cs,self.sn,
-                                                     self.dx,self.dy,self.dzl,
-                                       self.dt,self.bx,self.by,self.bzl)
+                                                     self.dx,self.dy,self.dzl_lin,
+                                       self.dt,self.bx,self.by,self.bzl_lin)
         if self.save_raw:
             self.note_taking(which)
         type1 = tend<=3
@@ -549,7 +556,7 @@ class particle(point):
                 self.face[which].astype(int),
                 self.iy[which].astype(int),
                 self.ix[which].astype(int),
-                self.izl[which].astype(int)
+                self.izl_lin[which].astype(int)
             )
             tface[type1],tiy[type1],tix[type1] = self.tp.ind_tend_vec(
                 (tface[type1],tiy[type1],tix[type1]),
@@ -558,7 +565,7 @@ class particle(point):
             tiy,tix,tiz = (
                 self.iy[which].astype(int),
                 self.ix[which].astype(int),
-                self.izl[which].astype(int)
+                self.izl_lin[which].astype(int)
             )
             tiy[type1],tix[type1] = self.tp.ind_tend_vec(
                 (tiy[type1],tix[type1]),
@@ -582,9 +589,9 @@ class particle(point):
 #             print('stuck!')
 #             raise Exception('ahhhhh!')
         if self.face is not None:
-            self.face[which],self.iy[which],self.ix[which],self.izl[which] = tface,tiy,tix,tiz
+            self.face[which],self.iy[which],self.ix[which],self.izl_lin[which] = tface,tiy,tix,tiz
         else:
-            self.iy[which],self.ix[which],self.izl[which] = tiy,tix,tiz
+            self.iy[which],self.ix[which],self.izl_lin[which] = tiy,tix,tiz
             
         
     def to_next_stop(self,t1):
@@ -639,5 +646,6 @@ class particle(point):
                     R.append(copy.deepcopy(self))
             else:
                 R.append(copy.deepcopy(self))
-            self.empty_lists()
+            if self.save_raw:
+                self.empty_lists()
         return stops,R
