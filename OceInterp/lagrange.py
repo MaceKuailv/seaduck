@@ -116,7 +116,7 @@ class particle(point):
         # just to prevent particles taking off
         self.dont_fly = dont_fly
         if dont_fly:
-            oce['WVELMASS'].loc[dict(Zl = 0)] = 0
+            self.ocedata['WVELMASS'].loc[dict(Zl = 0)] = 0
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
 #         if self.too_large:
@@ -144,6 +144,16 @@ class particle(point):
             self.rylist = [[] for i in range(self.N)]
             self.rzlist = [[] for i in range(self.N)]
             self.ttlist = [[] for i in range(self.N)]
+            self.uulist = [[] for i in range(self.N)]
+            self.vvlist = [[] for i in range(self.N)]
+            self.wwlist = [[] for i in range(self.N)]
+            self.dulist = [[] for i in range(self.N)]
+            self.dvlist = [[] for i in range(self.N)]
+            self.dwlist = [[] for i in range(self.N)]
+            self.xxlist = [[] for i in range(self.N)]
+            self.yylist = [[] for i in range(self.N)]
+            self.zzlist = [[] for i in range(self.N)]
+            
 #     def update_uvw_array(self,od
 #                         ):
 #         uname = self.uname
@@ -177,6 +187,8 @@ class particle(point):
         self.du[which] = du/self.dx[which]
         self.dv[which] = dv/self.dy[which]
         self.dw[which] = dw/self.dzl_lin[which]
+        
+        self.fillna()
         
 #     def get_u_du(self,which = None):
 #         if which is None:
@@ -357,6 +369,15 @@ class particle(point):
             self.rylist[i].append(self.ry[i])
             self.rzlist[i].append(self.rzl_lin[i])
             self.ttlist[i].append(self.t[i])
+            self.uulist[i].append(self.u[i])
+            self.vvlist[i].append(self.v[i])
+            self.wwlist[i].append(self.w[i])
+            self.dulist[i].append(self.du[i])
+            self.dvlist[i].append(self.dv[i])
+            self.dwlist[i].append(self.dw[i])
+            self.xxlist[i].append(self.lon[i])
+            self.yylist[i].append(self.lat[i])
+            self.zzlist[i].append(self.dep[i])
             
     def empty_lists(self):
         
@@ -369,6 +390,15 @@ class particle(point):
         self.rylist = [[] for i in range(self.N)]
         self.rzlist = [[] for i in range(self.N)]
         self.ttlist = [[] for i in range(self.N)]
+        self.uulist = [[] for i in range(self.N)]
+        self.vvlist = [[] for i in range(self.N)]
+        self.wwlist = [[] for i in range(self.N)]
+        self.dulist = [[] for i in range(self.N)]
+        self.dvlist = [[] for i in range(self.N)]
+        self.dwlist = [[] for i in range(self.N)]
+        self.xxlist = [[] for i in range(self.N)]
+        self.yylist = [[] for i in range(self.N)]
+        self.zzlist = [[] for i in range(self.N)]
         
     def out_of_bound(self):
         x_out = np.logical_or(self.rx >0.5,self.rx < -0.5)
@@ -544,6 +574,8 @@ class particle(point):
                                                      self.dx,self.dy,self.dzl_lin,
                                        self.dt,self.bx,self.by,self.bzl_lin)
         if self.save_raw:
+            # record the moment just before crossing the wall
+            # or the moment reaching destination.
             self.note_taking(which)
         type1 = tend<=3
         translate = {
@@ -606,18 +638,21 @@ class particle(point):
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
             self.update_after_cell_change()
-            if self.save_raw:
-                self.note_taking(todo)
             tf = t1 - self.t
             todo = abs(tf)>tol
             if abs(tf).max()<tol:
                 break
             self.get_u_du(todo)
+            if self.save_raw:
+                # record those who cross the wall
+                self.note_taking(todo)
 #             self.contract()
         if i ==200:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
         self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
+        self.it,_,_,_ = find_rel_time(self.t,self.ocedata.time_midp)
+        self.it += 1
         
     def to_list_of_time(self,normal_stops,update_stops = 'default',return_in_between  =True):
         t_min = np.minimum(np.min(normal_stops),self.t[0])
@@ -640,6 +675,7 @@ class particle(point):
             print()
             print(np.datetime64(round(tl),'s'))
             if self.save_raw:
+                # save the very start of everything. 
                 self.note_taking()
             self.to_next_stop(tl)
             if update[i]:

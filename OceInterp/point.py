@@ -402,7 +402,7 @@ class point():
                 temp_ind = tuple(temp_ind)
                 needed = prefetched[temp_ind]
             else:
-                needed = sread(self.ocedata[varName],ind)
+                needed = np.nan_to_num(sread(self.ocedata[varName],ind))
             
             if 'Z' in dims:
                 if self.rz is not None:
@@ -512,8 +512,8 @@ class point():
             else:
                 rt = 0
             
-            n_u = sread(self.ocedata[uname],ind)
-            n_v = sread(self.ocedata[vname],ind)
+            n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
+            n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
             np.nan_to_num(n_u,copy = False)
             np.nan_to_num(n_v,copy = False)
             
@@ -558,10 +558,13 @@ class point():
                 n_u = temp_n_u
                 n_v = temp_n_v
                 
-                umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
+                temp_umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
                                  np.einsum('nijk,ni->nijk',vmask,UfromVvel))
-                vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
+                temp_vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
                                  np.einsum('nijk,ni->nijk',vmask,VfromVvel))
+                
+                umask = temp_umask
+                vmask = temp_vmask
                 
             upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
             vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
