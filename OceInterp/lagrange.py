@@ -116,7 +116,7 @@ class particle(point):
         # just to prevent particles taking off
         self.dont_fly = dont_fly
         if dont_fly:
-            self.ocedata['WVELMASS'].loc[dict(Zl = 0)] = 0
+            self.ocedata[wname].loc[dict(Zl = 0)] = 0
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
 #         if self.too_large:
@@ -176,10 +176,11 @@ class particle(point):
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
-        u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
-        du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
         w     = self.subset(which).interpolate(self.wname,wknw)
         dw    = self.subset(which).interpolate(self.wname,dwknw)
+        self.iz = self.izl_lin-1
+        u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
+        du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
         
         self.u [which] =  u/self.dx[which]
         self.v [which] =  v/self.dy[which]
@@ -638,11 +639,11 @@ class particle(point):
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
             self.update_after_cell_change()
+            self.get_u_du(todo)
             tf = t1 - self.t
             todo = abs(tf)>tol
             if abs(tf).max()<tol:
                 break
-            self.get_u_du(todo)
             if self.save_raw:
                 # record those who cross the wall
                 self.note_taking(todo)
