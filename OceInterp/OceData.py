@@ -77,7 +77,33 @@ class OceData(object):
         pass
     def show_alias(self):
         return pd.DataFrame.from_dict(self.alias,orient = 'index',columns = ['original name'])
-            
+    
+    def missing_cs_sn(self):
+        try:
+            self['CS']
+            self['SN']
+        except AttributeError:
+            xc = np.deg2rad(np.array(self['XC']))
+            yc = np.deg2rad(np.array(self['YC']))
+            cs = np.zeros_like(xc)
+            sn = np.zeros_like(xc)
+            cs[0],sn[0] = find_cs_sn(
+                yc[0],xc[0],
+                yc[1],xc[1]
+            )
+            cs[-1],sn[-1] = find_cs_sn(
+                yc[-2],xc[-2],
+                yc[-1],xc[-1]
+            )
+            cs[1:-1],sn[1:-1] = find_cs_sn(
+                yc[:-2],xc[:-2],
+                yc[2:],xc[2:]
+            )
+            # it makes no sense to turn it into DataArray again when you already have in memory
+            # and you know where this data is defined. 
+            self['CS'] = cs
+            self['SN'] = sn
+        
     def grid2array(self,all_of_them = False):
         if self.too_large:
             print("Loading grid into memory, it's a large dataset please be patient")
@@ -90,8 +116,8 @@ class OceData(object):
         self.dZl = np.roll(self.dZl,1)
         self.dZl[0] = 1e-10
 
-        self.dX = np.array(self['dX']).astype('float32')
-        self.dY = np.array(self['dY']).astype('float32')
+        self.dX = np.array(self['dXG']).astype('float32')
+        self.dY = np.array(self['dYG']).astype('float32')
 
         self.XC = np.array(self['XC']).astype('float32')
         self.YC = np.array(self['YC']).astype('float32')
@@ -109,7 +135,7 @@ class OceData(object):
             self.time_midp = (self.ts[1:]+self.ts[:-1])/2
         
         # add optional ones here
-        for var in ['XG','YG','dXG','dYG']:
+        for var in ['XG','YG','dX','dY','rA']:
             try:
                 self[var] = np.array(self[var]).astype('float32')
             except:
@@ -123,7 +149,15 @@ class OceData(object):
 
     def find_rel_h(self,x,y):
         # give find_rel_h a new cover
-        faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,
+        try:s
+            faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_oceanparcel(x,y,
+                                                                           self.XC,self.YC,
+                                                                           self.dX,self.dY,
+                                                                           self.CS,self.SN,
+                                                                           self.XG,self.YG,
+                                                                           self.tree,self.tp)
+        except AttributeError:
+            faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_naive(x,y,
                                                      self.XC,self.YC,
                                                      self.dX,self.dY,
                                                      self.CS,self.SN,
