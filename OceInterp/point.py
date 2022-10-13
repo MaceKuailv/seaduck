@@ -4,6 +4,7 @@ from OceInterp.kernel_and_weight import translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
 from OceInterp.utils import local_to_latlon
+from OceInterp.lat2ind import find_px_py,weight_f_node
 
 import warnings
 import numpy as np
@@ -363,6 +364,29 @@ class point():
             required = [i for i in keys if i!='place_holder']
         return [R[i] for i in required]
     
+    def get_px_py(self):
+        if self.face is not None:
+            return find_px_py(self.ocedata.XG,
+                              self.ocedata.YG,
+                              self.ocedata.tp,
+                              self.face,
+                              self.iy,self.ix
+                             )
+        else:
+            return find_px_py(self.ocedata.XG,
+                              self.ocedata.YG,
+                              self.ocedata.tp,
+                              self.iy,self.ix
+                             )
+        
+    def get_lon_lat(self):
+        px,py = self.get_px_py()
+        w = weigh_f_node(self.rx,self.ry)
+        lon = np.einsum('nj,nj->n',w,px)
+        lat = np.einsum('nj,nj->n',w,py)
+        return lon,lat
+            
+    
     def get_needed(self,varName,knw,**kwarg):
         ind = self.fatten(knw,**kwarg)
         if len(ind)!= len(self.ocedata[varName].dims):
@@ -582,3 +606,4 @@ class point():
             return u,v
         else:
             raise Exception('varList type not supported.')
+            
