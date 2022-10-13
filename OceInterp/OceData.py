@@ -149,7 +149,7 @@ class OceData(object):
 
     def find_rel_h(self,x,y):
         # give find_rel_h a new cover
-        try:s
+        try:
             faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_oceanparcel(x,y,
                                                                            self.XC,self.YC,
                                                                            self.dX,self.dY,

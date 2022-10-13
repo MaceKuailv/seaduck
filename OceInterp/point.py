@@ -378,12 +378,13 @@ class point():
                               self.ocedata.tp,
                               self.iy,self.ix
                              )
-        
+    def get_f_node_weight(self):
+        return weight_f_node(self.rx,self.ry)
     def get_lon_lat(self):
         px,py = self.get_px_py()
-        w = weigh_f_node(self.rx,self.ry)
-        lon = np.einsum('nj,nj->n',w,px)
-        lat = np.einsum('nj,nj->n',w,py)
+        w = self.get_f_node_weight()
+        lon = np.einsum('nj,nj->n',w,px.T)
+        lat = np.einsum('nj,nj->n',w,py.T)
         return lon,lat
             
     
