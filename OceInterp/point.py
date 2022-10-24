@@ -390,7 +390,7 @@ class point():
     
     def get_needed(self,varName,knw,**kwarg):
         ind = self.fatten(knw,**kwarg)
-        if len(ind)!= len(self.ocedata[varName].dims):
+        if len(ind)!= len(self.ocedata._ds[varName].dims):
             raise Exception("""dimension mismatch.
                             Please check if the point objects have all the dimensions needed""")
         return sread(self.ocedata[varName],ind)
@@ -399,7 +399,7 @@ class point():
         ind = self.fatten(knw,fourD = True,**kwarg)
         if self.it is not None:
             ind = ind[1:]
-        if len(ind)!=len(self.ocedata['maskC'].dims):
+        if len(ind)!=len(self.ocedata._ds['maskC'].dims):
             raise Exception("""dimension mismatch.
                             Please check if the point objects have all the dimensions needed""")
         return get_masked(self.ocedata,ind,gridtype = gridtype)
@@ -412,7 +412,7 @@ class point():
     def interpolate(self,varName,knw,vec_transform = True,prefetched = None,itmin = 0):
         # implement shortcut u,v,w
         if isinstance(varName,str):
-            dims = self.ocedata[varName].dims
+            dims = self.ocedata._ds[varName].dims
             if 'Xp1' in dims or 'Yp1' in dims:
                 raise NotImplementedError("Wall variables' scalar style interpolation is ambiguous and thus not implemented")
             ind = self.fatten(knw,required = dims,fourD = True)
@@ -498,7 +498,7 @@ class point():
             if not uknw.same_size(vknw):
                 raise Exception('u,v kernel needs to have same size, use a kernel that include both of the uv kernels')
                 
-            old_dims = self.ocedata[uname].dims
+            old_dims = self.ocedata._ds[uname].dims
             dims = []
             for i in old_dims:
                 if i in ['Xp1','Yp1']:
