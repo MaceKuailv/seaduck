@@ -154,14 +154,28 @@ class KnW(object):
                       pk4d = None,# All using the largest 
                       bottom_scheme = 'no flux'# None
                      ):
+        if self.vkernel in ['linear','dz']:
+            nz = 2
+        else:
+            nz = 1
+        if self.tkernel in ['linear','dt']:
+            nt = 2
+        else:
+            nt = 1
+            
         if pk4d is None:
-            pk4d = [[[list(range(len(rx)))]]]
+            pk4d = [
+                [
+                    [list(range(len(rx)))]# all points are in the same catagory
+                for i in range(nz)]# Every layer is the same
+            for j in range(nt)]# 
+        if nt != len(pk4d) or nz != len(pk4d[0]):
+            raise ValueError('The kernel and the input pk4d does not match')
+            
         if isinstance(rz,(int,float,complex)) and self.vkernel!='nearest':
             rz = np.array([rz for i in range(len(rx))])
         if isinstance(rt,(int,float,complex)) and self.tkernel!='nearest':
             rt = np.array([rt for i in range(len(rx))])
-        nt = len(pk4d)
-        nz = len(pk4d[0])
 
         if self.tkernel == 'linear':
             rp = copy.deepcopy(rt)
