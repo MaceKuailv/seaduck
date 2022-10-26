@@ -3,7 +3,7 @@ import copy
 from numba import njit
 
 from OceInterp.kernelNweight import KnW
-from OceInterp.point import point
+from OceInterp.eulerian import position
 from OceInterp.lat2ind import find_rel_time
 
 deg2m = 6271e3*np.pi/180
@@ -89,7 +89,7 @@ dwknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
 duknw = KnW(kernel = ukernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
 dvknw = KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dx',h_order = 1)
 
-class particle(point):
+class particle(position):
     def __init__(self,
                 memory_limit = 1e7,# 10MB
                 uname = 'UVELMASS',

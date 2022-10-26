@@ -99,7 +99,7 @@ def _general_len(thing):
     except:
         return 1
 
-class point():
+class position():
 #     self.ind_h_dict = {}
     def from_latlon(self,x = None,y = None,z = None,t = None,**kwarg):
         try:

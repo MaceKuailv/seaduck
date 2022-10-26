@@ -1,5 +1,5 @@
-from OceInterp.lagrange import particle,uknw,vknw
-from OceInterp.point import point
+from OceInterp.lagrangian import particle,uknw,vknw
+from OceInterp.eulerian import position
 from OceInterp.OceData import OceData
 from OceInterp.kernelNweight import KnW
 
@@ -44,7 +44,7 @@ def OceInterp(od,varList,x,y,z,t,
                 else:
                     kernelList.append([uknw,vknw])
     if not lagrangian:
-        pt = point()
+        pt = position()
         pt.from_latlon(x = x,y=y,z=z,t=t,data = od)
         R = []
         for i,var in enumerate(varList):
