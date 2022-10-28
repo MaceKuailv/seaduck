@@ -87,7 +87,7 @@ uknw = KnW(kernel = ukernel,inheritance = udoll)
 vknw = KnW(kernel = vkernel,inheritance = vdoll)
 dwknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
 duknw = KnW(kernel = ukernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
-dvknw = KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dx',h_order = 1)
+dvknw = KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dy',h_order = 1)
 
 class particle(position):
     def __init__(self,

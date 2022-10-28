@@ -195,7 +195,7 @@ class position():
         return self
     
     def subset(self,which):
-        p = point()
+        p = position()
         keys = self.__dict__.keys()
         for i in keys:
             item = self.__dict__[i]
@@ -392,7 +392,7 @@ class position():
         ind = self.fatten(knw,**kwarg)
         if len(ind)!= len(self.ocedata._ds[varName].dims):
             raise Exception("""dimension mismatch.
-                            Please check if the point objects have all the dimensions needed""")
+                            Please check if the position objects have all the dimensions needed""")
         return sread(self.ocedata[varName],ind)
     
     def get_masked(self,knw,gridtype = 'C',**kwarg):
@@ -401,7 +401,7 @@ class position():
             ind = ind[1:]
         if len(ind)!=len(self.ocedata._ds['maskC'].dims):
             raise Exception("""dimension mismatch.
-                            Please check if the point objects have all the dimensions needed""")
+                            Please check if the position objects have all the dimensions needed""")
         return get_masked(self.ocedata,ind,gridtype = gridtype)
     
     def find_pk4d(self,knw,gridtype = 'C'):
@@ -409,20 +409,28 @@ class position():
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
-    def interpolate(self,varName,knw,vec_transform = True,prefetched = None,itmin = 0):
+    def interpolate(self,varName,knw,
+                    vec_transform = True,
+                    prefetched = None,i_min = None):
         # implement shortcut u,v,w
+        if prefetched is not None:
+            # TODO: I could have a warning about prefetch
+            # overwriting varName.
+            # But should I?
+            pass
         if isinstance(varName,str):
             dims = self.ocedata._ds[varName].dims
             if 'Xp1' in dims or 'Yp1' in dims:
-                raise NotImplementedError("Wall variables' scalar style interpolation is ambiguous and thus not implemented")
+                raise NotImplementedError("""
+                Wall variables' scalar style interpolation
+                is ambiguous and thus not implemented""")
             ind = self.fatten(knw,required = dims,fourD = True)
             ind_dic = dict(zip(dims,ind))
             if prefetched is not None:
                 temp_ind = []
-                for dim in dims:
+                for i,dim in enumerate(dims):
                     a_ind = ind_dic[dim]
-                    if dim == 'time':
-                        a_ind-=itmin
+                    a_ind-= i_min[i]
                     temp_ind.append(a_ind)
                 temp_ind = tuple(temp_ind)
                 needed = prefetched[temp_ind]
@@ -509,6 +517,22 @@ class position():
             ind = self.fatten(uknw,required = dims,fourD = True)
             ind_dic = dict(zip(dims,ind))
             
+            if prefetched is not None:
+                upre,vpre = prefetched
+                temp_ind = []
+                for i,dim in enumerate(dims):
+                    a_ind = ind_dic[dim]
+                    a_ind-= i_min[i]
+                    temp_ind.append(a_ind)
+                temp_ind = tuple(temp_ind)
+                n_u = upre[temp_ind]
+                n_v = vpre[temp_ind]
+            else:  
+                n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
+                n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
+            np.nan_to_num(n_u,copy = False)
+            np.nan_to_num(n_v,copy = False)
+            
             
             if 'Z' in dims:
                 if self.rz is not None:
@@ -536,11 +560,6 @@ class position():
                     rt = self.rt_lin
             else:
                 rt = 0
-            
-            n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
-            n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
-            np.nan_to_num(n_u,copy = False)
-            np.nan_to_num(n_v,copy = False)
             
             if not ('X' in dims and 'Y' in dims):
                 # if it does not have a horizontal dimension, then we don't have to mask
