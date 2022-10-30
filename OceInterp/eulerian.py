@@ -200,7 +200,10 @@ class position():
         for i in keys:
             item = self.__dict__[i]
             if isinstance(item,np.ndarray):
-                p.__dict__[i] = item[which]
+                if len(item.shape) ==1:
+                    p.__dict__[i] = item[which]
+                else:
+                    p.__dict__[i] = item
             else:
                 p.__dict__[i] = item
         p.N = max([_general_len(i) for i in p.__dict__.values()])

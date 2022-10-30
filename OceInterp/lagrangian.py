@@ -128,10 +128,10 @@ class particle(position):
             self.ocedata[wname].loc[dict(Zl = 0)] = 0
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
-#         if self.too_large:
-#             pass
-#         else:
-#             self.update_uvw_array(self.ocedata)
+        if self.too_large:
+            pass
+        else:
+            self.update_uvw_array()
         (
             self.u,
             self.v,
@@ -166,24 +166,24 @@ class particle(position):
             self.yylist = [[] for i in range(self.N)]
             self.zzlist = [[] for i in range(self.N)]
             
-#     def update_uvw_array(self,od
-#                         ):
-#         uname = self.uname
-#         vname = self.vname
-#         wname = self.wname
-#         self.itmin = np.min(self.it)
-#         self.itmax = np.max(self.it)
-#         if self.itmax!=self.itmin:
-#             self.uarray = np.array(od._ds[uname][self.itmin:self.itmax+1])
-#             self.varray = np.array(od._ds[vname][self.itmin:self.itmax+1])
-#             self.warray = np.array(od._ds[wname][self.itmin:self.itmax+1])
-#         else:
-#             self.uarray = np.array(od._ds[uname][[self.itmin]])
-#             self.varray = np.array(od._ds[vname][[self.itmin]])
-#             self.warray = np.array(od._ds[wname][[self.itmin]])
-#         if self.dont_fly:
-#             # I think it's fine
-#             self.warray[:,0] = 0.0
+    def update_uvw_array(self
+                        ):
+        uname = self.uname
+        vname = self.vname
+        wname = self.wname
+        self.itmin = int(np.min(self.it))
+        self.itmax = int(np.max(self.it))
+        if self.itmax!=self.itmin:
+            self.uarray = np.array(self.ocedata[uname][self.itmin:self.itmax+1])
+            self.varray = np.array(self.ocedata[vname][self.itmin:self.itmax+1])
+            self.warray = np.array(self.ocedata[wname][self.itmin:self.itmax+1])
+        else:
+            self.uarray = np.array(self.ocedata[uname][[self.itmin]])
+            self.varray = np.array(self.ocedata[vname][[self.itmin]])
+            self.warray = np.array(self.ocedata[wname][[self.itmin]])
+        if self.dont_fly:
+            # I think it's fine
+            self.warray[:,0] = 0.0
             
     def get_vol(self,which = None):
         if which is None:
@@ -198,11 +198,31 @@ class particle(position):
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
-        w     = self.subset(which).interpolate(self.wname,wknw)
-        dw    = self.subset(which).interpolate(self.wname,dwknw)
-        self.iz = self.izl_lin-1
-        u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
-        du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
+        sub = self.subset(which)
+        if self.too_large:
+            w     = sub.interpolate(self.wname,wknw)
+            dw    = sub.interpolate(self.wname,dwknw)
+            self.iz = self.izl_lin-1
+            u,v   = sub.interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
+            du,dv = sub.interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
+        else:
+            if self.face is not None:
+                i_min = (self.itmin,0,0,0,0)
+            else:
+                i_min = (self.itmin,0,0,0)
+            w     = sub.interpolate(self.wname,wknw ,prefetched = self.warray,i_min = i_min)
+            dw    = sub.interpolate(self.wname,dwknw,prefetched = self.warray,i_min = i_min)
+            self.iz = self.izl_lin-1
+            u,v   = sub.interpolate([self.uname,self.vname],
+                                    [uknw,vknw],vec_transform = False,
+                                    prefetched = [self.uarray,self.varray],
+                                    i_min = i_min,
+                                   )
+            du,dv = sub.interpolate([self.uname,self.vname],
+                                    [duknw,dvknw],vec_transform = False,
+                                    prefetched = [self.uarray,self.varray],
+                                    i_min = i_min,
+                                   )
         
         if not self.transport:
         
@@ -659,7 +679,22 @@ class particle(position):
             self.face[which],self.iy[which],self.ix[which],self.izl_lin[which] = tface,tiy,tix,tiz
         else:
             self.iy[which],self.ix[which],self.izl_lin[which] = tiy,tix,tiz
-            
+    
+    def deepcopy(self):
+        p = position()
+        p.ocedata = self.ocedata
+        p.N = self.N
+        keys = self.__dict__.keys()
+        for i in keys:
+            item = self.__dict__[i]
+            if isinstance(item,np.ndarray):
+                if len(item.shape) ==1:
+                    p.__dict__[i] = copy.deepcopy(item)
+                else:
+                    pass
+            else:
+                pass
+        return p
         
     def to_next_stop(self,t1):
         tol = 0.5
@@ -714,11 +749,12 @@ class particle(position):
                 self.note_taking()
             self.to_next_stop(tl)
             if update[i]:
+                self.update_uvw_array()
                 self.get_u_du()
                 if return_in_between:
-                    R.append(copy.deepcopy(self))
+                    R.append(self.deepcopy())
             else:
-                R.append(copy.deepcopy(self))
+                R.append(self.deepcopy())
             if self.save_raw:
                 self.empty_lists()
         return stops,R
