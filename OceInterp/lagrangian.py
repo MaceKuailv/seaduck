@@ -97,6 +97,7 @@ class particle(position):
                 wname = 'WVELMASS',
                  dont_fly = True,
                  save_raw = False,
+                 transport = False,
                 **kwarg
                 ):
         self.from_latlon(**kwarg)
@@ -111,6 +112,14 @@ class particle(position):
         self.uname = uname
         self.vname = vname
         self.wname = wname
+        
+        # whether u,v,w is in m^3/s or m/s
+        self.transport = transport
+        if self.transport:
+            try:
+                self.ocedata['vol']
+            except KeyError:
+                self.ocedata['vol'] = np.array(self.ocedata._ds['drF']*self.ocedata._ds['rA'])
         
         # whether or not setting the w at the surface
         # just to prevent particles taking off
@@ -129,8 +138,11 @@ class particle(position):
             self.w,
             self.du,
             self.dv,
-            self.dw
-        ) = [np.zeros(self.N).astype(float) for i in range(6)]
+            self.dw,
+            self.Vol
+        ) = [np.zeros(self.N).astype(float) for i in range(7)]
+        if self.transport==True:
+            self.get_vol()
         self.fillna()
         
         self.save_raw = save_raw
@@ -173,6 +185,16 @@ class particle(position):
 #             # I think it's fine
 #             self.warray[:,0] = 0.0
             
+    def get_vol(self,which = None):
+        if which is None:
+            which = np.ones(self.N).astype(bool)
+        sub = self.subset(which)
+        if self.face is not None:
+            Vol = self.ocedata['vol'][sub.iz,sub.face,sub.iy,sub.ix]
+        else:
+            Vol = self.ocedata['vol'][sub.iz,sub.iy,sub.ix]
+        self.Vol[which] = Vol
+        
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
@@ -182,12 +204,22 @@ class particle(position):
         u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
         du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
         
-        self.u [which] =  u/self.dx[which]
-        self.v [which] =  v/self.dy[which]
-        self.w [which] =  w/self.dzl_lin[which]
-        self.du[which] = du/self.dx[which]
-        self.dv[which] = dv/self.dy[which]
-        self.dw[which] = dw/self.dzl_lin[which]
+        if not self.transport:
+        
+            self.u [which] =  u/self.dx[which]
+            self.v [which] =  v/self.dy[which]
+            self.w [which] =  w/self.dzl_lin[which]
+            self.du[which] = du/self.dx[which]
+            self.dv[which] = dv/self.dy[which]
+            self.dw[which] = dw/self.dzl_lin[which]
+            
+        else:
+            self.u [which] =  u/self.Vol[which]
+            self.v [which] =  v/self.Vol[which]
+            self.w [which] =  w/self.Vol[which]
+            self.du[which] = du/self.Vol[which]
+            self.dv[which] = dv/self.Vol[which]
+            self.dw[which] = dw/self.Vol[which]
         
         self.fillna()
         
@@ -639,6 +671,8 @@ class particle(position):
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
             self.update_after_cell_change()
+            if self.transport==True:
+                self.get_vol()
             self.get_u_du(todo)
             tf = t1 - self.t
             todo = abs(tf)>tol
