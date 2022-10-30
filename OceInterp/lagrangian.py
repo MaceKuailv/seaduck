@@ -630,6 +630,8 @@ class particle(position):
             # record the moment just before crossing the wall
             # or the moment reaching destination.
             self.note_taking(which)
+        else:
+            print(self.save_raw)
         type1 = tend<=3
         translate = {
             0:2,#left
