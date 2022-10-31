@@ -200,8 +200,12 @@ class particle(position):
             which = np.ones(self.N).astype(bool)
 
         if self.too_large:
-            w     = self.subset(which).interpolate(self.wname,wknw)
-            dw    = self.subset(which).interpolate(self.wname,dwknw)
+            if self.wname is not None:
+                w     = self.subset(which).interpolate(self.wname,wknw)
+                dw    = self.subset(which).interpolate(self.wname,dwknw)
+            else:
+                w = np.zeros(self.N,float)
+                dw = np.zeros(self.N,float)
             self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                                    [uknw,vknw  ],
@@ -216,14 +220,19 @@ class particle(position):
                 i_min = (self.itmin,0,0,0,0)
             else:
                 i_min = (self.itmin,0,0,0)
-            w     = self.subset(which).interpolate(self.wname,
-                                                   wknw ,
-                                                   prefetched = self.warray,
-                                                   i_min = i_min)
-            dw    = self.subset(which).interpolate(self.wname,
-                                                   dwknw,
-                                                   prefetched = self.warray,
-                                                   i_min = i_min)
+            if self.wname is not None:
+                w     = self.subset(which).interpolate(self.wname,
+                                                       wknw ,
+                                                       prefetched = self.warray,
+                                                       i_min = i_min)
+                dw    = self.subset(which).interpolate(self.wname,
+                                                       dwknw,
+                                                       prefetched = self.warray,
+                                                       i_min = i_min)
+            else:
+                w = np.zeros(self.N,float)
+                dw = np.zeros(self.N,float)
+            
             self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                     [uknw,vknw],vec_transform = False,
