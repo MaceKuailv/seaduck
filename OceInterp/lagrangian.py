@@ -198,27 +198,27 @@ class particle(position):
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
-        sub = self.subset(which)
+
         if self.too_large:
-            w     = sub.interpolate(self.wname,wknw)
-            dw    = sub.interpolate(self.wname,dwknw)
+            w     = self.subset(which).interpolate(self.wname,wknw)
+            dw    = self.subset(which).interpolate(self.wname,dwknw)
             self.iz = self.izl_lin-1
-            u,v   = sub.interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
-            du,dv = sub.interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
+            u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
+            du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
         else:
             if self.face is not None:
                 i_min = (self.itmin,0,0,0,0)
             else:
                 i_min = (self.itmin,0,0,0)
-            w     = sub.interpolate(self.wname,wknw ,prefetched = self.warray,i_min = i_min)
-            dw    = sub.interpolate(self.wname,dwknw,prefetched = self.warray,i_min = i_min)
+            w     = self.subset(which).interpolate(self.wname,wknw ,prefetched = self.warray,i_min = i_min)
+            dw    = self.subset(which).interpolate(self.wname,dwknw,prefetched = self.warray,i_min = i_min)
             self.iz = self.izl_lin-1
-            u,v   = sub.interpolate([self.uname,self.vname],
+            u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                     [uknw,vknw],vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
                                    )
-            du,dv = sub.interpolate([self.uname,self.vname],
+            du,dv = self.subset(which).interpolate([self.uname,self.vname],
                                     [duknw,dvknw],vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
@@ -630,8 +630,6 @@ class particle(position):
             # record the moment just before crossing the wall
             # or the moment reaching destination.
             self.note_taking(which)
-        else:
-            print(self.save_raw)
         type1 = tend<=3
         translate = {
             0:2,#left
@@ -694,6 +692,8 @@ class particle(position):
                     p.__dict__[i] = copy.deepcopy(item)
                 else:
                     pass
+            elif isinstance(item,list):
+                p.__dict__[i] = copy.deepcopy(item)
             else:
                 pass
         return p
