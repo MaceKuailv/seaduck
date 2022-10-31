@@ -436,7 +436,7 @@ class position():
                     a_ind-= i_min[i]
                     temp_ind.append(a_ind)
                 temp_ind = tuple(temp_ind)
-                needed = prefetched[temp_ind]
+                needed = np.nan_to_num(prefetched[temp_ind])
             else:
                 needed = np.nan_to_num(sread(self.ocedata[varName],ind))
             
@@ -528,13 +528,13 @@ class position():
                     a_ind-= i_min[i]
                     temp_ind.append(a_ind)
                 temp_ind = tuple(temp_ind)
-                n_u = upre[temp_ind]
-                n_v = vpre[temp_ind]
+                n_u = np.nan_to_num(upre[temp_ind])
+                n_v = np.nan_to_num(vpre[temp_ind])
             else:  
                 n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
                 n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
-            np.nan_to_num(n_u,copy = False)
-            np.nan_to_num(n_v,copy = False)
+#             np.nan_to_num(n_u,copy = False)
+#             np.nan_to_num(n_v,copy = False)
             
             
             if 'Z' in dims:

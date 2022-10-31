@@ -203,15 +203,27 @@ class particle(position):
             w     = self.subset(which).interpolate(self.wname,wknw)
             dw    = self.subset(which).interpolate(self.wname,dwknw)
             self.iz = self.izl_lin-1
-            u,v   = self.subset(which).interpolate([self.uname,self.vname],[uknw,vknw],vec_transform = False)
-            du,dv = self.subset(which).interpolate([self.uname,self.vname],[duknw,dvknw],vec_transform = False)
+            u,v   = self.subset(which).interpolate([self.uname,self.vname],
+                                                   [uknw,vknw  ],
+                                                   vec_transform = False
+                                                  )
+            du,dv = self.subset(which).interpolate([self.uname,self.vname],
+                                                   [duknw,dvknw],
+                                                   vec_transform = False
+                                                  )
         else:
             if self.face is not None:
                 i_min = (self.itmin,0,0,0,0)
             else:
                 i_min = (self.itmin,0,0,0)
-            w     = self.subset(which).interpolate(self.wname,wknw ,prefetched = self.warray,i_min = i_min)
-            dw    = self.subset(which).interpolate(self.wname,dwknw,prefetched = self.warray,i_min = i_min)
+            w     = self.subset(which).interpolate(self.wname,
+                                                   wknw ,
+                                                   prefetched = self.warray,
+                                                   i_min = i_min)
+            dw    = self.subset(which).interpolate(self.wname,
+                                                   dwknw,
+                                                   prefetched = self.warray,
+                                                   i_min = i_min)
             self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                     [uknw,vknw],vec_transform = False,
@@ -223,6 +235,45 @@ class particle(position):
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
                                    )
+#             ow     = self.subset(which).interpolate(self.wname,wknw)
+#             odw    = self.subset(which).interpolate(self.wname,dwknw)
+#             self.iz = self.izl_lin-1
+#             ou,ov   = self.subset(which).interpolate([self.uname,self.vname],
+#                                                    [uknw,vknw  ],
+#                                                    vec_transform = False
+#                                                   )
+#             odu,odv = self.subset(which).interpolate([self.uname,self.vname],
+#                                                    [duknw,dvknw],
+#                                                    vec_transform = False
+#                                                   )
+#             _wmatch = (np.nan_to_num( ow)==np.nan_to_num(w )).all()
+#             dwmatch = (np.nan_to_num(odw)==np.nan_to_num(dw)).all()
+#             _vmatch = (np.nan_to_num( ov)==np.nan_to_num(v )).all()
+#             dvmatch = (np.nan_to_num(odv)==np.nan_to_num(dv)).all()
+#             _umatch = (np.nan_to_num( ou)==np.nan_to_num(u )).all()
+#             dumatch = (np.nan_to_num(odu)==np.nan_to_num(du)).all()
+#             if _wmatch and dwmatch and _vmatch and dvmatch and _umatch and dumatch:
+#                 pass
+#             else:
+#                 if not _wmatch:
+#                     print('w mismatch')
+#                 if not dwmatch:
+#                     print('dw mismatch')
+#                 if not _vmatch:
+#                     print('v mismatch')
+#                 if not dvmatch:
+#                     print('dv mismatch')
+#                 if not _umatch:
+#                     print('u mismatch')
+#                 if not dumatch:
+#                     print('du mismatch')
+#                 print(self.it[0])
+#                 print(self.itmin,self.itmax)
+#                 self.w  = (w)
+#                 self.ow = (ow)
+#                 print((np.nan_to_num( ou)==np.nan_to_num(u )).all())
+#                 print((np.nan_to_num(self.ou)==np.nan_to_num(self.u )).all())
+#                 raise Exception('two schemes mismatch')
         
         if not self.transport:
         
@@ -751,7 +802,8 @@ class particle(position):
                 self.note_taking()
             self.to_next_stop(tl)
             if update[i]:
-                self.update_uvw_array()
+                if not self.too_large:
+                    self.update_uvw_array()
                 self.get_u_du()
                 if return_in_between:
                     R.append(self.deepcopy())
