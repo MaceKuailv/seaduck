@@ -125,7 +125,11 @@ class particle(position):
         # just to prevent particles taking off
         self.dont_fly = dont_fly
         if dont_fly:
-            self.ocedata[wname].loc[dict(Zl = 0)] = 0
+            if wname is not None:
+                try:
+                    self.ocedata[wname].loc[dict(Zl = 0)] = 0
+                except KeyError:
+                    pass
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
         
         if self.too_large:
@@ -204,8 +208,8 @@ class particle(position):
                 w     = self.subset(which).interpolate(self.wname,wknw)
                 dw    = self.subset(which).interpolate(self.wname,dwknw)
             else:
-                w = np.zeros(self.N,float)
-                dw = np.zeros(self.N,float)
+                w  = np.zeros(self.subset(which).N,float)
+                dw = np.zeros(self.subset(which).N,float)
             self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                                    [uknw,vknw  ],
@@ -230,8 +234,8 @@ class particle(position):
                                                        prefetched = self.warray,
                                                        i_min = i_min)
             else:
-                w = np.zeros(self.N,float)
-                dw = np.zeros(self.N,float)
+                w = np.zeros(self.subset(which).N,float)
+                dw = np.zeros(self.subset(which).N,float)
             
             self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
@@ -779,7 +783,7 @@ class particle(position):
                 # record those who cross the wall
                 self.note_taking(todo)
 #             self.contract()
-        if i ==200:
+        if i ==199:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
         self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
@@ -789,13 +793,17 @@ class particle(position):
     def to_list_of_time(self,normal_stops,update_stops = 'default',return_in_between  =True):
         t_min = np.minimum(np.min(normal_stops),self.t[0])
         t_max = np.maximum(np.max(normal_stops),self.t[0])
-        data_tmin = self.ocedata.ts.min()
-        data_tmax = self.ocedata.ts.max()
-        if t_min<data_tmin or t_max>data_tmax:
-            raise Exception(f'time range not within bound({data_tmin},{data_tmax})')
-        if update_stops == 'default':
-            update_stops = self.ocedata.time_midp[np.logical_and(t_min<self.ocedata.time_midp,
-                                                         self.ocedata.time_midp<t_max)]
+        
+        if 'time' not in self.ocedata[self.uname].dims:
+            pass
+        else:
+            data_tmin = self.ocedata.ts.min()
+            data_tmax = self.ocedata.ts.max()
+            if t_min<data_tmin or t_max>data_tmax:
+                raise Exception(f'time range not within bound({data_tmin},{data_tmax})')
+            if update_stops == 'default':
+                update_stops = self.ocedata.time_midp[np.logical_and(t_min<self.ocedata.time_midp,
+                                                             self.ocedata.time_midp<t_max)]
         temp = (list(zip(normal_stops,np.zeros_like(normal_stops)))+
                 list(zip(update_stops,np.ones_like(update_stops))))
         temp.sort(key = lambda x:abs(x[0]-self.t[0]))

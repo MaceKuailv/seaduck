@@ -135,11 +135,12 @@ class OceData(object):
             self.time_midp = (self.ts[1:]+self.ts[:-1])/2
         
         # add optional ones here
-        for var in ['XG','YG','dX','dY','rA']:
-            try:
-                self[var] = np.array(self[var]).astype('float32')
-            except:
-                print(f'no {var} in dataset, skip')
+        if not self.too_large:
+            for var in ['XG','YG','dX','dY','rA']:
+                try:
+                    self[var] = np.array(self[var]).astype('float32')
+                except:
+                    print(f'no {var} in dataset, skip')
         
         if self.too_large:
             print('numpy arrays of grid loaded into memory')
