@@ -175,19 +175,29 @@ class particle(position):
         uname = self.uname
         vname = self.vname
         wname = self.wname
-        self.itmin = int(np.min(self.it))
-        self.itmax = int(np.max(self.it))
-        if self.itmax!=self.itmin:
-            self.uarray = np.array(self.ocedata[uname][self.itmin:self.itmax+1])
-            self.varray = np.array(self.ocedata[vname][self.itmin:self.itmax+1])
-            self.warray = np.array(self.ocedata[wname][self.itmin:self.itmax+1])
+        if 'time' not in self.ocedata[uname].dims:
+            try:
+                self.uarray
+                self.varray
+                self.warray
+            except AttributeError:
+                self.uarray = np.array(self.ocedata[uname])
+                self.varray = np.array(self.ocedata[vname])
+                self.warray = np.array(self.ocedata[wname])
         else:
-            self.uarray = np.array(self.ocedata[uname][[self.itmin]])
-            self.varray = np.array(self.ocedata[vname][[self.itmin]])
-            self.warray = np.array(self.ocedata[wname][[self.itmin]])
-        if self.dont_fly:
-            # I think it's fine
-            self.warray[:,0] = 0.0
+            self.itmin = int(np.min(self.it))
+            self.itmax = int(np.max(self.it))
+            if self.itmax!=self.itmin:
+                self.uarray = np.array(self.ocedata[uname][self.itmin:self.itmax+1])
+                self.varray = np.array(self.ocedata[vname][self.itmin:self.itmax+1])
+                self.warray = np.array(self.ocedata[wname][self.itmin:self.itmax+1])
+            else:
+                self.uarray = np.array(self.ocedata[uname][[self.itmin]])
+                self.varray = np.array(self.ocedata[vname][[self.itmin]])
+                self.warray = np.array(self.ocedata[wname][[self.itmin]])
+            if self.dont_fly:
+                # I think it's fine
+                self.warray[:,0] = 0.0
             
     def get_vol(self,which = None):
         if which is None:
@@ -220,11 +230,14 @@ class particle(position):
                                                    vec_transform = False
                                                   )
         else:
-            if self.face is not None:
-                i_min = (self.itmin,0,0,0,0)
+            if 'time' not in self.ocedata[self.uname].dims:
+                ifirst = 0
             else:
-                i_min = (self.itmin,0,0,0)
+                ifirst = self.itmin
+
             if self.wname is not None:
+                i_min = [0 for i in self.warray.shape]
+                i_min[0] = ifirst
                 w     = self.subset(which).interpolate(self.wname,
                                                        wknw ,
                                                        prefetched = self.warray,
@@ -238,6 +251,8 @@ class particle(position):
                 dw = np.zeros(self.subset(which).N,float)
             
             self.iz = self.izl_lin-1
+            i_min = [0 for i in self.uarray.shape]
+            i_min[0] = ifirst
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                     [uknw,vknw],vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
