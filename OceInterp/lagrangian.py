@@ -184,6 +184,9 @@ class particle(position):
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
                 self.warray = np.array(self.ocedata[wname])
+                if self.dont_fly:
+                    # I think it's fine
+                    self.warray[0] = 0.0
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
