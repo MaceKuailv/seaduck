@@ -89,12 +89,14 @@ def x_per_ind_tend(ind,tend,iymax,ixmax):
     return (iy,ix)
 
 @njit
-def llc_ind_tend(ind,tendency,iymax,ixmax):
+def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
     '''
     ind is a tuple that is face,iy,ix,
     tendency again is up, down, left, right represented by 0,1,2,3
     return the next cell.
     Essentially, just try all the possibilities. 
+    use gridoffset when you are dealing with f-node, 
+    -1 for MITgcm, 1 for NEMO.
     '''
 #     iymax = 89
 #     ixmax = 89

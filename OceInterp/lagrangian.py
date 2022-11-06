@@ -98,6 +98,7 @@ class particle(position):
                  dont_fly = True,
                  save_raw = False,
                  transport = False,
+                 stop_criterion = None,
                 **kwarg
                 ):
         self.from_latlon(**kwarg)
@@ -112,6 +113,9 @@ class particle(position):
         self.uname = uname
         self.vname = vname
         self.wname = wname
+        
+        #  user defined function to stop integration. 
+        self.stop_criterion = stop_criterion
         
         # whether u,v,w is in m^3/s or m/s
         self.transport = transport
@@ -215,7 +219,6 @@ class particle(position):
     def get_u_du(self,which = None):
         if which is None:
             which = np.ones(self.N).astype(bool)
-
         if self.too_large:
             if self.wname is not None:
                 w     = self.subset(which).interpolate(self.wname,wknw)
@@ -784,6 +787,8 @@ class particle(position):
         tol = 0.5
         tf = t1 - self.t
         todo = abs(tf)>tol
+        if self.stop_criterion is not None:
+            todo = np.logical_and(todo,self.stop_criterion(self))
         for i in range(200):
             
             self.trim()
@@ -795,7 +800,9 @@ class particle(position):
             self.get_u_du(todo)
             tf = t1 - self.t
             todo = abs(tf)>tol
-            if abs(tf).max()<tol:
+            if self.stop_criterion is not None:
+                todo = np.logical_and(todo,self.stop_criterion(self))
+            if sum(todo) == 0:
                 break
             if self.save_raw:
                 # record those who cross the wall

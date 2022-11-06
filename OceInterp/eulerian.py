@@ -202,11 +202,12 @@ class position():
             if isinstance(item,np.ndarray):
                 if len(item.shape) ==1:
                     p.__dict__[i] = item[which]
+                    p.N = len(p.__dict__[i])
                 else:
                     p.__dict__[i] = item
             else:
                 p.__dict__[i] = item
-        p.N = max([_general_len(i) for i in p.__dict__.values()])
+        # p.N = max([_general_len(i) for i in p.__dict__.values()])
         return p
         
     def fatten_h(self,knw):
