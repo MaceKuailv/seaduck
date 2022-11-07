@@ -108,6 +108,14 @@ def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
             nface,nedge = llc_get_the_other_edge(face,3) 
             if nedge == 1:
                 face,iy,ix = [nface,0,ixmax-iy]
+                if gridoffset ==0:
+                    pass
+                elif gridoffset==-1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),3,iymax,ixmax)
+                elif gridoffset == 1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),2,iymax,ixmax)
+                else:
+                    raise ValueError('gridoffset must be -1,1 or 1')
             elif nedge == 0:
                 face,iy,ix = [nface,iymax,iy]
             elif nedge == 2:
@@ -123,6 +131,14 @@ def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
                 face,iy,ix = [nface,0,iy]
             elif nedge == 0:
                 face,iy,ix = [nface,iymax,ixmax-iy]
+                if gridoffset ==0:
+                    pass
+                elif gridoffset==-1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),3,iymax,ixmax)
+                elif gridoffset == 1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),2,iymax,ixmax)
+                else:
+                    raise ValueError('gridoffset must be -1,1 or 1')
             elif nedge == 2:
                 face,iy,ix = [nface,iymax-iy,0]
             elif nedge == 3:
@@ -138,6 +154,14 @@ def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
                 face,iy,ix = [nface,iymax,ixmax-ix]
             elif nedge == 2:
                 face,iy,ix = [nface,iymax-ix,0]
+                if gridoffset ==0:
+                    pass
+                elif gridoffset==-1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),0,iymax,ixmax)
+                elif gridoffset == 1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),1,iymax,ixmax)
+                else:
+                    raise ValueError('gridoffset must be -1,1 or 1')
             elif nedge == 3:
                 face,iy,ix = [nface,ix,ixmax]
     if tendency == 1:
@@ -153,6 +177,14 @@ def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
                 face,iy,ix = [nface,ix,0]
             elif nedge == 3:
                 face,iy,ix = [nface,iymax-ix,ixmax]
+                if gridoffset ==0:
+                    pass
+                elif gridoffset==-1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),0,iymax,ixmax)
+                elif gridoffset == 1:
+                    face,iy,ix = llc_ind_tend((face,iy,ix),1,iymax,ixmax)
+                else:
+                    raise ValueError('gridoffset must be -1,1 or 1')
     return(face,iy,ix)
 
 @njit
@@ -240,7 +272,7 @@ class topology():
         else:
             raise NotImplementedError
             
-    def ind_tend(self,ind,tend):
+    def ind_tend(self,ind,tend,**kwarg):
         '''
         ind is a tuple that is (face,)iy,ix,
         tendency again is up, down, left, right represented by 0,1,2,3
@@ -251,14 +283,14 @@ class topology():
 #         if tend not in [0,1,2,3]:
 #             raise Exception('Illegal move. Must be 0,1,2,3')
         if self.typ == 'LLC':
-            return llc_ind_tend(ind,tend,self.iymax,self.ixmax)
+            return llc_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
         elif self.typ == 'x_periodic':
-            return x_per_ind_tend(ind,tend,self.iymax,self.ixmax)
+            return x_per_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
         elif self.typ == 'box':
-            return box_ind_tend(ind,tend,self.iymax,self.ixmax)
+            return box_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
         else:
             raise NotImplementedError
-    def ind_moves(self,ind,moves):
+    def ind_moves(self,ind,moves,**kwarg):
         '''
         moves being a list of directions (0,1,2,3),
         ind being the starting index,
@@ -272,7 +304,7 @@ class topology():
             face,iy,ix = ind
             for k in range(len(moves)):
                 move = moves[k]
-                ind =  self.ind_tend(ind,move)
+                ind =  self.ind_tend(ind,move,**kwarg)
                 if ind[0]!=face:# if the face has changed
                     '''
                     there are times where the the kernel lies between
@@ -315,7 +347,7 @@ class topology():
                 max_pos = self.h_shape[i]
                 result = np.logical_or(np.logical_or((0>z),(z>max_pos-1)),result)
             return result
-    def ind_tend_vec(self,inds,tend):
+    def ind_tend_vec(self,inds,tend,**kwarg):
         inds = np.array(inds)
         old_inds = copy.deepcopy(inds)
         move_dic = {
@@ -331,7 +363,7 @@ class topology():
         for num,loc in enumerate(redo):
             j = loc[0]
             ind = tuple(old_inds[:,j])
-            n_ind = self.ind_tend(ind,int(tend[j]))
+            n_ind = self.ind_tend(ind,int(tend[j]),**kwarg)
             inds[:,j] = np.array(n_ind).ravel()
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)

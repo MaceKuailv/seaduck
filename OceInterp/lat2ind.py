@@ -324,11 +324,11 @@ def find_cs_sn(thetaA,phiA,thetaB,phiB):
     CS = np.sign(thetaB-thetaA)*np.sqrt(1-SN**2)
     return CS,SN
 
-def find_px_py(XG,YG,tp,*ind):
+def find_px_py(XG,YG,tp,*ind,gridoffset = -1):
     N = len(ind[0])
-    ind1 = tuple(i for i in tp.ind_tend_vec(ind,np.ones(N)*3))
-    ind2 = tuple(i for i in tp.ind_tend_vec(ind1,np.zeros(N)))
-    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N)))
+    ind1 = tuple(i for i in tp.ind_tend_vec(ind,np.ones(N)*3,gridoffset = gridoffset))
+    ind2 = tuple(i for i in tp.ind_tend_vec(ind1,np.zeros(N),gridoffset = gridoffset))
+    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N),gridoffset = gridoffset))
     
     x0 = XG[ind]
     x1 = XG[ind1]
