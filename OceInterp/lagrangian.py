@@ -4,7 +4,7 @@ from numba import njit
 
 from OceInterp.kernelNweight import KnW
 from OceInterp.eulerian import position
-from OceInterp.lat2ind import find_rel_time
+from OceInterp.lat2ind import find_rel_time,find_rx_ry_oceanparcel
 
 deg2m = 6271e3*np.pi/180
 
@@ -671,12 +671,15 @@ class particle(position):
                 self.ocedata.dZ[self.iz],
                 self.ocedata.dZl[self.izl_lin]
             )
-
-        dlon = to_180(self.lon - self.bx)
-        dlat = to_180(self.lat - self.by)
-
-        self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
-        self.ry = (dlat*self.cs-dlon*self.sn*np.cos(self.by*np.pi/180))*deg2m/self.dy
+        
+        try:
+            self.px,self.py = self.get_px_py()
+            self.rx,self.ry = find_rx_ry_oceanparcel(x,y,self.px,self.py)
+        except AttributeError:
+            dlon = to_180(self.lon - self.bx)
+            dlat = to_180(self.lat - self.by)
+            self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
+            self.ry = (dlat*self.cs-dlon*self.sn*np.cos(self.by*np.pi/180))*deg2m/self.dy
         self.rzl_lin= (self.dep - self.bzl_lin)/self.dzl_lin
     
     def analytical_step(self,tf,which = None):
@@ -707,10 +710,17 @@ class particle(position):
         self.rx[which],self.ry[which],self.rzl_lin[which] = new_x
         self.u[which],self.v[which],self.w[which] = new_u
         self.rzl_lin[which] +=1/2
-        self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl_lin,
-                                                   self.cs,self.sn,
-                                                     self.dx,self.dy,self.dzl_lin,
-                                       self.dt,self.bx,self.by,self.bzl_lin)
+        try:
+            px,py = self.px,self.py
+            w = self.get_f_node_weight()
+            self.lon = np.einsum('nj,nj->n',w,px.T)
+            self.lat = np.einsum('nj,nj->n',w,py.T)
+            self.dep = self.bzl_lin+self.dzl_lin*self.rzl_lin
+        except AttributeError
+            self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl_lin,
+                                                       self.cs,self.sn,
+                                                         self.dx,self.dy,self.dzl_lin,
+                                           self.dt,self.bx,self.by,self.bzl_lin)
         if self.save_raw:
             # record the moment just before crossing the wall
             # or the moment reaching destination.
