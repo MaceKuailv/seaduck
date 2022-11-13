@@ -393,7 +393,8 @@ class position():
             
     
     def get_needed(self,varName,knw,**kwarg):
-        ind = self.fatten(knw,**kwarg)
+        dims = self.ocedata._ds[varName].dims
+        ind = self.fatten(knw,required = dims,**kwarg)
         if len(ind)!= len(self.ocedata._ds[varName].dims):
             raise Exception("""dimension mismatch.
                             Please check if the position objects have all the dimensions needed""")

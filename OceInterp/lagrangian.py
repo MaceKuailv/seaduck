@@ -716,7 +716,7 @@ class particle(position):
             self.lon = np.einsum('nj,nj->n',w,px.T)
             self.lat = np.einsum('nj,nj->n',w,py.T)
             self.dep = self.bzl_lin+self.dzl_lin*self.rzl_lin
-        except AttributeError
+        except AttributeError:
             self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl_lin,
                                                        self.cs,self.sn,
                                                          self.dx,self.dy,self.dzl_lin,
