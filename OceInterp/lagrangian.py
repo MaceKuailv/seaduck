@@ -674,7 +674,7 @@ class particle(position):
         
         try:
             self.px,self.py = self.get_px_py()
-            self.rx,self.ry = find_rx_ry_oceanparcel(x,y,self.px,self.py)
+            self.rx,self.ry = find_rx_ry_oceanparcel(self.lon,self.lat,self.px,self.py)
         except AttributeError:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)

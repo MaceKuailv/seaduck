@@ -16,6 +16,37 @@ def OceInterp(od,varList,x,y,z,t,
               return_in_between  =True,
               return_pt_time = True,
               **kernel_kwarg):
+    '''
+    The center piece function of the package, from here 
+    you can access almost all the functionality of the 
+    package.
+    -------
+    od: OceInterp.OceData object
+        the dataset to work on
+    varList: str or lst
+        (list of) variable/pair of variables
+    kernelList: OceInterp.KnW/list of OceInterp.KnW object
+        which kernel to use for each interpolation
+    x,y,z: numpy.ndarray
+        location of the particles, x,y are in degrees, and 
+        z are in meters, the deeper, the more negative. 
+    t: numpy.ndarray
+        In Eulerian scheme, the time of interpolation.
+        In Lagrangian scheme, the time needed for output. 
+    lagrangian: bool
+        whether the interpolation is done in Eulerian or 
+        Lagarangian scheme
+    lagrange_kwarg: dict
+        keyward argument passed into the OceInterp.lagrangia
+        n.particle object.
+    update_stops: None, 'defalut', iterable of float
+        time to update the prefetch the velocity.
+    return_in_between: bool
+        in lagrangian mode, return the interpolation not only
+        at t, but also at whenever the speed is updated.
+    return_pt_time: bool
+        whether to return time of all the steps.
+    '''
     if not isinstance(od,OceData):
         od = OceData(od)
 

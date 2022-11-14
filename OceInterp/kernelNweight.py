@@ -6,6 +6,7 @@ import copy
 from OceInterp.kernel_and_weight import kernel_weight,get_weight_cascade
 from OceInterp.topology import topology
 from OceInterp.utils import get_combination
+from OceInterp.RuntimeConf import rcParam
 
 default_kernel = np.array([
     [0,0],
@@ -45,7 +46,8 @@ def get_func(kernel,hkernel = 'interp',h_order = 0):
     
     layer_3 = layer_2.get(h_order)
     if layer_3 is None:
-        print('Creating new weight function, the first time is going to be slow')
+        if rcParam['debug_level'] == 'very_high':
+            print('Creating new weight function, the first time is going to be slow')
         layer_2[h_order] = kernel_weight(kernel,ktype = hkernel,order = h_order)
     layer_3 = layer_2[h_order]
     
