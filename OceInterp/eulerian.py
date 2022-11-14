@@ -223,7 +223,7 @@ class position():
         kernel_tends =  [translate_to_tendency(k) for k in kernel]
         m = len(kernel_tends)
         n = len(self.iy)
-        tp = self.tp
+        tp = self.ocedata.tp
 
         # the arrays we are going to return 
         if self.face is not None:
