@@ -21,7 +21,7 @@ def OceInterp(od,varList,x,y,z,t,
     you can access almost all the functionality of the 
     package.
     -------
-    od: OceInterp.OceData object
+    od: OceInterp.OceData object or xarray.Dataset (hopefully also netcdf)
         the dataset to work on
     varList: str or lst
         (list of) variable/pair of variables

@@ -4,6 +4,7 @@ import copy
 import warnings
 from OceInterp.topology import topology
 from OceInterp.smart_read import smart_read
+from OceInterp.RuntimeConf import rcParam
 
 def mask_u_node(maskC,tp):
     '''
@@ -13,16 +14,15 @@ def mask_u_node(maskC,tp):
     b. on the interface, where the cell to the left is wet.
     if b is the case, we need to unmask the udata
     '''
+        
     maskU = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC==0)).T
     ### find out which points are masked will make the search faster.
-    for i,zind in enumerate(indexes):
-        zind = tuple(zind)
-        nhind = tp.ind_tend(zind[1:],2)
-        # this is the point to the left
-        new_ind = tuple([zind[0]]+[i for i in nhind])
-        if maskC[new_ind]==1:
-            maskU[zind] = 1
+    nind = tp.ind_tend_vec(indexes.T[1:],np.ones_like(indexes.T[0],int)*2)
+    nind = np.vstack([indexes.T[0],nind])
+    switch = indexes[np.where(maskC[tuple(nind)])]
+    maskU[tuple(switch.T)] = 1
+    
     return maskU
 
 def mask_v_node(maskC,tp):
@@ -36,18 +36,10 @@ def mask_v_node(maskC,tp):
     maskV = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC==0)).T
     ### find out which points are masked will make the search faster.
-    for i,zind in enumerate(indexes):
-        zind = tuple(zind)
-        try:
-            nhind = tp.ind_tend(zind[1:],1)
-            new_ind = tuple([zind[0]]+[i for i in nhind])
-            # On antarctica, there are no cells to the south. 
-            # which would create an error
-        except:
-            continue
-            # but those cell shouldn't be unmasked anyway
-        if maskC[new_ind]==1:
-            maskV[zind] = 1
+    nind = tp.ind_tend_vec(indexes.T[1:],np.ones_like(indexes.T[0],int)*1)
+    nind = np.vstack([indexes.T[0],nind])
+    switch = indexes[np.where(maskC[tuple(nind)])]
+    maskV[tuple(switch.T)] = 1
     return maskV
 
 
@@ -130,7 +122,8 @@ def get_masked(od,ind,gridtype = 'C'):
         'Wvel':lambda x: x if x!='Z' else 'Zl',
     }
     if name not in keys:
-        print(f'creating {name}, this is going to be slow!')
+        if rcParam['debug_level'] in ['high','very_high']:
+            print(f'creating {name}, this is going to be slow!')
         small_mask = func_dic[gridtype](maskC,tp)
         dims = tuple(map(
                                            rename_dic[gridtype],

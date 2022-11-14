@@ -2,6 +2,7 @@
 import numpy as np
 from numba import njit
 import copy
+from OceInterp.RuntimeConf import rcParam
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
@@ -360,11 +361,18 @@ class topology():
         inds[-2:]+=naive_move
         illegal = self.check_illegal(inds)
         redo = np.array(np.where(illegal)).T
+        particle_on_edge = False
         for num,loc in enumerate(redo):
             j = loc[0]
             ind = tuple(old_inds[:,j])
-            n_ind = self.ind_tend(ind,int(tend[j]),**kwarg)
+            try:
+                n_ind = self.ind_tend(ind,int(tend[j]),**kwarg)
+            except:
+                particle_on_edge = True
+                n_ind = ind
             inds[:,j] = np.array(n_ind).ravel()
+        if particle_on_edge and rcParam['debug_level'] == 'very_high':
+            print('Warning:Some points are on the edge')
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)
         return inds
