@@ -546,7 +546,7 @@ class particle(position):
 
     
     def trim(self,verbose = False):
-        tol = 1e-5 # about 10 cm horizontal
+        tol = 1e-4 # about 10 m horizontal
         xmax = np.max(self.rx)
         xmin = np.min(self.rx)
         ymax = np.max(self.ry)
@@ -676,6 +676,7 @@ class particle(position):
             self.px,self.py = self.get_px_py()
             self.rx,self.ry = find_rx_ry_oceanparcel(self.lon,self.lat,self.px,self.py)
         except AttributeError:
+#         if True:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
             self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
