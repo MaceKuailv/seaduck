@@ -546,7 +546,7 @@ class particle(position):
 
     
     def trim(self,verbose = False):
-        tol = 1e-6 # about 1 cm
+        tol = 1e-5 # about 10 cm horizontal
         xmax = np.max(self.rx)
         xmin = np.min(self.rx)
         ymax = np.max(self.ry)
