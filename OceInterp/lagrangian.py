@@ -545,14 +545,14 @@ class particle(position):
         return np.logical_or(np.logical_or(x_out,y_out),z_out)
 
     
-    def trim(self,verbose = False):
-        tol = 1e-4 # about 10 m horizontal
-        xmax = np.max(self.rx)
-        xmin = np.min(self.rx)
-        ymax = np.max(self.ry)
-        ymin = np.min(self.ry)
-        zmax = np.max(self.rzl_lin)
-        zmin = np.min(self.rzl_lin)
+    def trim(self,verbose = False,tol = 1e-6):
+        # tol = 1e-6 # about 10 m horizontal
+        xmax = np.nanmax(self.rx)
+        xmin = np.nanmin(self.rx)
+        ymax = np.nanmax(self.ry)
+        ymin = np.nanmin(self.ry)
+        zmax = np.nanmax(self.rzl_lin)
+        zmin = np.nanmin(self.rzl_lin)
         if xmax>=0.5-tol:
             where = self.rx>=0.5-tol
             cdx = (0.5-tol)-self.rx[where]
@@ -675,6 +675,12 @@ class particle(position):
         try:
             self.px,self.py = self.get_px_py()
             self.rx,self.ry = find_rx_ry_oceanparcel(self.lon,self.lat,self.px,self.py)
+            if np.isnan(self.rx).any() or np.isnan(self.ry).any():
+                whereNan = np.logical_or(np.isnan(self.rx),np.isnan(self.ry))
+                print(self.lon[whereNan],self.lat[whereNan])
+                print(self.px[:,whereNan],self.py[:,whereNan])
+                print(self.ix[whereNan],self.iy[whereNan],self.iz[whereNan],self.face[whereNan])
+                raise Exception('no tolerant for NaN!')
         except AttributeError:
 #         if True:
             dlon = to_180(self.lon - self.bx)
@@ -691,6 +697,9 @@ class particle(position):
             tf = np.array([tf for i in range(self.N)])
         
         tf = tf[which]
+        
+        if self.out_of_bound().any():
+            raise Exception('this step should always be after trim...')
 
         xs = [self.rx[which],self.ry[which],self.rzl_lin[which]-1/2]
         us = [self.u[which],self.v[which],self.w[which]]
@@ -800,9 +809,17 @@ class particle(position):
         todo = abs(tf)>tol
         if self.stop_criterion is not None:
             todo = np.logical_and(todo,self.stop_criterion(self))
+        trim_tol = 1e-6
         for i in range(200):
-            
-            self.trim()
+            if i > 50:
+                trim_tol = 1e-2
+            elif i > 30:
+                trim_tol = 1e-3
+            elif i > 20:
+                trim_tol = 1e-4
+            elif i > 10:
+                trim_tol = 1e-5
+            self.trim(tol = trim_tol)
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
             self.update_after_cell_change()
