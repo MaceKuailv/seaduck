@@ -369,11 +369,12 @@ def find_rx_ry_oceanparcel(x,y,px,py):
     
     order1 = np.abs(aa)<1e-12
     order2 = np.logical_and(~order1,det2>=0)
-    nans   = np.logical_and(~order1,det2< 0)
+#     nans   = np.logical_and(~order1,det2< 0)
     
-    ry[order1] = -(cc/bb)[order1]
+#     ry[order1] = -(cc/bb)[order1]
+    ry = -(cc/bb) # if it is supposed to be nan, just try linear solve. 
     ry[order2] = ((-bb+np.sqrt(det2))/(2*aa))[order2]
-    ry[nans  ] = np.nan
+#     ry[nans  ] = np.nan
     
     rot_rectilinear = np.abs(a[1]+a[3]*ry) < 1e-12
     rx[rot_rectilinear ] = ((y-py[0])/(py[1]-py[0]) + (y-py[3])/(py[2]-py[3]))[rot_rectilinear] * .5
