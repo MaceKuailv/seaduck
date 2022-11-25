@@ -187,10 +187,11 @@ class particle(position):
             except AttributeError:
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
-                self.warray = np.array(self.ocedata[wname])
-                if self.dont_fly:
-                    # I think it's fine
-                    self.warray[0] = 0.0
+                if self.wname is not None:
+                    self.warray = np.array(self.ocedata[wname])
+                    if self.dont_fly:
+                        # I think it's fine
+                        self.warray[0] = 0.0
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
@@ -498,8 +499,9 @@ class particle(position):
         except AttributeError:
             raise AttributeError('This is not a particle_rawlist object')
         for i in where:
+            if self.face is not None:
+                self.fclist[i].append(self.face[i])
             self.itlist[i].append(self.it[i])
-            self.fclist[i].append(self.face[i])
             self.iylist[i].append(self.iy[i])
             self.izlist[i].append(self.izl_lin[i])
             self.ixlist[i].append(self.ix[i])
