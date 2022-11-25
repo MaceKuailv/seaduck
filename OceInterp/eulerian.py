@@ -531,7 +531,7 @@ class position():
                 u = self.interpolate(uname,uknw,
                     prefetched = upre,i_min = i_min)
                 v = self.interpolate(vname,vknw,
-                    prefetched = upre,i_min = i_min)
+                    prefetched = vpre,i_min = i_min)
             else:
                 if not uknw.same_size(vknw):
                     raise Exception('u,v kernel needs to have same size'
