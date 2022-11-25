@@ -92,6 +92,12 @@ dwknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'dz')
 duknw = KnW(kernel = uvkernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
 dvknw = KnW(kernel = uvkernel,inheritance = vdoll,hkernel = 'dy',h_order = 1)
 
+# scalar style kernel for datasets without face
+uknw_s = KnW(kernel = ukernel,inheritance = None)
+vknw_s = KnW(kernel = vkernel,inheritance = None)
+duknw_s = KnW(kernel = ukernel,inheritance = None,hkernel = 'dx',h_order = 1)
+dvknw_s = KnW(kernel = vkernel,inheritance = None,hkernel = 'dy',h_order = 1)
+
 class particle(position):
     def __init__(self,
                 memory_limit = 1e7,# 10MB
@@ -116,6 +122,20 @@ class particle(position):
         self.uname = uname
         self.vname = vname
         self.wname = wname
+        
+        # set up which kernels to use:
+        self.wknw = wknw
+        self.dwknw=dwknw
+        if self.face is not None:
+            self.uknw = uknw
+            self.duknw=duknw
+            self.vknw = vknw
+            self.dvknw=dvknw
+        else:
+            self.uknw = uknw_s
+            self.duknw=duknw_s
+            self.vknw = vknw_s
+            self.dvknw=dvknw_s
         
         #  user defined function to stop integration. 
         self.stop_criterion = stop_criterion
@@ -225,18 +245,18 @@ class particle(position):
             which = np.ones(self.N).astype(bool)
         if self.too_large:
             if self.wname is not None:
-                w     = self.subset(which).interpolate(self.wname,wknw)
-                dw    = self.subset(which).interpolate(self.wname,dwknw)
+                w     = self.subset(which).interpolate(self.wname,self.wknw)
+                dw    = self.subset(which).interpolate(self.wname,self.dwknw)
             else:
                 w  = np.zeros(self.subset(which).N,float)
                 dw = np.zeros(self.subset(which).N,float)
             self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
-                                                   [uknw,vknw  ],
+                                                   [self.uknw ,self.vknw  ],
                                                    vec_transform = False
                                                   )
             du,dv = self.subset(which).interpolate([self.uname,self.vname],
-                                                   [duknw,dvknw],
+                                                   [self.duknw,self.dvknw],
                                                    vec_transform = False
                                                   )
         else:
@@ -249,11 +269,11 @@ class particle(position):
                 i_min = [0 for i in self.warray.shape]
                 i_min[0] = ifirst
                 w     = self.subset(which).interpolate(self.wname,
-                                                       wknw ,
+                                                       self.wknw ,
                                                        prefetched = self.warray,
                                                        i_min = i_min)
                 dw    = self.subset(which).interpolate(self.wname,
-                                                       dwknw,
+                                                       self.dwknw,
                                                        prefetched = self.warray,
                                                        i_min = i_min)
             else:
@@ -264,12 +284,12 @@ class particle(position):
             i_min = [0 for i in self.uarray.shape]
             i_min[0] = ifirst
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
-                                    [uknw,vknw],vec_transform = False,
+                                    [self.uknw,self.vknw],vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
                                    )
             du,dv = self.subset(which).interpolate([self.uname,self.vname],
-                                    [duknw,dvknw],vec_transform = False,
+                                    [self.duknw,self.dvknw],vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
                                    )
@@ -814,16 +834,16 @@ class particle(position):
         todo = abs(tf)>tol
         if self.stop_criterion is not None:
             todo = np.logical_and(todo,self.stop_criterion(self))
-        trim_tol = 1e-6
+        trim_tol = 1e-12
         for i in range(200):
             if i > 50:
-                trim_tol = 1e-2
-            elif i > 30:
-                trim_tol = 1e-3
-            elif i > 20:
                 trim_tol = 1e-4
+            elif i > 30:
+                trim_tol = 1e-6
+            elif i > 20:
+                trim_tol = 1e-8
             elif i > 10:
-                trim_tol = 1e-5
+                trim_tol = 1e-10
             self.trim(tol = trim_tol)
             print(sum(todo),'left',end = ' ')
             self.analytical_step(tf,todo)
