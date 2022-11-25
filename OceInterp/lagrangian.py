@@ -64,14 +64,17 @@ def which_early(tf,ts):
     the_t = np.array([ts[te][i] for i,te in enumerate(tend)])
     return tend,the_t
 
-ukernel = np.array([
+uvkernel = np.array([
     [0,0],
     [1,0],
     [0,1]
 ])
+ukernel = np.array([
+    [0,0],
+    [1,0]
+])
 vkernel = np.array([
     [0,0],
-    [1,0],
     [0,1]
 ])
 wkernel = np.array([
@@ -82,12 +85,12 @@ vdoll = [[0,2]]
 wdoll = [[0]]
 ktype = 'interp'
 h_order = 0
-wknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'linear')
-uknw = KnW(kernel = ukernel,inheritance = udoll)
-vknw = KnW(kernel = vkernel,inheritance = vdoll)
-dwknw = KnW(kernel = wkernel,inheritance = None,vkernel = 'dz')
-duknw = KnW(kernel = ukernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
-dvknw = KnW(kernel = vkernel,inheritance = vdoll,hkernel = 'dy',h_order = 1)
+wknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'linear')
+uknw = KnW(kernel = uvkernel,inheritance = udoll)
+vknw = KnW(kernel = uvkernel,inheritance = vdoll)
+dwknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'dz')
+duknw = KnW(kernel = uvkernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
+dvknw = KnW(kernel = uvkernel,inheritance = vdoll,hkernel = 'dy',h_order = 1)
 
 class particle(position):
     def __init__(self,
