@@ -508,8 +508,10 @@ class position():
                 raise Exception('list varName can only have length 2, representing horizontal vectors')
             uname,vname = varName
             uknw,vknw = knw
-            if not uknw.same_size(vknw):
-                raise Exception('u,v kernel needs to have same size, use a kernel that include both of the uv kernels')
+            if self.face is not None and not uknw.same_size(vknw):
+                raise Exception('u,v kernel needs to have same size'
+                                'to navigate the complex grid orientation.'
+                                'use a kernel that include both of the uv kernels')
                 
             old_dims = self.ocedata._ds[uname].dims
             dims = []
