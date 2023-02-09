@@ -164,16 +164,8 @@ class KnW(object):
             nt = 2
         else:
             nt = 1
-            
-        if pk4d is None:
-            pk4d = [
-                [
-                    [list(range(len(rx)))]# all points are in the same catagory
-                for i in range(nz)]# Every layer is the same
-            for j in range(nt)]# 
-        if nt != len(pk4d) or nz != len(pk4d[0]):
-            raise ValueError('The kernel and the input pk4d does not match')
-            
+        
+        weight = np.zeros((len(rx),len(self.kernel),nz,nt))
         if isinstance(rz,(int,float,complex)) and self.vkernel!='nearest':
             rz = np.array([rz for i in range(len(rx))])
         if isinstance(rt,(int,float,complex)) and self.tkernel!='nearest':
@@ -194,16 +186,29 @@ class KnW(object):
             zweight = [-1,1]
         elif self.vkernel == 'nearest':
             zweight = [1]
+            
+        if pk4d is None:
+#             pk4d = [
+#                 [
+#                     [list(range(len(rx)))]# all points are in the same catagory
+#                 for i in range(nz)]# Every layer is the same
+#             for j in range(nt)]# 
+            for jt in range(nt):
+                for jz in range(nz):
+                    weight[:,:,jz,jt] =   self.hfuncs[0](rx,ry)
+        else:
+            if nt != len(pk4d) or nz != len(pk4d[0]):
+                raise ValueError('The kernel and the input pk4d does not match')
 
-        weight = np.zeros((len(rx),len(self.kernel),nz,nt))
-        for jt in range(nt):
-            for jz in range(nz):
-                weight[:,:,jz,jt] =   get_weight_cascade(rx,ry,
-                                                          pk4d[jt][jz],
-                                                          kernel_large = self.kernel,
-                                                          russian_doll = self.inheritance,
-                                                          funcs = self.hfuncs
-                                                         )
+
+            for jt in range(nt):
+                for jz in range(nz):
+                    weight[:,:,jz,jt] =   get_weight_cascade(rx,ry,
+                                                              pk4d[jt][jz],
+                                                              kernel_large = self.kernel,
+                                                              russian_doll = self.inheritance,
+                                                              funcs = self.hfuncs
+                                                             )
         for jt in range(nt):
             if (self.vkernel == 'linear') and (bottom_scheme == 'no flux'):
                 # whereever the bottom layer is masked, replace it with a ghost point above it

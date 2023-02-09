@@ -392,13 +392,17 @@ class position():
         return lon,lat
             
     
-    def get_needed(self,varName,knw,**kwarg):
-        dims = self.ocedata._ds[varName].dims
-        ind = self.fatten(knw,required = dims,**kwarg)
+    def get_needed(self,varName,knw,required = None,prefetched = None,**kwarg):
+        if required is None:
+            required = self.ocedata._ds[varName].dims
+        ind = self.fatten(knw,required = required,**kwarg)
         if len(ind)!= len(self.ocedata._ds[varName].dims):
             raise Exception("""dimension mismatch.
                             Please check if the position objects have all the dimensions needed""")
-        return sread(self.ocedata[varName],ind)
+        if prefetched is None:
+            return sread(self.ocedata[varName],ind)
+        else:
+            return prefetched[ind]
     
     def get_masked(self,knw,gridtype = 'C',**kwarg):
         ind = self.fatten(knw,fourD = True,**kwarg)

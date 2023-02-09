@@ -108,6 +108,7 @@ class particle(position):
                  save_raw = False,
                  transport = False,
                  stop_criterion = None,
+                 max_iteration = 200,
                 **kwarg
                 ):
         self.from_latlon(**kwarg)
@@ -158,6 +159,7 @@ class particle(position):
                 except KeyError:
                     pass
         self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
+        self.max_iteration = max_iteration
         
         if self.too_large:
             pass
@@ -820,12 +822,8 @@ class particle(position):
             if isinstance(item,np.ndarray):
                 if len(item.shape) ==1:
                     p.__dict__[i] = copy.deepcopy(item)
-                else:
-                    pass
             elif isinstance(item,list):
                 p.__dict__[i] = copy.deepcopy(item)
-            else:
-                pass
         return p
         
     def to_next_stop(self,t1):
@@ -835,9 +833,9 @@ class particle(position):
         if self.stop_criterion is not None:
             todo = np.logical_and(todo,self.stop_criterion(self))
         trim_tol = 1e-12
-        for i in range(200):
+        for i in range(self.max_iteration):
             if i > 50:
-                trim_tol = 1e-4
+                trim_tol = 1e-3
             elif i > 30:
                 trim_tol = 1e-6
             elif i > 20:
@@ -861,7 +859,7 @@ class particle(position):
                 # record those who cross the wall
                 self.note_taking(todo)
 #             self.contract()
-        if i ==199:
+        if i ==self.max_iteration-1:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
         self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
@@ -879,9 +877,9 @@ class particle(position):
             data_tmax = self.ocedata.ts.max()
             if t_min<data_tmin or t_max>data_tmax:
                 raise Exception(f'time range not within bound({data_tmin},{data_tmax})')
-            if update_stops == 'default':
-                update_stops = self.ocedata.time_midp[np.logical_and(t_min<self.ocedata.time_midp,
-                                                             self.ocedata.time_midp<t_max)]
+        if update_stops == 'default':
+            update_stops = self.ocedata.time_midp[np.logical_and(t_min<self.ocedata.time_midp,
+                                                         self.ocedata.time_midp<t_max)]
         temp = (list(zip(normal_stops,np.zeros_like(normal_stops)))+
                 list(zip(update_stops,np.ones_like(update_stops))))
         temp.sort(key = lambda x:abs(x[0]-self.t[0]))
@@ -897,7 +895,11 @@ class particle(position):
                 self.note_taking()
             self.to_next_stop(tl)
             if update[i]:
-                if not self.too_large:
+                if self.too_large:
+                    pass
+                elif 'time' not in self.ocedata[self.uname].dims:
+                    pass
+                else:
                     self.update_uvw_array()
                 self.get_u_du()
                 if return_in_between:
