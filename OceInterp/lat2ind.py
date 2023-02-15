@@ -186,12 +186,14 @@ def read_h_with_face(some_x,some_y,some_dx,some_dy,CS,SN,faces,iys,ixs):
         
         bx[i] = some_x[faces[i],iys[i],ixs[i]]
         by[i] = some_y[faces[i],iys[i],ixs[i]]
-
-        cs[i] = CS[faces[i],iys[i],ixs[i]]
-        sn[i] = SN[faces[i],iys[i],ixs[i]]
         
-        dx[i] = some_dx[faces[i],iys[i],ixs[i]]
-        dy[i] = some_dy[faces[i],iys[i],ixs[i]]
+        if CS is not None:
+            cs[i] = CS[faces[i],iys[i],ixs[i]]
+            sn[i] = SN[faces[i],iys[i],ixs[i]]
+        if dx is not None:
+            dx[i] = some_dx[faces[i],iys[i],ixs[i]]
+        if dy is not None:
+            dy[i] = some_dy[faces[i],iys[i],ixs[i]]
     
     return cs,sn,dx,dy,bx,by
 

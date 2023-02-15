@@ -220,8 +220,15 @@ class topology():
     def __init__(self,od,typ = None):
         h_shape = od['XC'].shape 
         self.h_shape = h_shape
-        self.itmax = len(od['time'])-1
-        self.izmax = len(od['Z'])-1
+        try:
+            self.itmax = len(od['time'])-1
+        except KeyError:
+            self.itmax = 0
+        try:
+            self.izmax = len(od['Z'])-1
+        except KeyError:
+            self.izmax = 0
+            
         if typ:
             self.typ = typ
         elif typ is None:
