@@ -42,7 +42,7 @@ class OceData(object):
         if readiness:
             self.grid2array(readiness = readiness)
         else:
-            print(f'''
+            raise(f'''
             use add_missing_variables or set_alias to create {missing},
             then call OceData.grid2array.
             ''')
@@ -66,8 +66,38 @@ class OceData(object):
                 return self._ds[key]
     
     def check_readiness(self):
-        # TODO:
-        return 'Full',[]
+        # TODO: make the check more detailed
+        varnames = list(self._ds.data_vars)+list(self._ds.coords)
+        readiness = []
+        if all([i in varnames for i in ['XC','YC','XG','YG']]):
+            readiness.append('oceanparcel')
+            # could be a curvilinear grid that can use oceanparcel style
+        elif all([i in varnames for i in ['XC','YC','dxG','dyG','CS','SN']]):
+            readiness.append('local_cartesian')
+            # could be a curvilinear grid that can use local cartesian style
+        elif all([i in varnames for i in ['lon','lat']]):
+            readiness.append('rectilinear')
+            # corresponding to a rectilinear dataset
+        else:
+            missing = '''
+            For the most basic use case,
+            {XC,YC,XG,YG} or {XC,YC,dxG,dyG,CS,SN} for curvilinear grid;
+            or {lon, lat} for rectilinear grid.
+            '''
+            return False,missing
+        
+        if 'time' in varnames:
+            readiness.append('time')
+        else:
+            readiness.append('no_time')
+            
+        if 'Z' in varnames:
+            readiness.append('Z')
+        else:
+            readiness.append('no_Z')
+            
+        return readiness,[]
+        
     def add_missing_grid(self):
         # TODO:
         '''
