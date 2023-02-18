@@ -257,7 +257,7 @@ class topology():
                     lon_left  = float(od['XC'][0,  0  ])
                 except KeyError:
                     lon_right = float(od['lon'][self.ixmax])
-                    lon_left  = float(od['lon'][self.ixmax])
+                    lon_left  = float(od['lon'][0])
                 left_to_right = (lon_right - lon_left)%360
                 right_to_left = (lon_left - lon_right)%360
                 if left_to_right >50*right_to_left:
