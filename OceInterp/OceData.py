@@ -12,8 +12,8 @@ no_alias = {
     'Z':'Z',
     'Zl':'Zl',
     'time':'time',
-    'dX':'dxC',
-    'dY':'dyC',
+    'dXC':'dxC',
+    'dYC':'dyC',
     'dZ':'drC',
     'XG':'XG',
     'YG':'YG',
@@ -37,7 +37,10 @@ class OceData(object):
         elif isinstance(alias,dict):
             self.alias = alias
             
-        self.too_large = self._ds['XC'].nbytes>memory_limit
+        try:
+            self.too_large = self._ds['XC'].nbytes>memory_limit
+        except KeyError:
+            self.too_large = False
         readiness,missing = self.check_readiness()
         self.readiness = readiness
         if readiness:
@@ -131,29 +134,45 @@ class OceData(object):
             self['SN'] = sn
             
     def hgrid2array(self):
+        way = self.readiness['h']
         if self.too_large:
             print("Loading grid into memory, it's a large dataset please be patient")
-        self.dX = np.array(self['dXG']).astype('float32')
-        self.dY = np.array(self['dYG']).astype('float32')
-
-        self.XC = np.array(self['XC']).astype('float32')
-        self.YC = np.array(self['YC']).astype('float32')
-
-        self.CS = np.array(self['CS']).astype('float32')
-        self.SN = np.array(self['SN']).astype('float32')
-        
-        if not self.too_large:
-            for var in ['XG','YG','dX','dY','rA']:
+            
+        if way == 'oceanparcel':
+            for var in ['XC','YC','XG','YG']:
+                self[var] = np.array(self[var]).astype('float32')
+            for var in ['rA']:
                 try:
                     self[var] = np.array(self[var]).astype('float32')
                 except:
                     print(f'no {var} in dataset, skip')
+            if self.too_large:
+                print('numpy arrays of grid loaded into memory')
+            self.tree = create_tree(self.XC,self.YC)  
+            if self.too_large:
+                print('cKD created')
+                    
+        if way == 'local_cartesian':
+            for var in ['XC','YC','CS','SN']:
+                self[var] = np.array(self[var]).astype('float32')
+            self.dX = np.array(self['dXG']).astype('float32')
+            self.dY = np.array(self['dYG']).astype('float32')
         
-        if self.too_large:
-            print('numpy arrays of grid loaded into memory')
-        self.tree = create_tree(self.XC,self.YC)  
-        if self.too_large:
-            print('cKD created')
+            if not self.too_large:
+                for var in ['XG','YG','dXC','dYC','rA']:
+                    try:
+                        self[var] = np.array(self[var]).astype('float32')
+                    except:
+                        print(f'no {var} in dataset, skip')
+            if self.too_large:
+                print('numpy arrays of grid loaded into memory')
+            self.tree = create_tree(self.XC,self.YC)  
+            if self.too_large:
+                print('cKD created')
+                        
+        if way == 'rectilinear':
+            self.lon = np.array(self['lon']).astype('float32')
+            self.lat = np.array(self['lat']).astype('float32')
             
     def vgrid2array(self):
         self.Z = np.array(self['Z'])
@@ -189,19 +208,23 @@ class OceData(object):
         
     def find_rel_h(self,x,y):
         # give find_rel_h a new cover
-        try:
+        if self.readiness['h'] == 'oceanparcel':
             faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_oceanparcel(x,y,
                                                                            self.XC,self.YC,
-                                                                           self.dX,self.dY,
-                                                                           self.CS,self.SN,
+                                                                           None,None,
+                                                                           None,None,
                                                                            self.XG,self.YG,
                                                                            self.tree,self.tp)
-        except AttributeError:
+        elif self.readiness['h'] == 'local_cartesian':
             faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_naive(x,y,
                                                      self.XC,self.YC,
                                                      self.dX,self.dY,
                                                      self.CS,self.SN,
                                                      self.tree)
+        elif self.readiness['h'] == 'rectilinear':
+            faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_rectilinear(x,y,
+                                                                           self.lon,self.lat
+                                                                          )
         return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
     
     def find_rel_vl(self,t):
