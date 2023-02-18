@@ -39,8 +39,9 @@ class OceData(object):
             
         self.too_large = self._ds['XC'].nbytes>memory_limit
         readiness,missing = self.check_readiness()
+        self.readiness = readiness
         if readiness:
-            self.grid2array(readiness = readiness)
+            self.grid2array()
         else:
             raise(f'''
             use add_missing_variables or set_alias to create {missing},
@@ -68,35 +69,30 @@ class OceData(object):
     def check_readiness(self):
         # TODO: make the check more detailed
         varnames = list(self._ds.data_vars)+list(self._ds.coords)
-        readiness = []
+        readiness = {}
+        missing = []
         if all([i in varnames for i in ['XC','YC','XG','YG']]):
-            readiness.append('oceanparcel')
+            readiness['h'] = 'oceanparcel'
             # could be a curvilinear grid that can use oceanparcel style
         elif all([i in varnames for i in ['XC','YC','dxG','dyG','CS','SN']]):
-            readiness.append('local_cartesian')
+            readiness['h'] = 'local_cartesian'
             # could be a curvilinear grid that can use local cartesian style
         elif all([i in varnames for i in ['lon','lat']]):
-            readiness.append('rectilinear')
+            readiness['h'] = 'rectilinear'
             # corresponding to a rectilinear dataset
         else:
-            missing = '''
+            readiness['h'] = False
+            # readiness['overall'] = False
+            missing.append('''
             For the most basic use case,
             {XC,YC,XG,YG} or {XC,YC,dxG,dyG,CS,SN} for curvilinear grid;
             or {lon, lat} for rectilinear grid.
-            '''
+            ''')
             return False,missing
-        
-        if 'time' in varnames:
-            readiness.append('time')
-        else:
-            readiness.append('no_time')
+        for _ in ['time','Z','Zl']:
+            readiness[_] = (_ in varnames)
             
-        if 'Z' in varnames:
-            readiness.append('Z')
-        else:
-            readiness.append('no_Z')
-            
-        return readiness,[]
+        return readiness,missing
         
     def add_missing_grid(self):
         # TODO:
@@ -133,19 +129,10 @@ class OceData(object):
             # and you know where this data is defined. 
             self['CS'] = cs
             self['SN'] = sn
-        
-    def grid2array(self,readiness = 'full'):
+            
+    def hgrid2array(self):
         if self.too_large:
             print("Loading grid into memory, it's a large dataset please be patient")
-        self.Z = np.array(self['Z'])
-        self.dZ = np.array(self['dZ'])
-        self.Zl = np.array(self['Zl'])
-        self.dZl = np.array(self['dZl'])
-        
-        # special treatment for dZl
-        self.dZl = np.roll(self.dZl,1)
-        self.dZl[0] = 1e-10
-
         self.dX = np.array(self['dXG']).astype('float32')
         self.dY = np.array(self['dYG']).astype('float32')
 
@@ -155,16 +142,6 @@ class OceData(object):
         self.CS = np.array(self['CS']).astype('float32')
         self.SN = np.array(self['SN']).astype('float32')
         
-        self.t_base = 0
-        self.ts = np.array(self['time'])
-        self.ts = (self.ts).astype(float)/1e9
-        try:
-            self.time_midp = np.array(self['time_midp'])
-            self.time_midp = (self.time_midp).astype(float)/1e9
-        except:
-            self.time_midp = (self.ts[1:]+self.ts[:-1])/2
-        
-        # add optional ones here
         if not self.too_large:
             for var in ['XG','YG','dX','dY','rA']:
                 try:
@@ -177,7 +154,39 @@ class OceData(object):
         self.tree = create_tree(self.XC,self.YC)  
         if self.too_large:
             print('cKD created')
-
+            
+    def vgrid2array(self):
+        self.Z = np.array(self['Z'])
+        self.dZ = np.array(self['dZ'])
+        
+    def vlgrid2array(self):
+        self.Zl = np.array(self['Zl'])
+        self.dZl = np.array(self['dZl'])
+        
+        # special treatment for dZl
+        self.dZl = np.roll(self.dZl,1)
+        self.dZl[0] = 1e-10
+        
+    def tgrid2array(self):
+        self.t_base = 0
+        self.ts = np.array(self['time'])
+        self.ts = (self.ts).astype(float)/1e9
+        try:
+            self.time_midp = np.array(self['time_midp'])
+            self.time_midp = (self.time_midp).astype(float)/1e9
+        except:
+            self.time_midp = (self.ts[1:]+self.ts[:-1])/2
+        
+    def grid2array(self):
+        if self.readiness['h']:
+            self.hgrid2array()
+        if self.readiness['Z']:
+            self.vgrid2array()
+        if self.readiness['Zl']:
+            self.vlgrid2array()
+        if self.readiness['time']:
+            self.tgrid2array()
+        
     def find_rel_h(self,x,y):
         # give find_rel_h a new cover
         try:

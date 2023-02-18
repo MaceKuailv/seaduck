@@ -218,7 +218,13 @@ def llc_get_uv_mask_from_face(faces):
 
 class topology():
     def __init__(self,od,typ = None):
-        h_shape = od['XC'].shape 
+        try:
+            h_shape = od['XC'].shape
+        except KeyError:
+            try:
+                h_shape = (int(od['lat'].shape[0]),int(od['lon'].shape[0]))
+            except KeyError:
+                raise KeyError("Either XC or lat/lon is needed to create the topology object")
         self.h_shape = h_shape
         try:
             self.itmax = len(od['time'])-1
@@ -246,8 +252,12 @@ class topology():
                 self.iymax,self.ixmax = h_shape
                 self.iymax -=1
                 self.ixmax -=1
-                lon_right = float(od['XC'][0,self.ixmax])
-                lon_left  = float(od['XC'][0,  0  ])
+                try:
+                    lon_right = float(od['XC'][0,self.ixmax])
+                    lon_left  = float(od['XC'][0,  0  ])
+                except KeyError:
+                    lon_right = float(od['lon'][self.ixmax])
+                    lon_left  = float(od['lon'][self.ixmax])
                 left_to_right = (lon_right - lon_left)%360
                 right_to_left = (lon_left - lon_right)%360
                 if left_to_right >50*right_to_left:
