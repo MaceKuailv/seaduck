@@ -38,9 +38,9 @@ class OceData(object):
             self.alias = alias
             
         self.too_large = self._ds['XC'].nbytes>memory_limit
-        ready,missing = self.check_readiness()
-        if ready:
-            self.grid2array()
+        readiness,missing = self.check_readiness()
+        if readiness:
+            self.grid2array(readiness = readiness)
         else:
             print(f'''
             use add_missing_variables or set_alias to create {missing},
@@ -67,7 +67,7 @@ class OceData(object):
     
     def check_readiness(self):
         # TODO:
-        return True,[]
+        return 'Full',[]
     def add_missing_grid(self):
         # TODO:
         '''
@@ -104,7 +104,7 @@ class OceData(object):
             self['CS'] = cs
             self['SN'] = sn
         
-    def grid2array(self,all_of_them = False):
+    def grid2array(self,readiness = 'full'):
         if self.too_large:
             print("Loading grid into memory, it's a large dataset please be patient")
         self.Z = np.array(self['Z'])

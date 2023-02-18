@@ -176,24 +176,32 @@ def read_h_with_face(some_x,some_y,some_dx,some_dy,CS,SN,faces,iys,ixs):
     
     '''
     n = len(ixs)
-    dx = np.ones_like(ixs)*0.0
-    dy = np.ones_like(ixs)*0.0
+    
     bx = np.ones_like(ixs)*0.0
     by = np.ones_like(ixs)*0.0
-    cs = np.ones_like(ixs)*0.0
-    sn = np.ones_like(ixs)*0.0
     for i in range(n):
-        
         bx[i] = some_x[faces[i],iys[i],ixs[i]]
         by[i] = some_y[faces[i],iys[i],ixs[i]]
         
-        if CS is not None:
+    if CS is not None and SN is not None:
+        cs = np.ones_like(ixs)*0.0
+        sn = np.ones_like(ixs)*0.0
+        for i in range(n):
             cs[i] = CS[faces[i],iys[i],ixs[i]]
             sn[i] = SN[faces[i],iys[i],ixs[i]]
-        if dx is not None:
+    else:
+        cs = None
+        sn = None
+        
+    if some_dx is not None and some_dy is not None:
+        dx = np.ones_like(ixs)*0.0
+        dy = np.ones_like(ixs)*0.0
+        for i in range(n):
             dx[i] = some_dx[faces[i],iys[i],ixs[i]]
-        if dy is not None:
             dy[i] = some_dy[faces[i],iys[i],ixs[i]]
+    else:
+        dx = None
+        dy = None
     
     return cs,sn,dx,dy,bx,by
 
@@ -203,25 +211,34 @@ def read_h_without_face(some_x,some_y,some_dx,some_dy,CS,SN,iys,ixs):
     read find_rel_h for more info,
     
     '''
+    # TODO ADD test if those are Nones.
     n = len(ixs)
-    dx = np.ones_like(ixs)*0.0
-    dy = np.ones_like(ixs)*0.0
+    if some_dx is not None and some_dy is not None:
+        dx = np.ones_like(ixs)*0.0
+        dy = np.ones_like(ixs)*0.0
+        for i in range(n):
+            dx[i] = some_dx[iys[i],ixs[i]]
+            dy[i] = some_dy[iys[i],ixs[i]]
+    else:
+        dx = None
+        dy = None
+        
+    if CS is not None and SN is not None:
+        cs = np.ones_like(ixs)*0.0
+        sn = np.ones_like(ixs)*0.0
+        for i in range(n):
+            cs[i] = CS[iys[i],ixs[i]]
+            sn[i] = SN[iys[i],ixs[i]]
+    else:
+        cs = None
+        sn = None
+            
     bx = np.ones_like(ixs)*0.0
     by = np.ones_like(ixs)*0.0
-    cs = np.ones_like(ixs)*0.0
-    sn = np.ones_like(ixs)*0.0
     for i in range(n):
-        
         bx[i] = some_x[iys[i],ixs[i]]
         by[i] = some_y[iys[i],ixs[i]]
         
-        cs[i] = CS[iys[i],ixs[i]]
-        sn[i] = SN[iys[i],ixs[i]]
-        
-        dx[i] = some_dx[iys[i],ixs[i]]
-        dy[i] = some_dy[iys[i],ixs[i]]
-        
-    
     return cs,sn,dx,dy,bx,by
 
 @njit
@@ -243,6 +260,8 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
     cs,sn is just the cos and sin of the grid orientation.
     It will come in handy when we transfer vectors.
     '''
+    if None in [Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree]:
+        raise ValueError('Some of the required variables are missing')
     h_shape = some_x.shape
     faces,iys,ixs = find_ind_h(Xs,
                                Ys,
@@ -271,7 +290,21 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
     rx,ry = find_rx_ry_naive(Xs,Ys,bx,by,cs,sn,dx,dy)
     return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
 
+def find_rel_h_rectilinear(x,y,lon,lat):
+    ratio = 6371e3*np.pi/180
+    ix,rx,dx,bx = find_rel_nearest(x,lon)
+    iy,ry,dy,by = find_rel_nearest(x,lon)
+    dx = np.cos(y*np.pi/180)*ratio*dx
+    dy = ratio*dy
+    face = None
+    cs = np.ones_like(x)
+    sn = np.zeros_like(x)
+    return face,iy,ix,rx,ry,cs,sn,dx,dy,bx,by
+    
+
 def find_rel_h_oceanparcel(x,y,some_x,some_y,some_dx,some_dy,CS,SN,XG,YG,tree,tp):
+    if None in [x,y,some_x,some_y,XG,YG,tree]:
+        raise ValueError('Some of the required variables are missing')
     h_shape = some_x.shape
     faces,iys,ixs = find_ind_h(x,
                                y,
