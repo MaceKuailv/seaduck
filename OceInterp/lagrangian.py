@@ -99,8 +99,7 @@ duknw_s = KnW(kernel = ukernel,inheritance = None,hkernel = 'dx',h_order = 1)
 dvknw_s = KnW(kernel = vkernel,inheritance = None,hkernel = 'dy',h_order = 1)
 
 class particle(position):
-    def __init__(self,
-                memory_limit = 1e7,# 10MB
+    def __init__(self,# 10MB
                 uname = 'UVELMASS',
                 vname = 'VVELMASS',
                 wname = 'WVELMASS',
@@ -112,13 +111,20 @@ class particle(position):
                 **kwarg
                 ):
         self.from_latlon(**kwarg)
-        
-        (
-            self.izl_lin,
-            self.rzl_lin,
-            self.dzl_lin,
-            self.bzl_lin
-        ) = self.ocedata.find_rel_vl_lin(self.dep)
+        if self.ocedata.readiness['Zl']:
+            (
+                self.izl_lin,
+                self.rzl_lin,
+                self.dzl_lin,
+                self.bzl_lin
+            ) = self.ocedata.find_rel_vl_lin(self.dep)
+        else:
+            (
+                self.izl_lin,
+                self.rzl_lin,
+                self.dzl_lin,
+                self.bzl_lin
+            ) = [None for i in range(4)]
         
         self.uname = uname
         self.vname = vname
@@ -158,7 +164,7 @@ class particle(position):
                     self.ocedata[wname].loc[dict(Zl = 0)] = 0
                 except KeyError:
                     pass
-        self.too_large = self.ocedata._ds['XC'].nbytes>memory_limit
+        self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
         
         if self.too_large:
@@ -252,7 +258,8 @@ class particle(position):
             else:
                 w  = np.zeros(self.subset(which).N,float)
                 dw = np.zeros(self.subset(which).N,float)
-            self.iz = self.izl_lin-1
+            if self.izl_lin is not None:
+                self.iz = self.izl_lin-1
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
                                                    [self.uknw ,self.vknw  ],
                                                    vec_transform = False
@@ -282,7 +289,10 @@ class particle(position):
                 w = np.zeros(self.subset(which).N,float)
                 dw = np.zeros(self.subset(which).N,float)
             
-            self.iz = self.izl_lin-1
+            try:
+                self.iz = self.izl_lin-1
+            except:
+                pass
             i_min = [0 for i in self.uarray.shape]
             i_min[0] = ifirst
             u,v   = self.subset(which).interpolate([self.uname,self.vname],
@@ -334,24 +344,28 @@ class particle(position):
 #                 print((np.nan_to_num( ou)==np.nan_to_num(u )).all())
 #                 print((np.nan_to_num(self.ou)==np.nan_to_num(self.u )).all())
 #                 raise Exception('two schemes mismatch')
-        
         if not self.transport:
         
             self.u [which] =  u/self.dx[which]
             self.v [which] =  v/self.dy[which]
-            self.w [which] =  w/self.dzl_lin[which]
             self.du[which] = du/self.dx[which]
             self.dv[which] = dv/self.dy[which]
-            self.dw[which] = dw/self.dzl_lin[which]
             
         else:
             self.u [which] =  u/self.Vol[which]
             self.v [which] =  v/self.Vol[which]
-            self.w [which] =  w/self.Vol[which]
             self.du[which] = du/self.Vol[which]
             self.dv[which] = dv/self.Vol[which]
-            self.dw[which] = dw/self.Vol[which]
-        
+            
+        if self.wname is not None:
+            if not self.transport:
+
+                self.w [which] =  w/self.dzl_lin[which]
+                self.dw[which] = dw/self.dzl_lin[which]
+            else:
+                self.w [which] =  w/self.Vol[which]
+                self.dw[which] = dw/self.Vol[which]
+            s
         self.fillna()
         
 #     def get_u_du(self,which = None):
@@ -528,11 +542,13 @@ class particle(position):
                 self.fclist[i].append(self.face[i])
             self.itlist[i].append(self.it[i])
             self.iylist[i].append(self.iy[i])
-            self.izlist[i].append(self.izl_lin[i])
+            if self.izl_lin is not None:
+                self.izlist[i].append(self.izl_lin[i])
             self.ixlist[i].append(self.ix[i])
             self.rxlist[i].append(self.rx[i])
             self.rylist[i].append(self.ry[i])
-            self.rzlist[i].append(self.rzl_lin[i])
+            if self.rzl_lin is not None:
+                self.rzlist[i].append(self.rzl_lin[i])
             self.ttlist[i].append(self.t[i])
             self.uulist[i].append(self.u[i])
             self.vvlist[i].append(self.v[i])
@@ -568,7 +584,10 @@ class particle(position):
     def out_of_bound(self):
         x_out = np.logical_or(self.rx >0.5,self.rx < -0.5)
         y_out = np.logical_or(self.ry >0.5,self.ry < -0.5)
-        z_out = np.logical_or(self.rzl_lin>1  ,self.rzl_lin< 0   )
+        if self.rzl_lin is not None:
+            z_out = np.logical_or(self.rzl_lin>1  ,self.rzl_lin< 0   )
+        else:
+            z_out = False
         return np.logical_or(np.logical_or(x_out,y_out),z_out)
 
     
@@ -578,8 +597,7 @@ class particle(position):
         xmin = np.nanmin(self.rx)
         ymax = np.nanmax(self.ry)
         ymin = np.nanmin(self.ry)
-        zmax = np.nanmax(self.rzl_lin)
-        zmin = np.nanmin(self.rzl_lin)
+        
         if xmax>=0.5-tol:
             where = self.rx>=0.5-tol
             cdx = (0.5-tol)-self.rx[where]
@@ -608,26 +626,33 @@ class particle(position):
             self.v[where] += self.dv[where]*cdx
             if verbose:
                 print(f'converting {ymin} to -0.5')
-        if zmax>=1.-tol:
-            where = self.rzl_lin>=1.-tol
-            cdx = (1.-tol)-self.rzl_lin[where]
-            self.rzl_lin[where]+=cdx
-            self.w[where] += self.dw[where]*cdx
-            if verbose:
-                print(f'converting {zmax} to 1')
-        if zmin<=-0.+tol:
-            where = self.rzl_lin<=-0.+tol
-            cdx = (-0.+tol)-self.rzl_lin[where]
-            self.rzl_lin[where]+=cdx
-            self.w[where] += self.dw[where]*cdx
-            if verbose:
-                print(f'converting {zmin} to 0')
+        if self.rzl_lin is not None:
+            zmax = np.nanmax(self.rzl_lin)
+            zmin = np.nanmin(self.rzl_lin)
+            if zmax>=1.-tol:
+                where = self.rzl_lin>=1.-tol
+                cdx = (1.-tol)-self.rzl_lin[where]
+                self.rzl_lin[where]+=cdx
+                self.w[where] += self.dw[where]*cdx
+                if verbose:
+                    print(f'converting {zmax} to 1')
+            if zmin<=-0.+tol:
+                where = self.rzl_lin<=-0.+tol
+                cdx = (-0.+tol)-self.rzl_lin[where]
+                self.rzl_lin[where]+=cdx
+                self.w[where] += self.dw[where]*cdx
+                if verbose:
+                    print(f'converting {zmin} to 0')
     
     def contract(self):
         max_time = 1e3
         out = self.out_of_bound()
         # out = np.logical_and(out,u!=0)
-        xs = [self.rx[out],self.ry[out],self.rzl_lin[out]-1/2]
+        if self.rzl_lin is not None:
+            xs = [self.rx[out],self.ry[out],self.rzl_lin[out]-1/2]
+        else:
+            x_ = self.rx[out]
+            xs = [x_,self.ry[out],np.zeros_like(x_)]
         us = [self.u[out],self.v[out],self.w[out]]
         dus= [self.du[out],self.dv[out],self.dw[out]]
         tmin = -np.ones_like(self.rx[out])*np.inf
@@ -656,7 +681,8 @@ class particle(position):
         
         self.rx[out] += cdx
         self.ry[out] += cdy
-        self.rzl_lin[out]+= cdz
+        if self.rzl_lin is not None:
+            self.rzl_lin[out]+= cdz
         
         self.u[out]+=cdx*self.du[out]
         self.v[out]+=cdy*self.dv[out]
@@ -665,40 +691,59 @@ class particle(position):
         self.t[out] += contract_time
         
     def update_after_cell_change(self):
-        self.iz,self.rz,self.dz,self.bz = self.ocedata.find_rel_v(self.dep)
-        if self.face is not None:
-            self.bx,self.by,self.bzl_lin = (
-                self.ocedata.XC[self.face,self.iy,self.ix],
-                self.ocedata.YC[self.face,self.iy,self.ix],
-                self.ocedata.Zl[self.izl_lin]
-            )
-            self.cs,self.sn = (
-                self.ocedata.CS[self.face,self.iy,self.ix],
-                self.ocedata.SN[self.face,self.iy,self.ix]
-            )
-            self.dx,self.dy,self.dz,self.dzl_lin = (
-                self.ocedata.dX[self.face,self.iy,self.ix],
-                self.ocedata.dY[self.face,self.iy,self.ix],
-                self.ocedata.dZ[self.iz],
-                self.ocedata.dZl[self.izl_lin]
-            )
-        else:
-            self.bx,self.by,self.bzl_lin = (
-                self.ocedata.XC[self.iy,self.ix],
-                self.ocedata.YC[self.iy,self.ix],
-                self.ocedata.Zl[self.izl_lin]
-            )
-            self.cs,self.sn = (
-                self.ocedata.CS[self.iy,self.ix],
-                self.ocedata.SN[self.iy,self.ix]
-            )
-            self.dx,self.dy,self.dz,self.dzl_lin = (
-                self.ocedata.dX[self.iy,self.ix],
-                self.ocedata.dY[self.iy,self.ix],
-                self.ocedata.dZ[self.iz],
-                self.ocedata.dZl[self.izl_lin]
-            )
+        if self. face is not None:
+            self.face = self.face.astype(int)
+        self.iy   = self.iy  .astype(int)
+        self.ix   = self.ix  .astype(int)
+        if self.iz is not None:
+            self.iz   = self.iz  .astype(int)
+        if self.izl_lin is not None:
+            self.izl_lin = self.izl_lin.astype(int)
         
+        if self.ocedata.readiness['Z']:
+            self.iz,self.rz,self.dz,self.bz = self.ocedata.find_rel_v(self.dep)
+        if self.ocedata.readiness['h'] in ['local_cartesian','oceanparcel']:
+            # todo: split the oceanparcel case
+            if self.face is not None:
+                self.bx,self.by = (
+                    self.ocedata.XC[self.face,self.iy,self.ix],
+                    self.ocedata.YC[self.face,self.iy,self.ix],
+                )
+                self.cs,self.sn = (
+                    self.ocedata.CS[self.face,self.iy,self.ix],
+                    self.ocedata.SN[self.face,self.iy,self.ix]
+                )
+                self.dx,self.dy,self.dz = (
+                    self.ocedata.dX[self.face,self.iy,self.ix],
+                    self.ocedata.dY[self.face,self.iy,self.ix],
+                )
+
+            else:
+                self.bx,self.by = (
+                    self.ocedata.XC[self.iy,self.ix],
+                    self.ocedata.YC[self.iy,self.ix],
+                )
+                self.cs,self.sn = (
+                    self.ocedata.CS[self.iy,self.ix],
+                    self.ocedata.SN[self.iy,self.ix]
+                )
+                self.dx,self.dy = (
+                    self.ocedata.dX[self.iy,self.ix],
+                    self.ocedata.dY[self.iy,self.ix],
+                )
+        elif self.ocedata.readiness['h'] == 'rectilinear':
+            self.bx = self.ocedata.lon[self.ix]
+            self.by = self.ocedata.lat[self.iy]
+            self.cs = np.ones_like(self.bx)
+            self.sn = np.zeros_like(self.bx)
+            self.dx = self.ocedata.dlon[self.ix]*np.cos(self.by*np.pi/180)
+            self.dy = self.ocedata.dlat[self.iy]
+            
+        if self.izl_lin is not None:
+            self.bzl_lin = self.ocedata.Zl[self.izl_lin]
+            self.dzl_lin = self.ocedata.dZl[self.izl_lin]
+        if self.dz:
+            self.dz = self.ocedata.dZ[self.iz]
         try:
             self.px,self.py = self.get_px_py()
             self.rx,self.ry = find_rx_ry_oceanparcel(self.lon,self.lat,self.px,self.py)
@@ -714,7 +759,8 @@ class particle(position):
             dlat = to_180(self.lat - self.by)
             self.rx = (dlon*np.cos(self.by*np.pi/180)*self.cs+dlat*self.sn)*deg2m/self.dx
             self.ry = (dlat*self.cs-dlon*self.sn*np.cos(self.by*np.pi/180))*deg2m/self.dy
-        self.rzl_lin= (self.dep - self.bzl_lin)/self.dzl_lin
+        if self.rzl_lin is not None:
+            self.rzl_lin= (self.dep - self.bzl_lin)/self.dzl_lin
     
     def analytical_step(self,tf,which = None):
         
@@ -727,8 +773,11 @@ class particle(position):
         
         if self.out_of_bound().any():
             raise Exception('this step should always be after trim...')
-
-        xs = [self.rx[which],self.ry[which],self.rzl_lin[which]-1/2]
+        if self.rzl_lin is not None:
+            xs = [self.rx[which],self.ry[which],self.rzl_lin[which]-1/2]
+        else:
+            x_ = self.rx[which]
+            xs = [x_,self.ry[which],np.zeros_like(x_)]
         us = [self.u[which],self.v[which],self.w[which]]
         dus= [self.du[which],self.dv[which],self.dw[which]]
         
@@ -744,20 +793,31 @@ class particle(position):
             new_u.append(us[i]+dus[i]*x_move)
             new_x.append(x_move+xs[i])
             
-        self.rx[which],self.ry[which],self.rzl_lin[which] = new_x
+        self.rx[which],self.ry[which],temp = new_x
+        if self.rzl_lin is not None:
+            self.rzl_lin[which] = temp+1/2
+            
         self.u[which],self.v[which],self.w[which] = new_u
-        self.rzl_lin[which] +=1/2
         try:
             px,py = self.px,self.py
             w = self.get_f_node_weight()
             self.lon = np.einsum('nj,nj->n',w,px.T)
             self.lat = np.einsum('nj,nj->n',w,py.T)
-            self.dep = self.bzl_lin+self.dzl_lin*self.rzl_lin
+            if self. rzl_lin is not None:
+                self.dep = self.bzl_lin+self.dzl_lin*self.rzl_lin
         except AttributeError:
-            self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,self.rzl_lin,
+            if self.rzl_lin is not None:
+                rzl_lin = self.rzl_lin
+                dzl_lin = self.dzl_lin
+                bzl_lin = self.bzl_lin
+            else:
+                rzl_lin = np.zeros_like(self.rx)
+                dzl_lin = np.zeros_like(self.rx)
+                bzl_lin = np.zeros_like(self.rx)
+            self.lon,self.lat,self.dep = rel2latlon(self.rx,self.ry,rzl_lin,
                                                        self.cs,self.sn,
-                                                         self.dx,self.dy,self.dzl_lin,
-                                           self.dt,self.bx,self.by,self.bzl_lin)
+                                                         self.dx,self.dy,dzl_lin,
+                                           self.dt,self.bx,self.by,bzl_lin)
         if self.save_raw:
             # record the moment just before crossing the wall
             # or the moment reaching destination.
@@ -781,11 +841,14 @@ class particle(position):
                 (tface[type1],tiy[type1],tix[type1]),
                 trans_tend)
         else:
-            tiy,tix,tiz = (
+            tiy,tix= (
                 self.iy[which].astype(int),
                 self.ix[which].astype(int),
-                self.izl_lin[which].astype(int)
             )
+            if self.izl_lin is not None:
+                tiz = self.izl_lin[which].astype(int)
+            else:
+                tiz = (np.ones_like(tiy)*(-1)).astype(int)
             tiy[type1],tix[type1] = self.tp.ind_tend_vec(
                 (tiy[type1],tix[type1]),
                 trans_tend)
@@ -808,9 +871,11 @@ class particle(position):
 #             print('stuck!')
 #             raise Exception('ahhhhh!')
         if self.face is not None:
-            self.face[which],self.iy[which],self.ix[which],self.izl_lin[which] = tface,tiy,tix,tiz
+            self.face[which],self.iy[which],self.ix[which] = tface,tiy,tix
         else:
-            self.iy[which],self.ix[which],self.izl_lin[which] = tiy,tix,tiz
+            self.iy[which],self.ix[which] = tiy,tix
+        if self.izl_lin is not None:
+            self.izl_lin[which] = tiz
     
     def deepcopy(self):
         p = position()
@@ -862,9 +927,10 @@ class particle(position):
         if i ==self.max_iteration-1:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
-        self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
-        self.it,_,_,_ = find_rel_time(self.t,self.ocedata.time_midp)
-        self.it += 1
+        if self.ocedata.readiness['time']:
+            self.it,self.rt,self.dt,self.bt = self.ocedata.find_rel_t(self.t)
+            self.it,_,_,_ = find_rel_time(self.t,self.ocedata.time_midp)
+            self.it += 1
         
     def to_list_of_time(self,normal_stops,update_stops = 'default',return_in_between  =True):
         t_min = np.minimum(np.min(normal_stops),self.t[0])
