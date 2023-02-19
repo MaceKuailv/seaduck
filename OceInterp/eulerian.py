@@ -150,19 +150,35 @@ class position():
             self.bx   = None
             self.by   = None
         if (z is not None):
-            (
-                self.iz,
-                self.rz,
-                self.dz,
-                self.bz 
-            ) = self.ocedata.find_rel_v(z)
-            (
-                self.izl,
-                self.rzl,
-                self.dzl,
-                self.bzl 
-            ) = self.ocedata.find_rel_vl(z)
             self.dep = z
+            if (self.ocedata.readiness['Z']):
+                (
+                    self.iz,
+                    self.rz,
+                    self.dz,
+                    self.bz 
+                ) = self.ocedata.find_rel_v(z)
+            else:
+                (
+                    self.iz,
+                    self.rz,
+                    self.dz,
+                    self.bz,
+                ) = [None for i in range(4)]
+            if (self.ocedata.readiness['Zl']):
+                (
+                    self.izl,
+                    self.rzl,
+                    self.dzl,
+                    self.bzl 
+                ) = self.ocedata.find_rel_vl(z)
+            else:
+                (
+                    self.izl,
+                    self.rzl,
+                    self.dzl,
+                    self.bzl,
+                ) = [None for i in range(4)]
         else:
             (
                 self.iz,
@@ -177,20 +193,28 @@ class position():
             ) = [None for i in range(9)]
             
         if (t is not None):
-            (
-                self.it,
-                self.rt,
-                self.dt,
-                self.bt 
-            ) = self.ocedata.find_rel_t(t)
             self.t = t
+            if self.ocedata.readiness['time']:
+                (
+                    self.it,
+                    self.rt,
+                    self.dt,
+                    self.bt 
+                ) = self.ocedata.find_rel_t(t)
+            else:
+                (
+                    self.it,
+                    self.rt,
+                    self.dt,
+                    self.bt,
+                ) = [None for i in range(4)]
         else:
             (
                 self.it,
                 self.rt,
                 self.dt,
                 self.bt,
-                self.tim
+                self.t
             ) = [None for i in range(5)]
         return self
     

@@ -76,6 +76,16 @@ def find_ind_nearest(array,value):
     idx = np.argmin(np.abs(array - value))
     idx = int(idx)
     return idx,array[idx]
+
+@njit
+def find_ind_periodic(array,value,peri):
+    '''
+    just find the nearest
+    '''
+    array = np.asarray(array)
+    idx = np.argmin(np.abs((array - value)%peri))
+    idx = int(idx)
+    return idx,array[idx]
     
 
 deg2m = 6271e3*np.pi/180
@@ -111,6 +121,32 @@ def find_rel_nearest(value,ts):
         t = value[i]
         it,bt = find_ind_nearest(ts,t)
         delta_t = t-bt
+        if delta_t*DT[i]>0:   
+            Delta_t = DT[it+1]
+        else:
+            Delta_t = DT[it]
+        rt = delta_t/abs(Delta_t)
+        its[i] = it 
+        rts[i] = rt
+        dts[i] = abs(Delta_t)
+        bts[i] = bt
+    return its,rts,dts,bts
+
+@njit
+def find_rel_periodic(value,ts,peri):
+    its = np.zeros_like(value)
+    rts = np.ones_like(value)*0.0#the way to create zeros with float32 type
+    dts = np.ones_like(value)*0.0
+    bts = np.ones_like(value)*0.0
+    
+    DT = np.zeros(len(ts)+1)
+    DT[1:-1] = ts[1:] - ts[:-1]
+    DT[0] = DT[1]
+    DT[-1] = DT[-2]
+    for i in range(len(value)):
+        t = value[i]
+        it,bt = find_ind_periodic(ts,t,peri)
+        delta_t = (t-bt)%peri
         if delta_t*DT[i]>0:   
             Delta_t = DT[it+1]
         else:
@@ -292,8 +328,8 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
 
 def find_rel_h_rectilinear(x,y,lon,lat):
     ratio = 6371e3*np.pi/180
-    ix,rx,dx,bx = find_rel_nearest(x,lon)
-    iy,ry,dy,by = find_rel_nearest(x,lon)
+    ix,rx,dx,bx = find_rel_periodic(x,lon,360.)
+    iy,ry,dy,by = find_rel_periodic(y,lat,360.)
     dx = np.cos(y*np.pi/180)*ratio*dx
     dy = ratio*dy
     face = None

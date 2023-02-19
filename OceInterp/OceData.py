@@ -81,6 +81,9 @@ class OceData(object):
             readiness['h'] = 'local_cartesian'
             # could be a curvilinear grid that can use local cartesian style
         elif all([i in varnames for i in ['lon','lat']]):
+            ratio = 6371e3*np.pi/180
+            self.dlon = np.gradient(self['lon'])*ratio
+            self.dlat = np.gradient(self['lat'])*ratio
             readiness['h'] = 'rectilinear'
             # corresponding to a rectilinear dataset
         else:
@@ -93,7 +96,7 @@ class OceData(object):
             ''')
             return False,missing
         for _ in ['time','Z','Zl']:
-            readiness[_] = (_ in varnames)
+            readiness[_] = (_ in varnames) and (len(self[_])>1)
             
         return readiness,missing
         
