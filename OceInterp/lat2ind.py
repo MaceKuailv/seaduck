@@ -10,6 +10,14 @@ def to_180(x):
     x = x%360
     return x+(-1)*(x//180)*360
 
+def NoneIn(lst):
+    ans = False
+    for i in lst:
+        if i is None:
+            ans = True
+            break
+    return ans
+
 @njit
 def spherical2cartesian(Y, X, R=6371.0):
     """
@@ -296,7 +304,7 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
     cs,sn is just the cos and sin of the grid orientation.
     It will come in handy when we transfer vectors.
     '''
-    if None in [Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree]:
+    if NoneIn([Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree]):
         raise ValueError('Some of the required variables are missing')
     h_shape = some_x.shape
     faces,iys,ixs = find_ind_h(Xs,
@@ -339,7 +347,7 @@ def find_rel_h_rectilinear(x,y,lon,lat):
     
 
 def find_rel_h_oceanparcel(x,y,some_x,some_y,some_dx,some_dy,CS,SN,XG,YG,tree,tp):
-    if None in [x,y,some_x,some_y,XG,YG,tree]:
+    if NoneIn([x,y,some_x,some_y,XG,YG,tree]):
         raise ValueError('Some of the required variables are missing')
     h_shape = some_x.shape
     faces,iys,ixs = find_ind_h(x,

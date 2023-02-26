@@ -125,7 +125,10 @@ class particle(position):
                 self.dzl_lin,
                 self.bzl_lin
             ) = [None for i in range(4)]
-        
+        try:
+            self.px,self.py = self.get_px_py()
+        except:
+            pass
         self.uname = uname
         self.vname = vname
         self.wname = wname
@@ -365,7 +368,6 @@ class particle(position):
             else:
                 self.w [which] =  w/self.Vol[which]
                 self.dw[which] = dw/self.Vol[which]
-            s
         self.fillna()
         
 #     def get_u_du(self,which = None):
@@ -702,7 +704,7 @@ class particle(position):
         
         if self.ocedata.readiness['Z']:
             self.iz,self.rz,self.dz,self.bz = self.ocedata.find_rel_v(self.dep)
-        if self.ocedata.readiness['h'] in ['local_cartesian','oceanparcel']:
+        if self.ocedata.readiness['h'] == 'local_cartesian':
             # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx,self.by = (
@@ -731,6 +733,20 @@ class particle(position):
                     self.ocedata.dX[self.iy,self.ix],
                     self.ocedata.dY[self.iy,self.ix],
                 )
+        elif self.ocedata.readiness['h'] == 'oceanparcel':
+            # todo: split the oceanparcel case
+            if self.face is not None:
+                self.bx,self.by = (
+                    self.ocedata.XC[self.face,self.iy,self.ix],
+                    self.ocedata.YC[self.face,self.iy,self.ix],
+                )
+
+            else:
+                self.bx,self.by = (
+                    self.ocedata.XC[self.iy,self.ix],
+                    self.ocedata.YC[self.iy,self.ix],
+                )
+                
         elif self.ocedata.readiness['h'] == 'rectilinear':
             self.bx = self.ocedata.lon[self.ix]
             self.by = self.ocedata.lat[self.iy]
@@ -742,7 +758,7 @@ class particle(position):
         if self.izl_lin is not None:
             self.bzl_lin = self.ocedata.Zl[self.izl_lin]
             self.dzl_lin = self.ocedata.dZl[self.izl_lin]
-        if self.dz:
+        if self.dz is not None:
             self.dz = self.ocedata.dZ[self.iz]
         try:
             self.px,self.py = self.get_px_py()
