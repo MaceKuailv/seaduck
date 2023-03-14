@@ -542,7 +542,8 @@ class particle(position):
         for i in where:
             if self.face is not None:
                 self.fclist[i].append(self.face[i])
-            self.itlist[i].append(self.it[i])
+            if self.it is not None:
+                self.itlist[i].append(self.it[i])
             self.iylist[i].append(self.iy[i])
             if self.izl_lin is not None:
                 self.izlist[i].append(self.izl_lin[i])

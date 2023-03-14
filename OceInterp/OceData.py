@@ -144,11 +144,18 @@ class OceData(object):
         if way == 'oceanparcel':
             for var in ['XC','YC','XG','YG']:
                 self[var] = np.array(self[var]).astype('float32')
-            for var in ['rA']:
+            for var in ['rA','CS','SN']:
                 try:
                     self[var] = np.array(self[var]).astype('float32')
                 except:
                     print(f'no {var} in dataset, skip')
+                    self[var] = None
+            try:
+                self.dX = np.array(self['dXG']).astype('float32')
+                self.dY = np.array(self['dYG']).astype('float32')
+            except:
+                self.dX = None
+                self.dY = None
             if self.too_large:
                 print('numpy arrays of grid loaded into memory')
             self.tree = create_tree(self.XC,self.YC)  
@@ -167,6 +174,7 @@ class OceData(object):
                         self[var] = np.array(self[var]).astype('float32')
                     except:
                         print(f'no {var} in dataset, skip')
+                        self[var] = None
             if self.too_large:
                 print('numpy arrays of grid loaded into memory')
             self.tree = create_tree(self.XC,self.YC)  
@@ -214,8 +222,8 @@ class OceData(object):
         if self.readiness['h'] == 'oceanparcel':
             faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_oceanparcel(x,y,
                                                                            self.XC,self.YC,
-                                                                           None,None,
-                                                                           None,None,
+                                                                           self.dX,self.dY,
+                                                                           self.CS,self.SN,
                                                                            self.XG,self.YG,
                                                                            self.tree,self.tp)
         elif self.readiness['h'] == 'local_cartesian':
