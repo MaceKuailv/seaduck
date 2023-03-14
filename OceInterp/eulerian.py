@@ -109,16 +109,23 @@ class position():
                 raise Exception('data not provided')
             self.ocedata = kwarg['data']
         self.tp = self.ocedata.tp
-        self.N = max([_general_len(i) for i in [x,y,z,t]])
+        length = [_general_len(i) for i in [x,y,z,t]]
+        self.N = max(length)
+        if any([i!= self.N for i in length if i>1]):
+            raise ValueError('Shapes of input coordinates are not compatible')
+        
         if isinstance(x,float):
             x = np.array([1.0])*x
         if isinstance(y,float):
             y = np.array([1.0])*y
         if isinstance(z,float):
-            z = np.array([1.0])*t
+            z = np.array([1.0])*z
         if isinstance(z,float):
             t = np.array([1.0])*t
-
+        
+        for thing in [x,y,z,t]:
+            if len(shape(x))>1:
+                raise ValueError('Input need to be 1D numpy arrays')
         if (x is not None) and (y is not None):
             self.lon = x
             self.lat = y
@@ -390,7 +397,7 @@ class position():
         R = dict(zip(keys,R))
         if required == 'all':
             required = [i for i in keys if i!='place_holder']
-        return [R[i] for i in required]
+        return tuple([R[i] for i in required])
     
     def get_px_py(self):
         if self.face is not None:
