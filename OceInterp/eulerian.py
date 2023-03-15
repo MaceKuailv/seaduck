@@ -124,7 +124,7 @@ class position():
             t = np.array([1.0])*t
         
         for thing in [x,y,z,t]:
-            if len(shape(x))>1:
+            if len(x.shape)>1:
                 raise ValueError('Input need to be 1D numpy arrays')
         if (x is not None) and (y is not None):
             self.lon = x
