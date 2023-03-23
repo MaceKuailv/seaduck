@@ -186,12 +186,12 @@ class OceData(object):
             self.lat = np.array(self['lat']).astype('float32')
             
     def vgrid2array(self):
-        self.Z = np.array(self['Z'])
-        self.dZ = np.array(self['dZ'])
+        self.Z = np.array(self['Z']).astype('float32')
+        self.dZ = np.array(self['dZ']).astype('float32')
         
     def vlgrid2array(self):
-        self.Zl = np.array(self['Zl'])
-        self.dZl = np.array(self['dZl'])
+        self.Zl = np.array(self['Zl']).astype('float32')
+        self.dZl = np.array(self['dZl']).astype('float32')
         
         # special treatment for dZl
         self.dZl = np.roll(self.dZl,1)
