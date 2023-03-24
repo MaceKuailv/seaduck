@@ -217,7 +217,8 @@ class particle(position):
             try:
                 self.uarray
                 self.varray
-                self.warray
+                if self.wname is not None:
+                    self.warray
             except AttributeError:
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
@@ -232,14 +233,17 @@ class particle(position):
             if self.itmax!=self.itmin:
                 self.uarray = np.array(self.ocedata[uname][self.itmin:self.itmax+1])
                 self.varray = np.array(self.ocedata[vname][self.itmin:self.itmax+1])
-                self.warray = np.array(self.ocedata[wname][self.itmin:self.itmax+1])
+                if self.wname is not None:
+                    self.warray = np.array(self.ocedata[wname][self.itmin:self.itmax+1])
             else:
                 self.uarray = np.array(self.ocedata[uname][[self.itmin]])
                 self.varray = np.array(self.ocedata[vname][[self.itmin]])
-                self.warray = np.array(self.ocedata[wname][[self.itmin]])
+                if self.wname is not None:
+                    self.warray = np.array(self.ocedata[wname][[self.itmin]])
             if self.dont_fly:
-                # I think it's fine
-                self.warray[:,0] = 0.0
+                if self.wname is not None:
+                    # I think it's fine
+                    self.warray[:,0] = 0.0
             
     def get_vol(self,which = None):
         if which is None:

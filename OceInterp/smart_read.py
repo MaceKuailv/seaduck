@@ -7,7 +7,7 @@ def smart_read(da,ind):
     the_shape = ind[0].shape
     ind = tuple([i.ravel() for i in ind])
     memory_chunk = 3
-    xarray_more_efficient = 8
+    xarray_more_efficient = 100
     if da.chunks is None:
         npck = np.array(da)
         return npck[ind].reshape(the_shape)
