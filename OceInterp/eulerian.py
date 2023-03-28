@@ -453,6 +453,8 @@ class position():
                     vec_transform = True,
                     prefetched = None,i_min = None):
         # implement shortcut u,v,w
+        # TODO: fix the very subtle bug that cause velocity component parallel to face connection
+        # TODO: add function to interpolate multiple variable at once. 
         if prefetched is not None:
             # TODO: I could have a warning about prefetch
             # overwriting varName.
