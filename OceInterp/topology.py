@@ -29,7 +29,7 @@ llc_face_connect = np.array([[ 1, 42, 12,  3],
 directions = np.array([np.pi/2,-np.pi/2,np.pi,0])
 
 @njit
-def llc_mutual_direction(face,nface):
+def llc_mutual_direction(face,nface,transitive = False):
     '''
     0,1,2,3 stands for up, down, left, right
     given 2 faces, the returns are 
@@ -38,7 +38,31 @@ def llc_mutual_direction(face,nface):
     '''
     edge_n = np.where(llc_face_connect[face] == nface)
     nedge_n = np.where(llc_face_connect[nface] == face)
-    return edge_n[0][0],nedge_n[0][0]
+    if edge_n[0][0] in [0,1,2,3] and nedge_n[0][0] in [0,1,2,3]:
+        return edge_n[0][0],nedge_n[0][0]
+    elif transitive:
+        common = -1
+        for i in llc_face_connect[face]:
+            if i in llc_face_connect[nface]:
+                common = i
+                break
+        if common<0:
+            raise ValueError('The two faces does not share common face, transitive did not help')
+        else:
+            edge_1 = np.where(llc_face_connect[face] == common)[0][0]
+            nedge_1 = np.where(llc_face_connect[common] == face)[0][0]
+            edge_2 = np.where(llc_face_connect[common] == nface)[0][0]
+            nedge_2 = np.where(llc_face_connect[nface] == common)[0][0]
+            if (edge_1 in [0,1] and nedge_1 in [0,1]) or (edge_1 in [2,3] and nedge_1 in [2,3]):
+                return edge_2,nedge_2
+            elif (edge_2 in [0,1] and nedge_2 in [0,1]) or (edge_2 in [2,3] and nedge_2 in [2,3]):
+                return edge_1,nedge_1
+            else:
+                raise NotImplementedError('the common face is not parallel to either of the face')
+    else:
+        raise ValueError('The two faces are not connected (transitive = False)')
+            
+        
 
 @njit
 def llc_get_the_other_edge(face,edge):
@@ -207,7 +231,7 @@ def llc_get_uv_mask_from_face(faces):
             # if the face is not the same, we need to do something
             else:
                 # get how much the new face is rotated from the old face
-                edge,nedge = llc_mutual_direction(faces[0],faces[i])
+                edge,nedge = llc_mutual_direction(faces[0],faces[i],transitive = True)
                 rot = np.pi-directions[edge]+directions[nedge]
                 # you can think of this as a rotation matrix
                 UfromUvel[i] = np.cos(rot)
@@ -276,7 +300,7 @@ class topology():
             raise Exception('It makes no sense to tinker with face_connection when there is only one face')
         else:
             raise NotImplementedError
-    def mutual_direction(self,face,nface):
+    def mutual_direction(self,face,nface,**kwarg):
         '''
         0,1,2,3 stands for up, down, left, right
         given 2 faces, the returns are 
@@ -284,7 +308,7 @@ class topology():
         2. the 1st face is to which direction of the 2nd face
         '''
         if self.typ =='LLC':
-            return llc_mutual_direction(face,nface)
+            return llc_mutual_direction(face,nface,**kwarg)
         elif self.typ in ['x_periodic','box']:
             raise Exception('It makes no sense to tinker with face_connection when there is only one face')
         else:
@@ -304,9 +328,11 @@ class topology():
             if cuvg == 'C':
                 return llc_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
             elif cuvg == 'U':
-                return self.ind_tend_U(ind,tend)
+                UorV,R = self.ind_tend_U(ind,tend)
+                return R
             elif cuvg == 'V':
-                return self.ind_tend_V(ind,tend)
+                UorV,R = self.ind_tend_V(ind,tend)
+                return R
             elif cuvg == 'G':
                 raise NotImplementedError('G grid is not yet supported')
             else:
@@ -339,7 +365,7 @@ class topology():
                     when that happens we need to correct the direction
                     you want to move the indexes.
                     '''
-                    edge,nedge = self.mutual_direction(face,ind[0])
+                    edge,nedge = self.mutual_direction(face,ind[0],transitive = True)
                     rot = (np.pi-directions[edge]+directions[nedge])%(np.pi*2)
                     if np.isclose(rot,0):
                         pass
@@ -464,7 +490,7 @@ class topology():
         else:
             first = self.ind_tend(ind,tend)
             if first[0] == ind[0]:
-                return 'V'first
+                return 'V',first
             else:
                 alter = self.ind_moves(ind,[1,tend])
                 return self._find_wall_between(first,alter)
