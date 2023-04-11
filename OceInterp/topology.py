@@ -13,18 +13,18 @@ tends = [0,1,2,3]#up,down,left,right #list(llc_face_connect.columns)
 
 # llc_face_connect = np.array(llc_face_connect)
 llc_face_connect = np.array([[ 1, 42, 12,  3],
-       [ 2,  0, 11,  4],
-       [ 6,  1, 10,  5],
-       [ 4, 42,  0,  9],
-       [ 5,  3,  1,  8],
-       [ 6,  4,  2,  7],
-       [10,  5,  2,  7],
-       [10,  5,  6,  8],
-       [11,  4,  7,  9],
-       [12,  3,  8, 42],
-       [ 2,  7,  6, 11],
-       [ 1,  8, 10, 12],
-       [ 0,  9, 11, 42]])
+                             [ 2,  0, 11,  4],
+                             [ 6,  1, 10,  5],
+                             [ 4, 42,  0,  9],
+                             [ 5,  3,  1,  8],
+                             [ 6,  4,  2,  7],
+                             [10,  5,  2,  7],
+                             [10,  5,  6,  8],
+                             [11,  4,  7,  9],
+                             [12,  3,  8, 42],
+                             [ 2,  7,  6, 11],
+                             [ 1,  8, 10, 12],
+                             [ 0,  9, 11, 42]])
 
 directions = np.array([np.pi/2,-np.pi/2,np.pi,0])
 
@@ -116,7 +116,7 @@ def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
                 elif gridoffset == 1:
                     face,iy,ix = llc_ind_tend((face,iy,ix),2,iymax,ixmax)
                 else:
-                    raise ValueError('gridoffset must be -1,1 or 1')
+                    raise ValueError('gridoffset must be -1 or 1')
             elif nedge == 0:
                 face,iy,ix = [nface,iymax,iy]
             elif nedge == 2:
@@ -139,7 +139,7 @@ def llc_ind_tend(ind,tendency,iymax,ixmax,gridoffset = 0):
                 elif gridoffset == 1:
                     face,iy,ix = llc_ind_tend((face,iy,ix),2,iymax,ixmax)
                 else:
-                    raise ValueError('gridoffset must be -1,1 or 1')
+                    raise ValueError('gridoffset must be -1 or 1')
             elif nedge == 2:
                 face,iy,ix = [nface,iymax-iy,0]
             elif nedge == 3:
@@ -290,7 +290,7 @@ class topology():
         else:
             raise NotImplementedError
             
-    def ind_tend(self,ind,tend,**kwarg):
+    def ind_tend(self,ind,tend,cuvg = 'C',**kwarg):
         '''
         ind is a tuple that is (face,)iy,ix,
         tendency again is up, down, left, right represented by 0,1,2,3
@@ -301,7 +301,16 @@ class topology():
 #         if tend not in [0,1,2,3]:
 #             raise Exception('Illegal move. Must be 0,1,2,3')
         if self.typ == 'LLC':
-            return llc_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
+            if cuvg == 'C':
+                return llc_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
+            elif cuvg == 'U':
+                return self.ind_tend_U(ind,tend)
+            elif cuvg == 'V':
+                return self.ind_tend_V(ind,tend)
+            elif cuvg == 'G':
+                raise NotImplementedError('G grid is not yet supported')
+            else:
+                raise ValueError('The type of grid point should be among C,U,V,G')
         elif self.typ == 'x_periodic':
             return x_per_ind_tend(ind,tend,self.iymax,self.ixmax,**kwarg)
         elif self.typ == 'box':
@@ -384,7 +393,7 @@ class topology():
             ind = tuple(old_inds[:,j])
             try:
                 n_ind = self.ind_tend(ind,int(tend[j]),**kwarg)
-            except:
+            except IndexError:
                 particle_on_edge = True
                 n_ind = ind
             inds[:,j] = np.array(n_ind).ravel()
@@ -393,6 +402,72 @@ class topology():
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)
         return inds
+    def _find_wall_between(self,ind1,ind2):
+        '''
+        return the wall between two adjacent cells,
+        if the input is not adjacent, error may not be raised
+        This scheme is only valid if there is face in the dimensions.
+        '''
+        (fc1,iy1,ix1) = ind1
+        (fc2,iy2,ix2) = ind2
+        Non_normal_connection = ValueError('The two face connecting the indexes are not connected in a normal way')
+        if fc1 == fc2:
+            R = tuple(np.ceil((np.array(ind1)+np.array(ind2))/2).astype(int))
+            other = ind1 if ind2==R else ind2
+            (fcr,iyr,ixr) = R
+            (fco,iyo,ixo) = other
+            if ixr>ixo:
+                return 'U',R
+            elif iyr>iyo:
+                return 'V',R
+            else:
+                raise IndexError('there is no wall between a cell and itself')
+                # This error can be raised when there is three instead of four points in a corner
+        else:
+            d1to2,d2to1 = self.mutual_direction(fc1,fc2)
+            if d1to2 in [0,3]:
+                R = ind2
+                if d2to1 == 1:
+                    return 'V',R
+                elif d2to1 == 2:
+                    return 'U',R
+                else:
+                    raise Non_normal_connection
+            elif d2to1 in [0,2]:
+                R = ind1
+                if d1to2 == 1:
+                    return 'V',R
+                elif d1to2 == 2:
+                    return 'U',R
+                else:
+                    raise Non_normal_connection
+            else:
+                raise Non_normal_connection
+            
+    def ind_tend_U(self,ind,tend):
+        # TODO: implement different grid offset case
+        if tend in [2,3]:
+            return 'U',self.ind_tend(ind,tend)
+        else:
+            first = self.ind_tend(ind,tend)
+            if first[0] == ind[0]:
+                return 'U',first
+            else:
+                alter = self.ind_moves(ind,[2,tend])
+                # TODO: Add the case of alter == first for three-way join of faces.Low priority
+                return self._find_wall_between(first,alter)
+            
+    def ind_tend_V(self,ind,tend):
+        # TODO: implement different grid offset case
+        if tend in [0,1]:
+            return 'V',self.ind_tend(ind,tend)
+        else:
+            first = self.ind_tend(ind,tend)
+            if first[0] == ind[0]:
+                return 'V'first
+            else:
+                alter = self.ind_moves(ind,[1,tend])
+                return self._find_wall_between(first,alter)
         
     def get_uv_mask_from_face(self,faces):
         if self.typ =='LLC':
