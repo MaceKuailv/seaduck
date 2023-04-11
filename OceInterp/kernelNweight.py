@@ -138,9 +138,18 @@ class KnW(object):
     def __hash__(self):
         return hash((kash(self.kernel),
                      tuple(tuple(i for i in heir) for heir in self.inheritance),
+                     self.h_order,
                      self.hkernel,
                      self.vkernel,
                      self.tkernel))
+    
+    def hash_largest(self):
+        return hash((kash(self.kernel),
+                     self.h_order,
+                     self.hkernel,
+                     self.vkernel,
+                     self.tkernel))
+    
     def size_hash(self):
         only_size = {
             'dz':2,
