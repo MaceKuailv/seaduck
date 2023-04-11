@@ -93,9 +93,6 @@ def get_masks(od,tp):
         maskW = mask_w_node(maskC)
         od._ds['maskWvel'] = od._ds['Z']+od._ds['YC']
         od._ds['maskWvel'].values = maskW
-        # this dimension is actually not quite right
-        # TODO: create the correct dimension
-        # done
     else:
         maskW = np.array(od._ds['maskWvel'])
     return maskC,maskU,maskV,maskW

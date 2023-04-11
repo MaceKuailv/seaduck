@@ -1,5 +1,6 @@
 # notebooks
 small_demo.ipynb
+test*.ipynb
 *ipy*/
 *.pyc
 *.npy
