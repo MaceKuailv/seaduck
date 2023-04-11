@@ -49,7 +49,7 @@ def llc_get_the_other_edge(face,edge):
     face_connect = llc_face_connect
     nface = face_connect[face,edge]
     if nface ==42:
-        raise Exception('This is Antarctica, go home kid')
+        raise IndexError('Reaching the edge where the face is not connected to any other face')
     nedge_n = np.where(face_connect[nface] == face)
     return nface,nedge_n[0][0]
 
