@@ -639,7 +639,7 @@ class position():
                         warnings.warn('the vertical value of vector is between cells, may result in wrong masking')
                         ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
                         this_bottom_scheme = None
-                        if knw.vkernel == 'nearest':
+                        if uknw.vkernel == 'nearest':
                             rz = self.rzl
                         else:
                             rz = self.rzl_lin
