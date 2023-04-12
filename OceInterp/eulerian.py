@@ -241,7 +241,7 @@ class position():
         # p.N = max([_general_len(i) for i in p.__dict__.values()])
         return p
         
-    def fatten_h(self,knw):
+    def fatten_h(self,knw,ind_moves_kwarg = {}):
         '''
         faces,iys,ixs is now 1d arrays of size n. 
         We are applying a kernel of size m.
@@ -284,7 +284,7 @@ class position():
             moves = kernel_tends[i]
             # moves is a list of operations to get to a single point
             #[2,2] means move to the left and then move to the left again.
-            n_ind = tp.ind_moves(ind,moves)
+            n_ind = tp.ind_moves(ind,moves,**ind_moves_kwarg)
             if self.face is not None:
                 n_faces[j,i],n_iys[j,i],n_ixs[j,i] = n_ind
             else:
@@ -353,7 +353,7 @@ class position():
         else:
             raise Exception('vkernel not supported')
     
-    def fatten(self,knw,fourD = False,required = 'all'):
+    def fatten(self,knw,fourD = False,required = 'all',ind_moves_kwarg = {}):
         if required!='all' and isinstance(required,str):
             required = tuple([required])
         if required =='all' or isinstance(required,tuple):
@@ -363,7 +363,7 @@ class position():
         
         #TODO: register the kernel shape
         if _in_required('X',required) or _in_required('Y',required) or _in_required('face',required):
-            ffc,fiy,fix = self.fatten_h(knw)
+            ffc,fiy,fix = self.fatten_h(knw,ind_moves_kwarg = ind_moves_kwarg)
             if ffc is not None:
                 R = (ffc,fiy,fix)
                 keys = ['face','Y','X']
@@ -423,7 +423,7 @@ class position():
         return lon,lat
             
     
-    def get_needed(self,varName,knw,required = None,prefetched = None,**kwarg):
+    def _get_needed(self,varName,knw,required = None,prefetched = None,**kwarg):
         if required is None:
             required = self.ocedata._ds[varName].dims
         ind = self.fatten(knw,required = required,**kwarg)
@@ -435,7 +435,7 @@ class position():
         else:
             return prefetched[ind]
     
-    def get_masked(self,knw,gridtype = 'C',**kwarg):
+    def _get_masked(self,knw,gridtype = 'C',**kwarg):
         ind = self.fatten(knw,fourD = True,**kwarg)
         if self.it is not None:
             ind = ind[1:]
@@ -444,8 +444,8 @@ class position():
                             Please check if the position objects have all the dimensions needed""")
         return get_masked(self.ocedata,ind,gridtype = gridtype)
     
-    def find_pk4d(self,knw,gridtype = 'C'):
-        masked = self.get_masked(knw,gridtype = gridtype)
+    def _find_pk4d(self,knw,gridtype = 'C'):
+        masked = self._get_masked(knw,gridtype = gridtype)
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
@@ -481,8 +481,10 @@ class position():
             ind_dic = dict(zip(dims,ind))
             if prefetched is not None:
                 temp_ind = []
+                if i_min is None:
+                    raise ValueError('please pass value for the prefix of prefetched dataset, even if the prefix is zero')
                 for i,dim in enumerate(dims):
-                    a_ind = ind_dic[dim]
+                    a_ind = ind[i]
                     a_ind-= i_min[i]
                     temp_ind.append(a_ind)
                 temp_ind = tuple(temp_ind)
@@ -551,6 +553,7 @@ class position():
 
             R = np.einsum('nj,nj->n',needed,weight)
             return R
+# vector case is here
         elif isinstance(varName,list) or isinstance(varName,tuple):
             if len(varName)!=2:
                 raise Exception('list varName can only have length 2, representing horizontal vectors')
@@ -584,21 +587,36 @@ class position():
                     else:
                         dims.append(i)
                 dims = tuple(dims)
-                ind = self.fatten(uknw,required = dims,fourD = True)
-                ind_dic = dict(zip(dims,ind))
+                uind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'U'})
+                vind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'V'})
+                uind_dic = dict(zip(dims,uind))
+                vind_dic = dict(zip(dims,vind))
 
                 if prefetched is not None:
-                    temp_ind = []
+                    temp_uind = []
+                    temp_vind = []
                     for i,dim in enumerate(dims):
-                        a_ind = ind_dic[dim]
-                        a_ind-= i_min[i]
-                        temp_ind.append(a_ind)
-                    temp_ind = tuple(temp_ind)
-                    n_u = np.nan_to_num(upre[temp_ind])
-                    n_v = np.nan_to_num(vpre[temp_ind])
+                        a_uind = uind[i]
+                        a_uind-= i_min[i]
+                        temp_uind.append(a_uind)
+                        
+                        a_vind = vind[i]
+                        a_vind-= i_min[i]
+                        temp_vind.append(a_vind)
+                    temp_uind = tuple(temp_uind)
+                    temp_vind = tuple(temp_vind)
+                    
+                    n_ufromu = np.nan_to_num(upre[temp_uind])
+                    n_ufromv = np.nan_to_num(vpre[temp_uind])
+                    n_vfromu = np.nan_to_num(upre[temp_vind])
+                    n_vfromv = np.nan_to_num(vpre[temp_vind])
                 else:  
-                    n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
-                    n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
+                    # n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
+                    # n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
+                    n_ufromu = np.nan_to_num(sread(self.ocedata[uname],uind))
+                    n_ufromv = np.nan_to_num(sread(self.ocedata[vname],uind))
+                    n_vfromu = np.nan_to_num(sread(self.ocedata[uname],vind))
+                    n_vfromv = np.nan_to_num(sread(self.ocedata[vname],vind))
     #             np.nan_to_num(n_u,copy = False)
     #             np.nan_to_num(n_v,copy = False)
 
@@ -635,42 +653,47 @@ class position():
                     umask = np.ones_like(ind[0])
                     vmask = np.ones_like(ind[0])
                 else:
+                    # In this part, I am using uind for masking, which is not correct, this is kind of temporary, 
+                    # because I am ging to overhaul the whole function afterwards
                     if 'Zl' in dims:
                         warnings.warn('the vertical value of vector is between cells, may result in wrong masking')
-                        ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
+                        ind_for_mask = tuple([uind[i] for i in range(len(uind)) if dims[i] not in ['time']])
                         this_bottom_scheme = None
-                        if uknw.vkernel == 'nearest':
-                            rz = self.rzl
-                        else:
-                            rz = self.rzl_lin
                     elif 'Z' in dims:
                         # something like salt
-                        ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
+                        ind_for_mask = tuple([uind[i] for i in range(len(uind)) if dims[i] not in ['time']])
                         this_bottom_scheme = 'no_flux'
                     else:
                         # something like 
-                        ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
+                        ind_for_mask = [uind[i] for i in range(len(uind)) if dims[i] not in ['time']]
                         ind_for_mask.insert(0,np.zeros_like(ind[0]))
                         ind_for_mask = ind_for_mask
                         this_bottom_scheme = 'no_flux'
 
-                umask = get_masked(self.ocedata,ind_for_mask,gridtype = 'U')
-                vmask = get_masked(self.ocedata,ind_for_mask,gridtype = 'V')
+                    umask = get_masked(self.ocedata,ind_for_mask,gridtype = 'U')
+                    vmask = get_masked(self.ocedata,ind_for_mask,gridtype = 'V')
                 if self.face is not None:
     #                 hface = ind4d[2][:,:,0,0]
                     (UfromUvel,
                      UfromVvel,
+                     _,
+                     _        ) = self.ocedata.tp.four_matrix_for_uv(uind_dic['face'][:,:,0,0])
+        
+                    (_,
+                     _,
                      VfromUvel,
-                     VfromVvel) = self.ocedata.tp.four_matrix_for_uv(ind_dic['face'][:,:,0,0])
+                     VfromVvel) = self.ocedata.tp.four_matrix_for_uv(vind_dic['face'][:,:,0,0])
 
-                    temp_n_u = (np.einsum('nijk,ni->nijk',n_u,UfromUvel)
-                               +np.einsum('nijk,ni->nijk',n_v,UfromVvel))
-                    temp_n_v = (np.einsum('nijk,ni->nijk',n_u,VfromUvel)
-                               +np.einsum('nijk,ni->nijk',n_v,VfromVvel))
+
+                    temp_n_u = (np.einsum('nijk,ni->nijk',n_ufromu,UfromUvel)
+                               +np.einsum('nijk,ni->nijk',n_ufromv,UfromVvel))
+                    temp_n_v = (np.einsum('nijk,ni->nijk',n_vfromu,VfromUvel)
+                               +np.einsum('nijk,ni->nijk',n_vfromv,VfromVvel))
 
                     n_u = temp_n_u
                     n_v = temp_n_v
-
+                    
+                    # again this part is not accurate
                     temp_umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
                                      np.einsum('nijk,ni->nijk',vmask,UfromVvel))
                     temp_vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
@@ -678,6 +701,9 @@ class position():
 
                     umask = temp_umask
                     vmask = temp_vmask
+                else:
+                    n_u = n_ufromu
+                    n_v = n_vfromv
 
                 upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
                 vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
