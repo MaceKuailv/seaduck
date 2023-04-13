@@ -549,7 +549,7 @@ class position():
         
     
     def _fatten_required_index_and_register(self,hash_index,main_dict):
-        hsh = np.unique(hash_index.values())
+        hsh = np.unique(list(hash_index.values()))
         index_lookup = {}
         for hs in hsh:
             main_key = get_key_by_value(hash_index,hs)
@@ -577,7 +577,7 @@ class position():
         return index_lookup
     
     def _transform_vector_and_register(self,index_lookup,hash_index,main_dict):
-        hsh = np.unique(hash_index.values())
+        hsh = np.unique(list(hash_index.values()))
         transform_lookup = {}
         if self.face is None:
             for hs in hsh:
@@ -590,9 +590,9 @@ class position():
                 transform_lookup[hs] = None
             elif isinstance(dims[0],tuple):
                 uind,vind = index_lookup[hs]
-                uind_dic = dict(zip(dims,uind))
-                vind_dic = dict(zip(dims,vind))
-                # This only matters when dim == 'face', no need to think about 'x'
+                uind_dic = dict(zip(dims[0],uind))
+                vind_dic = dict(zip(dims[1],vind))
+                # This only matters when dim == 'face', no need to think about 'Xp1'
                 (UfromUvel,
                  UfromVvel,
                  _,
@@ -620,15 +620,15 @@ class position():
             else:
                 raise ValueError(f'unsupported dims: {dims}')
         # modify the index_lookup
-        return index_lookup,transform_lookeup
+        return transform_lookup
     
     def _mask_value_and_register(self,index_lookup,transform_lookup,hash_index,main_dict):
-        hsh = np.unique(hash_index.values())
+        hsh = np.unique(list(hash_index.values()))
         mask_lookup = {}
         return mask_lookup
     
     def _read_data_and_register(self,index_lookup,hash_read,main_dict,prefetch_dict):
-        hsh = np.unique(hash_index.values())
+        hsh = np.unique(list(hash_read.values()))
         data_lookup = {}
         return data_lookup
     
