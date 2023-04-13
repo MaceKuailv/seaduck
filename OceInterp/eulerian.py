@@ -449,6 +449,140 @@ class position():
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
+    def _register_interpolation_input(self,varName,knw,
+                    prefetched = None,i_min = None):
+        # prefetch_dict = {var:(prefetched,i_min)}
+        # main_dict = {var:(var,kernel)}
+        # hash_index = {var:hash(cuvg,kernel_size)}
+        # hash_read  = {var:hash(var,kernel_size)}
+        # hash_weight= {var:hash(kernel,cuvg)}
+        if isinstance(varName,str) or isinstance(varName,tuple):
+            varName = [varName]
+        elif isinstance(varName,list):
+            pass
+        else:
+            raise ValueError('varName needs to be string, tuple, or a list of the above.')
+            
+        Nvar = len(varName)
+        
+        if isinstance(knw,KnW):
+            knw = [knw for i in range(Nvar)]
+        if isinstance(knw,tuple):
+            if len(knw)!=2:
+                raise ValueError('When knw is a tuple, we assume it to be kernels for a horizontal vector,'
+                                 'thus, it has to have 2 elements')
+            knw = [knw for i in range(Nvar)]
+        elif isinstance(knw,list):
+            if len(knw)!=Nvar:
+                raise ValueError('Mismatch between the number of kernels and variables')
+        elif isinstance(knw,dict):
+            temp = []
+            for var in varName:
+                a_knw = knw.get(var)
+                if (a_knw is None) or not(isinstance(a_knw,KnW)):
+                    raise ValueError(f'Variable {var} does not have a proper corresponding kernel')
+                else:
+                    temp.append(a_knw)
+            knw = temp
+        else:
+            raise ValueError('knw needs to be a KnW object, or list/dictionaries containing that ')
+            
+        if isinstance(prefetched,np.ndarray):
+            prefetched = [prefetched for i in range(Nvar)]
+        elif isinstance(prefetched,list):
+            if len(prefetched)!=Nvar:
+                raise ValueError('Mismatch between the number of prefetched arrays and variables')
+        elif isinstance(prefetched,dict):
+            prefetched = [prefetched.get(var) for var in varName]
+        else:
+            raise ValueError('prefetched needs to be a numpy array, or list/dictionaries containing that ')
+            
+        if isinstance(i_min,tuple):
+            i_min = [i_min for i in range(Nvar)]
+        elif isinstance(i_min,list):
+            if len(i_min)!=Nvar:
+                raise ValueError('Mismatch between the number of prefetched arrays prefix i_min and variables')
+        elif isinstance(i_min,dict):
+            i_min = [i_min.get(var) for var in varName]
+        else:
+            raise ValueError('prefetched prefix i_min needs to be a tuple, or list/dictionaries containing that ')
+            
+        kernel_size_hash = []
+        kernel_hash = []
+        for kkk in knw:
+            if isinstance(kkk,KnW):
+                kernel_size_hash.append(kkk.size_hash)
+                kernel_hash.append(hash(kkk))
+            elif isinstance(kkk,tuple):
+                if len(kkk)!=2:
+                    raise ValueError('When knw is a tuple, we assume it to be kernels for a horizontal vector,'
+                                     'thus, it has to have 2 elements')
+                uknw,vknw = kkk
+                if not uknw.same_size(vknw):
+                    raise Exception('u,v kernel needs to have same size'
+                                    'to navigate the complex grid orientation.'
+                                    'use a kernel that include both of the uv kernels'
+                                   )
+                kernel_size_hash.append(uknw.size_hash)
+                kernel_hash.append(hash((uknw,vknw)))
+        dims = []
+        for var in varName:
+            if isinstance(var,str):
+                dims.append(self.ocedata[var].dims)
+            elif isinstance(var,tuple):
+                temp = []
+                for vvv in var:
+                    temp.append(self.ocedata[vvv].dims)
+                dims.append(tuple(temp))
+        
+        prefetch_dict = dict(zip(varName,zip(prefetched,i_min)))
+        main_dict = dict(zip(varName,zip(varName,dims,knw)))
+        hash_index = dict(zip(varName,[hash(i) for i in zip(dims,kernel_size_hash)]))
+        hash_read  = dict(zip(varName,[hash(i) for i in zip(varName,kernel_size_hash)]))
+        hash_weight= dict(zip(varName,[hash(i) for i in zip(dims,kernel_size_hash)]))
+        return prefetch_dict,main_dict,hash_index,hash_read,hash_weight
+        
+    
+    def _fatten_required_index_and_register(self,hash_index,main_index):
+        hsh = np.unique(hash_index.values())
+        index_lookup = {}
+        return index_lookup
+    
+    def _transform_vector_and_register(self,index_lookup,hash_index,main_dict):
+        hsh = np.unique(hash_index.values())
+        transform_lookup = {}
+        # modify the index_lookup
+        return transform_lookeup
+    
+    def _mask_value_and_register(self,index_lookup,hash_index,main_dict):
+        hsh = np.unique(hash_index.values())
+        mask_lookup = {}
+        return mask_lookup
+    
+    def _read_data_and_register(self,index_lookup,hash_read,main_dict,prefetch_dict):
+        hsh = np.unique(hash_index.values())
+        data_lookup = {}
+        return data_lookup
+    
+    def _compute_weight_and_register(self,hash_weight,main_dict):
+        weight_lookup = {}
+        return weight_lookup
+    
+    def newinterp(self,varName,knw,
+                    vec_transform = True,
+                    prefetched = None,i_min = None):
+        (
+            prefetch_dict,
+            main_dict,
+            hash_index,
+            hash_read,
+            hash_weight
+        ) = _register_interpolation_input(self,varName,knw,
+                    prefetched = prefetched,i_min = i_min)
+        index_lookup = self._fatten_required_index_and_register(hash_index,main_index)
+        transform_lookup = self._transform_vector_and_register(index_lookup,hash_index,main_dict)
+        
+    
     def interpolate(self,varName,knw,
                     vec_transform = True,
                     prefetched = None,i_min = None):
