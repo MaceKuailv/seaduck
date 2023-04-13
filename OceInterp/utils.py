@@ -66,7 +66,11 @@ def rel_lon(x,ref_lon):
 #     z = R * _np.sin(Y_rad)
 
 #     return x, y, z
-
+def get_key_by_value(d, value):
+    for k, v in d.items():
+        if v == value:
+            return k
+    return None
 
 def great_circle_path(lat1, lon1, lat2, lon2, delta_km=None, R=None):
     """
