@@ -586,9 +586,9 @@ class position():
         for hs in hsh:
             main_key = get_key_by_value(hash_index,hs)
             varName,dims,knw = main_dict[main_key]
-            if isinstance(dims[0],str):
+            if isinstance(varName,str):
                 transform_lookup[hs] = None
-            elif isinstance(dims[0],tuple):
+            elif isinstance(varName,tuple):
                 uind,vind = index_lookup[hs]
                 uind_dic = dict(zip(dims[0],uind))
                 vind_dic = dict(zip(dims[1],vind))
@@ -625,6 +625,12 @@ class position():
     def _mask_value_and_register(self,index_lookup,transform_lookup,hash_index,main_dict):
         hsh = np.unique(list(hash_index.values()))
         mask_lookup = {}
+        for hs in hsh:
+            main_key = get_key_by_value(hash_index,hs)
+            varName,dims,knw = main_dict[main_key]
+            if isinstance(varName,str):
+                ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
+
         return mask_lookup
     
     def _read_data_and_register(self,index_lookup,hash_read,main_dict,prefetch_dict):
@@ -647,281 +653,281 @@ class position():
             hash_weight
         ) = _register_interpolation_input(self,varName,knw,
                     prefetched = prefetched,i_min = i_min)
-        index_lookup = self._fatten_required_index_and_register(hash_index,main_index)
+        index_lookup = self._fatten_required_index_and_register(hash_index,main_dict)
         transform_lookup = self._transform_vector_and_register(index_lookup,hash_index,main_dict)
         
     
-    def interpolate(self,varName,knw,
-                    vec_transform = True,
-                    prefetched = None,i_min = None):
-        # implement shortcut u,v,w
-        # TODO: fix the very subtle bug that cause velocity component parallel to face connection
-        # TODO: add function to interpolate multiple variable at once. 
-        if prefetched is not None:
-            # TODO: I could have a warning about prefetch
-            # overwriting varName.
-            # But should I?
-            pass
-        if isinstance(varName,str):
-            old_dims = self.ocedata._ds[varName].dims
-            dims = []
-            for i in old_dims:
-                if i in ['Xp1','Yp1']:
-                    dims.append(i[:1])
-                else:
-                    dims.append(i)
-            dims = tuple(dims)
-            if 'Xp1' in old_dims:
-                rx = self.rx+0.5
-            else:
-                rx = self.rx
-            if 'Yp1' in old_dims:
-                ry = self.ry+0.5
-            else:
-                ry = self.ry
-            ind = self.fatten(knw,required = dims,fourD = True)
-            ind_dic = dict(zip(dims,ind))
-            if prefetched is not None:
-                temp_ind = []
-                if i_min is None:
-                    raise ValueError('please pass value for the prefix of prefetched dataset, even if the prefix is zero')
-                for i,dim in enumerate(dims):
-                    a_ind = ind[i]
-                    a_ind-= i_min[i]
-                    temp_ind.append(a_ind)
-                temp_ind = tuple(temp_ind)
-                needed = np.nan_to_num(prefetched[temp_ind])
-            else:
-                needed = np.nan_to_num(sread(self.ocedata[varName],ind))
+#     def interpolate(self,varName,knw,
+#                     vec_transform = True,
+#                     prefetched = None,i_min = None):
+#         # implement shortcut u,v,w
+#         # TODO: fix the very subtle bug that cause velocity component parallel to face connection
+#         # TODO: add function to interpolate multiple variable at once. 
+#         if prefetched is not None:
+#             # TODO: I could have a warning about prefetch
+#             # overwriting varName.
+#             # But should I?
+#             pass
+#         if isinstance(varName,str):
+#             old_dims = self.ocedata._ds[varName].dims
+#             dims = []
+#             for i in old_dims:
+#                 if i in ['Xp1','Yp1']:
+#                     dims.append(i[:1])
+#                 else:
+#                     dims.append(i)
+#             dims = tuple(dims)
+#             if 'Xp1' in old_dims:
+#                 rx = self.rx+0.5
+#             else:
+#                 rx = self.rx
+#             if 'Yp1' in old_dims:
+#                 ry = self.ry+0.5
+#             else:
+#                 ry = self.ry
+#             ind = self.fatten(knw,required = dims,fourD = True)
+#             ind_dic = dict(zip(dims,ind))
+#             if prefetched is not None:
+#                 temp_ind = []
+#                 if i_min is None:
+#                     raise ValueError('please pass value for the prefix of prefetched dataset, even if the prefix is zero')
+#                 for i,dim in enumerate(dims):
+#                     a_ind = ind[i]
+#                     a_ind-= i_min[i]
+#                     temp_ind.append(a_ind)
+#                 temp_ind = tuple(temp_ind)
+#                 needed = np.nan_to_num(prefetched[temp_ind])
+#             else:
+#                 needed = np.nan_to_num(sread(self.ocedata[varName],ind))
             
-            if 'Z' in dims:
-                if self.rz is not None:
-                    if knw.vkernel == 'nearest':
-                        rz = self.rz
-                    else:
-                        rz = self.rz_lin
-                else:
-                    rz = 0
-            elif 'Zl' in dims:
-                if self.rz is not None:
-                    if knw.vkernel == 'nearest':
-                        rz = self.rzl
-                    else:
-                        rz = self.rzl_lin
-                else:
-                    rz = 0
-            else:
-                rz = 0
+#             if 'Z' in dims:
+#                 if self.rz is not None:
+#                     if knw.vkernel == 'nearest':
+#                         rz = self.rz
+#                     else:
+#                         rz = self.rz_lin
+#                 else:
+#                     rz = 0
+#             elif 'Zl' in dims:
+#                 if self.rz is not None:
+#                     if knw.vkernel == 'nearest':
+#                         rz = self.rzl
+#                     else:
+#                         rz = self.rzl_lin
+#                 else:
+#                     rz = 0
+#             else:
+#                 rz = 0
 
-            if self.rt is not None:
-                if knw.tkernel == 'nearest':
-                    rt = self.rt
-                else:
-                    rt = self.rt_lin
-            else:
-                rt = 0
+#             if self.rt is not None:
+#                 if knw.tkernel == 'nearest':
+#                     rt = self.rt
+#                 else:
+#                     rt = self.rt_lin
+#             else:
+#                 rt = 0
             
-            if not ('X' in dims and 'Y' in dims):
-                # if it does not have a horizontal dimension, then we don't have to mask
-                masked = np.ones_like(ind[0])
-            else:
-                if 'Zl' in dims:
-                    # something like wvel
-                    ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
-                    masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'Wvel')
-                    this_bottom_scheme = None
-                elif 'Z' in dims:
-                    # something like salt
-                    ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
-                    masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'C')
-                    this_bottom_scheme = 'no_flux'
-                else:
-                    # something like etan
-                    ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
-                    ind_for_mask.insert(0,np.zeros_like(ind[0]))
-                    ind_for_mask = ind_for_mask
-                    masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'C')
-                    this_bottom_scheme = 'no_flux'
+#             if not ('X' in dims and 'Y' in dims):
+#                 # if it does not have a horizontal dimension, then we don't have to mask
+#                 masked = np.ones_like(ind[0])
+#             else:
+#                 if 'Zl' in dims:
+#                     # something like wvel
+#                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
+#                     masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'Wvel')
+#                     this_bottom_scheme = None
+#                 elif 'Z' in dims:
+#                     # something like salt
+#                     ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
+#                     masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'C')
+#                     this_bottom_scheme = 'no_flux'
+#                 else:
+#                     # something like etan
+#                     ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
+#                     ind_for_mask.insert(0,np.zeros_like(ind[0]))
+#                     ind_for_mask = ind_for_mask
+#                     masked = get_masked(self.ocedata,ind_for_mask,gridtype = 'C')
+#                     this_bottom_scheme = 'no_flux'
                     
-            pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
+#             pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
 
-            weight = knw.get_weight(rx = rx,ry = ry,
-                                    rz = rz,rt = rt,
-                                    pk4d = pk4d,
-                                    bottom_scheme = this_bottom_scheme)
+#             weight = knw.get_weight(rx = rx,ry = ry,
+#                                     rz = rz,rt = rt,
+#                                     pk4d = pk4d,
+#                                     bottom_scheme = this_bottom_scheme)
 
-            needed = partial_flatten(needed)
-            weight = partial_flatten(weight)
+#             needed = partial_flatten(needed)
+#             weight = partial_flatten(weight)
 
-            R = np.einsum('nj,nj->n',needed,weight)
-            return R
-# vector case is here
-        elif isinstance(varName,list) or isinstance(varName,tuple):
-            if len(varName)!=2:
-                raise Exception('list varName can only have length 2, representing horizontal vectors')
-            uname,vname = varName
-            uknw,vknw = knw
+#             R = np.einsum('nj,nj->n',needed,weight)
+#             return R
+# # vector case is here
+#         elif isinstance(varName,list) or isinstance(varName,tuple):
+#             if len(varName)!=2:
+#                 raise Exception('list varName can only have length 2, representing horizontal vectors')
+#             uname,vname = varName
+#             uknw,vknw = knw
             
-            if prefetched is not None:
-                upre,vpre = prefetched
-            else:
-                upre = None
-                vpre = None
+#             if prefetched is not None:
+#                 upre,vpre = prefetched
+#             else:
+#                 upre = None
+#                 vpre = None
                 
-            if self.face is None:
-                # treat them as scalar then. 
-                u = self.interpolate(uname,uknw,
-                    prefetched = upre,i_min = i_min)
-                v = self.interpolate(vname,vknw,
-                    prefetched = vpre,i_min = i_min)
-            else:
-                if not uknw.same_size(vknw):
-                    raise Exception('u,v kernel needs to have same size'
-                                    'to navigate the complex grid orientation.'
-                                    'use a kernel that include both of the uv kernels'
-                                   )
+#             if self.face is None:
+#                 # treat them as scalar then. 
+#                 u = self.interpolate(uname,uknw,
+#                     prefetched = upre,i_min = i_min)
+#                 v = self.interpolate(vname,vknw,
+#                     prefetched = vpre,i_min = i_min)
+#             else:
+#                 if not uknw.same_size(vknw):
+#                     raise Exception('u,v kernel needs to have same size'
+#                                     'to navigate the complex grid orientation.'
+#                                     'use a kernel that include both of the uv kernels'
+#                                    )
 
-                old_dims = self.ocedata._ds[uname].dims
-                dims = []
-                for i in old_dims:
-                    if i in ['Xp1','Yp1']:
-                        dims.append(i[:1])
-                    else:
-                        dims.append(i)
-                dims = tuple(dims)
-                uind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'U'})
-                vind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'V'})
-                uind_dic = dict(zip(dims,uind))
-                vind_dic = dict(zip(dims,vind))
+#                 old_dims = self.ocedata._ds[uname].dims
+#                 dims = []
+#                 for i in old_dims:
+#                     if i in ['Xp1','Yp1']:
+#                         dims.append(i[:1])
+#                     else:
+#                         dims.append(i)
+#                 dims = tuple(dims)
+#                 uind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'U'})
+#                 vind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'V'})
+#                 uind_dic = dict(zip(dims,uind))
+#                 vind_dic = dict(zip(dims,vind))
 
-                if prefetched is not None:
-                    temp_uind = []
-                    temp_vind = []
-                    for i,dim in enumerate(dims):
-                        a_uind = uind[i]
-                        a_uind-= i_min[i]
-                        temp_uind.append(a_uind)
+#                 if prefetched is not None:
+#                     temp_uind = []
+#                     temp_vind = []
+#                     for i,dim in enumerate(dims):
+#                         a_uind = uind[i]
+#                         a_uind-= i_min[i]
+#                         temp_uind.append(a_uind)
                         
-                        a_vind = vind[i]
-                        a_vind-= i_min[i]
-                        temp_vind.append(a_vind)
-                    temp_uind = tuple(temp_uind)
-                    temp_vind = tuple(temp_vind)
+#                         a_vind = vind[i]
+#                         a_vind-= i_min[i]
+#                         temp_vind.append(a_vind)
+#                     temp_uind = tuple(temp_uind)
+#                     temp_vind = tuple(temp_vind)
                     
-                    n_ufromu = np.nan_to_num(upre[temp_uind])
-                    n_ufromv = np.nan_to_num(vpre[temp_uind])
-                    n_vfromu = np.nan_to_num(upre[temp_vind])
-                    n_vfromv = np.nan_to_num(vpre[temp_vind])
-                else:  
-                    # n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
-                    # n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
-                    n_ufromu = np.nan_to_num(sread(self.ocedata[uname],uind))
-                    n_ufromv = np.nan_to_num(sread(self.ocedata[vname],uind))
-                    n_vfromu = np.nan_to_num(sread(self.ocedata[uname],vind))
-                    n_vfromv = np.nan_to_num(sread(self.ocedata[vname],vind))
-    #             np.nan_to_num(n_u,copy = False)
-    #             np.nan_to_num(n_v,copy = False)
+#                     n_ufromu = np.nan_to_num(upre[temp_uind])
+#                     n_ufromv = np.nan_to_num(vpre[temp_uind])
+#                     n_vfromu = np.nan_to_num(upre[temp_vind])
+#                     n_vfromv = np.nan_to_num(vpre[temp_vind])
+#                 else:  
+#                     # n_u = np.nan_to_num(sread(self.ocedata[uname],ind))
+#                     # n_v = np.nan_to_num(sread(self.ocedata[vname],ind))
+#                     n_ufromu = np.nan_to_num(sread(self.ocedata[uname],uind))
+#                     n_ufromv = np.nan_to_num(sread(self.ocedata[vname],uind))
+#                     n_vfromu = np.nan_to_num(sread(self.ocedata[uname],vind))
+#                     n_vfromv = np.nan_to_num(sread(self.ocedata[vname],vind))
+#     #             np.nan_to_num(n_u,copy = False)
+#     #             np.nan_to_num(n_v,copy = False)
 
 
-                if 'Z' in dims:
-                    if self.rz is not None:
-                        if uknw.vkernel == 'nearest':
-                            rz = self.rz
-                        else:
-                            rz = self.rz_lin
-                    else:
-                        rz = 0
-                elif 'Zl' in dims:
-                    if self.rz is not None:
-                        if uknw.vkernel == 'nearest':
-                            rz = self.rzl
-                        else:
-                            rz = self.rzl_lin
-                    else:
-                        rz = 0
-                else:
-                    rz = 0
+#                 if 'Z' in dims:
+#                     if self.rz is not None:
+#                         if uknw.vkernel == 'nearest':
+#                             rz = self.rz
+#                         else:
+#                             rz = self.rz_lin
+#                     else:
+#                         rz = 0
+#                 elif 'Zl' in dims:
+#                     if self.rz is not None:
+#                         if uknw.vkernel == 'nearest':
+#                             rz = self.rzl
+#                         else:
+#                             rz = self.rzl_lin
+#                     else:
+#                         rz = 0
+#                 else:
+#                     rz = 0
 
-                if self.rt is not None:
-                    if uknw.tkernel == 'nearest':
-                        rt = self.rt
-                    else:
-                        rt = self.rt_lin
-                else:
-                    rt = 0
+#                 if self.rt is not None:
+#                     if uknw.tkernel == 'nearest':
+#                         rt = self.rt
+#                     else:
+#                         rt = self.rt_lin
+#                 else:
+#                     rt = 0
 
-                if not ('X' in dims and 'Y' in dims):
-                    # if it does not have a horizontal dimension, then we don't have to mask
-                    umask = np.ones_like(ind[0])
-                    vmask = np.ones_like(ind[0])
-                else:
-                    # In this part, I am using uind for masking, which is not correct, this is kind of temporary, 
-                    # because I am ging to overhaul the whole function afterwards
-                    if 'Zl' in dims:
-                        warnings.warn('the vertical value of vector is between cells, may result in wrong masking')
-                        ind_for_mask = tuple([uind[i] for i in range(len(uind)) if dims[i] not in ['time']])
-                        this_bottom_scheme = None
-                    elif 'Z' in dims:
-                        # something like salt
-                        ind_for_mask = tuple([uind[i] for i in range(len(uind)) if dims[i] not in ['time']])
-                        this_bottom_scheme = 'no_flux'
-                    else:
-                        # something like 
-                        ind_for_mask = [uind[i] for i in range(len(uind)) if dims[i] not in ['time']]
-                        ind_for_mask.insert(0,np.zeros_like(ind[0]))
-                        ind_for_mask = ind_for_mask
-                        this_bottom_scheme = 'no_flux'
+#                 if not ('X' in dims and 'Y' in dims):
+#                     # if it does not have a horizontal dimension, then we don't have to mask
+#                     umask = np.ones_like(ind[0])
+#                     vmask = np.ones_like(ind[0])
+#                 else:
+#                     # In this part, I am using uind for masking, which is not correct, this is kind of temporary, 
+#                     # because I am ging to overhaul the whole function afterwards
+#                     if 'Zl' in dims:
+#                         warnings.warn('the vertical value of vector is between cells, may result in wrong masking')
+#                         ind_for_mask = tuple([uind[i] for i in range(len(uind)) if dims[i] not in ['time']])
+#                         this_bottom_scheme = None
+#                     elif 'Z' in dims:
+#                         # something like salt
+#                         ind_for_mask = tuple([uind[i] for i in range(len(uind)) if dims[i] not in ['time']])
+#                         this_bottom_scheme = 'no_flux'
+#                     else:
+#                         # something like 
+#                         ind_for_mask = [uind[i] for i in range(len(uind)) if dims[i] not in ['time']]
+#                         ind_for_mask.insert(0,np.zeros_like(ind[0]))
+#                         ind_for_mask = ind_for_mask
+#                         this_bottom_scheme = 'no_flux'
 
-                    umask = get_masked(self.ocedata,ind_for_mask,gridtype = 'U')
-                    vmask = get_masked(self.ocedata,ind_for_mask,gridtype = 'V')
-                if self.face is not None:
-    #                 hface = ind4d[2][:,:,0,0]
-                    (UfromUvel,
-                     UfromVvel,
-                     _,
-                     _        ) = self.ocedata.tp.four_matrix_for_uv(uind_dic['face'][:,:,0,0])
+#                     umask = get_masked(self.ocedata,ind_for_mask,gridtype = 'U')
+#                     vmask = get_masked(self.ocedata,ind_for_mask,gridtype = 'V')
+#                 if self.face is not None:
+#     #                 hface = ind4d[2][:,:,0,0]
+#                     (UfromUvel,
+#                      UfromVvel,
+#                      _,
+#                      _        ) = self.ocedata.tp.four_matrix_for_uv(uind_dic['face'][:,:,0,0])
         
-                    (_,
-                     _,
-                     VfromUvel,
-                     VfromVvel) = self.ocedata.tp.four_matrix_for_uv(vind_dic['face'][:,:,0,0])
+#                     (_,
+#                      _,
+#                      VfromUvel,
+#                      VfromVvel) = self.ocedata.tp.four_matrix_for_uv(vind_dic['face'][:,:,0,0])
 
 
-                    temp_n_u = (np.einsum('nijk,ni->nijk',n_ufromu,UfromUvel)
-                               +np.einsum('nijk,ni->nijk',n_ufromv,UfromVvel))
-                    temp_n_v = (np.einsum('nijk,ni->nijk',n_vfromu,VfromUvel)
-                               +np.einsum('nijk,ni->nijk',n_vfromv,VfromVvel))
+#                     temp_n_u = (np.einsum('nijk,ni->nijk',n_ufromu,UfromUvel)
+#                                +np.einsum('nijk,ni->nijk',n_ufromv,UfromVvel))
+#                     temp_n_v = (np.einsum('nijk,ni->nijk',n_vfromu,VfromUvel)
+#                                +np.einsum('nijk,ni->nijk',n_vfromv,VfromVvel))
 
-                    n_u = temp_n_u
-                    n_v = temp_n_v
+#                     n_u = temp_n_u
+#                     n_v = temp_n_v
                     
-                    # again this part is not accurate
-                    temp_umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
-                                     np.einsum('nijk,ni->nijk',vmask,UfromVvel))
-                    temp_vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
-                                     np.einsum('nijk,ni->nijk',vmask,VfromVvel))
+#                     # again this part is not accurate
+#                     temp_umask = np.round(np.einsum('nijk,ni->nijk',umask,UfromUvel)+
+#                                      np.einsum('nijk,ni->nijk',vmask,UfromVvel))
+#                     temp_vmask = np.round(np.einsum('nijk,ni->nijk',umask,VfromUvel)+
+#                                      np.einsum('nijk,ni->nijk',vmask,VfromVvel))
 
-                    umask = temp_umask
-                    vmask = temp_vmask
-                else:
-                    n_u = n_ufromu
-                    n_v = n_vfromv
+#                     umask = temp_umask
+#                     vmask = temp_vmask
+#                 else:
+#                     n_u = n_ufromu
+#                     n_v = n_vfromv
 
-                upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
-                vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
-                uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
-                vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = vpk4d)
+#                 upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
+#                 vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
+#                 uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
+#                 vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = vpk4d)
 
-    #             n_u    = partial_flatten(n_u   )
-    #             uweight = partial_flatten(uweight)
-    #             n_v    = partial_flatten(n_v   )
-    #             vweight = partial_flatten(veight)
-                u = np.einsum('nijk,nijk->n',n_u,uweight)
-                v = np.einsum('nijk,nijk->n',n_v,vweight)
+#     #             n_u    = partial_flatten(n_u   )
+#     #             uweight = partial_flatten(uweight)
+#     #             n_v    = partial_flatten(n_v   )
+#     #             vweight = partial_flatten(veight)
+#                 u = np.einsum('nijk,nijk->n',n_u,uweight)
+#                 v = np.einsum('nijk,nijk->n',n_v,vweight)
 
-            if vec_transform:
-                u,v = local_to_latlon(u,v,self.cs,self.sn)
-            return u,v
-        else:
-            raise Exception('varList type not supported.')
+#             if vec_transform:
+#                 u,v = local_to_latlon(u,v,self.cs,self.sn)
+#             return u,v
+#         else:
+#             raise Exception('varList type not supported.')
             
