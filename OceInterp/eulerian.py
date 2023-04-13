@@ -451,6 +451,7 @@ class position():
     
     def _register_interpolation_input(self,varName,knw,
                     prefetched = None,i_min = None):
+        # TODO: distinguish the no face case
         # prefetch_dict = {var:(prefetched,i_min)}
         # main_dict = {var:(var,kernel)}
         # hash_index = {var:hash(cuvg,kernel_size)}
@@ -522,11 +523,11 @@ class position():
                     raise ValueError('When knw is a tuple, we assume it to be kernels for a horizontal vector,'
                                      'thus, it has to have 2 elements')
                 uknw,vknw = kkk
-                if not uknw.same_size(vknw):
-                    raise Exception('u,v kernel needs to have same size'
-                                    'to navigate the complex grid orientation.'
-                                    'use a kernel that include both of the uv kernels'
-                                   )
+                # if not uknw.same_size(vknw):
+                #     raise Exception('u,v kernel needs to have same size'
+                #                     'to navigate the complex grid orientation.'
+                #                     'use a kernel that include both of the uv kernels'
+                #                    )
                 kernel_size_hash.append(uknw.size_hash())
                 kernel_hash.append(hash((uknw,vknw)))
         dims = []
@@ -547,20 +548,81 @@ class position():
         return prefetch_dict,main_dict,hash_index,hash_read,hash_weight
         
     
-    def _fatten_required_index_and_register(self,hash_index,main_index):
+    def _fatten_required_index_and_register(self,hash_index,main_dict):
         hsh = np.unique(hash_index.values())
         index_lookup = {}
         for hs in hsh:
             main_key = get_key_by_value(hash_index,hs)
+            varName,dims,knw = main_dict[main_key]
+            if isinstance(varName,str):
+                old_dims = dims
+            elif isinstance(varName,tuple):
+                old_dims = dims[0]
+            dims = []
+            for i in old_dims:
+                if i in ['Xp1','Yp1']:
+                    dims.append(i[:1])
+                else:
+                    dims.append(i)
+            dims = tuple(dims)
+            if isinstance(varName,str):
+                ind = self.fatten(knw,required = dims,fourD = True)
+                index_lookup[hs] = ind
+            elif isinstance(varName,tuple):
+                uknw,vknw = knw
+                uind = self.fatten(uknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'U'})
+                vind = self.fatten(vknw,required = dims,fourD = True,ind_moves_kwarg = {'cuvg':'V'})
+                index_lookup[hs] = (uind,vind)
+            
         return index_lookup
     
     def _transform_vector_and_register(self,index_lookup,hash_index,main_dict):
         hsh = np.unique(hash_index.values())
         transform_lookup = {}
+        if self.face is None:
+            for hs in hsh:
+                transform_lookup[hs] = None
+            return transform_lookup
+        for hs in hsh:
+            main_key = get_key_by_value(hash_index,hs)
+            varName,dims,knw = main_dict[main_key]
+            if isinstance(dims[0],str):
+                transform_lookup[hs] = None
+            elif isinstance(dims[0],tuple):
+                uind,vind = index_lookup[hs]
+                uind_dic = dict(zip(dims,uind))
+                vind_dic = dict(zip(dims,vind))
+                # This only matters when dim == 'face', no need to think about 'x'
+                (UfromUvel,
+                 UfromVvel,
+                 _,
+                 _        ) = self.ocedata.tp.four_matrix_for_uv(uind_dic['face'][:,:,0,0])
+
+                (_,
+                 _,
+                 VfromUvel,
+                 VfromVvel) = self.ocedata.tp.four_matrix_for_uv(vind_dic['face'][:,:,0,0])
+                bool_ufromu = abs(UfromUvel).astype(bool)
+                bool_ufromv = abs(UfromVvel).astype(bool)
+                bool_vfromu = abs(VfromUvel).astype(bool)
+                bool_vfromv = abs(VfromVvel).astype(bool)
+                
+                indufromu = tuple([idid[bool_ufromu] for idid in uind])
+                indufromv = tuple([idid[bool_ufromv] for idid in uind])
+                indvfromu = tuple([idid[bool_vfromu] for idid in vind])
+                indvfromv = tuple([idid[bool_vfromv] for idid in vind])
+                
+                transform_lookup[hs] = (
+                    (UfromUvel,UfromVvel,VfromUvel,VfromVvel),
+                    (bool_ufromu,bool_ufromv,bool_vfromu,bool_vfromv),
+                    (indufromu,indufromv,indvfromu,indvfromv)
+                )
+            else:
+                raise ValueError(f'unsupported dims: {dims}')
         # modify the index_lookup
-        return transform_lookeup
+        return index_lookup,transform_lookeup
     
-    def _mask_value_and_register(self,index_lookup,hash_index,main_dict):
+    def _mask_value_and_register(self,index_lookup,transform_lookup,hash_index,main_dict):
         hsh = np.unique(hash_index.values())
         mask_lookup = {}
         return mask_lookup
