@@ -3,7 +3,7 @@ from OceInterp.kernelNweight import KnW
 from OceInterp.kernel_and_weight import translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
-from OceInterp.utils import local_to_latlon
+from OceInterp.utils import local_to_latlon,get_key_by_value
 from OceInterp.lat2ind import find_px_py,weight_f_node
 
 import warnings
@@ -489,6 +489,8 @@ class position():
             
         if isinstance(prefetched,np.ndarray):
             prefetched = [prefetched for i in range(Nvar)]
+        elif prefetched is None:
+            prefetched = [prefetched for i in range(Nvar)]
         elif isinstance(prefetched,list):
             if len(prefetched)!=Nvar:
                 raise ValueError('Mismatch between the number of prefetched arrays and variables')
@@ -499,6 +501,8 @@ class position():
             
         if isinstance(i_min,tuple):
             i_min = [i_min for i in range(Nvar)]
+        elif i_min is None:
+            i_min = [None for i in range(Nvar)]
         elif isinstance(i_min,list):
             if len(i_min)!=Nvar:
                 raise ValueError('Mismatch between the number of prefetched arrays prefix i_min and variables')
@@ -511,7 +515,7 @@ class position():
         kernel_hash = []
         for kkk in knw:
             if isinstance(kkk,KnW):
-                kernel_size_hash.append(kkk.size_hash)
+                kernel_size_hash.append(kkk.size_hash())
                 kernel_hash.append(hash(kkk))
             elif isinstance(kkk,tuple):
                 if len(kkk)!=2:
@@ -523,7 +527,7 @@ class position():
                                     'to navigate the complex grid orientation.'
                                     'use a kernel that include both of the uv kernels'
                                    )
-                kernel_size_hash.append(uknw.size_hash)
+                kernel_size_hash.append(uknw.size_hash())
                 kernel_hash.append(hash((uknw,vknw)))
         dims = []
         for var in varName:
@@ -535,17 +539,19 @@ class position():
                     temp.append(self.ocedata[vvv].dims)
                 dims.append(tuple(temp))
         
-        prefetch_dict = dict(zip(varName,zip(prefetched,i_min)))
-        main_dict = dict(zip(varName,zip(varName,dims,knw)))
-        hash_index = dict(zip(varName,[hash(i) for i in zip(dims,kernel_size_hash)]))
-        hash_read  = dict(zip(varName,[hash(i) for i in zip(varName,kernel_size_hash)]))
-        hash_weight= dict(zip(varName,[hash(i) for i in zip(dims,kernel_size_hash)]))
+        prefetch_dict = dict(zip(zip(varName,kernel_hash),zip(prefetched,i_min)))
+        main_dict     = dict(zip(zip(varName,kernel_hash),zip(varName,dims,knw)))
+        hash_index    = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_size_hash)]))
+        hash_read     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(varName,kernel_size_hash)]))
+        hash_weight   = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_hash)]))
         return prefetch_dict,main_dict,hash_index,hash_read,hash_weight
         
     
     def _fatten_required_index_and_register(self,hash_index,main_index):
         hsh = np.unique(hash_index.values())
         index_lookup = {}
+        for hs in hsh:
+            main_key = get_key_by_value(hash_index,hs)
         return index_lookup
     
     def _transform_vector_and_register(self,index_lookup,hash_index,main_dict):
