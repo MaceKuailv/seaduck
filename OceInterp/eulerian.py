@@ -100,7 +100,7 @@ def _general_len(thing):
         return 1
     
 def _ind_for_mask(ind,dims):
-    ind_for_mask = [uind[i] for i in range(len(uind)) if dims[i] not in ['time']]
+    ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
     if 'Z' not in dims and 'Zl' not in dims:
         ind_for_mask.insert(0,np.zeros_like(ind[0]))
     return tuple(ind_for_mask)
@@ -496,6 +496,8 @@ class position():
             
         if isinstance(prefetched,np.ndarray):
             prefetched = [prefetched for i in range(Nvar)]
+        elif isinstance(prefetched,tuple):
+            prefetched = [prefetched for i in range(Nvar)]
         elif prefetched is None:
             prefetched = [prefetched for i in range(Nvar)]
         elif isinstance(prefetched,list):
@@ -504,7 +506,8 @@ class position():
         elif isinstance(prefetched,dict):
             prefetched = [prefetched.get(var) for var in varName]
         else:
-            raise ValueError('prefetched needs to be a numpy array, or list/dictionaries containing that ')
+            raise ValueError('prefetched needs to be a numpy array/tuple pair of numpy array,'
+                             ' or list/dictionaries containing that')
             
         if isinstance(i_min,tuple):
             i_min = [i_min for i in range(Nvar)]
@@ -520,10 +523,12 @@ class position():
             
         kernel_size_hash = []
         kernel_hash = []
+        mask_ignore = []
         for kkk in knw:
             if isinstance(kkk,KnW):
                 kernel_size_hash.append(kkk.size_hash())
                 kernel_hash.append(hash(kkk))
+                mask_ignore.append(kkk.ignore_mask)
             elif isinstance(kkk,tuple):
                 if len(kkk)!=2:
                     raise ValueError('When knw is a tuple, we assume it to be kernels for a horizontal vector,'
@@ -536,6 +541,7 @@ class position():
                 #                    )
                 kernel_size_hash.append(uknw.size_hash())
                 kernel_hash.append(hash((uknw,vknw)))
+                mask_ignore.append(uknw.ignore_mask or vknw.ignore_mask)
         dims = []
         for var in varName:
             if isinstance(var,str):
@@ -545,12 +551,11 @@ class position():
                 for vvv in var:
                     temp.append(self.ocedata[vvv].dims)
                 dims.append(tuple(temp))
-        mask_ignore = [kkk.ignore_mask for kkk in knw]
         
         prefetch_dict = dict(zip(zip(varName,kernel_hash),zip(prefetched,i_min)))
         main_dict     = dict(zip(zip(varName,kernel_hash),zip(varName,dims,knw)))
         hash_index    = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_size_hash)]))
-        hash_mask     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,mask_ignore,kernel_size_hash)]))
+        hash_mask     = dict(zip(zip(varName,kernel_hash),[i for i in zip(dims,mask_ignore,kernel_size_hash)]))
         hash_read     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(varName,kernel_size_hash)]))
         hash_weight   = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_hash)]))
         return prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
@@ -631,16 +636,27 @@ class position():
         return transform_lookup
     
     def _mask_value_and_register(self,index_lookup,transform_lookup,hash_mask,main_dict):
-        hsh = np.unique(list(hash_mask.values()))
+        lst = list(hash_mask.values())
+        hashed = [hash(i) for i in lst]
+        temp_dict = dict(zip(hashed,lst))
+        hsh = [temp_dict[i] for i in np.unique(hashed)]
         mask_lookup = {}
         for hs in hsh:
             main_key = get_key_by_value(hash_mask,hs)
             varName,dims,knw = main_dict[main_key]
-            longDims = ''.join(''.join(dims))
-            if (knw.ignore_mask) or ('X' not in longDims) or ('Y' not in longDims):
+            _,mask_ignore,kernel_size_hash = hs
+            hsind = hash((dims,kernel_size_hash))
+            longDims = ''.join([str(a_thing) for a_thing in dims])
+            if isinstance(knw,KnW):
+                ignore_mask = knw.ignore_mask
+            elif isinstance(knw,tuple):
+                ignore_mask = (knw[0].ignore_mask) or (knw[1].ignore_mask)
+            
+            if ignore_mask or ('X' not in longDims) or ('Y' not in longDims):
                 mask_lookup[hs] = None
             elif isinstance(varName,str):
-                ind_for_mask = _ind_for_masks(ind,dims)
+                ind = index_lookup[hsind]
+                ind_for_mask = _ind_for_mask(ind,dims)
                 if 'Zl' in dims:
                     cuvw = 'Wvel'
                 elif 'Z' in dims:
@@ -659,8 +675,8 @@ class position():
                 masked = get_masked(self.ocedata,ind_for_mask,gridtype = cuvw)
                 mask_lookup[hs] = masked
             elif isinstance(varName,tuple):
-                to_unzip = transform_lookup[hs]
-                uind,vind = index_lookup[hs]
+                to_unzip = transform_lookup[hsind]
+                uind,vind = index_lookup[hsind]
                 if to_unzip is None:
                     uind_for_mask = _ind_for_mask(uind,dims[0])
                     vind_for_mask = _ind_for_mask(vind,dims[1])
@@ -672,12 +688,12 @@ class position():
                         (bool_ufromu,bool_ufromv,bool_vfromu,bool_vfromv),
                         (indufromu,indufromv,indvfromu,indvfromv)
                     ) = to_unzip
-                    umask = np.zeros_like(uind[0])
-                    vmask = np.zeros_like(vind[0])
+                    umask = np.full(uind[0].shape,np.nan)
+                    vmask = np.full(vind[0].shape,np.nan)
                     umask[bool_ufromu] = get_masked(self.ocedata,_ind_for_mask(indufromu,dims[0]),gridtype = 'U')
                     umask[bool_ufromv] = get_masked(self.ocedata,_ind_for_mask(indufromv,dims[1]),gridtype = 'V')
-                    umask[bool_vfromu] = get_masked(self.ocedata,_ind_for_mask(indvfromu,dims[0]),gridtype = 'U')
-                    umask[bool_vfromv] = get_masked(self.ocedata,_ind_for_mask(indvfromv,dims[1]),gridtype = 'V')
+                    vmask[bool_vfromu] = get_masked(self.ocedata,_ind_for_mask(indvfromu,dims[0]),gridtype = 'U')
+                    vmask[bool_vfromv] = get_masked(self.ocedata,_ind_for_mask(indvfromv,dims[1]),gridtype = 'V')
                 mask_lookup[hs] = (umask,vmask)
         return mask_lookup
     
