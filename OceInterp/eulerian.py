@@ -539,13 +539,15 @@ class position():
                 for vvv in var:
                     temp.append(self.ocedata[vvv].dims)
                 dims.append(tuple(temp))
+        mask_ignore = [kkk.ignore_mask for kkk in knw]
         
         prefetch_dict = dict(zip(zip(varName,kernel_hash),zip(prefetched,i_min)))
         main_dict     = dict(zip(zip(varName,kernel_hash),zip(varName,dims,knw)))
         hash_index    = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_size_hash)]))
+        hash_mask     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,mask_ignore,kernel_size_hash)]))
         hash_read     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(varName,kernel_size_hash)]))
         hash_weight   = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_hash)]))
-        return prefetch_dict,main_dict,hash_index,hash_read,hash_weight
+        return prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
         
     
     def _fatten_required_index_and_register(self,hash_index,main_dict):
@@ -622,12 +624,16 @@ class position():
         # modify the index_lookup
         return transform_lookup
     
-    def _mask_value_and_register(self,index_lookup,transform_lookup,hash_index,main_dict):
-        hsh = np.unique(list(hash_index.values()))
+    def _mask_value_and_register(self,index_lookup,transform_lookup,hash_mask,main_dict):
+        hsh = np.unique(list(hash_mask.values()))
         mask_lookup = {}
         for hs in hsh:
-            main_key = get_key_by_value(hash_index,hs)
+            main_key = get_key_by_value(hash_mask,hs)
             varName,dims,knw = main_dict[main_key]
+            longDims = ''.join(''.join(dims))
+            if (knw.ignore_mask) or ('X' not in longDims) or ('Y' not in longDims):
+                mask_lookup[hs] = None
+                continue
             if isinstance(varName,str):
                 ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
 

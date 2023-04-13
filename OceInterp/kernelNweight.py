@@ -78,9 +78,13 @@ class KnW(object):
                  vkernel = "nearest",# linear,dz
                  tkernel = "nearest",# linear,dt
                  h_order = 0,# depend on hkernel type
+                 ignore_mask = False,
                 ):
         ksort = np.abs(kernel+np.array([0.01,0.00618])).sum(axis = 1).argsort()
         ksort_inv = ksort.argsort()
+        
+        if inheritance is not None and ignore_mask:
+            print('Warning:overwriting the inheritance oject to None, because we ignore masking')
         
         if inheritance == 'auto':
             inheritance = auto_doll(kernel,hkernel = hkernel)
@@ -97,6 +101,7 @@ class KnW(object):
         self.vkernel = vkernel
         self.tkernel = tkernel
         self.h_order = h_order
+        self.ignore_mask = ignore_mask
         
         self.kernels = [np.array([self.kernel[i] for i in doll]) for doll in self.inheritance]
         self.hfuncs = [
