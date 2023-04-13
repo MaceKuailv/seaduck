@@ -98,6 +98,12 @@ def _general_len(thing):
         return len(thing)
     except:
         return 1
+    
+def _ind_for_mask(ind,dims):
+    ind_for_mask = [uind[i] for i in range(len(uind)) if dims[i] not in ['time']]
+    if 'Z' not in dims and 'Zl' not in dims:
+        ind_for_mask.insert(0,np.zeros_like(ind[0]))
+    return tuple(ind_for_mask)
 
 class position():
 #     self.ind_h_dict = {}
@@ -633,10 +639,46 @@ class position():
             longDims = ''.join(''.join(dims))
             if (knw.ignore_mask) or ('X' not in longDims) or ('Y' not in longDims):
                 mask_lookup[hs] = None
-                continue
-            if isinstance(varName,str):
-                ind_for_mask = tuple([ind[i] for i in range(len(ind)) if dims[i] not in ['time']])
-
+            elif isinstance(varName,str):
+                ind_for_mask = _ind_for_masks(ind,dims)
+                if 'Zl' in dims:
+                    cuvw = 'Wvel'
+                elif 'Z' in dims:
+                    if 'Xp1' in dims and 'Yp1' in dims:
+                        raise NotImplementedError('The masking of corner points are open to '
+                                                  'interpretations thus not implemented, '
+                                                  'let knw.ignore_mask =True to go around')
+                    elif 'Xp1' in dims:
+                        cuvw =  'U'
+                    elif 'Yp1' in dims:
+                        cuvw = 'V'
+                    else:
+                        cuvw = 'C'
+                else:
+                    cuvw = 'C'
+                masked = get_masked(self.ocedata,ind_for_mask,gridtype = cuvw)
+                mask_lookup[hs] = masked
+            elif isinstance(varName,tuple):
+                to_unzip = transform_lookup[hs]
+                uind,vind = index_lookup[hs]
+                if to_unzip is None:
+                    uind_for_mask = _ind_for_mask(uind,dims[0])
+                    vind_for_mask = _ind_for_mask(vind,dims[1])
+                    umask = get_masked(self.ocedata,uind_for_mask,gridtype = 'U')
+                    vmask = get_masked(self.ocedata,vind_for_mask,gridtype = 'V')
+                else:
+                    (
+                        _,
+                        (bool_ufromu,bool_ufromv,bool_vfromu,bool_vfromv),
+                        (indufromu,indufromv,indvfromu,indvfromv)
+                    ) = to_unzip
+                    umask = np.zeros_like(uind[0])
+                    vmask = np.zeros_like(vind[0])
+                    umask[bool_ufromu] = get_masked(self.ocedata,_ind_for_mask(indufromu,dims[0]),gridtype = 'U')
+                    umask[bool_ufromv] = get_masked(self.ocedata,_ind_for_mask(indufromv,dims[1]),gridtype = 'V')
+                    umask[bool_vfromu] = get_masked(self.ocedata,_ind_for_mask(indvfromu,dims[0]),gridtype = 'U')
+                    umask[bool_vfromv] = get_masked(self.ocedata,_ind_for_mask(indvfromv,dims[1]),gridtype = 'V')
+                mask_lookup[hs] = (umask,vmask)
         return mask_lookup
     
     def _read_data_and_register(self,index_lookup,hash_read,main_dict,prefetch_dict):
