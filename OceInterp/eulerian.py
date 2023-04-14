@@ -760,9 +760,13 @@ class position():
             hsmsk = hash_mask[main_key]
             varName,dims,knw = main_dict[main_key]
             masked = mask_lookup[hsmsk]
-            if isinstance(dims[0],tuple):
+            if isinstance(varName,tuple):
                 ori_dims = dims
                 dims = ori_dims[0]
+                ori_knw = knw
+                knw = ori_knw[0]
+                # Assuming the two kernels have the same 
+                # vertical dimensions, which is reasonable.
             
             # shared part for 'vertical direction'
             this_bottom_scheme = 'no_flux'
@@ -785,12 +789,20 @@ class position():
                     rz = 0
             else:
                 rz = 0
+            if self.rt is not None:
+                if knw.tkernel == 'nearest':
+                    rt = self.rt
+                else:
+                    rt = self.rt_lin
+            else:
+                rt = 0
+                
             if isinstance(varName,str):
-                if 'Xp1' in old_dims:
+                if 'Xp1' in dims:
                     rx = self.rx+0.5
                 else:
                     rx = self.rx
-                if 'Yp1' in old_dims:
+                if 'Yp1' in dims:
                     ry = self.ry+0.5
                 else:
                     ry = self.ry
@@ -803,7 +815,7 @@ class position():
                 weight_lookup[hs] = weight
             elif isinstance(varName,tuple):
                 umask,vmask = masked
-                uknw,vknw = knw
+                uknw,vknw = ori_knw
                 upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
                 vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
                 uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
@@ -822,8 +834,20 @@ class position():
             hash_weight
         ) = _register_interpolation_input(self,varName,knw,
                     prefetched = prefetched,i_min = i_min)
-        index_lookup = self._fatten_required_index_and_register(hash_index,main_dict)
-        transform_lookup = self._transform_vector_and_register(index_lookup,hash_index,main_dict)
+        index_lookup = self._fatten_required_index_and_register(hash_index,
+                                                                main_dict)
+        transform_lookup = self._transform_vector_and_register(index_lookup,
+                                                               hash_index,
+                                                               main_dict)
+        data_lookup = self._read_data_and_register(index_lookup,transform_lookup,
+                                                   hash_read,hash_index,
+                                                   main_dict,prefetch_dict)
+        mask_lookup = self._mask_value_and_register(index_lookup,transform_lookup,
+                                                    hash_mask,hash_index,
+                                                    main_dict)
+        weight_lookup = self._compute_weight_and_register(mask_lookup,
+                                                          hash_weight,hash_mask,
+                                                          main_dict)
         
     
 #     def interpolate(self,varName,knw,

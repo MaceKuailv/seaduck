@@ -143,7 +143,7 @@ class KnW(object):
     def __hash__(self):
         return hash((kash(self.kernel),
                      tuple(tuple(i for i in heir) for heir in self.inheritance),
-                     self.ignore_mask
+                     self.ignore_mask,
                      self.h_order,
                      self.hkernel,
                      self.vkernel,
