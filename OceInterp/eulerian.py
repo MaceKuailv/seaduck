@@ -752,8 +752,63 @@ class position():
                 
         return data_lookup
     
-    def _compute_weight_and_register(self,hash_weight,main_dict):
+    def _compute_weight_and_register(self,mask_lookup,hash_weight,hash_mask,main_dict):
+        hsh = np.unique(list(hash_weight.values()))
         weight_lookup = {}
+        for hs in hsh:
+            main_key = get_key_by_value(hash_weight,hs)
+            hsmsk = hash_mask[main_key]
+            varName,dims,knw = main_dict[main_key]
+            masked = mask_lookup[hsmsk]
+            if isinstance(dims[0],tuple):
+                ori_dims = dims
+                dims = ori_dims[0]
+            
+            # shared part for 'vertical direction'
+            this_bottom_scheme = 'no_flux'
+            if 'Z' in dims:
+                if self.rz is not None:
+                    if knw.vkernel == 'nearest':
+                        rz = self.rz
+                    else:
+                        rz = self.rz_lin
+                else:
+                    rz = 0
+            elif 'Zl' in dims:
+                this_bottom_scheme = None
+                if self.rz is not None:
+                    if knw.vkernel == 'nearest':
+                        rz = self.rzl
+                    else:
+                        rz = self.rzl_lin
+                else:
+                    rz = 0
+            else:
+                rz = 0
+            if isinstance(varName,str):
+                if 'Xp1' in old_dims:
+                    rx = self.rx+0.5
+                else:
+                    rx = self.rx
+                if 'Yp1' in old_dims:
+                    ry = self.ry+0.5
+                else:
+                    ry = self.ry
+                
+                pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
+                weight = knw.get_weight(rx = rx,ry = ry,
+                                    rz = rz,rt = rt,
+                                    pk4d = pk4d,
+                                    bottom_scheme = this_bottom_scheme)
+                weight_lookup[hs] = weight
+            elif isinstance(varName,tuple):
+                umask,vmask = masked
+                uknw,vknw = knw
+                upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
+                vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
+                uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
+                vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = vpk4d)
+                weight_lookup[hs] = (uweight,vweight)
         return weight_lookup
     
     def newinterp(self,varName,knw,
