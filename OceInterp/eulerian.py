@@ -72,12 +72,12 @@ def partial_flatten(ind):
     if isinstance(ind,tuple):
         shape = ind[0].shape
         
-        num_neighbor = 1
-        for i in range(1,len(shape)):
-            num_neighbor*=shape[i]
+        # num_neighbor = 1
+        # for i in range(1,len(shape)):
+        #     num_neighbor*=shape[i]
         R = []
         for i in range(len(ind)):
-            R.append(ind[i].reshape(shape[0],num_neighbor))
+            R.append(ind[i].reshape(shape[0],-1))
         return tuple(R)
     elif isinstance(ind,np.ndarray):
         shape = ind.shape
@@ -104,6 +104,12 @@ def _ind_for_mask(ind,dims):
     if 'Z' not in dims and 'Zl' not in dims:
         ind_for_mask.insert(0,np.zeros_like(ind[0]))
     return tuple(ind_for_mask)
+
+def _subtract_i_min(ind,i_min):
+    temp_ind = []
+    for i in range(len(i_min)):
+        temp_ind.append(ind[i]-i_min[i])
+    return tuple(temp_ind)
 
 class position():
 #     self.ind_h_dict = {}
@@ -697,9 +703,56 @@ class position():
                 mask_lookup[hs] = (umask,vmask)
         return mask_lookup
     
-    def _read_data_and_register(self,index_lookup,hash_read,main_dict,prefetch_dict):
+    def _read_data_and_register(self,index_lookup,hash_read,hash_index,main_dict,prefetch_dict):
         hsh = np.unique(list(hash_read.values()))
         data_lookup = {}
+        for hs in hsh:
+            main_key = get_key_by_value(hash_read,hs)
+            hsind = hash_index[main_key]
+            varName,dims,knw = main_dict[main_key]
+            prefetched,i_min = prefetch_dict[main_key]
+            if isinstance(varName,str):
+                ind = index_lookup[hsind]
+                if prefetched is not None:
+                    if i_min is None:
+                        raise ValueError('please pass value of the prefix of prefetched dataset, '
+                                         'even if the prefix is zero')
+                    temp_ind = _subtract_i_min(ind,i_min)
+                    needed = np.nan_to_num(prefetched[temp_ind])
+                else:
+                    needed = np.nan_to_num(sread(self.ocedata[varName],ind))
+                data_lookup[hsh] = needed
+            elif isinstance(varName,tuple):
+                uind,vind = index_lookup[hsind]
+                (
+                    (UfromUvel,UfromVvel,VfromUvel,VfromVvel),
+                    (bool_ufromu,bool_ufromv,bool_vfromu,bool_vfromv),
+                    (indufromu,indufromv,indvfromu,indvfromv)
+                ) = transform_lookup[hsind]
+                temp_n_u = np.full(uind[0].shape,np.nan)
+                temp_n_v = np.full(vind[0].shape,np.nan)
+                if prefetched is not None:
+                    upre,vpre = prefetched
+                    ufromu = np.nan_to_num(upre[indufromu])
+                    ufromv = np.nan_to_num(vpre[indufromv])
+                    vfromu = np.nan_to_num(upre[indvfromu])
+                    vfromv = np.nan_to_num(vpre[indvfromv])
+                else:
+                    ufromu = np.nan_to_num(upre[indufromu])
+                    ufromv = np.nan_to_num(vpre[indufromv])
+                    vfromu = np.nan_to_num(upre[indvfromu])
+                    vfromv = np.nan_to_num(vpre[indvfromv])
+                temp_n_u[bool_ufromu] = ufromu
+                temp_n_u[bool_ufromv] = ufromv
+                temp_n_v[bool_vfromu] = vfromu
+                temp_n_v[bool_vfromv] = vfromv
+                
+                n_u = (np.einsum('nijk,ni->nijk',temp_n_ufromu,UfromUvel)
+                      +np.einsum('nijk,ni->nijk',temp_n_ufromv,UfromVvel))
+                n_v = (np.einsum('nijk,ni->nijk',temp_n_vfromu,VfromUvel)
+                      +np.einsum('nijk,ni->nijk',temp_n_vfromv,VfromVvel))
+                data_lookup[hs] = (n_u,n_v)
+                
         return data_lookup
     
     def _compute_weight_and_register(self,hash_weight,main_dict):
