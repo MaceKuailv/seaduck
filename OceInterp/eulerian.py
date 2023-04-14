@@ -561,7 +561,7 @@ class position():
         prefetch_dict = dict(zip(zip(varName,kernel_hash),zip(prefetched,i_min)))
         main_dict     = dict(zip(zip(varName,kernel_hash),zip(varName,dims,knw)))
         hash_index    = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_size_hash)]))
-        hash_mask     = dict(zip(zip(varName,kernel_hash),[i for i in zip(dims,mask_ignore,kernel_size_hash)]))
+        hash_mask     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,mask_ignore,kernel_size_hash)]))
         hash_read     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(varName,kernel_size_hash)]))
         hash_weight   = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_hash)]))
         return prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
@@ -641,17 +641,13 @@ class position():
         # modify the index_lookup
         return transform_lookup
     
-    def _mask_value_and_register(self,index_lookup,transform_lookup,hash_mask,main_dict):
-        lst = list(hash_mask.values())
-        hashed = [hash(i) for i in lst]
-        temp_dict = dict(zip(hashed,lst))
-        hsh = [temp_dict[i] for i in np.unique(hashed)]
+    def _mask_value_and_register(self,index_lookup,transform_lookup,hash_mask,hash_index,main_dict):
+        hsh = np.unique(list(hash_mask.values()))
         mask_lookup = {}
         for hs in hsh:
             main_key = get_key_by_value(hash_mask,hs)
             varName,dims,knw = main_dict[main_key]
-            _,mask_ignore,kernel_size_hash = hs
-            hsind = hash((dims,kernel_size_hash))
+            hsind = hash_index[main_key]
             longDims = ''.join([str(a_thing) for a_thing in dims])
             if isinstance(knw,KnW):
                 ignore_mask = knw.ignore_mask
@@ -703,7 +699,7 @@ class position():
                 mask_lookup[hs] = (umask,vmask)
         return mask_lookup
     
-    def _read_data_and_register(self,index_lookup,hash_read,hash_index,main_dict,prefetch_dict):
+    def _read_data_and_register(self,index_lookup,transform_lookup,hash_read,hash_index,main_dict,prefetch_dict):
         hsh = np.unique(list(hash_read.values()))
         data_lookup = {}
         for hs in hsh:
@@ -721,8 +717,9 @@ class position():
                     needed = np.nan_to_num(prefetched[temp_ind])
                 else:
                     needed = np.nan_to_num(sread(self.ocedata[varName],ind))
-                data_lookup[hsh] = needed
+                data_lookup[hs] = needed
             elif isinstance(varName,tuple):
+                uname,vname = varName
                 uind,vind = index_lookup[hsind]
                 (
                     (UfromUvel,UfromVvel,VfromUvel,VfromVvel),
@@ -733,24 +730,24 @@ class position():
                 temp_n_v = np.full(vind[0].shape,np.nan)
                 if prefetched is not None:
                     upre,vpre = prefetched
-                    ufromu = np.nan_to_num(upre[indufromu])
-                    ufromv = np.nan_to_num(vpre[indufromv])
-                    vfromu = np.nan_to_num(upre[indvfromu])
-                    vfromv = np.nan_to_num(vpre[indvfromv])
+                    ufromu = np.nan_to_num(upre[_subtract_i_min(indufromu,i_min)])
+                    ufromv = np.nan_to_num(vpre[_subtract_i_min(indufromv,i_min)])
+                    vfromu = np.nan_to_num(upre[_subtract_i_min(indvfromu,i_min)])
+                    vfromv = np.nan_to_num(vpre[_subtract_i_min(indvfromv,i_min)])
                 else:
-                    ufromu = np.nan_to_num(upre[indufromu])
-                    ufromv = np.nan_to_num(vpre[indufromv])
-                    vfromu = np.nan_to_num(upre[indvfromu])
-                    vfromv = np.nan_to_num(vpre[indvfromv])
+                    ufromu = np.nan_to_num(sread(self.ocedata[uname],indufromu))
+                    ufromv = np.nan_to_num(sread(self.ocedata[vname],indufromv))
+                    vfromu = np.nan_to_num(sread(self.ocedata[uname],indvfromu))
+                    vfromv = np.nan_to_num(sread(self.ocedata[vname],indvfromv))
                 temp_n_u[bool_ufromu] = ufromu
                 temp_n_u[bool_ufromv] = ufromv
                 temp_n_v[bool_vfromu] = vfromu
                 temp_n_v[bool_vfromv] = vfromv
                 
-                n_u = (np.einsum('nijk,ni->nijk',temp_n_ufromu,UfromUvel)
-                      +np.einsum('nijk,ni->nijk',temp_n_ufromv,UfromVvel))
-                n_v = (np.einsum('nijk,ni->nijk',temp_n_vfromu,VfromUvel)
-                      +np.einsum('nijk,ni->nijk',temp_n_vfromv,VfromVvel))
+                n_u = (np.einsum('nijk,ni->nijk',temp_n_u,UfromUvel)
+                      +np.einsum('nijk,ni->nijk',temp_n_u,UfromVvel))
+                n_v = (np.einsum('nijk,ni->nijk',temp_n_v,VfromUvel)
+                      +np.einsum('nijk,ni->nijk',temp_n_v,VfromVvel))
                 data_lookup[hs] = (n_u,n_v)
                 
         return data_lookup
