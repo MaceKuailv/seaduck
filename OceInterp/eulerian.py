@@ -96,7 +96,7 @@ def _in_required(name,required):
 def _general_len(thing):
     try:
         return len(thing)
-    except:
+    except TypeError:
         return 1
     
 def _ind_for_mask(ind,dims):
@@ -824,7 +824,7 @@ class position():
                 weight_lookup[hs] = (uweight,vweight)
         return weight_lookup
     
-    def newinterp(self,varName,knw,
+    def interpolate(self,varName,knw,
                     vec_transform = True,
                     prefetched = None,i_min = None):
         R = []

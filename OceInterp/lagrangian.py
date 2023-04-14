@@ -127,7 +127,7 @@ class particle(position):
             ) = [None for i in range(4)]
         try:
             self.px,self.py = self.get_px_py()
-        except:
+        except AttributeError:
             pass
         self.uname = uname
         self.vname = vname
@@ -267,12 +267,12 @@ class particle(position):
                 dw = np.zeros(self.subset(which).N,float)
             if self.izl_lin is not None:
                 self.iz = self.izl_lin-1
-            u,v   = self.subset(which).interpolate([self.uname,self.vname],
-                                                   [self.uknw ,self.vknw  ],
+            u,v   = self.subset(which).interpolate((self.uname,self.vname ),
+                                                   (self.uknw ,self.vknw  ),
                                                    vec_transform = False
                                                   )
-            du,dv = self.subset(which).interpolate([self.uname,self.vname],
-                                                   [self.duknw,self.dvknw],
+            du,dv = self.subset(which).interpolate((self.uname,self.vname),
+                                                   (self.duknw,self.dvknw),
                                                    vec_transform = False
                                                   )
         else:
@@ -298,17 +298,17 @@ class particle(position):
             
             try:
                 self.iz = self.izl_lin-1
-            except:
+            except AttributeError:
                 pass
             i_min = [0 for i in self.uarray.shape]
             i_min[0] = ifirst
-            u,v   = self.subset(which).interpolate([self.uname,self.vname],
-                                    [self.uknw,self.vknw],vec_transform = False,
+            u,v   = self.subset(which).interpolate((self.uname,self.vname),
+                                    (self.uknw,self.vknw),vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
                                    )
-            du,dv = self.subset(which).interpolate([self.uname,self.vname],
-                                    [self.duknw,self.dvknw],vec_transform = False,
+            du,dv = self.subset(which).interpolate((self.uname,self.vname),
+                                    (self.duknw,self.dvknw),vec_transform = False,
                                     prefetched = [self.uarray,self.varray],
                                     i_min = i_min,
                                    )
