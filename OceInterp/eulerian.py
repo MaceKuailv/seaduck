@@ -558,13 +558,14 @@ class position():
                     temp.append(self.ocedata[vvv].dims)
                 dims.append(tuple(temp))
         
-        prefetch_dict = dict(zip(zip(varName,kernel_hash),zip(prefetched,i_min)))
-        main_dict     = dict(zip(zip(varName,kernel_hash),zip(varName,dims,knw)))
-        hash_index    = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_size_hash)]))
-        hash_mask     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,mask_ignore,kernel_size_hash)]))
-        hash_read     = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(varName,kernel_size_hash)]))
-        hash_weight   = dict(zip(zip(varName,kernel_hash),[hash(i) for i in zip(dims,kernel_hash)]))
-        return prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
+        main_keys = zip(varName,kernel_hash)
+        prefetch_dict = dict(zip(main_keys,zip(prefetched,i_min)))
+        main_dict     = dict(zip(main_keys,zip(varName,dims,knw)))
+        hash_index    = dict(zip(main_keys,[hash(i) for i in zip(dims,kernel_size_hash)]))
+        hash_mask     = dict(zip(main_keys,[hash(i) for i in zip(dims,mask_ignore,kernel_size_hash)]))
+        hash_read     = dict(zip(main_keys,[hash(i) for i in zip(varName,kernel_size_hash)]))
+        hash_weight   = dict(zip(main_keys,[hash(i) for i in zip(dims,kernel_hash)]))
+        return main_keys,prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
         
     
     def _fatten_required_index_and_register(self,hash_index,main_dict):
@@ -826,7 +827,9 @@ class position():
     def newinterp(self,varName,knw,
                     vec_transform = True,
                     prefetched = None,i_min = None):
+        R = []
         (
+            main_keys,
             prefetch_dict,
             main_dict,
             hash_index,
@@ -848,7 +851,21 @@ class position():
         weight_lookup = self._compute_weight_and_register(mask_lookup,
                                                           hash_weight,hash_mask,
                                                           main_dict)
-        
+        for key in main_keys:
+            varName,dims,knw = main_dict[key]
+            if isinstance(varName,str):
+                needed = data_lookup[hash_read[key]]
+                weight = weight_lookup[hash_weight[key]]
+                needed = partial_flatten(needed)
+                weight = partial_flatten(weight)
+                R.append(np.einsum('nj,nj->n',needed,weight))
+            elif isinstance(varName,str):
+                n_u,n_v = data_lookup[hash_read[key]]
+                uweight,vweight = weight_lookup[hash_weight[key]]
+                u = np.einsum('nijk,nijk->n',n_u,uweight)
+                v = np.einsum('nijk,nijk->n',n_v,vweight)
+                R.append((u,v))
+        return R
     
 #     def interpolate(self,varName,knw,
 #                     vec_transform = True,
