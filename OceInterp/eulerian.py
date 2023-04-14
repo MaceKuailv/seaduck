@@ -558,7 +558,7 @@ class position():
                     temp.append(self.ocedata[vvv].dims)
                 dims.append(tuple(temp))
         
-        main_keys = zip(varName,kernel_hash)
+        main_keys = list(zip(varName,kernel_hash))
         prefetch_dict = dict(zip(main_keys,zip(prefetched,i_min)))
         main_dict     = dict(zip(main_keys,zip(varName,dims,knw)))
         hash_index    = dict(zip(main_keys,[hash(i) for i in zip(dims,kernel_size_hash)]))
@@ -833,9 +833,10 @@ class position():
             prefetch_dict,
             main_dict,
             hash_index,
+            hash_mask,
             hash_read,
             hash_weight
-        ) = _register_interpolation_input(self,varName,knw,
+        ) = self._register_interpolation_input(varName,knw,
                     prefetched = prefetched,i_min = i_min)
         index_lookup = self._fatten_required_index_and_register(hash_index,
                                                                 main_dict)
@@ -859,12 +860,14 @@ class position():
                 needed = partial_flatten(needed)
                 weight = partial_flatten(weight)
                 R.append(np.einsum('nj,nj->n',needed,weight))
-            elif isinstance(varName,str):
+            elif isinstance(varName,tuple):
                 n_u,n_v = data_lookup[hash_read[key]]
                 uweight,vweight = weight_lookup[hash_weight[key]]
                 u = np.einsum('nijk,nijk->n',n_u,uweight)
                 v = np.einsum('nijk,nijk->n',n_v,vweight)
                 R.append((u,v))
+            else:
+                raise ValueError(f'unexpected varName: {varName}')
         return R
     
 #     def interpolate(self,varName,knw,
