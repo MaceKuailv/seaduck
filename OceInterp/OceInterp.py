@@ -87,7 +87,7 @@ def OceInterp(od,varList,x,y,z,t,
     else:
         try:
             assert len(t)>1
-        except:
+        except AssertionError:
             raise Exception('There needs to be at least two time steps to run the lagrangian particle')
         t_start = t[0]
         t_nec = t[1:]

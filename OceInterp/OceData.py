@@ -147,13 +147,13 @@ class OceData(object):
             for var in ['rA','CS','SN']:
                 try:
                     self[var] = np.array(self[var]).astype('float32')
-                except:
+                except KeyError:
                     print(f'no {var} in dataset, skip')
                     self[var] = None
             try:
                 self.dX = np.array(self['dXG']).astype('float32')
                 self.dY = np.array(self['dYG']).astype('float32')
-            except:
+            except KeyError:
                 self.dX = None
                 self.dY = None
             if self.too_large:
@@ -172,7 +172,7 @@ class OceData(object):
                 for var in ['XG','YG','dXC','dYC','rA']:
                     try:
                         self[var] = np.array(self[var]).astype('float32')
-                    except:
+                    except KeyError:
                         print(f'no {var} in dataset, skip')
                         self[var] = None
             if self.too_large:
@@ -204,7 +204,7 @@ class OceData(object):
         try:
             self.time_midp = np.array(self['time_midp'])
             self.time_midp = (self.time_midp).astype(float)/1e9
-        except:
+        except KeyError:
             self.time_midp = (self.ts[1:]+self.ts[:-1])/2
         
     def grid2array(self):
