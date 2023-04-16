@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from OceInterp.topology import topology
-from OceInterp.utils import create_tree
+from OceInterp.utils import create_tree,_general_len
 from OceInterp.lat2ind import *
 
 no_alias = {
@@ -96,7 +96,7 @@ class OceData(object):
             ''')
             return False,missing
         for _ in ['time','Z','Zl']:
-            readiness[_] = (_ in varnames) and (len(self[_])>1)
+            readiness[_] = (_ in varnames) and (_general_len(self[_])>1)
             
         return readiness,missing
         

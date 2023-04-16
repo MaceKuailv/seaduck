@@ -26,6 +26,12 @@ def rel_lon(x,ref_lon):
     '''
     return (x-ref_lon)%360
 
+def _general_len(thing):
+    try:
+        return len(thing)
+    except TypeError:
+        return 1
+
 # def spherical2cartesian(Y, X, R=None):
 #     """
 #     Convert spherical coordinates to cartesian.

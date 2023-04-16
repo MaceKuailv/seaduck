@@ -73,6 +73,10 @@ def get_masks(od,tp):
         # expecially given that there is no performance boost.
         return maskC,maskC,maskC,maskC
     maskC = np.array(od._ds['maskC'])
+    if 'Z' not in od._ds['maskC'].dims:
+        raise NotImplementedError('2D land mask is not yet supported,'
+                                  'you could potentially get around by adding a psuedo dimension'
+                                  'or you could set knw.ignore_mask = True')
     if 'maskU' not in keys:
         print('creating maskU,this is going to be very slow!')
         maskU = mask_u_node(maskC,tp)
