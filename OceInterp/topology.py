@@ -252,11 +252,11 @@ class topology():
         self.h_shape = h_shape
         try:
             self.itmax = len(od['time'])-1
-        except KeyError:
+        except (KeyError, TypeError):
             self.itmax = 0
         try:
             self.izmax = len(od['Z'])-1
-        except KeyError:
+        except (KeyError, TypeError):
             self.izmax = 0
             
         if typ:
@@ -436,7 +436,8 @@ class topology():
         '''
         (fc1,iy1,ix1) = ind1
         (fc2,iy2,ix2) = ind2
-        Non_normal_connection = ValueError('The two face connecting the indexes are not connected in a normal way')
+        Non_normal_connection = ValueError(f'The two face connecting the indexes {ind1},{ind2}'
+                                           ' are not connected in a normal way')
         if fc1 == fc2:
             R = tuple(np.ceil((np.array(ind1)+np.array(ind2))/2).astype(int))
             other = ind1 if ind2==R else ind2
@@ -459,7 +460,7 @@ class topology():
                     return 'U',R
                 else:
                     raise Non_normal_connection
-            elif d2to1 in [0,2]:
+            elif d2to1 in [0,3]:
                 R = ind1
                 if d1to2 == 1:
                     return 'V',R

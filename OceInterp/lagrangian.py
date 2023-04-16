@@ -260,18 +260,18 @@ class particle(position):
             which = np.ones(self.N).astype(bool)
         if self.too_large:
             if self.wname is not None:
-                w     = self.subset(which).interpolate(self.wname,self.wknw)
-                dw    = self.subset(which).interpolate(self.wname,self.dwknw)
+                [w]     = self.subset(which).interpolate(self.wname,self.wknw)
+                [dw]    = self.subset(which).interpolate(self.wname,self.dwknw)
             else:
                 w  = np.zeros(self.subset(which).N,float)
                 dw = np.zeros(self.subset(which).N,float)
             if self.izl_lin is not None:
                 self.iz = self.izl_lin-1
-            u,v   = self.subset(which).interpolate((self.uname,self.vname ),
+            [(u,v)]   = self.subset(which).interpolate((self.uname,self.vname ),
                                                    (self.uknw ,self.vknw  ),
                                                    vec_transform = False
                                                   )
-            du,dv = self.subset(which).interpolate((self.uname,self.vname),
+            [(du,dv)] = self.subset(which).interpolate((self.uname,self.vname),
                                                    (self.duknw,self.dvknw),
                                                    vec_transform = False
                                                   )
@@ -284,11 +284,11 @@ class particle(position):
             if self.wname is not None:
                 i_min = [0 for i in self.warray.shape]
                 i_min[0] = ifirst
-                w     = self.subset(which).interpolate(self.wname,
+                [w]     = self.subset(which).interpolate(self.wname,
                                                        self.wknw ,
                                                        prefetched = self.warray,
                                                        i_min = i_min)
-                dw    = self.subset(which).interpolate(self.wname,
+                [dw]    = self.subset(which).interpolate(self.wname,
                                                        self.dwknw,
                                                        prefetched = self.warray,
                                                        i_min = i_min)
@@ -298,18 +298,19 @@ class particle(position):
             
             try:
                 self.iz = self.izl_lin-1
-            except AttributeError:
+            except (TypeError,AttributeError):
                 pass
             i_min = [0 for i in self.uarray.shape]
             i_min[0] = ifirst
-            u,v   = self.subset(which).interpolate((self.uname,self.vname),
+            i_min = tuple(i_min)
+            [(u,v)]   = self.subset(which).interpolate((self.uname,self.vname),
                                     (self.uknw,self.vknw),vec_transform = False,
-                                    prefetched = [self.uarray,self.varray],
+                                    prefetched = (self.uarray,self.varray),
                                     i_min = i_min,
                                    )
-            du,dv = self.subset(which).interpolate((self.uname,self.vname),
+            [(du,dv)] = self.subset(which).interpolate((self.uname,self.vname),
                                     (self.duknw,self.dvknw),vec_transform = False,
-                                    prefetched = [self.uarray,self.varray],
+                                    prefetched = (self.uarray,self.varray),
                                     i_min = i_min,
                                    )
 #             ow     = self.subset(which).interpolate(self.wname,wknw)

@@ -3,7 +3,7 @@ from OceInterp.kernelNweight import KnW
 from OceInterp.kernel_and_weight import translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
-from OceInterp.utils import local_to_latlon,get_key_by_value
+from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len
 from OceInterp.lat2ind import find_px_py,weight_f_node
 
 import warnings
@@ -92,12 +92,6 @@ def _in_required(name,required):
         return True
     else:
         return name in required
-    
-def _general_len(thing):
-    try:
-        return len(thing)
-    except TypeError:
-        return 1
     
 def _ind_for_mask(ind,dims):
     ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
@@ -622,10 +616,16 @@ class position():
                  _,
                  VfromUvel,
                  VfromVvel) = self.ocedata.tp.four_matrix_for_uv(vind_dic['face'][:,:,0,0])
-                bool_ufromu = abs(UfromUvel).astype(bool)
-                bool_ufromv = abs(UfromVvel).astype(bool)
-                bool_vfromu = abs(VfromUvel).astype(bool)
-                bool_vfromv = abs(VfromVvel).astype(bool)
+                
+                UfromUvel = np.round(UfromUvel)
+                UfromVvel = np.round(UfromVvel)
+                VfromUvel = np.round(VfromUvel)
+                VfromVvel = np.round(VfromVvel)
+                
+                bool_ufromu = np.abs(UfromUvel).astype(bool)
+                bool_ufromv = np.abs(UfromVvel).astype(bool)
+                bool_vfromu = np.abs(VfromUvel).astype(bool)
+                bool_vfromv = np.abs(VfromVvel).astype(bool)
                 
                 indufromu = tuple([idid[bool_ufromu] for idid in uind])
                 indufromv = tuple([idid[bool_ufromv] for idid in uind])
@@ -693,6 +693,7 @@ class position():
                     ) = to_unzip
                     umask = np.full(uind[0].shape,np.nan)
                     vmask = np.full(vind[0].shape,np.nan)
+                    
                     umask[bool_ufromu] = get_masked(self.ocedata,_ind_for_mask(indufromu,dims[0]),gridtype = 'U')
                     umask[bool_ufromv] = get_masked(self.ocedata,_ind_for_mask(indufromv,dims[1]),gridtype = 'V')
                     vmask[bool_vfromu] = get_masked(self.ocedata,_ind_for_mask(indvfromu,dims[0]),gridtype = 'U')
@@ -740,10 +741,16 @@ class position():
                     ufromv = np.nan_to_num(sread(self.ocedata[vname],indufromv))
                     vfromu = np.nan_to_num(sread(self.ocedata[uname],indvfromu))
                     vfromv = np.nan_to_num(sread(self.ocedata[vname],indvfromv))
-                temp_n_u[bool_ufromu] = ufromu
-                temp_n_u[bool_ufromv] = ufromv
-                temp_n_v[bool_vfromu] = vfromu
-                temp_n_v[bool_vfromv] = vfromv
+                temp_n_u[bool_ufromu] = ufromu#0#
+                temp_n_u[bool_ufromv] = ufromv#1#
+                temp_n_v[bool_vfromu] = vfromu#0#
+                temp_n_v[bool_vfromv] = vfromv#1#
+                # dont_break = np.isclose(temp_n_v,2).any()
+                # if not dont_break:
+                #     print(bool_vfromu)
+                #     raise Exception('what is going on')
+                # else:
+                #     print('somehow it passed')
                 
                 n_u = (np.einsum('nijk,ni->nijk',temp_n_u,UfromUvel)
                       +np.einsum('nijk,ni->nijk',temp_n_u,UfromVvel))
@@ -852,6 +859,7 @@ class position():
         weight_lookup = self._compute_weight_and_register(mask_lookup,
                                                           hash_weight,hash_mask,
                                                           main_dict)
+        # index_list = []
         for key in main_keys:
             varName,dims,knw = main_dict[key]
             if isinstance(varName,str):
@@ -860,15 +868,23 @@ class position():
                 needed = partial_flatten(needed)
                 weight = partial_flatten(weight)
                 R.append(np.einsum('nj,nj->n',needed,weight))
+                # index_list.append((index_lookup[hash_index[key]],
+                #                    transform_lookup[hash_index[key]],
+                #                    data_lookup[hash_read[key]]))
             elif isinstance(varName,tuple):
                 n_u,n_v = data_lookup[hash_read[key]]
                 uweight,vweight = weight_lookup[hash_weight[key]]
                 u = np.einsum('nijk,nijk->n',n_u,uweight)
                 v = np.einsum('nijk,nijk->n',n_v,vweight)
+                if vec_transform:
+                    u,v = local_to_latlon(u,v,self.cs,self.sn)
                 R.append((u,v))
+                # index_list.append((index_lookup[hash_index[key]],
+                #                    transform_lookup[hash_index[key]],
+                #                    data_lookup[hash_read[key]]))
             else:
                 raise ValueError(f'unexpected varName: {varName}')
-        return R
+        return R#,index_list
     
 #     def interpolate(self,varName,knw,
 #                     vec_transform = True,
