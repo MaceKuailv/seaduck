@@ -463,14 +463,34 @@ class position():
         # hash_index = {var:hash(cuvg,kernel_size)}
         # hash_read  = {var:hash(var,kernel_size)}
         # hash_weight= {var:hash(kernel,cuvg)}
+        output_format = {}
         if isinstance(varName,str) or isinstance(varName,tuple):
             varName = [varName]
+            output_format['single'] = True
         elif isinstance(varName,list):
-            pass
+            output_format['single'] = False
         else:
             raise ValueError('varName needs to be string, tuple, or a list of the above.')
-            
         Nvar = len(varName)
+        
+        output_format['ori_list'] = copy.deepcopy(varName)
+        new_varName = []
+        for i in varName:
+            if isinstance(i,str):
+                new_varName.append(i)
+            elif isinstance(i,tuple):
+                if self.face is None:
+                    for j in i:
+                        new_varName.append(j)
+                else:
+                    new_varName.append(i)
+            elif i is None:
+                pass
+            else:
+                raise ValueError('varName needs to be string, tuple, or a list of the above.')
+        
+        varName = new_varName
+        output_format['final_varName'] = varName
         
         if isinstance(knw,KnW):
             knw = [knw for i in range(Nvar)]
@@ -520,6 +540,31 @@ class position():
             i_min = [i_min.get(var) for var in varName]
         else:
             raise ValueError('prefetched prefix i_min needs to be a tuple, or list/dictionaries containing that ')
+        
+        new_prefetched = []
+        new_knw = []
+        new_i_min = []
+        for i in range(len(knw)):
+            if output_format['ori_list'][i] is None:
+                pass
+            elif isinstance(output_format['ori_list'][i],tuple):
+                if self.face is None:
+                    for j in range(len(output_format['ori_list'][i])):
+                        new_prefetched.append(prefetched[i][j])
+                        new_knw.append(knw[i][j])
+                        new_i_min.append(i_min[i])
+                else:
+                    new_prefetched.append(prefetched[i])
+                    new_knw.append(knw[i])
+                    new_i_min.append(i_min[i])
+            elif isinstance(output_format['ori_list'][i],str):
+                new_prefetched.append(prefetched[i])
+                new_knw.append(knw[i])
+                new_i_min.append(i_min[i])
+        prefetched = new_prefetched
+        knw = new_knw
+        i_min = new_i_min
+            
             
         kernel_size_hash = []
         kernel_hash = []
@@ -559,7 +604,7 @@ class position():
         hash_mask     = dict(zip(main_keys,[hash(i) for i in zip(dims,mask_ignore,kernel_size_hash)]))
         hash_read     = dict(zip(main_keys,[hash(i) for i in zip(varName,kernel_size_hash)]))
         hash_weight   = dict(zip(main_keys,[hash(i) for i in zip(dims,kernel_hash)]))
-        return main_keys,prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
+        return output_format,main_keys,prefetch_dict,main_dict,hash_index,hash_mask,hash_read,hash_weight
         
     
     def _fatten_required_index_and_register(self,hash_index,main_dict):
@@ -836,6 +881,7 @@ class position():
                     prefetched = None,i_min = None):
         R = []
         (
+            output_format,
             main_keys,
             prefetch_dict,
             main_dict,
@@ -884,7 +930,25 @@ class position():
                 #                    data_lookup[hash_read[key]]))
             else:
                 raise ValueError(f'unexpected varName: {varName}')
-        return R#,index_list
+                
+        final_dict = dict(zip(output_format['final_varName'],R))
+        ori_list = output_format['ori_list']
+        output = []
+        # print(ori_list,R,final_dict.keys())
+        for key in ori_list:
+            if key is None:
+                output.append(None)
+            elif isinstance(key, tuple):
+                if self.face is None:
+                    values = tuple(final_dict.get(k) for k in key)
+                    output.append(values)
+                else:
+                    output.append(final_dict.get(key))
+            else:
+                output.append(final_dict.get(key))
+        if output_format['single']:
+            output = output[0]
+        return output
     
 #     def interpolate(self,varName,knw,
 #                     vec_transform = True,
