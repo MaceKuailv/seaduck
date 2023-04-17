@@ -85,18 +85,18 @@ vdoll = [[0,2]]
 wdoll = [[0]]
 ktype = 'interp'
 h_order = 0
-wknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'linear')
-uknw = KnW(kernel = uvkernel,inheritance = udoll)
-vknw = KnW(kernel = uvkernel,inheritance = vdoll)
-dwknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'dz')
-duknw = KnW(kernel = uvkernel,inheritance = udoll,hkernel = 'dx',h_order = 1)
-dvknw = KnW(kernel = uvkernel,inheritance = vdoll,hkernel = 'dy',h_order = 1)
+wknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'linear',ignore_mask = True)
+uknw = KnW(kernel = uvkernel,inheritance = udoll,ignore_mask = True)
+vknw = KnW(kernel = uvkernel,inheritance = vdoll,ignore_mask = True)
+dwknw = KnW(kernel =  wkernel,inheritance = None,vkernel = 'dz',ignore_mask = True)
+duknw = KnW(kernel = uvkernel,inheritance = udoll,hkernel = 'dx',h_order = 1,ignore_mask = True)
+dvknw = KnW(kernel = uvkernel,inheritance = vdoll,hkernel = 'dy',h_order = 1,ignore_mask = True)
 
 # scalar style kernel for datasets without face
-uknw_s = KnW(kernel = ukernel,inheritance = None)
-vknw_s = KnW(kernel = vkernel,inheritance = None)
-duknw_s = KnW(kernel = ukernel,inheritance = None,hkernel = 'dx',h_order = 1)
-dvknw_s = KnW(kernel = vkernel,inheritance = None,hkernel = 'dy',h_order = 1)
+uknw_s = KnW(kernel = ukernel,inheritance = None,ignore_mask = True)
+vknw_s = KnW(kernel = vkernel,inheritance = None,ignore_mask = True)
+duknw_s = KnW(kernel = ukernel,inheritance = None,hkernel = 'dx',h_order = 1,ignore_mask = True)
+dvknw_s = KnW(kernel = vkernel,inheritance = None,hkernel = 'dy',h_order = 1,ignore_mask = True)
 
 class particle(position):
     def __init__(self,# 10MB

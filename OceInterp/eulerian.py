@@ -859,18 +859,24 @@ class position():
                     ry = self.ry+0.5
                 else:
                     ry = self.ry
-                
-                pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
+                if masked is None:
+                    pk4d = None
+                else:
+                    pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
                 weight = knw.get_weight(rx = rx,ry = ry,
                                     rz = rz,rt = rt,
                                     pk4d = pk4d,
                                     bottom_scheme = this_bottom_scheme)
                 weight_lookup[hs] = weight
             elif isinstance(varName,tuple):
-                umask,vmask = masked
                 uknw,vknw = ori_knw
-                upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
-                vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
+                if masked is None:
+                    upk4d = None
+                    vpk4d = None
+                else:
+                    umask,vmask = masked
+                    upk4d = find_pk_4d(umask,russian_doll = uknw.inheritance)
+                    vpk4d = find_pk_4d(vmask,russian_doll = vknw.inheritance)
                 uweight = uknw.get_weight(self.rx+1/2,self.ry,rz = rz,rt = rt,pk4d = upk4d)
                 vweight = vknw.get_weight(self.rx,self.ry+1/2,rz = rz,rt = rt,pk4d = vpk4d)
                 weight_lookup[hs] = (uweight,vweight)
