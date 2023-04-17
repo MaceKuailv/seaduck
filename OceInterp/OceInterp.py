@@ -56,10 +56,12 @@ def OceInterp(od,varList,x,y,z,t,
         print(f"result will be in the order of {varList}")
     elif isinstance(varList,str):
         varList = [varList]
+    elif isinstance(varList,tuple):
+        varList = [varList]
     elif isinstance(varList,list):
         pass
     else:
-        raise Exception("varList type not recognized.")
+        raise ValueError("varList type not recognized.")
 
     if isinstance(kernelList,list):
         pass
@@ -69,11 +71,13 @@ def OceInterp(od,varList,x,y,z,t,
         for i in varList:
             if isinstance(i,str):
                 kernelList.append(the_kernel)
-            elif isinstance(i,list):
+            elif isinstance(i,tuple):
                 if kernel_kwarg != dict():
-                    kernelList.append([the_kernel,the_kernel])
+                    kernelList.append((the_kernel,the_kernel))
                 else:
-                    kernelList.append([uknw,vknw])
+                    kernelList.append((uknw,vknw))
+            else:
+                raise ValueError("varList need to be made up of string or tuples")
     if not lagrangian:
         pt = position()
         pt.from_latlon(x = x,y=y,z=z,t=t,data = od)
