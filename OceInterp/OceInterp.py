@@ -77,11 +77,10 @@ def OceInterp(od,varList,x,y,z,t,
     if not lagrangian:
         pt = position()
         pt.from_latlon(x = x,y=y,z=z,t=t,data = od)
-        R = []
         for i,var in enumerate(varList):
             if lagrange_token in var:
                 raise AttributeError('__particle variables is only available for Lagrangian particles')
-            R.append(pt.interpolate(var,kernelList[i]))
+        R = pt.interpolate(varList,kernelList)
         return R
             
     else:
