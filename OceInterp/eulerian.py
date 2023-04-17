@@ -473,25 +473,6 @@ class position():
             raise ValueError('varName needs to be string, tuple, or a list of the above.')
         Nvar = len(varName)
         
-        output_format['ori_list'] = copy.deepcopy(varName)
-        new_varName = []
-        for i in varName:
-            if isinstance(i,str):
-                new_varName.append(i)
-            elif isinstance(i,tuple):
-                if self.face is None:
-                    for j in i:
-                        new_varName.append(j)
-                else:
-                    new_varName.append(i)
-            elif i is None:
-                pass
-            else:
-                raise ValueError('varName needs to be string, tuple, or a list of the above.')
-        
-        varName = new_varName
-        output_format['final_varName'] = varName
-        
         if isinstance(knw,KnW):
             knw = [knw for i in range(Nvar)]
         if isinstance(knw,tuple):
@@ -540,30 +521,62 @@ class position():
             i_min = [i_min.get(var) for var in varName]
         else:
             raise ValueError('prefetched prefix i_min needs to be a tuple, or list/dictionaries containing that ')
-        
+            
+            
+        output_format['ori_list'] = copy.deepcopy(list(zip(varName,knw)))
+        new_varName = []
         new_prefetched = []
         new_knw = []
         new_i_min = []
-        for i in range(len(knw)):
-            if output_format['ori_list'][i] is None:
-                pass
-            elif isinstance(output_format['ori_list'][i],tuple):
+        for i,var in enumerate(varName):
+            if isinstance(var,str):
+                new_varName.append(var)
+                new_prefetched.append(prefetched[i])
+                new_knw.append(knw[i])
+                new_i_min.append(i_min[i])
+            elif isinstance(var,tuple):
                 if self.face is None:
-                    for j in range(len(output_format['ori_list'][i])):
+                    for j in range(len(var)):
+                        new_varName.append(var[j])
                         new_prefetched.append(prefetched[i][j])
                         new_knw.append(knw[i][j])
                         new_i_min.append(i_min[i])
                 else:
+                    new_varName.append(var)
                     new_prefetched.append(prefetched[i])
                     new_knw.append(knw[i])
                     new_i_min.append(i_min[i])
-            elif isinstance(output_format['ori_list'][i],str):
-                new_prefetched.append(prefetched[i])
-                new_knw.append(knw[i])
-                new_i_min.append(i_min[i])
+            elif var is None:
+                pass
+            else:
+                raise ValueError('varName needs to be string, tuple, or a list of the above.')
+        
+        
+        # new_prefetched = []
+        # new_knw = []
+        # new_i_min = []
+        # for i in range(len(knw)):
+        #     if output_format['ori_list'][i] is None:
+        #         pass
+        #     elif isinstance(output_format['ori_list'][i],tuple):
+        #         if self.face is None:
+        #             for j in range(len(output_format['ori_list'][i])):
+        #                 new_prefetched.append(prefetched[i][j])
+        #                 new_knw.append(knw[i][j])
+        #                 new_i_min.append(i_min[i])
+        #         else:
+        #             new_prefetched.append(prefetched[i])
+        #             new_knw.append(knw[i])
+        #             new_i_min.append(i_min[i])
+        #     elif isinstance(output_format['ori_list'][i],str):
+        #         new_prefetched.append(prefetched[i])
+        #         new_knw.append(knw[i])
+        #         new_i_min.append(i_min[i])
         prefetched = new_prefetched
         knw = new_knw
         i_min = new_i_min
+        varName = new_varName
+        output_format['final_varName'] = list(zip(varName,knw))
             
             
         kernel_size_hash = []
@@ -942,11 +955,14 @@ class position():
         output = []
         # print(ori_list,R,final_dict.keys())
         for key in ori_list:
-            if key is None:
+            var,knw = key
+            
+            if var is None:
                 output.append(None)
-            elif isinstance(key, tuple):
+            elif isinstance(var, tuple):
                 if self.face is None:
-                    values = tuple(final_dict.get(k) for k in key)
+                    temp_key = [(var[i],knw[i]) for i in range(len(var))]
+                    values = tuple(final_dict.get(k) for k in temp_key)
                     output.append(values)
                 else:
                     output.append(final_dict.get(key))
