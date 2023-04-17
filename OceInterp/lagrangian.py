@@ -227,6 +227,8 @@ class particle(position):
                     if self.dont_fly:
                         # I think it's fine
                         self.warray[0] = 0.0
+                # else:
+                #     self.warray = None
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
@@ -235,11 +237,15 @@ class particle(position):
                 self.varray = np.array(self.ocedata[vname][self.itmin:self.itmax+1])
                 if self.wname is not None:
                     self.warray = np.array(self.ocedata[wname][self.itmin:self.itmax+1])
+                # else:
+                #     self.warray = None
             else:
                 self.uarray = np.array(self.ocedata[uname][[self.itmin]])
                 self.varray = np.array(self.ocedata[vname][[self.itmin]])
                 if self.wname is not None:
                     self.warray = np.array(self.ocedata[wname][[self.itmin]])
+                # else:
+                #     self.warray = None
             if self.dont_fly:
                 if self.wname is not None:
                     # I think it's fine
@@ -259,60 +265,82 @@ class particle(position):
         if which is None:
             which = np.ones(self.N).astype(bool)
         if self.too_large:
-            if self.wname is not None:
-                [w]     = self.subset(which).interpolate(self.wname,self.wknw)
-                [dw]    = self.subset(which).interpolate(self.wname,self.dwknw)
-            else:
-                w  = np.zeros(self.subset(which).N,float)
-                dw = np.zeros(self.subset(which).N,float)
-            if self.izl_lin is not None:
-                self.iz = self.izl_lin-1
-            [(u,v)]   = self.subset(which).interpolate((self.uname,self.vname ),
-                                                   (self.uknw ,self.vknw  ),
-                                                   vec_transform = False
-                                                  )
-            [(du,dv)] = self.subset(which).interpolate((self.uname,self.vname),
-                                                   (self.duknw,self.dvknw),
-                                                   vec_transform = False
-                                                  )
+            prefetched = None
+            i_min = None
+            # if self.wname is not None:
+            #     w     = self.subset(which).interpolate(self.wname,self.wknw)
+            #     dw    = self.subset(which).interpolate(self.wname,self.dwknw)
+            # else:
+            #     w  = np.zeros(self.subset(which).N,float)
+            #     dw = np.zeros(self.subset(which).N,float)
+            # if self.izl_lin is not None:
+            #     self.iz = self.izl_lin-1
+            # (u,v)   = self.subset(which).interpolate((self.uname,self.vname ),
+            #                                        (self.uknw ,self.vknw  ),
+            #                                        vec_transform = False
+            #                                       )
+            # (du,dv) = self.subset(which).interpolate((self.uname,self.vname),
+            #                                        (self.duknw,self.dvknw),
+            #                                        vec_transform = False
+            #                                       )
         else:
             if 'time' not in self.ocedata[self.uname].dims:
                 ifirst = 0
             else:
                 ifirst = self.itmin
-
-            if self.wname is not None:
-                i_min = [0 for i in self.warray.shape]
-                i_min[0] = ifirst
-                w     = self.subset(which).interpolate(self.wname,
-                                                       self.wknw ,
-                                                       prefetched = self.warray,
-                                                       i_min = i_min)
-                dw    = self.subset(which).interpolate(self.wname,
-                                                       self.dwknw,
-                                                       prefetched = self.warray,
-                                                       i_min = i_min)
-            else:
-                w = np.zeros(self.subset(which).N,float)
-                dw = np.zeros(self.subset(which).N,float)
-            
-            try:
-                self.iz = self.izl_lin-1
-            except (TypeError,AttributeError):
-                pass
             i_min = [0 for i in self.uarray.shape]
             i_min[0] = ifirst
             i_min = tuple(i_min)
-            (u,v)   = self.subset(which).interpolate((self.uname,self.vname),
-                                    (self.uknw,self.vknw),vec_transform = False,
-                                    prefetched = (self.uarray,self.varray),
-                                    i_min = i_min,
-                                   )
-            (du,dv) = self.subset(which).interpolate((self.uname,self.vname),
-                                    (self.duknw,self.dvknw),vec_transform = False,
-                                    prefetched = (self.uarray,self.varray),
-                                    i_min = i_min,
-                                   )
+            
+            if self.wname is None:
+                self.warray = None
+            prefetched = [self.warray,self.warray,(self.uarray,self.varray),(self.uarray,self.varray)]
+        
+        try:
+            self.iz = self.izl_lin-1
+        except (TypeError,AttributeError):
+            pass
+            
+            
+
+        [w,dw,(u,v),(du,dv)] = self.subset(which).interpolate(
+            [self.wname,self.wname,(self.uname,self.vname),(self.uname,self.vname)],
+            [self.wknw,self.dwknw,(self.uknw,self.vknw),(self.duknw,self.dvknw)],
+            prefetched = prefetched,
+            i_min = i_min,
+            vec_transform = False
+        )
+
+        if self.wname is None:
+            w = np.zeros_like(u)
+            dw= np.zeros_like(u)
+
+#             if self.wname is not None:
+#                 # i_min = [0 for i in self.warray.shape]
+#                 # i_min[0] = ifirst
+#                 w     = self.subset(which).interpolate(self.wname,
+#                                                        self.wknw ,
+#                                                        prefetched = self.warray,
+#                                                        i_min = i_min)
+#                 dw    = self.subset(which).interpolate(self.wname,
+#                                                        self.dwknw,
+#                                                        prefetched = self.warray,
+#                                                        i_min = i_min)
+#             else:
+#                 w = np.zeros(self.subset(which).N,float)
+#                 dw = np.zeros(self.subset(which).N,float)
+            
+            
+#             (u,v)   = self.subset(which).interpolate((self.uname,self.vname),
+#                                     (self.uknw,self.vknw),vec_transform = False,
+#                                     prefetched = (self.uarray,self.varray),
+#                                     i_min = i_min,
+#                                    )
+#             (du,dv) = self.subset(which).interpolate((self.uname,self.vname),
+#                                     (self.duknw,self.dvknw),vec_transform = False,
+#                                     prefetched = (self.uarray,self.varray),
+#                                     i_min = i_min,
+#                                    )
 #             ow     = self.subset(which).interpolate(self.wname,wknw)
 #             odw    = self.subset(which).interpolate(self.wname,dwknw)
 #             self.iz = self.izl_lin-1
