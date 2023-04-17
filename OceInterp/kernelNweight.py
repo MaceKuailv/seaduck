@@ -210,7 +210,7 @@ class KnW(object):
 #             for j in range(nt)]# 
             for jt in range(nt):
                 for jz in range(nz):
-                    weight[:,:,jz,jt] =   self.hfuncs[0](rx,ry)
+                    weight[:,self.inheritance[0],jz,jt] =   self.hfuncs[0](rx,ry)
         else:
             if nt != len(pk4d) or nz != len(pk4d[0]):
                 raise ValueError('The kernel and the input pk4d does not match')
