@@ -284,11 +284,11 @@ class particle(position):
             if self.wname is not None:
                 i_min = [0 for i in self.warray.shape]
                 i_min[0] = ifirst
-                [w]     = self.subset(which).interpolate(self.wname,
+                w     = self.subset(which).interpolate(self.wname,
                                                        self.wknw ,
                                                        prefetched = self.warray,
                                                        i_min = i_min)
-                [dw]    = self.subset(which).interpolate(self.wname,
+                dw    = self.subset(which).interpolate(self.wname,
                                                        self.dwknw,
                                                        prefetched = self.warray,
                                                        i_min = i_min)
@@ -303,12 +303,12 @@ class particle(position):
             i_min = [0 for i in self.uarray.shape]
             i_min[0] = ifirst
             i_min = tuple(i_min)
-            [(u,v)]   = self.subset(which).interpolate((self.uname,self.vname),
+            (u,v)   = self.subset(which).interpolate((self.uname,self.vname),
                                     (self.uknw,self.vknw),vec_transform = False,
                                     prefetched = (self.uarray,self.varray),
                                     i_min = i_min,
                                    )
-            [(du,dv)] = self.subset(which).interpolate((self.uname,self.vname),
+            (du,dv) = self.subset(which).interpolate((self.uname,self.vname),
                                     (self.duknw,self.dvknw),vec_transform = False,
                                     prefetched = (self.uarray,self.varray),
                                     i_min = i_min,
