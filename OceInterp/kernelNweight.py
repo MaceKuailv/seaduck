@@ -84,7 +84,7 @@ class KnW(object):
         ksort_inv = ksort.argsort()
         
         if inheritance is not None and ignore_mask:
-            print('Warning:overwriting the inheritance oject to None, because we ignore masking')
+            print('Warning:overwriting the inheritance object to None, because we ignore masking')
         
         if inheritance == 'auto':
             inheritance = auto_doll(kernel,hkernel = hkernel)
