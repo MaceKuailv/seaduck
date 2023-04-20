@@ -25,6 +25,19 @@ no_alias = {
 }
 
 class OceData(object):
+    '''
+    Class that enables variable aliasing, topology extraction, and 4-D translation between latitude-longitude-depth-time grid and relative description.
+
+    Parameters
+    ----------
+
+    data: xarray.Dataset
+        The dataset to extract grid information, create cKD tree, and topology object on.
+    alias: dict, None, or 'auto'
+        1. dict: Map the variable used by this package (key) to that used by the dataset (value).
+        2. None (default): Do not apply alias.
+        3. 'auto' (Not implemented): Automatically generate a list for the alias.
+    '''
     def __init__(self,data,
                  alias = None,
                  memory_limit = 1e7):
@@ -70,6 +83,17 @@ class OceData(object):
                 return self._ds[key]
     
     def check_readiness(self):
+        '''
+        Function that checks what kind of interpolation is supported.
+
+        Returns
+        -------
+        readiness: dict
+            'h': The scheme of horizontal interpolation to be used, including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
+            'Z': Whether the dataset has a vertical dimension at the center points.
+            'Zl': Whether the dataset has a vertical dimension at staggered points (vertical velocity).
+            'time': Whether the dataset has a temporal dimension.
+        '''
         # TODO: make the check more detailed
         varnames = list(self._ds.data_vars)+list(self._ds.coords)
         readiness = {}
@@ -100,17 +124,16 @@ class OceData(object):
             
         return readiness,missing
         
-    def add_missing_grid(self):
+    def _add_missing_grid(self):
         # TODO:
-        '''
-        we need to add at least the following variables here,
-        XC,YC,dxG,dyG,Z,Zl,
-        '''
         pass
     def show_alias(self):
+        '''
+        print out the alias in a nice pd.DataFrame format. 
+        '''
         return pd.DataFrame.from_dict(self.alias,orient = 'index',columns = ['original name'])
     
-    def missing_cs_sn(self):
+    def _add_missing_cs_sn(self):
         try:
             self['CS']
             self['SN']
@@ -137,6 +160,9 @@ class OceData(object):
             self['SN'] = sn
             
     def hgrid2array(self):
+        '''
+        Extract the horizontal grid data into numpy arrays based on the readiness['h'] of the OceData object.
+        '''
         way = self.readiness['h']
         if self.too_large:
             print("Loading grid into memory, it's a large dataset please be patient")
@@ -186,10 +212,16 @@ class OceData(object):
             self.lat = np.array(self['lat']).astype('float32')
             
     def vgrid2array(self):
+        '''
+        Extract the vertical center point grid data into numpy arrays.
+        '''
         self.Z = np.array(self['Z']).astype('float32')
         self.dZ = np.array(self['dZ']).astype('float32')
         
     def vlgrid2array(self):
+        '''
+        Extract the vertical staggered point grid data into numpy arrays.
+        '''
         self.Zl = np.array(self['Zl']).astype('float32')
         self.dZl = np.array(self['dZl']).astype('float32')
         
@@ -198,6 +230,9 @@ class OceData(object):
         self.dZl[0] = 1e-10
         
     def tgrid2array(self):
+        '''
+        Extract the temporal grid data into numpy arrays.
+        '''
         self.t_base = 0
         self.ts = np.array(self['time'])
         self.ts = (self.ts).astype(float)/1e9
@@ -208,6 +243,9 @@ class OceData(object):
             self.time_midp = (self.ts[1:]+self.ts[:-1])/2
         
     def grid2array(self):
+        '''
+        Assemble all the extraction methods, based on the readiness of the OceData object. 
+        '''
         if self.readiness['h']:
             self.hgrid2array()
         if self.readiness['Z']:
@@ -218,7 +256,27 @@ class OceData(object):
             self.tgrid2array()
         
     def find_rel_h(self,x,y):
-        # give find_rel_h a new cover
+        '''
+        Find the horizontal rel-coordinate of the given 4-D position based on readiness['h'].
+
+        Parameters
+        ----------
+        x, y: np.ndarray
+            1D array of longitude and latitude.
+
+        Returns
+        -------
+        faces, iys, ixs: np.ndarray or None
+            Indexes of the nearest horizontal point.
+        rx, ry: np.ndarray
+            Non-dimensional distance to the nearest point.
+        cs, sn: np.ndarray or None
+            The cosine and sine of the grid orientation compared to local meridian.
+        dx, dy:
+            The size of the horizontal cell used for the Non-dimensionalization.
+        bx, by:
+            The longitude and latitude for the nearest grid point.
+        '''
         if self.readiness['h'] == 'oceanparcel':
             faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h_oceanparcel(x,y,
                                                                            self.XC,self.YC,
@@ -238,32 +296,51 @@ class OceData(object):
                                                                           )
         return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
     
-    def find_rel_vl(self,t):
-        iz,rz,dz,bz = find_rel_nearest(t,self.Zl)
+    def find_rel_vl(self,z):
+        '''
+        find the rel-coord based on vertical staggered grid using the nearest neighbor scheme.
+        '''
+        iz,rz,dz,bz = find_rel_nearest(z,self.Zl)
         return iz.astype(int),rz,dz,bz
     
     def find_rel_vl_lin(self,z):
+        '''
+        find the rel-coord based on vertical staggered grid using the 2-point linear scheme.
+        '''
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
         return iz.astype(int),rz,dz,bz 
     
     def find_rel_v(self,z):
+        '''
+        find the rel-coord based on vertical center grid using the nearest neighbor scheme.
+        '''
         iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
         return (iz-1).astype(int),rz-0.5,dz,bz 
     
     def find_rel_v_lin(self,z):
+        '''
+        find the rel-coord based on vertical center grid using the 2-point linear scheme.
+        '''
         iz,rz,dz,bz = find_rel_z(z,self.Z,self.dZ)
         return iz.astype(int),rz,dz,bz 
     
     def find_rel_t(self,t):
+        '''
+        find the rel-coord based along the temporal direction using the nearest neighbor scheme. 
+        '''
         it,rt,dt,bt = find_rel_nearest(t,self.ts)
         return it.astype(int),rt,dt,bt
     
     def find_rel_t_lin(self,t):
+        '''
+        find the rel-coord based along the temporal direction using the 2-point linear scheme.
+        '''
         it,rt,dt,bt = find_rel_time(t,self.ts)
         return it.astype(int),rt,dt,bt
     
-    def find_rel_3d(self,x,y,z):
-        faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,
+    def _find_rel_3d(self,x,y,z):
+        # for internal test 
+        faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = self.find_rel_h(x,y,
                                                      self.XC,self.YC,
                                                      self.dX,self.dY,
                                                      self.CS,self.SN,
@@ -272,8 +349,9 @@ class OceData(object):
         iz = iz.astype(int)
         return iz.astype(int),faces,iys,ixs,rx,ry,rz,cs,sn,dx,dy,dz,bx,by,bz
     
-    def find_rel_4d(self,x,y,z,t):
-        faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = find_rel_h(x,y,
+    def _find_rel_4d(self,x,y,z,t):
+        # for internal tests
+        faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by = self.find_rel_h(x,y,
                                                      self.XC,self.YC,
                                                      self.dX,self.dY,
                                                      self.CS,self.SN,
@@ -284,7 +362,8 @@ class OceData(object):
         it = it.astype(int)
         return it.astype(int),iz.astype(int),faces,iys,ixs,rx,ry,rz,rt,cs,sn,dx,dy,dz,dt,bx,by,bz,bt
     
-    def find_rel(self,*arg):
+    def _find_rel(self,*arg):
+        # Internal testing 
         if len(arg) ==2:
             return self.find_rel_2d(*arg)
         if len(arg) ==3:
