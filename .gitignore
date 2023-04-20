@@ -6,4 +6,4 @@ test*.ipynb
 *.npy
 *.png
 *.jpg
-
+doc/
