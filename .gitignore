@@ -7,3 +7,4 @@ test*.ipynb
 *.png
 *.jpg
 doc/
+.vscode/

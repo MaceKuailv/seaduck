@@ -17,35 +17,31 @@ def OceInterp(od,varList,x,y,z,t,
               return_pt_time = True,
               **kernel_kwarg):
     '''
-    The center piece function of the package, from here 
-    you can access almost all the functionality of the 
-    package.
-    -------
-    od: OceInterp.OceData object or xarray.Dataset (hopefully also netcdf)
-        the dataset to work on
-    varList: str or lst
-        (list of) variable/pair of variables
-    kernelList: OceInterp.KnW/list of OceInterp.KnW object
-        which kernel to use for each interpolation
-    x,y,z: numpy.ndarray
-        location of the particles, x,y are in degrees, and 
-        z are in meters, the deeper, the more negative. 
+    **This is the centerpiece function of the package, through which you can access almost all of its functionality.**
+
+    Parameters
+    ----------
+
+    od: OceInterp.OceData object or xarray.Dataset (limited support for netCDF Dataset)
+        The dataset to work on.
+    varList: str or list
+        A list of variable or pair of variables.
+    kernelList: OceInterp.KnW or list of OceInterp.KnW objects
+        Indicates which kernel to use for each interpolation.
+    x, y, z: numpy.ndarray
+        The location of the particles, where x and y are in degrees, and z is in meters (deeper locations are represented by more negative values).
     t: numpy.ndarray
-        In Eulerian scheme, the time of interpolation.
-        In Lagrangian scheme, the time needed for output. 
+        In the Eulerian scheme, this represents the time of interpolation. In the Lagrangian scheme, it represents the time needed for output. 
     lagrangian: bool
-        whether the interpolation is done in Eulerian or 
-        Lagarangian scheme
+        Specifies whether the interpolation is done in the Eulerian or Lagrangian scheme.
     lagrange_kwarg: dict
-        keyward argument passed into the OceInterp.lagrangia
-        n.particle object.
-    update_stops: None, 'defalut', iterable of float
-        time to update the prefetch the velocity.
+        Keyword arguments passed into the OceInterp.lagrangian.particle object.
+    update_stops: None, 'default', or iterable of float
+        Specifies the time to update the prefetch velocity.
     return_in_between: bool
-        in lagrangian mode, return the interpolation not only
-        at t, but also at whenever the speed is updated.
+        In Lagrangian mode, this returns the interpolation not only at time t, but also at every point in time when the speed is updated.
     return_pt_time: bool
-        whether to return time of all the steps.
+        Specifies whether to return the time of all the steps.
     '''
     if not isinstance(od,OceData):
         od = OceData(od)
