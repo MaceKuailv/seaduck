@@ -3,6 +3,21 @@ import xarray as xr
 from collections import OrderedDict as orderdic
 
 def smart_read(da,ind):
+    '''
+    Read from a xarray.DataArray given tuple indexes, and try to do it fast.
+
+    Parameters:
+    -----------
+    da: xarray.DataArray
+        DataArray to read from
+    ind: tuple of numpy.ndarray
+        The indexes of points of interest, each element does not need to be 1D
+
+    Returns:
+    ---------
+    values: numpy.ndarray
+        The values of the points of interest. Has the same shape as the elements in ind. 
+    '''
 #     print('read called')
     the_shape = ind[0].shape
     ind = tuple([i.ravel() for i in ind])
