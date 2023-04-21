@@ -3,48 +3,58 @@ from OceInterp.kernelNweight import KnW
 from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
-from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len
+from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len,local_to_latlon,to_180,get_combination
 from OceInterp.lat2ind import find_px_py,weight_f_node
 
 import warnings
 import numpy as np
 import copy
 
-def to_180(x):
-    '''
-    convert any longitude scale to [-180,180)
-    '''
-    x = x%360
-    return x+(-1)*(x//180)*360
+# def to_180(x):
+#     '''
+#     convert any longitude scale to [-180,180)
+#     '''
+#     x = x%360
+#     return x+(-1)*(x//180)*360
 
-def local_to_latlon(u,v,cs,sn):
-    '''convert local vector to north-east '''
-    uu = u*cs-v*sn
-    vv = u*sn+v*cs
-    return uu,vv
+# def local_to_latlon(u,v,cs,sn):
+#     '''convert local vector to north-east '''
+#     uu = u*cs-v*sn
+#     vv = u*sn+v*cs
+#     return uu,vv
 
-def get_combination(lst,select):
-    '''
-    Iteratively find all the combination that
-    has (select) amount of elements
-    and every element belongs to lst
-    This is the same as the one in itertools, 
-    but I didn't know at the time.
-    '''
-    n = len(lst)
-    if select==1:
-        return [[num] for num in lst]
-    else:
-        the_lst = []
-        for i,num in enumerate(lst):
-            sub_lst = get_combination(lst[i+1:],select-1)
-            for com in sub_lst:
-                com.append(num)
-#             print(sub_lst)
-            the_lst+=sub_lst
-        return the_lst
+# def get_combination(lst,select):
+#     '''
+#     Iteratively find all the combination that
+#     has (select) amount of elements
+#     and every element belongs to lst
+#     This is the same as the one in itertools, 
+#     but I didn't know at the time.
+#     '''
+#     n = len(lst)
+#     if select==1:
+#         return [[num] for num in lst]
+#     else:
+#         the_lst = []
+#         for i,num in enumerate(lst):
+#             sub_lst = get_combination(lst[i+1:],select-1)
+#             for com in sub_lst:
+#                 com.append(num)
+# #             print(sub_lst)
+#             the_lst+=sub_lst
+#         return the_lst
     
-def ind_broadcast(x,ind):
+def _ind_broadcast(x,ind):
+    '''
+    Perform a "cartesian product" on two fattened dimensions 
+
+    Parameters:
+    ----------
+    x: numpy.ndarray
+        A new dimension
+    ind: tuple
+        Existing indexes
+    '''
     n = x.shape[0]
     if len(x.shape) ==1:
         x = x.reshape((n,1))
@@ -68,7 +78,10 @@ def ind_broadcast(x,ind):
         R[i] = R[i].T
     return R
 
-def partial_flatten(ind):
+def _partial_flatten(ind):
+    '''
+    Converting a high dimensional index set to a 2D one
+    '''
     if isinstance(ind,tuple):
         shape = ind[0].shape
         
@@ -88,32 +101,62 @@ def partial_flatten(ind):
         return ind.reshape(shape[0],num_neighbor)
     
 def _in_required(name,required):
+    '''
+    see if a name is in required. 
+    '''
     if required == 'all':
         return True
     else:
         return name in required
     
 def _ind_for_mask(ind,dims):
+    '''
+    If dims does not include a vertical dimension, assume to be 0.
+    If dims has a temporal dimension, take it away. 
+    Return the index for masking. 
+    '''
     ind_for_mask = [ind[i] for i in range(len(ind)) if dims[i] not in ['time']]
     if 'Z' not in dims and 'Zl' not in dims:
         ind_for_mask.insert(0,np.zeros_like(ind[0]))
     return tuple(ind_for_mask)
 
 def _subtract_i_min(ind,i_min):
+    '''
+    Subtract the index prefix from the actual index. 
+    This is used when one is reading from a prefetched subset of the data.
+    '''
     temp_ind = []
     for i in range(len(i_min)):
         temp_ind.append(ind[i]-i_min[i])
     return tuple(temp_ind)
 
 class position():
+    '''
+    The position object that performs the interpolation.
+    Create a empty one by default. 
+    To actually do interpolation, use from_latlon method to tell the ducks where they are. 
+    '''
 #     self.ind_h_dict = {}
-    def from_latlon(self,x = None,y = None,z = None,t = None,**kwarg):
-        try:
-            self.ocedata
-        except AttributeError:
-            if 'data' not in kwarg.keys():
-                raise Exception('data not provided')
-            self.ocedata = kwarg['data']
+    def from_latlon(self,x = None,y = None,z = None,t = None,data = None):
+        '''
+        Use the methods from the ocedata to transform 
+        from lat-lon-dep-time coords to rel-coords
+        store the output in the position object. 
+
+        Parameters:
+        -----------
+        x,y,z,t: numpy.ndarray
+            1D array of the lat-lon-dep-time coords
+        data: OceData object
+            The field where the positions are defined on. 
+        '''
+        if data is None:
+            try:
+                self.ocedata
+            except AttributeError:
+                raise ValueError('data not provided')
+        else:
+            self.ocedata = data
         self.tp = self.ocedata.tp
         length = [_general_len(i) for i in [x,y,z,t]]
         self.N = max(length)
@@ -232,6 +275,21 @@ class position():
         return self
     
     def subset(self,which):
+        '''
+        Create a subset of the position object
+
+        Parameters:
+        -----------
+        which: numpy.ndarray
+            Define which points survive the subset operation.
+            It be an array of either boolean or int.
+            The selection is similar to that of selecting from a 1D numpy array.
+
+        Returns:
+        --------
+        the_subset: position object
+            The selected positions. 
+        '''
         p = position()
         keys = self.__dict__.keys()
         for i in keys:
@@ -249,11 +307,21 @@ class position():
         
     def fatten_h(self,knw,ind_moves_kwarg = {}):
         '''
-        faces,iys,ixs is now 1d arrays of size n. 
+        Fatten means to find the neighboring points of the points of interest based on the kernel.
+        faces,iys,ixs are 1d arrays of size n. 
         We are applying a kernel of size m.
-        This is going to return a n * m array of indexes.
+        This is going to return a n * m array of indexes. 
+        A very slim vector is now a matrix, and hence the name. 
         each row represen all the node needed for interpolation of a single point.
         "h" represent we are only doing it on the horizontal plane
+
+        Parameters:
+        -----------
+        knw: KnW object
+            The kernel used to find neighboring points.
+        ind_moves_kward: dict
+            Key word argument to put into ind_moves method of the topology object. 
+            Read topology.ind_moves for more detail. 
         '''
 #         self.ind_h_dict
         kernel = knw.kernel
@@ -301,6 +369,14 @@ class position():
             return None,n_iys.astype('int'),n_ixs.astype('int')
         
     def fatten_v(self,knw):
+        '''
+        Finding the neighboring center grid points in the vertical direction.
+
+        Parameters:
+        -----------
+        knw: KnW object
+            The kernel used to find neighboring points.
+        '''
         if self.iz is None:
             return None
         if knw.vkernel == 'nearest':
@@ -321,6 +397,14 @@ class position():
             
             
     def fatten_vl(self,knw):
+        '''
+        Finding the neighboring staggered grid points in the vertical direction.
+
+        Parameters:
+        -----------
+        knw: KnW object
+            The kernel used to find neighboring points.
+        '''
         if self.izl is None:
             return None
         if knw.vkernel == 'nearest':
@@ -341,6 +425,14 @@ class position():
             raise Exception('vkernel not supported')
             
     def fatten_t(self,knw):
+        '''
+        Finding the neighboring center grid points in the temporal dimension.
+
+        Parameters:
+        -----------
+        knw: KnW object
+            The kernel used to find neighboring points.
+        '''
         if self.it is None:
             return None
         if knw.tkernel == 'nearest':
@@ -360,6 +452,23 @@ class position():
             raise Exception('vkernel not supported')
     
     def fatten(self,knw,fourD = False,required = 'all',ind_moves_kwarg = {}):
+        '''
+        Finding the neighboring center grid points in all 4 dimensions.
+
+        Parameters:
+        -----------
+        knw: KnW object
+            The kernel used to find neighboring points.
+        fourD: Boolean
+            When we are doing nearest neighbor interpolation on some of the dimensions, 
+            with fourD = True, this will create dimensions with length 1, and will squeeze 
+            the dimension if fourD = False
+        required: str, iterable of str
+            Which dims is needed in the process
+        ind_moves_kward: dict
+            Key word argument to put into ind_moves method of the topology object. 
+            Read topology.ind_moves for more detail.
+        '''
         if required!='all' and isinstance(required,str):
             required = tuple([required])
         if required =='all' or isinstance(required,tuple):
@@ -383,12 +492,12 @@ class position():
         if _in_required('Z',required):
             fiz = self.fatten_v(knw)
             if fiz is not None:
-                R = ind_broadcast(fiz,R)
+                R = _ind_broadcast(fiz,R)
                 keys.insert(0,'Z')
         elif _in_required('Zl',required):
             fizl = self.fatten_vl(knw)
             if fizl is not None:
-                R = ind_broadcast(fizl,R)
+                R = _ind_broadcast(fizl,R)
                 keys.insert(0,'Zl')
         elif fourD:
             R = [np.expand_dims(R[i],axis = -1) for i in range(len(R))]
@@ -396,7 +505,7 @@ class position():
         if _in_required('time',required):
             fit = self.fatten_t(knw)
             if fit is not None:
-                R = ind_broadcast(fit,R)
+                R = _ind_broadcast(fit,R)
                 keys.insert(0,'time')
         elif fourD:
             R = [np.expand_dims(R[i],axis = -1) for i in range(len(R))]
@@ -406,6 +515,10 @@ class position():
         return tuple([R[i] for i in required])
     
     def get_px_py(self):
+        '''
+        Get the nearest 4 corner points of the given point. 
+        Used for oceanparcel style horizontal interpolation.
+        '''
         if self.face is not None:
             return find_px_py(self.ocedata.XG,
                               self.ocedata.YG,
@@ -420,8 +533,15 @@ class position():
                               self.iy,self.ix
                              )
     def get_f_node_weight(self):
+        '''
+        The weight for the corner points interpolation
+        '''
         return weight_f_node(self.rx,self.ry)
     def get_lon_lat(self):
+        '''
+        Return the lat-lon value based on relative coordinate.
+        This method only work if the dataset has readiness['h'] == 'oceanparcel'
+        '''
         px,py = self.get_px_py()
         w = self.get_f_node_weight()
         lon = np.einsum('nj,nj->n',w,px.T)
@@ -430,6 +550,7 @@ class position():
             
     
     def _get_needed(self,varName,knw,required = None,prefetched = None,**kwarg):
+        '''An internal testing function'''
         if required is None:
             required = self.ocedata._ds[varName].dims
         ind = self.fatten(knw,required = required,**kwarg)
@@ -442,6 +563,7 @@ class position():
             return prefetched[ind]
     
     def _get_masked(self,knw,gridtype = 'C',**kwarg):
+        '''An internal testing function'''
         ind = self.fatten(knw,fourD = True,**kwarg)
         if self.it is not None:
             ind = ind[1:]
@@ -451,13 +573,44 @@ class position():
         return get_masked(self.ocedata,ind,gridtype = gridtype)
     
     def _find_pk4d(self,knw,gridtype = 'C'):
+        '''An internal testing function'''
         masked = self._get_masked(knw,gridtype = gridtype)
         pk4d = find_pk_4d(masked,russian_doll = knw.inheritance)
         return pk4d
     
     def _register_interpolation_input(self,varName,knw,
                     prefetched = None,i_min = None):
-        # TODO: distinguish the no face case
+        '''
+        Part of the interpolation function.
+        Register the input of the interpolation function.
+        For the input format, go to interpolation for more details. 
+
+        Returns:
+        ---------
+        output_format: dict
+            Record information about the original varName input. 
+            Provide the formatting information for output, 
+            such that it matches the input in a direct fashion.
+        main_keys: list
+            A list that defines each interpolation to be performed. 
+            The combination of variable name and kernel uniquely define such an operation.
+        prefetch_dict: dict
+            Lookup the prefetched the data and its index prefix using main_key
+        main_dict: dict
+            Lookup the raw information using main_key
+        hash_index: dict
+            Lookup the token that uniquely define its indexing operation using main_key. 
+            Different main_key could share the same token. 
+        hash_mask: dict
+            Lookup the token that uniquely define its masking operation using main_key. 
+            Different main_key could share the same token. 
+        hash_read: dict
+            Lookup the token that uniquely define its reading of the data using main_key. 
+            Different main_key could share the same token. 
+        hash_weight: dict
+            Lookup the token that uniquely define its computation of the weight using main_key. 
+            Different main_key could share the same token. 
+        '''
         # prefetch_dict = {var:(prefetched,i_min)}
         # main_dict = {var:(var,kernel)}
         # hash_index = {var:hash(cuvg,kernel_size)}
@@ -621,6 +774,23 @@ class position():
         
     
     def _fatten_required_index_and_register(self,hash_index,main_dict):
+        '''
+        Perform the fatten process for each unique token. Register the result as a dict.
+
+        Parameters:
+        -----------
+        hash_index: dict
+            See _register_interpolation_input
+        main_dict: dict
+            See _register_interpolation_input
+
+        Returns:
+        ------------
+        index_lookup: dict
+            A dictionary to lookup fatten results. 
+            The keys are the token in hash_index.
+            The values are corresponding results. 
+        '''
         hsh = np.unique(list(hash_index.values()))
         index_lookup = {}
         for hs in hsh:
@@ -649,6 +819,27 @@ class position():
         return index_lookup
     
     def _transform_vector_and_register(self,index_lookup,hash_index,main_dict):
+        '''
+        Perform the vector transformation. 
+        This is to say that sometimes u velocity becomes v velocity for datasets with face topology.
+          Register the result as a dict.
+
+        Parameters:
+        -----------
+        index_lookup: dict
+            See _fatten_required_index_and_register
+        hash_index: dict
+            See _register_interpolation_input
+        main_dict: dict
+            See _register_interpolation_input
+
+        Returns:
+        ------------
+        transform_lookup: dict
+            A dictionary to lookup transformation results. 
+            The keys are the token in hash_index.
+            The values are corresponding results. 
+        '''
         hsh = np.unique(list(hash_index.values()))
         transform_lookup = {}
         if self.face is None:
@@ -701,6 +892,29 @@ class position():
         return transform_lookup
     
     def _mask_value_and_register(self,index_lookup,transform_lookup,hash_mask,hash_index,main_dict):
+        '''
+        Perform the masking process and register in a dictionary. 
+
+        Parameters:
+        -----------
+        index_lookup: dict
+            See _fatten_required_index_and_register
+        transform_lookup: dict
+            See _transform_vector_and_lookup 
+        hash_mask: dict
+            See _register_interpolation_input
+        hash_index: dict
+            See _register_interpolation_input
+        main_dict: dict
+            See _register_interpolation_input
+
+        Returns:
+        ------------
+        mask_lookup: dict
+            A dictionary to lookup masking results. 
+            The keys are the token in hash_mask.
+            The values are corresponding results. 
+        '''
         hsh = np.unique(list(hash_mask.values()))
         mask_lookup = {}
         for hs in hsh:
@@ -760,6 +974,31 @@ class position():
         return mask_lookup
     
     def _read_data_and_register(self,index_lookup,transform_lookup,hash_read,hash_index,main_dict,prefetch_dict):
+        '''
+        Read the data and register them as dict. 
+
+        Parameters:
+        -----------
+        index_lookup: dict
+            See _fatten_required_index_and_register
+        transform_lookup: dict
+            See _transform_vector_and_lookup 
+        hash_read: dict
+            See _register_interpolation_input
+        hash_index: dict
+            See _register_interpolation_input
+        main_dict: dict
+            See _register_interpolation_input
+        prefetch_dict: dict
+            See _register_interpolation_input
+
+        Returns:
+        ------------
+        read_lookup: dict
+            A dictionary to lookup data reading results. 
+            The keys are the token in hash_read.
+            The values are corresponding results. 
+        '''
         hsh = np.unique(list(hash_read.values()))
         data_lookup = {}
         for hs in hsh:
@@ -819,6 +1058,27 @@ class position():
         return data_lookup
     
     def _compute_weight_and_register(self,mask_lookup,hash_weight,hash_mask,main_dict):
+        '''
+        Read the data and register them as dict. 
+
+        Parameters:
+        -----------
+        mask_lookup: dict
+            See _mask_value_and_register
+        hash_weight: dict
+            See _register_interpolation_input
+        hash_mask: dict
+            See _register_interpolation_input
+        main_dict: dict
+            See _register_interpolation_input
+
+        Returns:
+        ------------
+        weight_lookup: dict
+            A dictionary to lookup the weights computed. 
+            The keys are the token in hash_weight.
+            The values are corresponding results. 
+        '''
         hsh = np.unique(list(hash_weight.values()))
         weight_lookup = {}
         for hs in hsh:
@@ -898,6 +1158,42 @@ class position():
     def interpolate(self,varName,knw,
                     vec_transform = True,
                     prefetched = None,i_min = None):
+        '''
+        This is the method that does the actual interpolation/derivative.
+        It is a combination of the following methods:
+        _register_interpolation_input,
+        _fatten_required_index_and_register,
+        _transform_vector_and_register,
+        _read_data_and_register,
+        _mask_value_and_register,
+        _compute_weight_and_registe,
+
+        Parameters:
+        ----------
+        varName: list, str, tuple
+            The variables to interpolate. Tuples are used for horizontal vectors. 
+            Put str and list in a list if you have multiple things to interpolate. 
+            This input also defines the format of the output. 
+        knw: KnW object, tuple, list, dict
+            The kernel object used for the operation. 
+            Put them in the same order as varName. 
+            Some level of automatic broadcasting is also supported. 
+        vec_transform: Boolean
+            Whether to project the vector field to the local zonal/meridional direction. 
+        prefetched: numpy.ndarray, tuple, list, dict, None
+            The prefetched array for the data, this will effectively overwrite varName.
+            Put them in the same order as varName. 
+            Some level of automatic broadcasting is also supported.
+        i_min: tuple, list, dict, None
+            The prefix of the prefetched array. 
+            Put them in the same order as varName. 
+            Some level of automatic broadcasting is also supported.
+
+        Returns:
+        --------
+        R: list, numpy.array, tuple
+            The interpolation/derivative output in the same format as varName. 
+        '''
         R = []
         (
             output_format,
@@ -930,8 +1226,8 @@ class position():
             if isinstance(varName,str):
                 needed = data_lookup[hash_read[key]]
                 weight = weight_lookup[hash_weight[key]]
-                needed = partial_flatten(needed)
-                weight = partial_flatten(weight)
+                needed = _partial_flatten(needed)
+                weight = _partial_flatten(weight)
                 R.append(np.einsum('nj,nj->n',needed,weight))
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
