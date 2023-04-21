@@ -12,7 +12,21 @@ def mask_u_node(maskC,tp):
     When the C grid is dry, U are either:
     a. dry;
     b. on the interface, where the cell to the left is wet.
-    if b is the case, we need to unmask the udata
+    if b is the case, we need to unmask the udata, because it makes some physical sense.
+
+    Parameters:
+    ---------
+    maskC: numpy.ndarray
+        numpy array with the same shape as the model spacial coordinates. 
+        1 for wet cells (center points), 0 for dry ones.
+    tp: topology object
+        The topology object for the dataset. 
+
+    Returns:
+    --------
+    maskU: numpy.ndarray
+        numpy array with the same shape as the model spacial coordinates. 
+        1 for wet U-walls (including interface between wet and dry), 0 for dry ones.
     '''
         
     maskU = copy.deepcopy(maskC)
@@ -32,6 +46,20 @@ def mask_v_node(maskC,tp):
     a. dry;
     b. on the interface, where the cell to the downside is wet.
     if b is the case, we need to unmask the vdata
+
+    Parameters:
+    ---------
+    maskC: numpy.ndarray
+        numpy array with the same shape as the model spacial coordinates. 
+        1 for wet cells (center points), 0 for dry ones.
+    tp: topology object
+        The topology object for the dataset. 
+
+    Returns:
+    --------
+    maskV: numpy.ndarray
+        numpy array with the same shape as the model spacial coordinates. 
+        1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
     '''
     maskV = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC==0)).T
@@ -52,6 +80,20 @@ def mask_w_node(maskC,tp = None):
     a. dry;
     b. on the interface, where the cell above is wet.
     if b is the case, we need to unmask the wdata
+
+    Parameters:
+    ---------
+    maskC: numpy.ndarray
+        numpy array with the same shape as the model spacial coordinates. 
+        1 for wet cells (center points), 0 for dry ones.
+    tp: topology object
+        The topology object for the dataset. 
+
+    Returns:
+    --------
+    maskWvel: numpy.ndarray
+        numpy array with the same shape as the model spacial coordinates. 
+        1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
     '''
     temp = np.zeros_like(maskC)
     temp[1:] = maskC[:-1]
@@ -60,9 +102,22 @@ def mask_w_node(maskC,tp = None):
     
 def get_masks(od,tp):
     '''
-    just put the above functions together.
+    A wrapper around mask_u_node, mask_v_node, mask_w_node.
+    If there is no maskC in the dataset, just return nothing is masked. 
+
+    Parameters:
+    ----------
+    od: OceData object
+        The dataset to compute masks on. 
+    tp: topology object
+        The topology of the datset
+
+    Returns:
+    --------
+    maskC,maskU,maskV,maskW: numpy.ndarray
+        masks at center points, U-walls, V-walls, W-walls respectively. 
     '''
-    tp = topology(od)
+    # tp = topology(od)
     keys = od._ds.keys()
     if 'maskC' not in keys:
         warnings.warn('no maskC in the dataset, assuming nothing is masked.')
@@ -102,6 +157,19 @@ def get_masks(od,tp):
     return maskC,maskU,maskV,maskW
 
 def get_masked(od,ind,gridtype = 'C'):
+    '''
+    Return whether the indexes of intersts are masked or not.
+
+    Parameters:
+    ----------
+    od: OceDataset object
+        Dataset to find mask values from.
+    ind: tuple of numpy.ndarray
+        Indexes of grid points.
+    gridtype: str
+        Whether the indexes is for points at center points or on the walls.
+        Options are: ['C','U','V','Wvel'].
+    '''
     if gridtype not in ['C','U','V','Wvel']:
         raise NotImplementedError('gridtype for mask not supported')
     keys = od._ds.keys()
@@ -114,7 +182,7 @@ def get_masked(od,ind,gridtype = 'C'):
         return smart_read(od._ds.maskC,ind)
     
     name = 'mask'+gridtype
-    tp = topology(od)
+    tp = od.tp
     maskC = np.array(od._ds['maskC'])
     func_dic = {'U':mask_u_node,'V':mask_v_node,'Wvel':mask_w_node}
     rename_dic = {
