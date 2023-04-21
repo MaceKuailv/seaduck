@@ -28,11 +28,19 @@ default_kernels = [np.array([default_kernel[i] for i in doll]) for doll in defau
 
 # It just tell you what the kernels look like
 def show_kernels(kernels = default_kernels):
+    '''
+    Plot a small scatter plot of the shape of a list of kernel
+
+    Parameters
+    -------
+    kernels: list of numpy.ndarray
+        Each of the element is a (n,2) shaped array, where n is the number of element in the kernel. 
+    '''
     for i,k in enumerate(kernels):
         x,y = k.T
         plt.plot(x+0.1*i,y+0.1*i,'+')
     
-def translate_to_tendency(k):
+def _translate_to_tendency(k):
     '''
     A kernel looks like 
     np.array([
@@ -45,6 +53,11 @@ def translate_to_tendency(k):
     If you need to go to [0,2], you need to move up twice.
     it will return [0,0] or more explicitly ['up','up']
     [0,0] will produce a empty array.
+
+    Parameters
+    -------
+    k: numpy.ndarray
+        A (n,2)-shaped array, where n is the number of element in the kernel. 
     '''
     tend = []
     x,y = k 
@@ -69,8 +82,15 @@ def fatten_ind_h(faces,iys,ixs,tp,kernel=default_kernel):
     This is going to return a n * m array of indexes.
     each row represen all the node needed for interpolation of a single point.
     "h" represent we are only doing it on the horizontal plane
+
+    Parameters
+    -------
+    faces: numpy.ndarray or None
+        The index of faces that the points are on. None if there is no face dimension. 
+    iys,ixs: numpy.ndarray or None
+        1D array of indexes on the points' horizontal position
     '''
-    kernel_tends =  [translate_to_tendency(k) for k in kernel]
+    kernel_tends =  [_translate_to_tendency(k) for k in kernel]
     m = len(kernel_tends)
     n = len(iys)
     
@@ -112,41 +132,56 @@ def fatten_ind_h(faces,iys,ixs,tp,kernel=default_kernel):
     else:
         return None,n_iys.astype('int'),n_ixs.astype('int')
 
-def fatten_ind_3d(iz,faces,iy,ix,tp,kernel=default_kernel):
-    '''
-    fatten the kernel some more in the vertical direcion,
-    (1-rz)*this_layer+rz*that_layer
-    essentially, there are only two points in the vertical kernel.
-    more generally it should be kronecker product, I find it kind of 
-    unnecessary.
-    '''
-    ffaces,fiy,fix = fatten_ind_h(faces,iy,ix,tp,kernel)
-    n,m = fiy.shape
-    fiz = np.zeros_like(fiy)
-    fiz = np.concatenate((fiz,fiz),axis = 1)
-    for i in range(len(fiz)):
-        fiz[i,:m] = iz[i]
-        if iz[i]!=0:
-            fiz[i,m:] = iz[i]-1
-        # the commented lines below are not necessary,
-        # but it make it easier to explain what we are doing.
-        # if when we are considering the top level,
-        # we just do a 2D interpolation.
-        # top_layer = (1-rz)*top_layer+rz*top_layer
-        # it will be more obvious after you read the function of weight
-#         else:
-#             fiz[i,m:] = iz[i]
-    if faces is None:
-        ffaces = None
-    else:
-        ffaces = np.concatenate((ffaces,ffaces),axis = 1)
-    fiy = np.concatenate((fiy,fiy),axis = 1)
-    fix = np.concatenate((fix,fix),axis = 1)
-    return fiz,ffaces,fiy,fix
+# def fatten_ind_3d(iz,faces,iy,ix,tp,kernel=default_kernel):
+#     '''
+#     fatten the kernel some more in the vertical direcion,
+#     (1-rz)*this_layer+rz*that_layer
+#     essentially, there are only two points in the vertical kernel.
+#     more generally it should be kronecker product, I find it kind of 
+#     unnecessary.
+#     '''
+#     ffaces,fiy,fix = fatten_ind_h(faces,iy,ix,tp,kernel)
+#     n,m = fiy.shape
+#     fiz = np.zeros_like(fiy)
+#     fiz = np.concatenate((fiz,fiz),axis = 1)
+#     for i in range(len(fiz)):
+#         fiz[i,:m] = iz[i]
+#         if iz[i]!=0:
+#             fiz[i,m:] = iz[i]-1
+#         # the commented lines below are not necessary,
+#         # but it make it easier to explain what we are doing.
+#         # if when we are considering the top level,
+#         # we just do a 2D interpolation.
+#         # top_layer = (1-rz)*top_layer+rz*top_layer
+#         # it will be more obvious after you read the function of weight
+# #         else:
+# #             fiz[i,m:] = iz[i]
+#     if faces is None:
+#         ffaces = None
+#     else:
+#         ffaces = np.concatenate((ffaces,ffaces),axis = 1)
+#     fiy = np.concatenate((fiy,fiy),axis = 1)
+#     fix = np.concatenate((fix,fix),axis = 1)
+#     return fiz,ffaces,fiy,fix
 
 def fatten_linear_dim(iz,ind,maximum = None,minimum = None,kernel_type = 'linear'):
     '''
     this function linearly fattened the index in t or z dimension
+
+    Parameters:
+    -------
+    iz: np.ndarray
+        1D array of particle indexs in a linear dimension, including depth, 
+        time and horizontal dimensions if there is no face dimension
+    ind: tuple of np.ndarray
+        Index arrays that are already fattened in other directions
+    maximum: int or None
+        None if the neighboring cell has index 1 larger than iz. 
+        If the value of iz == maximum, the neighboring point is just maximum. 
+    minimum: int or None
+        None if the neighboring cell has index 1 smaller than iz. 
+    kernel_type: 'linear', 'dz' or 'nearest'
+        Whether to fatten the index using the nearest one point or two points. 
     '''
     if maximum and minimum:
         raise Exception('either interpolate the node with'
@@ -187,67 +222,78 @@ def fatten_linear_dim(iz,ind,maximum = None,minimum = None,kernel_type = 'linear
         raise Exception('kernel_type not recognized. should be either linear, dz, or nearest')
     return tuple(n_ind)
     
-def fatten_ind_4d(it,iz,face,iy,ix,tp,
-               hkernel=default_kernel,
-               zkernel='linear',
-               tkernel='linear',
-              ):
-    # perform horizontal fattening 
-    hface,hiy,hix = fatten_ind_h(face,iy,ix,tp,hkernel)
+# def fatten_ind_4d(it,iz,face,iy,ix,tp,
+#                hkernel=default_kernel,
+#                zkernel='linear',
+#                tkernel='linear',
+#               ):
+#     # perform horizontal fattening 
+#     hface,hiy,hix = fatten_ind_h(face,iy,ix,tp,hkernel)
     
-    # perform vertical
-    n,m = hiy.shape
-    if zkernel in ['linear','dz']:
-        vhiy = np.stack((hiy,hiy),axis = -1)
-        vhix = np.stack((hix,hix),axis = -1)
-        if face is not None:
-            vhface = np.stack((hface,hface),axis = -1)
-        vhiz = np.zeros((2,m,n))
-        vhiz[0] = iz
-        vhiz[1] = (abs(iz-1)+(iz-1))/2 #relu function
-        vhiz = vhiz.T
-    elif zkernel == 'nearest':
-        vhiy = hiy.reshape((n,m,1))
-        vhix = hix.reshape((n,m,1))
-        vhiz = np.zeros((n,m,1))
-        vhiz.T[:] = iz
-    else:
-        raise Exception('zkernel not recognized. should be either linear, dz, or nearest')
+#     # perform vertical
+#     n,m = hiy.shape
+#     if zkernel in ['linear','dz']:
+#         vhiy = np.stack((hiy,hiy),axis = -1)
+#         vhix = np.stack((hix,hix),axis = -1)
+#         if face is not None:
+#             vhface = np.stack((hface,hface),axis = -1)
+#         vhiz = np.zeros((2,m,n))
+#         vhiz[0] = iz
+#         vhiz[1] = (abs(iz-1)+(iz-1))/2 #relu function
+#         vhiz = vhiz.T
+#     elif zkernel == 'nearest':
+#         vhiy = hiy.reshape((n,m,1))
+#         vhix = hix.reshape((n,m,1))
+#         vhiz = np.zeros((n,m,1))
+#         vhiz.T[:] = iz
+#     else:
+#         raise Exception('zkernel not recognized. should be either linear, dz, or nearest')
 
-    # perform temperal
-    n,m,p = vhiy.shape
-    if tkernel in ['linear','dt']:
-        tvhiy = np.stack((vhiy,vhiy),axis = -1)
-        tvhix = np.stack((vhix,vhix),axis = -1)
-        tvhiz = np.stack((vhiz,vhiz),axis = -1)
-        if face is not None:
-            tvhface = np.stack((vhface,vhface),axis = -1)
-        tvhit = np.zeros((2,p,m,n))
-        tvhit[0] = it
-        tvhit[1] = np.minimum(tp.itmax,it+1)
-        tvhit = tvhit.T
-    elif tkernel == 'nearest':
-        tvhiy = vhiy.reshape(n,m,p,1)
-        tvhix = vhix.reshape(n,m,p,1)
-        tvhiz = vhiz.reshape(n,m,p,1)
-        tvhit = np.zeros((n,m,p,1))
-        tvhit.T[:] = it
-    else:
-        raise Exception('tkernel not recognized. should be either linear, dt, or nearest')
+#     # perform temperal
+#     n,m,p = vhiy.shape
+#     if tkernel in ['linear','dt']:
+#         tvhiy = np.stack((vhiy,vhiy),axis = -1)
+#         tvhix = np.stack((vhix,vhix),axis = -1)
+#         tvhiz = np.stack((vhiz,vhiz),axis = -1)
+#         if face is not None:
+#             tvhface = np.stack((vhface,vhface),axis = -1)
+#         tvhit = np.zeros((2,p,m,n))
+#         tvhit[0] = it
+#         tvhit[1] = np.minimum(tp.itmax,it+1)
+#         tvhit = tvhit.T
+#     elif tkernel == 'nearest':
+#         tvhiy = vhiy.reshape(n,m,p,1)
+#         tvhix = vhix.reshape(n,m,p,1)
+#         tvhiz = vhiz.reshape(n,m,p,1)
+#         tvhit = np.zeros((n,m,p,1))
+#         tvhit.T[:] = it
+#     else:
+#         raise Exception('tkernel not recognized. should be either linear, dt, or nearest')
         
-    if face is None:
-        tvhface = None
-    return tvhit.astype(int),tvhiz.astype(int),tvhface.astype(int),tvhiy.astype(int),tvhix.astype(int)
+#     if face is None:
+#         tvhface = None
+#     return tvhit.astype(int),tvhiz.astype(int),tvhface.astype(int),tvhiy.astype(int),tvhix.astype(int)
 
 def kernel_weight_x(kernel,ktype = 'interp',order = 0):
     '''
-    return the function that calculate the weight
-    given a cross-shaped (that's where x is coming from) kernel.
-    ktype can be choosen from "interp","x","y"
-    order is the order of derivatives.
+    return the function that calculate the interpolation/derivative weight 
+    given a cross-shaped (that's where x is coming from) Lagrangian kernel.
+
+    Parameters:
+    -----
+    kernel: np.ndarray
+        2D array with shape (n,2), where n is the number of nodes. 
+        It has to be shaped like a cross
+    ktype: str
+        "interp" (default): Use both x y direction for interpolation, implies that order = 0
+        "x": Use only x direction for interpolation/derivative
+        "y": Use only y direction for interpolation/derivative
+    order: int
+        The order of derivatives. Zero for interpolation. 
     
-    Those functions are a bit complicated, so it takes time to compile,
-    after that, they are great. 
+    Returns:
+    -------
+    func(rx,ry): compilable function to calculate the hotizontal interpolation/derivative weight
     '''
     xs = np.array(list(set(kernel.T[0]))).astype(float)
     ys = np.array(list(set(kernel.T[1]))).astype(float)
@@ -449,6 +495,24 @@ def kernel_weight_x(kernel,ktype = 'interp',order = 0):
 # and it really takes a lot of time to compile. 
 
 def kernel_weight_s(kernel,xorder = 0,yorder = 0):
+    '''
+    return the function that calculate the interpolation/derivative weight 
+    given a rectangle-shaped (that's where x is coming from) Lagrangian kernel.
+
+    Parameters:
+    -----
+    kernel: np.ndarray
+        2D array with shape (n,2), where n is the number of nodes. 
+        It has to be shaped like a rectangle
+    xorder: int
+        The order of derivatives in the x direction. Zero for interpolation. 
+    yorder: int
+        The order of derivatives in the y direction. Zero for interpolation. 
+    
+    Returns:
+    -------
+    func(rx,ry): compilable function to calculate the hotizontal interpolation/derivative weight
+    '''
     xs = np.array(list(set(kernel.T[0]))).astype(float)
     ys = np.array(list(set(kernel.T[1]))).astype(float)
     xmaxorder = False
@@ -540,6 +604,28 @@ def kernel_weight_s(kernel,xorder = 0,yorder = 0):
     return the_square_func
 
 def kernel_weight(kernel,ktype = 'interp',order = 0):
+    '''
+    A wrapper around kernel_weight_x and kernel_weight_s.
+    Return the function that calculate the interpolation/derivative weight 
+    of a  Lagrangian kernel.
+
+    Parameters:
+    -----
+    kernel: np.ndarray
+        2D array with shape (n,2), where n is the number of nodes. 
+        It need to either shape like a rectangle or a cross
+    ktype: str
+        "interp" (default): Use both x y direction for interpolation, implies that order = 0
+        "dx": Use only x direction for interpolation/derivative
+        "dy": Use only y direction for interpolation/derivative
+    order: int
+        The order of derivatives. Zero for interpolation. 
+    
+    Returns:
+    -------
+    func(rx,ry): compilable function to calculate the hotizontal 
+    interpolation/derivative weight
+    '''
     mx = len(set(kernel[:,0]))
     my = len(set(kernel[:,1]))
     if len(kernel) == mx+my-1:
@@ -556,7 +642,7 @@ def kernel_weight(kernel,ktype = 'interp',order = 0):
 
 default_interp_funcs = [kernel_weight_x(a_kernel) for a_kernel in default_kernels]
 
-def find_which_points_for_each_kernel(masked,russian_doll = default_russian_doll):
+def find_which_points_for_each_kernel(masked,russian_doll = 'default'):
     '''
     masked is going to be a n*m array,
     where n is the number of points of interest.
@@ -583,6 +669,8 @@ def find_which_points_for_each_kernel(masked,russian_doll = default_russian_doll
     if a row looks like [0,0,0,0,0],
     none of the kernel can fit it, so the index will not be in the return
     '''
+    if russian_doll == 'default':
+        russian_doll = default_russian_doll
     already_wet = []
     for i,doll in enumerate(russian_doll):
         wet_1d = masked[:,np.array(doll)].all(axis = 1)
@@ -603,6 +691,23 @@ def get_weight_cascade(rx,ry,pk,
     '''
     apply the corresponding functions that was figured out in 
     find_which_points_for_each_kernel
+
+    Parameters:
+    ------
+    rx,ry: numpy.ndarray
+        1D array with length N of non-dimensional relative horizontal position to the nearest node
+    kernel_large: numpy.ndarray
+        A numpy kernel of shape (M,2) that contains all the kernels needed.
+    russian_doll: list of list(s)
+        The inheritance sequence when some of the node is masked.
+    funcs: list of compileable functions
+        The weight function of each kernel in the inheritance sequence. 
+
+    Returns:
+    ------
+    weight: numpy.ndarray
+        The horizontal weight of interpolation/derivative for the points with shape (N,M)
+
     '''
     for i in range(len(pk)):
         if len(pk[i]) == 0:
@@ -615,36 +720,39 @@ def get_weight_cascade(rx,ry,pk,
         weight[pk[i]] = sub_weight
     return weight
 
-def find_which_points_for_2layer_kernel(masked,russian_doll = default_russian_doll):
-    # extend the find_which_points_for_each_kernel to the z dimension
-    n,m = masked.shape
-    m = m//2
-    pk1 = find_which_points_for_each_kernel(masked[:,:m],russian_doll)
-    pk2 = find_which_points_for_each_kernel(masked[:,m:],russian_doll)
-    return pk1,pk2
+# def find_which_points_for_2layer_kernel(masked,russian_doll = default_russian_doll):
+#     # extend the find_which_points_for_each_kernel to the z dimension
+#     n,m = masked.shape
+#     m = m//2
+#     pk1 = find_which_points_for_each_kernel(masked[:,:m],russian_doll)
+#     pk2 = find_which_points_for_each_kernel(masked[:,m:],russian_doll)
+#     return pk1,pk2
 
-def get_weight_2layer(rx,ry,rz,pk1,pk2,bc = 'no_flux',
-                      kernel_large = default_kernel,
-                       russian_doll = default_russian_doll,
-                       funcs = default_interp_funcs):
-    n = len(rx)
-    m = len(kernel_large)
-    weight = np.zeros((n,2*m))
-    # here the weight is multiplied by rz, which is just the weight associated with z location
-    # essentially a 2-point interpolation
-    weight[:,:m] = (get_weight_cascade(rx,ry,pk1,kernel_large,russian_doll,funcs).T*(1-rz)).T
-    weight[:,m:] = (get_weight_cascade(rx,ry,pk2,kernel_large,russian_doll,funcs).T*rz).T
-    if bc == 'no_flux':
-        # for salt the natural bottom bc is no_flux,
-        # between the lowest wet node and the dry node right under it.
-        # the gradient shoule be zero, and a nearest neighbor interpolation should be used.
-        # rather than returning nan
-        for i in range(n):
-            if np.isnan(weight[i,m]) and not np.isnan(weight[i,0]):
-                weight[i,m] = 0
-    return weight
+# def get_weight_2layer(rx,ry,rz,pk1,pk2,bc = 'no_flux',
+#                       kernel_large = default_kernel,
+#                        russian_doll = default_russian_doll,
+#                        funcs = default_interp_funcs):
+#     n = len(rx)
+#     m = len(kernel_large)
+#     weight = np.zeros((n,2*m))
+#     # here the weight is multiplied by rz, which is just the weight associated with z location
+#     # essentially a 2-point interpolation
+#     weight[:,:m] = (get_weight_cascade(rx,ry,pk1,kernel_large,russian_doll,funcs).T*(1-rz)).T
+#     weight[:,m:] = (get_weight_cascade(rx,ry,pk2,kernel_large,russian_doll,funcs).T*rz).T
+#     if bc == 'no_flux':
+#         # for salt the natural bottom bc is no_flux,
+#         # between the lowest wet node and the dry node right under it.
+#         # the gradient shoule be zero, and a nearest neighbor interpolation should be used.
+#         # rather than returning nan
+#         for i in range(n):
+#             if np.isnan(weight[i,m]) and not np.isnan(weight[i,0]):
+#                 weight[i,m] = 0
+#     return weight
 
 def find_pk_4d(masked,russian_doll = default_russian_doll):
+    '''
+    find the masking condition for 4D space time. 
+    '''
     maskedT = masked.T
     ind_shape = maskedT.shape
     tz = []
@@ -664,6 +772,31 @@ def get_weight_4d(rx,ry,rz,rt,
                   zkernel = 'linear',#'dz','nearest'
                   bottom_scheme = 'no flux'# None
                  ):
+    '''
+    Return the weight of values given particle rel-coords
+
+    Parameters
+    ----------
+    rx,ry,rz,rt: numpy.ndarray
+        1D array of non-dimensional particle positions
+    pk4d: list
+        A mapping on which points should use which kernel.
+    hkernel:
+        A horizontal numpy kernel that contains all the horizontal kernels needed.
+    russian_doll: list of list(s)
+        The inheritance sequence when some of the node is masked.
+    funcs: list of compileable functions
+        The weight function of each kernel in the inheritance sequence. 
+    tkernel: str
+        What kind of operation to do in the temporal dimension: 
+        'linear', 'nearest' interpolation, or 'dt'
+    zkernel: str
+        What kind of operation to do in the vertical: 
+        'linear', 'nearest' interpolation, or 'dz'
+    bottom_scheme: str
+        Whether to assume there is a ghost point with same value at the bottom boundary.
+        Choose None for vertical flux, 'no flux' for most other cases. 
+    '''
     nt = len(pk4d)
     nz = len(pk4d[0])
     

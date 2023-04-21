@@ -1,6 +1,6 @@
 from OceInterp.OceData import OceData
 from OceInterp.kernelNweight import KnW
-from OceInterp.kernel_and_weight import translate_to_tendency,find_pk_4d
+from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
 from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len
@@ -257,7 +257,7 @@ class position():
         '''
 #         self.ind_h_dict
         kernel = knw.kernel
-        kernel_tends =  [translate_to_tendency(k) for k in kernel]
+        kernel_tends =  [_translate_to_tendency(k) for k in kernel]
         m = len(kernel_tends)
         n = len(self.iy)
         tp = self.ocedata.tp
