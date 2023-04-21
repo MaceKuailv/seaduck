@@ -31,8 +31,8 @@ def show_kernels(kernels = default_kernels):
     '''
     Plot a small scatter plot of the shape of a list of kernel
 
-    Parameters
-    -------
+    Parameters:
+    ------------
     kernels: list of numpy.ndarray
         Each of the element is a (n,2) shaped array, where n is the number of element in the kernel. 
     '''
@@ -54,8 +54,8 @@ def _translate_to_tendency(k):
     it will return [0,0] or more explicitly ['up','up']
     [0,0] will produce a empty array.
 
-    Parameters
-    -------
+    Parameters:
+    ------------
     k: numpy.ndarray
         A (n,2)-shaped array, where n is the number of element in the kernel. 
     '''
@@ -83,8 +83,8 @@ def fatten_ind_h(faces,iys,ixs,tp,kernel=default_kernel):
     each row represen all the node needed for interpolation of a single point.
     "h" represent we are only doing it on the horizontal plane
 
-    Parameters
-    -------
+    Parameters:
+    -----------------
     faces: numpy.ndarray or None
         The index of faces that the points are on. None if there is no face dimension. 
     iys,ixs: numpy.ndarray or None
@@ -169,7 +169,7 @@ def fatten_linear_dim(iz,ind,maximum = None,minimum = None,kernel_type = 'linear
     this function linearly fattened the index in t or z dimension
 
     Parameters:
-    -------
+    ------------
     iz: np.ndarray
         1D array of particle indexs in a linear dimension, including depth, 
         time and horizontal dimensions if there is no face dimension
@@ -280,7 +280,7 @@ def kernel_weight_x(kernel,ktype = 'interp',order = 0):
     given a cross-shaped (that's where x is coming from) Lagrangian kernel.
 
     Parameters:
-    -----
+    ---------------
     kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes. 
         It has to be shaped like a cross
@@ -292,7 +292,7 @@ def kernel_weight_x(kernel,ktype = 'interp',order = 0):
         The order of derivatives. Zero for interpolation. 
     
     Returns:
-    -------
+    ------------
     func(rx,ry): compilable function to calculate the hotizontal interpolation/derivative weight
     '''
     xs = np.array(list(set(kernel.T[0]))).astype(float)
@@ -500,7 +500,7 @@ def kernel_weight_s(kernel,xorder = 0,yorder = 0):
     given a rectangle-shaped (that's where x is coming from) Lagrangian kernel.
 
     Parameters:
-    -----
+    ---------------
     kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes. 
         It has to be shaped like a rectangle
@@ -510,7 +510,7 @@ def kernel_weight_s(kernel,xorder = 0,yorder = 0):
         The order of derivatives in the y direction. Zero for interpolation. 
     
     Returns:
-    -------
+    ------------
     func(rx,ry): compilable function to calculate the hotizontal interpolation/derivative weight
     '''
     xs = np.array(list(set(kernel.T[0]))).astype(float)
@@ -610,7 +610,7 @@ def kernel_weight(kernel,ktype = 'interp',order = 0):
     of a  Lagrangian kernel.
 
     Parameters:
-    -----
+    ---------------
     kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes. 
         It need to either shape like a rectangle or a cross
@@ -622,7 +622,7 @@ def kernel_weight(kernel,ktype = 'interp',order = 0):
         The order of derivatives. Zero for interpolation. 
     
     Returns:
-    -------
+    ------------
     func(rx,ry): compilable function to calculate the hotizontal 
     interpolation/derivative weight
     '''
@@ -693,7 +693,7 @@ def get_weight_cascade(rx,ry,pk,
     find_which_points_for_each_kernel
 
     Parameters:
-    ------
+    ----------------
     rx,ry: numpy.ndarray
         1D array with length N of non-dimensional relative horizontal position to the nearest node
     kernel_large: numpy.ndarray
@@ -704,7 +704,7 @@ def get_weight_cascade(rx,ry,pk,
         The weight function of each kernel in the inheritance sequence. 
 
     Returns:
-    ------
+    ----------------
     weight: numpy.ndarray
         The horizontal weight of interpolation/derivative for the points with shape (N,M)
 
@@ -775,8 +775,8 @@ def get_weight_4d(rx,ry,rz,rt,
     '''
     Return the weight of values given particle rel-coords
 
-    Parameters
-    ----------
+    Parameters:
+    ---------------
     rx,ry,rz,rt: numpy.ndarray
         1D array of non-dimensional particle positions of shape (N)
     pk4d: list
