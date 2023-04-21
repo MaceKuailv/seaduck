@@ -31,12 +31,12 @@ def kash(kernel):#hash kernel
     '''
     hash a horizontal kernel
     Parameters:
-    -------
+    ------------
     kernel: numpy.ndarray
         A horizontal kernel
     
     Returns:
-    -------
+    ------------
     The hash value of this array
     '''
     temp_lst = [(i,j) for (i,j) in kernel]
@@ -96,7 +96,7 @@ class KnW(object):
     A class that describes anything about the interpolation/derivative kernel to be used. 
 
     Parameters:
-    -----------
+    ----------------
     kernel: numpy.ndarray
         The largest horizontal kernel to be used
     inheritance: list
@@ -227,8 +227,8 @@ class KnW(object):
         '''
         Return the weight of values given particle rel-coords
 
-        Parameters
-        ----------
+        Parameters:
+        ---------------
         rx,ry,rz,rt: numpy.ndarray
             1D array of non-dimensional particle positions
         pk4d: list
@@ -238,7 +238,7 @@ class KnW(object):
             Choose None for vertical flux, 'no flux' for most other cases. 
 
         Returns:
-        -------- 
+        -------------
         weight: numpy.ndarray
             The weight of interpolation/derivative for the points with shape (N,M), 
             M is the num of node in the largest kernel. 

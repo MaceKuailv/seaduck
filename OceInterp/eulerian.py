@@ -49,7 +49,7 @@ def _ind_broadcast(x,ind):
     Perform a "cartesian product" on two fattened dimensions 
 
     Parameters:
-    ----------
+    ---------------
     x: numpy.ndarray
         A new dimension
     ind: tuple
@@ -144,7 +144,7 @@ class position():
         store the output in the position object. 
 
         Parameters:
-        -----------
+        ----------------
         x,y,z,t: numpy.ndarray
             1D array of the lat-lon-dep-time coords
         data: OceData object
@@ -279,14 +279,14 @@ class position():
         Create a subset of the position object
 
         Parameters:
-        -----------
+        ----------------
         which: numpy.ndarray
             Define which points survive the subset operation.
             It be an array of either boolean or int.
             The selection is similar to that of selecting from a 1D numpy array.
 
         Returns:
-        --------
+        -------------
         the_subset: position object
             The selected positions. 
         '''
@@ -316,7 +316,7 @@ class position():
         "h" represent we are only doing it on the horizontal plane
 
         Parameters:
-        -----------
+        ----------------
         knw: KnW object
             The kernel used to find neighboring points.
         ind_moves_kward: dict
@@ -373,7 +373,7 @@ class position():
         Finding the neighboring center grid points in the vertical direction.
 
         Parameters:
-        -----------
+        ----------------
         knw: KnW object
             The kernel used to find neighboring points.
         '''
@@ -401,7 +401,7 @@ class position():
         Finding the neighboring staggered grid points in the vertical direction.
 
         Parameters:
-        -----------
+        ----------------
         knw: KnW object
             The kernel used to find neighboring points.
         '''
@@ -429,7 +429,7 @@ class position():
         Finding the neighboring center grid points in the temporal dimension.
 
         Parameters:
-        -----------
+        ----------------
         knw: KnW object
             The kernel used to find neighboring points.
         '''
@@ -456,7 +456,7 @@ class position():
         Finding the neighboring center grid points in all 4 dimensions.
 
         Parameters:
-        -----------
+        ----------------
         knw: KnW object
             The kernel used to find neighboring points.
         fourD: Boolean
@@ -586,7 +586,7 @@ class position():
         For the input format, go to interpolation for more details. 
 
         Returns:
-        ---------
+        --------------
         output_format: dict
             Record information about the original varName input. 
             Provide the formatting information for output, 
@@ -778,7 +778,7 @@ class position():
         Perform the fatten process for each unique token. Register the result as a dict.
 
         Parameters:
-        -----------
+        ----------------
         hash_index: dict
             See _register_interpolation_input
         main_dict: dict
@@ -825,7 +825,7 @@ class position():
           Register the result as a dict.
 
         Parameters:
-        -----------
+        ----------------
         index_lookup: dict
             See _fatten_required_index_and_register
         hash_index: dict
@@ -896,7 +896,7 @@ class position():
         Perform the masking process and register in a dictionary. 
 
         Parameters:
-        -----------
+        ----------------
         index_lookup: dict
             See _fatten_required_index_and_register
         transform_lookup: dict
@@ -978,7 +978,7 @@ class position():
         Read the data and register them as dict. 
 
         Parameters:
-        -----------
+        ----------------
         index_lookup: dict
             See _fatten_required_index_and_register
         transform_lookup: dict
@@ -1062,7 +1062,7 @@ class position():
         Read the data and register them as dict. 
 
         Parameters:
-        -----------
+        ----------------
         mask_lookup: dict
             See _mask_value_and_register
         hash_weight: dict
@@ -1169,7 +1169,7 @@ class position():
         _compute_weight_and_registe,
 
         Parameters:
-        ----------
+        ---------------
         varName: list, str, tuple
             The variables to interpolate. Tuples are used for horizontal vectors. 
             Put str and list in a list if you have multiple things to interpolate. 
