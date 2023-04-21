@@ -778,9 +778,9 @@ def get_weight_4d(rx,ry,rz,rt,
     Parameters
     ----------
     rx,ry,rz,rt: numpy.ndarray
-        1D array of non-dimensional particle positions
+        1D array of non-dimensional particle positions of shape (N)
     pk4d: list
-        A mapping on which points should use which kernel.
+        A mapping on which points should use which horizontal kernel.
     hkernel:
         A horizontal numpy kernel that contains all the horizontal kernels needed.
     russian_doll: list of list(s)
@@ -796,6 +796,12 @@ def get_weight_4d(rx,ry,rz,rt,
     bottom_scheme: str
         Whether to assume there is a ghost point with same value at the bottom boundary.
         Choose None for vertical flux, 'no flux' for most other cases. 
+
+    Returns:
+    -------- 
+    weight: numpy.ndarray
+        The weight of interpolation/derivative for the points with shape (N,M), 
+        M is the num of node in the largest kernel. 
     '''
     nt = len(pk4d)
     nz = len(pk4d[0])

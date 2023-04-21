@@ -28,10 +28,27 @@ default_inheritance = [
 weight_func = dict()
 
 def kash(kernel):#hash kernel
+    '''
+    hash a horizontal kernel
+    Parameters:
+    -------
+    kernel: numpy.ndarray
+        A horizontal kernel
+    
+    Returns:
+    -------
+    The hash value of this array
+    '''
     temp_lst = [(i,j) for (i,j) in kernel]
     return hash(tuple(temp_lst))
 
 def get_func(kernel,hkernel = 'interp',h_order = 0):
+    '''
+    Similar to the kernel_weight function,
+    the only difference is that this function can 
+    read existing functions from a global dictionary,
+    and can register to the dictionary when new ones are created. 
+    '''
     global weight_func
     ker_ind = kash(kernel)
     layer_1 = weight_func.get(ker_ind)
@@ -54,6 +71,9 @@ def get_func(kernel,hkernel = 'interp',h_order = 0):
     return layer_3
 
 def auto_doll(kernel,hkernel = 'interp'):
+    '''
+    Find a natural inheritance pattern given one horizontal kernel
+    '''
     if hkernel == 'interp':
         doll = [[i for i in range(len(kernel))]]
     elif hkernel == 'dx':
@@ -72,6 +92,30 @@ def auto_doll(kernel,hkernel = 'interp'):
     return doll      
 
 class KnW(object):
+    '''
+    A class that describes anything about the interpolation/derivative kernel to be used. 
+
+    Parameters:
+    -----------
+    kernel: numpy.ndarray
+        The largest horizontal kernel to be used
+    inheritance: list
+        The inheritance sequence of the kernels
+    hkernel: str
+        What to do in the horizontal direction
+        'interp', 'dx', or 'dy'?
+    tkernel: str
+        What kind of operation to do in the temporal dimension: 
+        'linear', 'nearest' interpolation, or 'dt'
+    zkernel: str
+        What kind of operation to do in the vertical: 
+        'linear', 'nearest' interpolation, or 'dz'
+    h_order: int
+        How many derivative to take in the horizontal direction. Zero for pure interpolation
+    ignore_mask: bool
+        Whether to diregard the masking of the dataset. You can select True if there is no 
+        inheritance, or if performance is a big concern. 
+    '''
     def __init__(self,kernel = default_kernel,
                  inheritance = 'auto',#None, or list of lists
                  hkernel = 'interp',# dx,dy
@@ -110,12 +154,18 @@ class KnW(object):
                      h_order = self.h_order) 
             for a_kernel in self.kernels]
     def same_hsize(self,other):
+        '''
+        return True if 2 KnW object has the same horizontal size
+        '''
         type_same = isinstance(other, type(self))
         if not type_same:
             raise TypeError('the argument is not a KnW object')
         return (self.kernel == other.kernel).all()
     
     def same_size(self,other):
+        '''
+        return True if 2 KnW object has the same 4D size
+        '''
         only_size = {
             'dz':2,
             'linear':2,
@@ -149,14 +199,17 @@ class KnW(object):
                      self.vkernel,
                      self.tkernel))
     
-    def hash_largest(self):
-        return hash((kash(self.kernel),
-                     self.h_order,
-                     self.hkernel,
-                     self.vkernel,
-                     self.tkernel))
+    # def hash_largest(self):
+    #     return hash((kash(self.kernel),
+    #                  self.h_order,
+    #                  self.hkernel,
+    #                  self.vkernel,
+    #                  self.tkernel))
     
     def size_hash(self):
+        '''
+        produce a hash value simply based on the 4D size of the KnW object
+        '''
         only_size = {
             'dz':2,
             'linear':2,
@@ -171,6 +224,25 @@ class KnW(object):
                       pk4d = None,# All using the largest 
                       bottom_scheme = 'no flux'# None
                      ):
+        '''
+        Return the weight of values given particle rel-coords
+
+        Parameters
+        ----------
+        rx,ry,rz,rt: numpy.ndarray
+            1D array of non-dimensional particle positions
+        pk4d: list
+            A mapping on which points should use which kernel.
+        bottom_scheme: str
+            Whether to assume there is a ghost point with same value at the bottom boundary.
+            Choose None for vertical flux, 'no flux' for most other cases. 
+
+        Returns:
+        -------- 
+        weight: numpy.ndarray
+            The weight of interpolation/derivative for the points with shape (N,M), 
+            M is the num of node in the largest kernel. 
+        '''
         if self.vkernel in ['linear','dz']:
             nz = 2
         else:
