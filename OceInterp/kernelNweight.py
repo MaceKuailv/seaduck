@@ -124,7 +124,7 @@ class KnW(object):
         ksort = np.abs(kernel+np.array([0.01,0.00618])).sum(axis = 1).argsort()
         ksort_inv = ksort.argsort()
         
-        if inheritance is not None and ignore_mask:
+        if inheritance is not None and ignore_mask and rcParam['debug_level']=='very_high':
             print('Warning:overwriting the inheritance object to None, because we ignore masking')
         
         if inheritance == 'auto':
