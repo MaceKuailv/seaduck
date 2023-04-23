@@ -5,11 +5,15 @@ from numba import njit
 from OceInterp.kernelNweight import KnW
 from OceInterp.eulerian import position
 from OceInterp.lat2ind import find_rel_time,find_rx_ry_oceanparcel
+from OceInterp.utils import to_180
 
 deg2m = 6271e3*np.pi/180
 
 @njit
 def rel2latlon(rx,ry,rzl,cs,sn,dx,dy,dzl,dt,bx,by,bzl):
+    '''
+    Translate the spatial rel-coords into lat-lon-dep coords. 
+    '''
     temp_x = rx*dx/deg2m
     temp_y = ry*dy/deg2m
     dlon = (temp_x*cs-temp_y*sn)/np.cos(by*np.pi/180)
@@ -19,19 +23,46 @@ def rel2latlon(rx,ry,rzl,cs,sn,dx,dy,dzl,dt,bx,by,bzl):
     dep = bzl+dzl*rzl
     return lon,lat,dep
 
-@njit
-def to_180(x):
-    '''
-    convert any longitude scale to [-180,180)
-    '''
-    x = x%360
-    return x+(-1)*(x//180)*360
+# @njit
+# def to_180(x):
+#     '''
+#     convert any longitude scale to [-180,180)
+#     '''
+#     x = x%360
+#     return x+(-1)*(x//180)*360
 
 @njit
 def increment(t,u,du):
+    '''
+    For a one dimensional particle with speed u and speed derivative du, find how far it will travel in duration t
+
+    Parameter:
+    ----------
+    t: float, numpy.ndarray
+        The time duration
+    u: float, numpy.ndarray
+        The velocity defined at the starting point.
+    du: float, numpy.ndarray
+        The velocity gradient. Assumed to be constant. 
+    '''
     return u/du*(np.exp(du*t)-1)
 
 def stationary(t,u,du,x0):
+    '''
+    For a one dimensional particle with speed u and speed derivative du starting at x0, the final position after time t.
+    "Stationary" means that we are assuming there is no time dependency. 
+
+    Parameter:
+    ----------
+    t: float, numpy.ndarray
+        The time duration
+    u: float, numpy.ndarray
+        The velocity defined at the starting point.
+    du: float, numpy.ndarray
+        The velocity gradient. Assumed to be constant. 
+    x0: float, numpy.ndarray
+        The starting position. 
+    '''
     incr = increment(t,u,du)
     nans = np.isnan(incr)
     incr[nans] = (u*t)[nans]
@@ -39,6 +70,26 @@ def stationary(t,u,du,x0):
 
 @njit
 def stationary_time(u,du,x0):
+    '''
+    Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
+    The time could be negative. 
+
+    Parameters:
+    -----------
+    u: numpy.ndarray
+        The velocity defined at the starting point.
+    du: numpy.ndarray
+        The velocity gradient. Assumed to be constant. 
+    x0: numpy.ndarray
+        The starting position. 
+
+    Returns:
+    ---------
+    tl: numpy.ndarray
+        The time it takes to hit -0.5. 
+    tr: numpy.ndarray
+        The time it takes to hit 0.5
+    '''
     tl = np.log(1-du/u*(0.5+x0))/du
     tr = np.log(1+du/u*(0.5-x0))/du
     no_gradient = du==0
@@ -48,6 +99,9 @@ def stationary_time(u,du,x0):
     return tl,tr
 
 def time2wall(xs,us,dus):
+    '''
+    Apply stationary_time three times for all three dimensions. 
+    '''
     ts = []
     for i in range(3):
         tl,tr = stationary_time(us[i],dus[i],xs[i])
@@ -56,6 +110,18 @@ def time2wall(xs,us,dus):
     return ts
 
 def which_early(tf,ts):
+    '''
+    We are trying to integrate the particle to time tf. The first event is either:
+    1. tf is reached before reaching a wall
+    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0
+
+    Parameters:
+    ------------
+    tf: float, numpy.ndarray
+        The final time
+    ts: list
+        The list of events calculated using time2wall
+    '''
     ts.append(np.ones(len(ts[0]))*tf)#float or array both ok
     t_directed = np.array(ts)*np.sign(tf)
     t_directed[np.isnan(t_directed)] = np.inf
@@ -99,15 +165,40 @@ duknw_s = KnW(kernel = ukernel,inheritance = None,hkernel = 'dx',h_order = 1,ign
 dvknw_s = KnW(kernel = vkernel,inheritance = None,hkernel = 'dy',h_order = 1,ignore_mask = True)
 
 class particle(position):
+    '''
+    The Lagrangian particle object. Simply a eulerian position object that know how to move itself. 
+
+    Parameters:
+    ------------
+    kwarg: dict
+        The keyword argument that feed into position.from_latlon method
+    uname, vname, wname: str
+        The variable names for the velocity/mass-transport components. 
+        If transport is true, pass in names of the volume/mass transport across cell wall in m^3/3
+        else,  just pass something that is in m/s
+    dont_fly: Boolean
+        Sometimes there is non-zero vertical velocity at sea surface. dont_fly = True set that to zero. 
+        An error may occur depends on the situation if set otherwise. 
+    save_raw: Boolean
+        Whether to record the analytical history of all particles in an unstructured list. 
+    transport: Boolean
+        If transport is true, pass in names of the volume/mass transport across cell wall in m^3/3
+        else,  just pass velocity that is in m/s
+    stop_criterion: function that take particle as input
+        A callback function that takes particle as input. Return boolean array that determines which particle should still be going. 
+        Users can also define customized functions here. 
+    max_iteration: int
+        The number of analytical steps allowed for the to_next_stop method. 
+    '''
     def __init__(self,# 10MB
                 uname = 'UVELMASS',
                 vname = 'VVELMASS',
                 wname = 'WVELMASS',
-                 dont_fly = True,
-                 save_raw = False,
-                 transport = False,
-                 stop_criterion = None,
-                 max_iteration = 200,
+                dont_fly = True,
+                save_raw = False,
+                transport = False,
+                stop_criterion = None,
+                max_iteration = 200,
                 **kwarg
                 ):
         self.from_latlon(**kwarg)
@@ -680,7 +771,7 @@ class particle(position):
                 if verbose:
                     print(f'converting {zmin} to 0')
     
-    def contract(self):
+    def _contract(self):
         max_time = 1e3
         out = self.out_of_bound()
         # out = np.logical_and(out,u!=0)
@@ -973,7 +1064,7 @@ class particle(position):
             if self.save_raw:
                 # record those who cross the wall
                 self.note_taking(todo)
-#             self.contract()
+#             self._contract()
         if i ==self.max_iteration-1:
             print('maximum iteration count reached')
         self.t = np.ones(self.N)*t1
