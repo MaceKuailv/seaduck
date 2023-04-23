@@ -11,6 +11,9 @@ def to_180(x):
     return x+(-1)*(x//180)*360
 
 def NoneIn(lst):
+    '''
+    See if there is a None in the iterable object. Return a Boolean.
+    '''
     ans = False
     for i in lst:
         if i is None:
@@ -22,8 +25,9 @@ def NoneIn(lst):
 def spherical2cartesian(Y, X, R=6371.0):
     """
     Convert spherical coordinates to cartesian.
-    Parameters
-    ----------
+
+    Parameters:
+    ------------
     Y: np.array
         Spherical Y coordinate (latitude)
     X: np.array
@@ -31,8 +35,9 @@ def spherical2cartesian(Y, X, R=6371.0):
     R: scalar
         Earth radius in km
         If None, use geopy default
-    Returns
-    -------
+    
+    Returns:
+    ---------
     x: np.array
         Cartesian x coordinate
     y: np.array
@@ -53,7 +58,7 @@ def spherical2cartesian(Y, X, R=6371.0):
 @njit
 def find_ind_z(array, value):
     '''
-    find the nearest level that is lower than the given level
+    find the index of the nearest level that is lower than the given level
     '''
     array = np.asarray(array)
     idx = np.argmin(np.abs(array - value))
@@ -66,7 +71,7 @@ def find_ind_z(array, value):
 @njit
 def find_ind_t(array, value):
     '''
-    find the latest time that is before the given time
+    find the index of the latest time that is before the given time
     '''
     array = np.asarray(array)
     idx = np.argmin(np.abs(array - value))
@@ -78,7 +83,7 @@ def find_ind_t(array, value):
 @njit
 def find_ind_nearest(array,value):
     '''
-    just find the nearest
+    Find the index of the nearest value in the array to the given value. 
     '''
     array = np.asarray(array)
     idx = np.argmin(np.abs(array - value))
@@ -88,7 +93,7 @@ def find_ind_nearest(array,value):
 @njit
 def find_ind_periodic(array,value,peri):
     '''
-    just find the nearest
+    Find the index of the nearest value in the array to the given value, where the values are periodic. 
     '''
     array = np.asarray(array)
     idx = np.argmin(np.abs((array - value)%peri))
@@ -99,9 +104,7 @@ def find_ind_periodic(array,value,peri):
 deg2m = 6271e3*np.pi/180
 def find_ind_h(Xs,Ys,tree,h_shape):
     '''
-    use ckd tree to find the indexes,
-    2-index case can be thinked about as having only 1 face,
-    we don't support that yet. but i think it would be easy.
+    use ckd tree to find the horizontal indexes,
     '''
     x,y,z = spherical2cartesian(Ys,Xs)
     _,index1d = tree.query(
@@ -116,6 +119,9 @@ def find_ind_h(Xs,Ys,tree,h_shape):
 
 @njit
 def find_rel_nearest(value,ts):
+    '''
+    Find the rel-coords based on the find_ind_nearest method. 
+    '''
     its = np.zeros_like(value)
     rts = np.ones_like(value)*0.0#the way to create zeros with float32 type
     dts = np.ones_like(value)*0.0
@@ -142,6 +148,9 @@ def find_rel_nearest(value,ts):
 
 @njit
 def find_rel_periodic(value,ts,peri):
+    '''
+    Find the rel-coords based on the find_ind_periodic method. 
+    '''
     its = np.zeros_like(value)
     rts = np.ones_like(value)*0.0#the way to create zeros with float32 type
     dts = np.ones_like(value)*0.0
@@ -169,9 +178,25 @@ def find_rel_periodic(value,ts,peri):
 @njit
 def find_rel_z(depth,some_z,some_dz):
     '''
-    iz = the index
-    rz  = how_much_higher_than_node/cell_size
-    dz = cell_size
+    find the rel-coords of the vertical coords
+
+    Paramters:
+    -----------
+    depth: numpy.ndarray
+        1D array for the depth of interest in meters. More negative means deeper. 
+    some_z: numpy.ndarray
+        The depth of reference depth.
+    some_dz: numpy.ndarray
+        dz_i = abs(z_{i+1}- z_i)
+
+    Returns:
+    ---------
+    iz: numpy.ndarray
+        Indexes of the reference z level
+    rz: numpy.ndarray
+        Non-dimensional distance to the reference z level
+    dz: numpy.ndarray
+        distance between the reference z level and the next one. 
     '''
     izs = np.zeros_like(depth)
     rzs = np.ones_like(depth)*0.0#the way to create zeros with float32 type
@@ -193,9 +218,23 @@ def find_rel_z(depth,some_z,some_dz):
 @njit
 def find_rel_time(time,ts):
     '''
-    it = the index
-    rt  = how_much_later_than_the_closest_time/time_interval
-    dt = time_interval
+    find the rel-coords of the temporal coords
+
+    Paramters:
+    -----------
+    time: numpy.ndarray
+        1D array for the time since 1970-01-01 in seconds. 
+    ts: numpy.ndarray
+        The time of model time steps also in seconds. 
+
+    Returns:
+    ---------
+    it: numpy.ndarray
+        Indexes of the reference t level
+    rt: numpy.ndarray
+        Non-dimensional distance to the reference t level
+    dt: numpy.ndarray
+        distance between the reference t level and the next one. 
     '''
     its = np.zeros(time.shape)
     rts = np.ones(time.shape)*0.0
@@ -214,10 +253,9 @@ def find_rel_time(time,ts):
     return its,rts,dts,bts
 
 @njit
-def read_h_with_face(some_x,some_y,some_dx,some_dy,CS,SN,faces,iys,ixs):
+def _read_h_with_face(some_x,some_y,some_dx,some_dy,CS,SN,faces,iys,ixs):
     '''
-    read find_rel_h for more info,
-    
+    read the grid coords when there is a face dimension to it. 
     '''
     n = len(ixs)
     
@@ -250,9 +288,9 @@ def read_h_with_face(some_x,some_y,some_dx,some_dy,CS,SN,faces,iys,ixs):
     return cs,sn,dx,dy,bx,by
 
 @njit
-def read_h_without_face(some_x,some_y,some_dx,some_dy,CS,SN,iys,ixs):
+def _read_h_without_face(some_x,some_y,some_dx,some_dy,CS,SN,iys,ixs):
     '''
-    read find_rel_h for more info,
+    read _read_h_with_face for more info.
     
     '''
     # TODO ADD test if those are Nones.
@@ -287,6 +325,9 @@ def read_h_without_face(some_x,some_y,some_dx,some_dy,CS,SN,iys,ixs):
 
 @njit
 def find_rx_ry_naive(x,y,bx,by,cs,sn,dx,dy):
+    '''
+    Find the non-dimensional coords using the local cartesian scheme
+    '''
     dlon = to_180(x - bx)
     dlat = to_180(y - by)
     rx = (dlon*np.cos(by*np.pi/180)*cs+dlat*sn)*deg2m/dx
@@ -313,7 +354,7 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
                                h_shape
                               )
     if faces is not None:
-        cs,sn,dx,dy,bx,by = read_h_with_face(  some_x,
+        cs,sn,dx,dy,bx,by = _read_h_with_face(  some_x,
                                                some_y,
                                                some_dx,
                                                some_dy,
@@ -323,7 +364,7 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
                                                iys,
                                                ixs)
     else:
-        cs,sn,dx,dy,bx,by = read_h_without_face(some_x,
+        cs,sn,dx,dy,bx,by = _read_h_without_face(some_x,
                                                some_y,
                                                some_dx,
                                                some_dy,
@@ -335,6 +376,9 @@ def find_rel_h_naive(Xs,Ys,some_x,some_y,some_dx,some_dy,CS,SN,tree):
     return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
 
 def find_rel_h_rectilinear(x,y,lon,lat):
+    '''
+    Find the rel-coords using the rectilinear scheme
+    '''
     ratio = 6371e3*np.pi/180
     ix,rx,dx,bx = find_rel_periodic(x,lon,360.)
     iy,ry,dy,by = find_rel_periodic(y,lat,360.)
@@ -347,6 +391,9 @@ def find_rel_h_rectilinear(x,y,lon,lat):
     
 
 def find_rel_h_oceanparcel(x,y,some_x,some_y,some_dx,some_dy,CS,SN,XG,YG,tree,tp):
+    '''
+    Find the rel-coords using the rectilinear scheme
+    '''
     if NoneIn([x,y,some_x,some_y,XG,YG,tree]):
         raise ValueError('Some of the required variables are missing')
     h_shape = some_x.shape
@@ -356,7 +403,7 @@ def find_rel_h_oceanparcel(x,y,some_x,some_y,some_dx,some_dy,CS,SN,XG,YG,tree,tp
                                h_shape
                               )
     if faces is not None:
-        cs,sn,dx,dy,bx,by = read_h_with_face(  some_x,
+        cs,sn,dx,dy,bx,by = _read_h_with_face(  some_x,
                                                some_y,
                                                some_dx,
                                                some_dy,
@@ -369,7 +416,7 @@ def find_rel_h_oceanparcel(x,y,some_x,some_y,some_dx,some_dy,CS,SN,XG,YG,tree,tp
                                                iys,
                                                ixs)
     else:
-        cs,sn,dx,dy,bx,by = read_h_without_face(some_x,
+        cs,sn,dx,dy,bx,by = _read_h_without_face(some_x,
                                                some_y,
                                                some_dx,
                                                some_dy,
@@ -383,27 +430,30 @@ def find_rel_h_oceanparcel(x,y,some_x,some_y,some_dx,some_dy,CS,SN,XG,YG,tree,tp
     return faces,iys,ixs,rx,ry,cs,sn,dx,dy,bx,by
     
 
-def find_cs_sn(thetaA,phiA,thetaB,phiB):
-    '''
-    theta is the angle 
-    between the meridian crossing point A
-    and the geodesic connecting A and B
+# def find_cs_sn(thetaA,phiA,thetaB,phiB):
+#     '''
+#     theta is the angle 
+#     between the meridian crossing point A
+#     and the geodesic connecting A and B
     
-    this function return cos and sin of theta
-    '''
-    # O being north pole
-    AO = np.pi/2 - thetaA
-    BO = np.pi/2 - thetaB
-    dphi = phiB-phiA
-    # Spherical law of cosine on AOB
-    cos_AB = np.cos(BO)*np.cos(AO)+np.sin(BO)*np.sin(AO)*np.cos(dphi)
-    sin_AB = np.sqrt(1-cos_AB**2)
-    # spherical law of sine on triangle AOB
-    SN = np.sin(BO)*np.sin(dphi)/sin_AB
-    CS = np.sign(thetaB-thetaA)*np.sqrt(1-SN**2)
-    return CS,SN
+#     this function return cos and sin of theta
+#     '''
+#     # O being north pole
+#     AO = np.pi/2 - thetaAf
+#     BO = np.pi/2 - thetaB
+#     dphi = phiB-phiA
+#     # Spherical law of cosine on AOB
+#     cos_AB = np.cos(BO)*np.cos(AO)+np.sin(BO)*np.sin(AO)*np.cos(dphi)
+#     sin_AB = np.sqrt(1-cos_AB**2)
+#     # spherical law of sine on triangle AOB
+#     SN = np.sin(BO)*np.sin(dphi)/sin_AB
+#     CS = np.sign(thetaB-thetaA)*np.sqrt(1-SN**2)
+#     return CS,SN
 
 def find_px_py(XG,YG,tp,*ind,gridoffset = -1):
+    '''
+    Find the nearest 4 corner points. This is used in oceanparcel interpolation scheme. 
+    '''
     N = len(ind[0])
     ind1 = tuple(i for i in tp.ind_tend_vec(ind,np.ones(N)*3,gridoffset = gridoffset))
     ind2 = tuple(i for i in tp.ind_tend_vec(ind1,np.zeros(N),gridoffset = gridoffset))
@@ -426,6 +476,9 @@ def find_px_py(XG,YG,tp,*ind,gridoffset = -1):
 
 @njit
 def find_rx_ry_oceanparcel(x,y,px,py):
+    '''
+    find the non-dimensional horizontal distance using the oceanparcel scheme. 
+    '''
     rx = np.ones_like(x)*0.0
     ry = np.ones_like(y)*0.0
     x0 = px[0]
@@ -462,6 +515,9 @@ def find_rx_ry_oceanparcel(x,y,px,py):
     return rx-1/2,ry-1/2
 
 def weight_f_node(rx,ry):
+    '''
+    assign weight based on the non-dimensional coords to the four corner points. 
+    '''
     return np.vstack([(0.5-rx)*(0.5-ry),
                       (0.5+rx)*(0.5-ry),
                       (0.5+rx)*(0.5+ry),
