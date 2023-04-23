@@ -29,15 +29,12 @@ weight_func = dict()
 
 def kash(kernel):#hash kernel
     '''
-    hash a horizontal kernel
+    Hash a horizontal kernel. Return the hash value. 
+
     Parameters:
     ------------
     kernel: numpy.ndarray
         A horizontal kernel
-    
-    Returns:
-    ------------
-    The hash value of this array
     '''
     temp_lst = [(i,j) for (i,j) in kernel]
     return hash(tuple(temp_lst))
