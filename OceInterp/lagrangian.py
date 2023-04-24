@@ -301,6 +301,10 @@ class particle(position):
             
     def update_uvw_array(self
                         ):
+        '''
+        Update the prefetched velocity arrays.
+        The way to do it is slightly different for dataset with time dimensions and those without. 
+        '''
         uname = self.uname
         vname = self.vname
         wname = self.wname
@@ -343,6 +347,16 @@ class particle(position):
                     self.warray[:,0] = 0.0
             
     def get_vol(self,which = None):
+        '''
+        For particles that has transport = True, 
+        volume of the cell is needed for the integration. 
+        This method read the volume that is calculated at __init__.
+        
+        Parameters:
+        -----------
+        which: numpy.ndarray
+            Boolean or int array that specify the subset of points to do the operation. 
+        '''
         if which is None:
             which = np.ones(self.N).astype(bool)
         sub = self.subset(which)
@@ -353,6 +367,16 @@ class particle(position):
         self.Vol[which] = Vol
         
     def get_u_du(self,which = None):
+        '''
+        Read the velocity and velocity derivatives in all three dimensions 
+        using the interpolate method with the default kernel.
+        Read eulerian.position.interpolate for more detail. 
+
+        Parameters:
+        -----------
+        which: numpy.ndarray
+            Boolean or int array that specify the subset of points to do the operation. 
+        '''
         if which is None:
             which = np.ones(self.N).astype(bool)
         if self.too_large:
@@ -645,6 +669,10 @@ class particle(position):
 #         self.dw = np.zeros_like(self.u)
 
     def fillna(self):
+        '''
+        Fill the np.nan values to nan. 
+        This is just to let those in rock stay in rock. 
+        '''
 #         np.nan_to_num(self.rx,copy = False)
 #         np.nan_to_num(self.ry,copy = False)
 #         np.nan_to_num(self.rz,copy = False)
@@ -656,6 +684,11 @@ class particle(position):
         np.nan_to_num(self.dw,copy = False)
         
     def note_taking(self,which = None):
+        '''
+        This method is only called in save_raw = True particles. 
+        This method will note done the raw info of the particle trajectories. 
+        With those info, one could reconstruct the analytical trajectories to arbitrary position. 
+        '''
         if which is None:
             which = np.ones(self.N).astype(bool)
         where = np.where(which)[0]
@@ -688,6 +721,12 @@ class particle(position):
             self.zzlist[i].append(self.dep[i])
             
     def empty_lists(self):
+        '''
+        Some times the raw-data list get too long, 
+        It would be necessary to dump the data, 
+        and empty the lists containing the raw data.
+        This method does the latter. 
+        '''
         
         self.itlist = [[] for i in range(self.N)]
         self.fclist = [[] for i in range(self.N)]
@@ -709,6 +748,11 @@ class particle(position):
         self.zzlist = [[] for i in range(self.N)]
         
     def out_of_bound(self):
+        '''
+        Return particles that are out of the cell bound.
+        This is most likely due to numerical error of one sort or another. 
+        If local cartesian is used, there would be more out_of_bound error. 
+        '''
         x_out = np.logical_or(self.rx >0.5,self.rx < -0.5)
         y_out = np.logical_or(self.ry >0.5,self.ry < -0.5)
         if self.rzl_lin is not None:
@@ -719,59 +763,80 @@ class particle(position):
 
     
     def trim(self,verbose = False,tol = 1e-6):
-        # tol = 1e-6 # about 10 m horizontal
-        xmax = np.nanmax(self.rx)
-        xmin = np.nanmin(self.rx)
-        ymax = np.nanmax(self.ry)
-        ymin = np.nanmin(self.ry)
+        '''
+        Move the particles from outside the cell into the cell. 
+        At the same time change the velocity accordingly. 
+        In the mean time, creating some negiligible error in time. 
+
+        Parameters:
+        --------------
+        verbose: Boolean
+            Whether to dump the maximum value trimmed. 
+            Only set True if something is not going correctly
+        tol: float
+            The relative tolerance when particles is significantly close to the cell. 
+        '''
+        # tol = 1e-6 # about 10 m horizontal for 1 degree
+        if verbose:
+            xmax = np.nanmax(self.rx)
+            xmin = np.nanmin(self.rx)
+            ymax = np.nanmax(self.ry)
+            ymin = np.nanmin(self.ry)
         
-        if xmax>=0.5-tol:
-            where = self.rx>=0.5-tol
-            cdx = (0.5-tol)-self.rx[where]
-            self.rx[where]+=cdx
-            self.u[where] += self.du[where]*cdx
-            if verbose:
-                print(f'converting {xmax} to 0.5')
-        if xmin<=-0.5+tol:
-            where = self.rx<=-0.5+tol
-            cdx = (-0.5+tol)-self.rx[where]
-            self.rx[where]+=cdx
-            self.u[where] += self.du[where]*cdx
-            if verbose:
-                print(f'converting {xmin} to -0.5')
-        if ymax>=0.5-tol:
-            where = self.ry>=0.5-tol
-            cdx = (0.5-tol)-self.ry[where]
-            self.ry[where]+=cdx
-            self.v[where] += self.dv[where]*cdx
-            if verbose:
-                print(f'converting {ymax} to 0.5')
-        if ymin<=-0.5+tol:
-            where = self.ry<=-0.5+tol
-            cdx = (-0.5+tol)-self.ry[where]
-            self.ry[where]+=cdx
-            self.v[where] += self.dv[where]*cdx
-            if verbose:
-                print(f'converting {ymin} to -0.5')
+        # if xmax>=0.5-tol:
+        where = self.rx>=0.5-tol
+        cdx = (0.5-tol)-self.rx[where]
+        self.rx[where]+=cdx
+        self.u[where] += self.du[where]*cdx
+        if verbose:
+            print(f'converting {xmax} to 0.5')
+        # if xmin<=-0.5+tol:
+        where = self.rx<=-0.5+tol
+        cdx = (-0.5+tol)-self.rx[where]
+        self.rx[where]+=cdx
+        self.u[where] += self.du[where]*cdx
+        if verbose:
+            print(f'converting {xmin} to -0.5')
+        # if ymax>=0.5-tol:
+        where = self.ry>=0.5-tol
+        cdx = (0.5-tol)-self.ry[where]
+        self.ry[where]+=cdx
+        self.v[where] += self.dv[where]*cdx
+        if verbose:
+            print(f'converting {ymax} to 0.5')
+        # if ymin<=-0.5+tol:
+        where = self.ry<=-0.5+tol
+        cdx = (-0.5+tol)-self.ry[where]
+        self.ry[where]+=cdx
+        self.v[where] += self.dv[where]*cdx
+        if verbose:
+            print(f'converting {ymin} to -0.5')
         if self.rzl_lin is not None:
             zmax = np.nanmax(self.rzl_lin)
             zmin = np.nanmin(self.rzl_lin)
-            if zmax>=1.-tol:
-                where = self.rzl_lin>=1.-tol
-                cdx = (1.-tol)-self.rzl_lin[where]
-                self.rzl_lin[where]+=cdx
-                self.w[where] += self.dw[where]*cdx
-                if verbose:
-                    print(f'converting {zmax} to 1')
-            if zmin<=-0.+tol:
-                where = self.rzl_lin<=-0.+tol
-                cdx = (-0.+tol)-self.rzl_lin[where]
-                self.rzl_lin[where]+=cdx
-                self.w[where] += self.dw[where]*cdx
-                if verbose:
-                    print(f'converting {zmin} to 0')
+            # if zmax>=1.-tol:
+            where = self.rzl_lin>=1.-tol
+            cdx = (1.-tol)-self.rzl_lin[where]
+            self.rzl_lin[where]+=cdx
+            self.w[where] += self.dw[where]*cdx
+            if verbose:
+                print(f'converting {zmax} to 1')
+            # if zmin<=-0.+tol:
+            where = self.rzl_lin<=-0.+tol
+            cdx = (-0.+tol)-self.rzl_lin[where]
+            self.rzl_lin[where]+=cdx
+            self.w[where] += self.dw[where]*cdx
+            if verbose:
+                print(f'converting {zmin} to 0')
     
     def _contract(self):
+        '''
+        If particles are not in the cell,
+        perform some timewarp to put them as close to the cell as possible.
+        This is not used in the main routine. Because it was not deemed worthy of the computational cost.
+        However, it might be reintroduced in latter versions 
+        as an option for users that requires more accuracy. 
+        '''
         max_time = 1e3
         out = self.out_of_bound()
         # out = np.logical_and(out,u!=0)
@@ -818,6 +883,10 @@ class particle(position):
         self.t[out] += contract_time
         
     def update_after_cell_change(self):
+        '''
+        A wall event is triggered when particle reached the wall. 
+        This method handle the coords translation as a particle cross a wall. 
+        '''
         if self. face is not None:
             self.face = self.face.astype(int)
         self.iy   = self.iy  .astype(int)
@@ -904,7 +973,20 @@ class particle(position):
             self.rzl_lin= (self.dep - self.bzl_lin)/self.dzl_lin
     
     def analytical_step(self,tf,which = None):
-        
+        '''
+        The core method. 
+        A set of particles trying to integrate for time tf (could be negative).
+        at the end of the call, every particle are either: 
+        1. ended up somewhere within the cell after time tf. 
+        2. ended up on a cell wall before (if tf is negative, then "after") tf.
+
+        Parameters:
+        ------------
+        tf: float, numpy.ndarray
+            The longest duration of the simulation for each particle. 
+        which: numpy.ndarray
+            Boolean or int array that specify the subset of points to do the operation. 
+        '''
         if which is None:
             which = np.ones(self.N).astype(bool)
         if isinstance(tf,float):
@@ -1019,6 +1101,10 @@ class particle(position):
             self.izl_lin[which] = tiz
     
     def deepcopy(self):
+        '''
+        Return a clone of the object. 
+        The object is a position object, and thus cannot move any more. 
+        '''
         p = position()
         p.ocedata = self.ocedata
         p.N = self.N
@@ -1033,6 +1119,18 @@ class particle(position):
         return p
         
     def to_next_stop(self,t1):
+        '''
+        Integrate all particles towards time tl 
+        by repeatedly calling analytical step. 
+        Or at least try to do so before maximum_iteration is reached. 
+        If the maximum time is reached,
+        we also force all particle's internal clock to be tl. 
+
+        Parameters:
+        -----------
+        tl: float, numpy.ndarray
+            The final time relative to 1970-01-01 in seconds.
+        '''
         tol = 0.5
         tf = t1 - self.t
         todo = abs(tf)>tol
@@ -1074,6 +1172,33 @@ class particle(position):
             self.it += 1
         
     def to_list_of_time(self,normal_stops,update_stops = 'default',return_in_between  =True):
+        '''
+        Integrate the particles to a list of time.
+
+        Parameters:
+        ------------
+        normal_stops: iterable
+            The time steps that user request a output
+        update_stops: iterable, or 'default'
+            The time steps that uvw array changes in the model. 
+            If 'default' is set, 
+            the method is going to figure it out automatically.
+        return_in_between: Boolean
+            Users can get the values of update_stops free of computational cost. 
+            We understand that user may sometimes don't want those in the output.
+            In that case, it that case, set it to be False, and the output will all be at normal_stops.
+
+        Returns:
+        ----------
+        stops: list
+            The list of stops. 
+            It is the combination of normal_stops and output_stops by default.
+            If return_in_between is set to be False, this is then the same as normal stops. 
+        R: list
+            A list deep copy of particle that inherited 
+            the interpolate method 
+            as well as velocity and coords info. 
+        '''
         t_min = np.minimum(np.min(normal_stops),self.t[0])
         t_max = np.maximum(np.max(normal_stops),self.t[0])
         
@@ -1103,12 +1228,12 @@ class particle(position):
             self.to_next_stop(tl)
             if update[i]:
                 if self.too_large:
-                    pass
+                    self.get_u_du()
                 elif 'time' not in self.ocedata[self.uname].dims:
                     pass
                 else:
                     self.update_uvw_array()
-                self.get_u_du()
+                    self.get_u_du()
                 if return_in_between:
                     R.append(self.deepcopy())
             else:
