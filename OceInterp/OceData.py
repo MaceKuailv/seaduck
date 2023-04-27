@@ -28,12 +28,11 @@ class OceData(object):
     '''
     Class that enables variable aliasing, topology extraction, and 4-D translation between latitude-longitude-depth-time grid and relative description.
 
-    Parameters
-    ----------
+    **Parameters**
 
-    data: xarray.Dataset
+    + data: xarray.Dataset
         The dataset to extract grid information, create cKD tree, and topology object on.
-    alias: dict, None, or 'auto'
+    + alias: dict, None, or 'auto'
         1. dict: Map the variable used by this package (key) to that used by the dataset (value).
         2. None (default): Do not apply alias.
         3. 'auto' (Not implemented): Automatically generate a list for the alias.
@@ -86,9 +85,9 @@ class OceData(object):
         '''
         Function that checks what kind of interpolation is supported.
 
-        Returns
-        -------
-        readiness: dict
+        **Returns:**
+        
+        + readiness: dict
             'h': The scheme of horizontal interpolation to be used, including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
             'Z': Whether the dataset has a vertical dimension at the center points.
             'Zl': Whether the dataset has a vertical dimension at staggered points (vertical velocity).
@@ -259,22 +258,22 @@ class OceData(object):
         '''
         Find the horizontal rel-coordinate of the given 4-D position based on readiness['h'].
 
-        Parameters
-        ----------
-        x, y: np.ndarray
+        **Parameters:**
+        
+        + x, y: np.ndarray
             1D array of longitude and latitude.
 
-        Returns
-        -------
-        faces, iys, ixs: np.ndarray or None
+        **Returns:**
+        
+        + faces, iys, ixs: np.ndarray or None
             Indexes of the nearest horizontal point.
-        rx, ry: np.ndarray
+        + rx, ry: np.ndarray
             Non-dimensional distance to the nearest point.
-        cs, sn: np.ndarray or None
+        + cs, sn: np.ndarray or None
             The cosine and sine of the grid orientation compared to local meridian.
-        dx, dy:
+        + dx, dy:
             The size of the horizontal cell used for the Non-dimensionalization.
-        bx, by:
+        + bx, by:
             The longitude and latitude for the nearest grid point.
         '''
         if self.readiness['h'] == 'oceanparcel':

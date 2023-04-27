@@ -31,9 +31,9 @@ def kash(kernel):#hash kernel
     '''
     Hash a horizontal kernel. Return the hash value. 
 
-    Parameters:
-    ------------
-    kernel: numpy.ndarray
+    **Parameters:**
+    
+    + kernel: numpy.ndarray
         A horizontal kernel
     '''
     temp_lst = [(i,j) for (i,j) in kernel]
@@ -92,24 +92,24 @@ class KnW(object):
     '''
     A class that describes anything about the interpolation/derivative kernel to be used. 
 
-    Parameters:
-    ----------------
-    kernel: numpy.ndarray
+    **Parameters:**
+    
+    + kernel: numpy.ndarray
         The largest horizontal kernel to be used
-    inheritance: list
+    + inheritance: list
         The inheritance sequence of the kernels
-    hkernel: str
+    + hkernel: str
         What to do in the horizontal direction
         'interp', 'dx', or 'dy'?
-    tkernel: str
+    + tkernel: str
         What kind of operation to do in the temporal dimension: 
         'linear', 'nearest' interpolation, or 'dt'
-    zkernel: str
+    + zkernel: str
         What kind of operation to do in the vertical: 
         'linear', 'nearest' interpolation, or 'dz'
-    h_order: int
+    + h_order: int
         How many derivative to take in the horizontal direction. Zero for pure interpolation
-    ignore_mask: bool
+    + ignore_mask: bool
         Whether to diregard the masking of the dataset. You can select True if there is no 
         inheritance, or if performance is a big concern. 
     '''
@@ -224,19 +224,19 @@ class KnW(object):
         '''
         Return the weight of values given particle rel-coords
 
-        Parameters:
-        ---------------
-        rx,ry,rz,rt: numpy.ndarray
+        **Parameters:**
+        
+        + rx,ry,rz,rt: numpy.ndarray
             1D array of non-dimensional particle positions
-        pk4d: list
+        + pk4d: list
             A mapping on which points should use which kernel.
-        bottom_scheme: str
+        + bottom_scheme: str
             Whether to assume there is a ghost point with same value at the bottom boundary.
             Choose None for vertical flux, 'no flux' for most other cases. 
 
-        Returns:
-        -------------
-        weight: numpy.ndarray
+        **Returns:**
+        
+        + weight: numpy.ndarray
             The weight of interpolation/derivative for the points with shape (N,M), 
             M is the num of node in the largest kernel. 
         '''

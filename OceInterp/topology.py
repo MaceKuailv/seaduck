@@ -253,11 +253,11 @@ class topology():
     In the movie kill Bill, the bride sat in a car and said "wiggle your big toe". 
     After the toe moved, "the hard part is over". You get the idea. 
 
-    Parameters:
-    ------------
-    od: xarray.Dataset, OceData object
+    **Parameters:**
+    
+    + od: xarray.Dataset, OceData object
         The dataset to record topological info from. 
-    typ: None, or str
+    + typ: None, or str
         Type of the grid. 
         Currently we support 
         'box' for regional dataset, 
@@ -320,17 +320,18 @@ class topology():
         the (nedge) side of the (nface).
         0,1,2,3 stands for up, down, left, right
 
-        Parameters:
-        ------------
-        face: int
+        **Parameters:**
+        
+        + face: int
             The face of interst
-        edge: 0,1,2,3
+        + edge: 0,1,2,3
             which direction of the face we are looking for
         
-        Returns:
-        nface: int
+        **Returns:**
+
+        + nface: int
             The face adjacent to face in the edge direction.
-        nedge: 0,1,2,3
+        + nedge: 0,1,2,3
             The face is connected to nface in which direction. 
         '''
         if self.typ =='LLC':
@@ -359,15 +360,15 @@ class topology():
         tendency again is up, down, left, right represented by 0,1,2,3
         return the next cell.
 
-        Parameters:
-        -------------
-        ind: tuple
+        **Parameters:**
+        
+        + ind: tuple
             The index to find the neighbor of
-        tend: int
+        + tend: int
             Which direction to move from the original index. 
-        cuvg:
+        + cuvg:
             Whether we are moving from C grid, U grid, V grid, or G grid. 
-        kwarg:dict
+        + kwarg:dict
             Keyword argument that currently only apply for the llc case. 
             Use gridoffset keyword when you are dealing with different grid-indexing, 
             -1 for MITgcm (default), 1 for NEMO.
@@ -401,13 +402,13 @@ class topology():
         ind being the starting index,
         return the index after moving in the directions in the list
 
-        Parameters:
-        ------------
-        ind: tuple
+        **Parameters:**
+        
+        + ind: tuple
             Index of the starting position
-        moves: iterable
+        + moves: iterable
             A sequence of steps to "walk" from the original position. 
-        kwarg: dict
+        + kwarg: dict
             Keyword arguments that pass into ind_tend. 
         '''
         if self.check_illegal(ind):
@@ -447,9 +448,9 @@ class topology():
         index can be a tuple of numpy ndarrays.
         no negative index is permitted for sanity reason. 
 
-        Parameters:
-        -------------
-        ind: tuple
+        **Parameters:**
+        
+        + ind: tuple
             Each element of the tuple is iterable of one dimension of the indexes. 
         '''
         if isinstance(ind[0],int):# for single item
@@ -470,13 +471,13 @@ class topology():
         '''
         Vectorized version for ind_tend method. 
 
-        Parameters:
-        -------------
-        inds: tuple or numpy.array
+        **Parameters:**
+        
+        + inds: tuple or numpy.array
             Each element of the tuple is iterable of one dimension of the indexes. 
-        tend: iterable
+        + tend: iterable
             Which direction should each index take. 
-        kwarg: dict
+        + kwarg: dict
             Keyword argument that feeds into ind_tend. 
         '''
         inds = np.array(inds)
@@ -591,9 +592,9 @@ class topology():
         local inconsistency in vector definition near face connections.
         This method corrects that. 
 
-        Parameters:
-        -----------
-        faces: iterable
+        **Parameters:**
+        
+        + faces: iterable
             1D iterable of faces, the first one is assumed to be the reference. 
         '''
         if self.typ =='LLC':

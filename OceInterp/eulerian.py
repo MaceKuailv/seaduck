@@ -48,11 +48,11 @@ def _ind_broadcast(x,ind):
     '''
     Perform a "cartesian product" on two fattened dimensions 
 
-    Parameters:
-    ---------------
-    x: numpy.ndarray
+    **Parameters:**
+    
+    + x: numpy.ndarray
         A new dimension
-    ind: tuple
+    + ind: tuple
         Existing indexes
     '''
     n = x.shape[0]
@@ -143,11 +143,11 @@ class position():
         from lat-lon-dep-time coords to rel-coords
         store the output in the position object. 
 
-        Parameters:
-        ----------------
-        x,y,z,t: numpy.ndarray
+        **Parameters:**
+        
+        + x,y,z,t: numpy.ndarray
             1D array of the lat-lon-dep-time coords
-        data: OceData object
+        + data: OceData object
             The field where the positions are defined on. 
         '''
         if data is None:
@@ -315,11 +315,11 @@ class position():
         each row represen all the node needed for interpolation of a single point.
         "h" represent we are only doing it on the horizontal plane
 
-        Parameters:
-        ----------------
-        knw: KnW object
+        **Parameters:**
+        
+        + knw: KnW object
             The kernel used to find neighboring points.
-        ind_moves_kward: dict
+        + ind_moves_kward: dict
             Key word argument to put into ind_moves method of the topology object. 
             Read topology.ind_moves for more detail. 
         '''
@@ -372,9 +372,9 @@ class position():
         '''
         Finding the neighboring center grid points in the vertical direction.
 
-        Parameters:
-        ----------------
-        knw: KnW object
+        **Parameters:**
+        
+        + knw: KnW object
             The kernel used to find neighboring points.
         '''
         if self.iz is None:
@@ -400,9 +400,9 @@ class position():
         '''
         Finding the neighboring staggered grid points in the vertical direction.
 
-        Parameters:
-        ----------------
-        knw: KnW object
+        **Parameters:**
+        
+        + knw: KnW object
             The kernel used to find neighboring points.
         '''
         if self.izl is None:
@@ -428,9 +428,9 @@ class position():
         '''
         Finding the neighboring center grid points in the temporal dimension.
 
-        Parameters:
-        ----------------
-        knw: KnW object
+        **Parameters:**
+        
+        + knw: KnW object
             The kernel used to find neighboring points.
         '''
         if self.it is None:
@@ -455,17 +455,17 @@ class position():
         '''
         Finding the neighboring center grid points in all 4 dimensions.
 
-        Parameters:
-        ----------------
-        knw: KnW object
+        **Parameters:**
+        
+        + knw: KnW object
             The kernel used to find neighboring points.
-        fourD: Boolean
+        + fourD: Boolean
             When we are doing nearest neighbor interpolation on some of the dimensions, 
             with fourD = True, this will create dimensions with length 1, and will squeeze 
             the dimension if fourD = False
-        required: str, iterable of str
+        + required: str, iterable of str
             Which dims is needed in the process
-        ind_moves_kward: dict
+        + ind_moves_kward: dict
             Key word argument to put into ind_moves method of the topology object. 
             Read topology.ind_moves for more detail.
         '''
@@ -585,29 +585,29 @@ class position():
         Register the input of the interpolation function.
         For the input format, go to interpolation for more details. 
 
-        Returns:
-        --------------
-        output_format: dict
+        **Returns:**
+        
+        + output_format: dict
             Record information about the original varName input. 
             Provide the formatting information for output, 
             such that it matches the input in a direct fashion.
-        main_keys: list
+        + main_keys: list
             A list that defines each interpolation to be performed. 
             The combination of variable name and kernel uniquely define such an operation.
-        prefetch_dict: dict
+        + prefetch_dict: dict
             Lookup the prefetched the data and its index prefix using main_key
-        main_dict: dict
+        + main_dict: dict
             Lookup the raw information using main_key
-        hash_index: dict
+        + hash_index: dict
             Lookup the token that uniquely define its indexing operation using main_key. 
             Different main_key could share the same token. 
-        hash_mask: dict
+        + hash_mask: dict
             Lookup the token that uniquely define its masking operation using main_key. 
             Different main_key could share the same token. 
-        hash_read: dict
+        + hash_read: dict
             Lookup the token that uniquely define its reading of the data using main_key. 
             Different main_key could share the same token. 
-        hash_weight: dict
+        + hash_weight: dict
             Lookup the token that uniquely define its computation of the weight using main_key. 
             Different main_key could share the same token. 
         '''
@@ -777,16 +777,16 @@ class position():
         '''
         Perform the fatten process for each unique token. Register the result as a dict.
 
-        Parameters:
-        ----------------
-        hash_index: dict
+        **Parameters:**
+        
+        + hash_index: dict
             See _register_interpolation_input
-        main_dict: dict
+        + main_dict: dict
             See _register_interpolation_input
 
-        Returns:
-        ------------
-        index_lookup: dict
+        **Returns:**
+        
+        + index_lookup: dict
             A dictionary to lookup fatten results. 
             The keys are the token in hash_index.
             The values are corresponding results. 
@@ -824,18 +824,18 @@ class position():
         This is to say that sometimes u velocity becomes v velocity for datasets with face topology.
           Register the result as a dict.
 
-        Parameters:
-        ----------------
-        index_lookup: dict
+        **Parameters:**
+        
+        + index_lookup: dict
             See _fatten_required_index_and_register
-        hash_index: dict
+        + hash_index: dict
             See _register_interpolation_input
-        main_dict: dict
+        + main_dict: dict
             See _register_interpolation_input
 
-        Returns:
-        ------------
-        transform_lookup: dict
+        **Returns:**
+        
+        + transform_lookup: dict
             A dictionary to lookup transformation results. 
             The keys are the token in hash_index.
             The values are corresponding results. 
@@ -895,22 +895,22 @@ class position():
         '''
         Perform the masking process and register in a dictionary. 
 
-        Parameters:
-        ----------------
-        index_lookup: dict
+        **Parameters:**
+        
+        + index_lookup: dict
             See _fatten_required_index_and_register
-        transform_lookup: dict
+        + transform_lookup: dict
             See _transform_vector_and_lookup 
-        hash_mask: dict
+        + hash_mask: dict
             See _register_interpolation_input
-        hash_index: dict
+        + hash_index: dict
             See _register_interpolation_input
-        main_dict: dict
+        + main_dict: dict
             See _register_interpolation_input
 
-        Returns:
-        ------------
-        mask_lookup: dict
+        **Returns:**
+        
+        + mask_lookup: dict
             A dictionary to lookup masking results. 
             The keys are the token in hash_mask.
             The values are corresponding results. 
@@ -977,24 +977,24 @@ class position():
         '''
         Read the data and register them as dict. 
 
-        Parameters:
-        ----------------
-        index_lookup: dict
+        **Parameters:**
+        
+        + index_lookup: dict
             See _fatten_required_index_and_register
-        transform_lookup: dict
+        + transform_lookup: dict
             See _transform_vector_and_lookup 
-        hash_read: dict
+        + hash_read: dict
             See _register_interpolation_input
-        hash_index: dict
+        + hash_index: dict
             See _register_interpolation_input
-        main_dict: dict
+        + main_dict: dict
             See _register_interpolation_input
-        prefetch_dict: dict
+        + prefetch_dict: dict
             See _register_interpolation_input
 
-        Returns:
-        ------------
-        read_lookup: dict
+        **Returns:**
+        
+        + read_lookup: dict
             A dictionary to lookup data reading results. 
             The keys are the token in hash_read.
             The values are corresponding results. 
@@ -1061,20 +1061,20 @@ class position():
         '''
         Read the data and register them as dict. 
 
-        Parameters:
-        ----------------
-        mask_lookup: dict
+        **Parameters:**
+        
+        + mask_lookup: dict
             See _mask_value_and_register
-        hash_weight: dict
+        + hash_weight: dict
             See _register_interpolation_input
-        hash_mask: dict
+        + hash_mask: dict
             See _register_interpolation_input
-        main_dict: dict
+        + main_dict: dict
             See _register_interpolation_input
 
-        Returns:
-        ------------
-        weight_lookup: dict
+        **Returns:**
+        
+        + weight_lookup: dict
             A dictionary to lookup the weights computed. 
             The keys are the token in hash_weight.
             The values are corresponding results. 
@@ -1168,30 +1168,30 @@ class position():
         _mask_value_and_register,
         _compute_weight_and_registe,
 
-        Parameters:
-        ---------------
-        varName: list, str, tuple
+        **Parameters:**
+        
+        + varName: list, str, tuple
             The variables to interpolate. Tuples are used for horizontal vectors. 
             Put str and list in a list if you have multiple things to interpolate. 
             This input also defines the format of the output. 
-        knw: KnW object, tuple, list, dict
+        + knw: KnW object, tuple, list, dict
             The kernel object used for the operation. 
             Put them in the same order as varName. 
             Some level of automatic broadcasting is also supported. 
-        vec_transform: Boolean
+        + vec_transform: Boolean
             Whether to project the vector field to the local zonal/meridional direction. 
-        prefetched: numpy.ndarray, tuple, list, dict, None
+        + prefetched: numpy.ndarray, tuple, list, dict, None
             The prefetched array for the data, this will effectively overwrite varName.
             Put them in the same order as varName. 
             Some level of automatic broadcasting is also supported.
-        i_min: tuple, list, dict, None
+        + i_min: tuple, list, dict, None
             The prefix of the prefetched array. 
             Put them in the same order as varName. 
             Some level of automatic broadcasting is also supported.
 
-        Returns:
-        --------
-        R: list, numpy.array, tuple
+        **Returns:**
+        
+        + R: list, numpy.array, tuple
             The interpolation/derivative output in the same format as varName. 
         '''
         R = []

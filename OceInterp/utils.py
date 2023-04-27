@@ -1,10 +1,9 @@
-"""
-OceanSpy utilities that don't need OceanDataset objects.
-"""
-
 import copy as _copy
 
 import numpy as _np
+import numpy as np
+from numba import njit
+from scipy import spatial
 
 # Required dependencies (private)
 import xarray as _xr
@@ -79,11 +78,11 @@ def get_key_by_value(d, value):
     '''
     Find one of the keys in a dictionary that correspond to the given value
 
-    Parameters:
-    -----------
-    d: dictionaty
+    **Parameters:**
+    
+    + d: dictionaty
         dictionary to lookup key from
-    value: object
+    + value: object
         A object that has __eq__ method. 
     '''
     for k, v in d.items():
@@ -617,32 +616,29 @@ def get_key_by_value(d, value):
 
 #     return f, e
 
-# import numpy as np
-# from numba import jit,njit
-# from scipy import spatial
 
 @njit
 def spherical2cartesian(Y, X, R=6371.0):
     """
     Convert spherical coordinates to cartesian.
 
-    Parameters:
-    -----------
-    Y: np.array
+    **Parameters:**
+    
+    + Y: np.array
         Spherical Y coordinate (latitude)
-    X: np.array
+    + X: np.array
         Spherical X coordinate (longitude)
-    R: scalar
+    + R: scalar
         Earth radius in km
         If None, use geopy default
-
-    Returns:
-    --------
-    x: np.array
+    
+    **Returns:**
+    
+    + x: np.array
         Cartesian x coordinate
-    y: np.array
+    + y: np.array
         Cartesian y coordinate
-    z: np.array
+    + z: np.array
         Cartesian z coordinate
     """
 
@@ -1084,32 +1080,44 @@ def get_combination(lst,select):
 #     it = it.astype(int)
 #     return it,iz,faces,iys,ixs,rx,ry,rz,rt,cs,sn,dx,dy,dz,dt,bx,by,bz
 
-# def create_tree(X,Y,R = 6371,leafsize = 16, grid_pos="C"):
-#     if R:
-#         x, y, z = spherical2cartesian(Y=Y, X=X, R=R)
-#     else:
-#         x = X
-#         y = Y
-#         z = _xr.zeros_like(Y)
+def create_tree(X,Y,R = 6371,leafsize = 16):
+    '''
+    Create a cKD tree object. 
 
-#     # Stack
-#     rid_value = 777777
-#     if isinstance(x,_xr.DataArray):
-#         x = x.stack(points=x.dims).fillna(rid_value).data
-#         y = y.stack(points=y.dims).fillna(rid_value).data
-#         z = z.stack(points=z.dims).fillna(rid_value).data
-#     elif isinstance(x,_np.ndarray):
-#         x = x.ravel()
-#         np.nan_to_num(x.ravel(),nan = rid_value,copy = False)
-#         y = y.ravel()
-#         np.nan_to_num(y.ravel(),nan = rid_value,copy = False)
-#         z = z.ravel()
-#         np.nan_to_num(z.ravel(),nan = rid_value,copy = False)
+    **Parameters:**
 
-#     # Construct KD-tree
-#     tree = spatial.cKDTree(np.column_stack((x, y, z)),leafsize = leafsize)
+    + X,Y: np.ndarray
+        longitude and latitude of the grid location
+    + R: float
+        The radius in kilometers of the planet. 
+    + leafsize: int
+        When to switch to brute force search. 
+    '''
+    if R:
+        x, y, z = spherical2cartesian(Y=Y, X=X, R=R)
+    else:
+        x = X
+        y = Y
+        z = _xr.zeros_like(Y)
 
-#     return tree
+    # Stack
+    rid_value = 777777
+    if isinstance(x,_xr.DataArray):
+        x = x.stack(points=x.dims).fillna(rid_value).data
+        y = y.stack(points=y.dims).fillna(rid_value).data
+        z = z.stack(points=z.dims).fillna(rid_value).data
+    elif isinstance(x,_np.ndarray):
+        x = x.ravel()
+        np.nan_to_num(x.ravel(),nan = rid_value,copy = False)
+        y = y.ravel()
+        np.nan_to_num(y.ravel(),nan = rid_value,copy = False)
+        z = z.ravel()
+        np.nan_to_num(z.ravel(),nan = rid_value,copy = False)
+
+    # Construct KD-tree
+    tree = spatial.cKDTree(np.column_stack((x, y, z)),leafsize = leafsize)
+
+    return tree
     
 # def find_cs_sn(thetaA,phiA,thetaB,phiB):
 #     '''
