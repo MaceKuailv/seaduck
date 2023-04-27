@@ -31,9 +31,9 @@ def show_kernels(kernels = default_kernels):
     '''
     Plot a small scatter plot of the shape of a list of kernel
 
-    Parameters:
-    ------------
-    kernels: list of numpy.ndarray
+    **Parameters:**
+    
+    + kernels: list of numpy.ndarray
         Each of the element is a (n,2) shaped array, where n is the number of element in the kernel. 
     '''
     for i,k in enumerate(kernels):
@@ -54,9 +54,9 @@ def _translate_to_tendency(k):
     it will return [0,0] or more explicitly ['up','up']
     [0,0] will produce a empty array.
 
-    Parameters:
-    ------------
-    k: numpy.ndarray
+    **Parameters:**
+    
+    + k: numpy.ndarray
         A (n,2)-shaped array, where n is the number of element in the kernel. 
     '''
     tend = []
@@ -83,11 +83,11 @@ def fatten_ind_h(faces,iys,ixs,tp,kernel=default_kernel):
     each row represen all the node needed for interpolation of a single point.
     "h" represent we are only doing it on the horizontal plane
 
-    Parameters:
-    -----------------
-    faces: numpy.ndarray or None
+    **Parameters:**
+    
+    + faces: numpy.ndarray or None
         The index of faces that the points are on. None if there is no face dimension. 
-    iys,ixs: numpy.ndarray or None
+    + iys,ixs: numpy.ndarray or None
         1D array of indexes on the points' horizontal position
     '''
     kernel_tends =  [_translate_to_tendency(k) for k in kernel]
@@ -168,19 +168,19 @@ def fatten_linear_dim(iz,ind,maximum = None,minimum = None,kernel_type = 'linear
     '''
     this function linearly fattened the index in t or z dimension
 
-    Parameters:
-    ------------
-    iz: np.ndarray
+    **Parameters:**
+    
+    + iz: np.ndarray
         1D array of particle indexs in a linear dimension, including depth, 
         time and horizontal dimensions if there is no face dimension
-    ind: tuple of np.ndarray
+    + ind: tuple of np.ndarray
         Index arrays that are already fattened in other directions
-    maximum: int or None
+    + maximum: int or None
         None if the neighboring cell has index 1 larger than iz. 
         If the value of iz == maximum, the neighboring point is just maximum. 
-    minimum: int or None
+    + minimum: int or None
         None if the neighboring cell has index 1 smaller than iz. 
-    kernel_type: 'linear', 'dz' or 'nearest'
+    + kernel_type: 'linear', 'dz' or 'nearest'
         Whether to fatten the index using the nearest one point or two points. 
     '''
     if maximum and minimum:
@@ -279,21 +279,22 @@ def kernel_weight_x(kernel,ktype = 'interp',order = 0):
     return the function that calculate the interpolation/derivative weight 
     given a cross-shaped (that's where x is coming from) Lagrangian kernel.
 
-    Parameters:
-    ---------------
-    kernel: np.ndarray
+    **Parameters:**
+    
+    + kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes. 
         It has to be shaped like a cross
-    ktype: str
+    + ktype: str
         "interp" (default): Use both x y direction for interpolation, implies that order = 0
         "x": Use only x direction for interpolation/derivative
         "y": Use only y direction for interpolation/derivative
-    order: int
+    + order: int
         The order of derivatives. Zero for interpolation. 
     
-    Returns:
-    ------------
-    func(rx,ry): compilable function to calculate the hotizontal interpolation/derivative weight
+    **Returns:**
+    
+    + func(rx,ry): compilable function 
+        function to calculate the hotizontal interpolation/derivative weight
     '''
     xs = np.array(list(set(kernel.T[0]))).astype(float)
     ys = np.array(list(set(kernel.T[1]))).astype(float)
@@ -499,19 +500,20 @@ def kernel_weight_s(kernel,xorder = 0,yorder = 0):
     return the function that calculate the interpolation/derivative weight 
     given a rectangle-shaped (that's where x is coming from) Lagrangian kernel.
 
-    Parameters:
-    ---------------
-    kernel: np.ndarray
+    **Parameters:**
+    
+    + kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes. 
         It has to be shaped like a rectangle
-    xorder: int
+    + xorder: int
         The order of derivatives in the x direction. Zero for interpolation. 
-    yorder: int
+    + yorder: int
         The order of derivatives in the y direction. Zero for interpolation. 
     
-    Returns:
-    ------------
-    func(rx,ry): compilable function to calculate the hotizontal interpolation/derivative weight
+    **Returns:**
+    
+    + func(rx,ry): compilable function
+        function to calculate the hotizontal interpolation/derivative weight
     '''
     xs = np.array(list(set(kernel.T[0]))).astype(float)
     ys = np.array(list(set(kernel.T[1]))).astype(float)
@@ -609,22 +611,22 @@ def kernel_weight(kernel,ktype = 'interp',order = 0):
     Return the function that calculate the interpolation/derivative weight 
     of a  Lagrangian kernel.
 
-    Parameters:
-    ---------------
-    kernel: np.ndarray
+    **Parameters:**
+    
+    + kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes. 
         It need to either shape like a rectangle or a cross
-    ktype: str
+    + ktype: str
         "interp" (default): Use both x y direction for interpolation, implies that order = 0
         "dx": Use only x direction for interpolation/derivative
         "dy": Use only y direction for interpolation/derivative
-    order: int
+    + order: int
         The order of derivatives. Zero for interpolation. 
     
-    Returns:
-    ------------
-    func(rx,ry): compilable function to calculate the hotizontal 
-    interpolation/derivative weight
+    **Returns:**
+    
+    + func(rx,ry): compilable function
+        function to calculate the hotizontal interpolation/derivative weight
     '''
     mx = len(set(kernel[:,0]))
     my = len(set(kernel[:,1]))
@@ -692,20 +694,20 @@ def get_weight_cascade(rx,ry,pk,
     apply the corresponding functions that was figured out in 
     find_which_points_for_each_kernel
 
-    Parameters:
-    ----------------
-    rx,ry: numpy.ndarray
+    **Parameters:**
+    
+    + rx,ry: numpy.ndarray
         1D array with length N of non-dimensional relative horizontal position to the nearest node
-    kernel_large: numpy.ndarray
+    + kernel_large: numpy.ndarray
         A numpy kernel of shape (M,2) that contains all the kernels needed.
-    russian_doll: list of list(s)
+    + russian_doll: list of list(s)
         The inheritance sequence when some of the node is masked.
-    funcs: list of compileable functions
+    + funcs: list of compileable functions
         The weight function of each kernel in the inheritance sequence. 
 
-    Returns:
-    ----------------
-    weight: numpy.ndarray
+    **Returns:**
+    
+    + weight: numpy.ndarray
         The horizontal weight of interpolation/derivative for the points with shape (N,M)
 
     '''
@@ -775,31 +777,31 @@ def get_weight_4d(rx,ry,rz,rt,
     '''
     Return the weight of values given particle rel-coords
 
-    Parameters:
-    ---------------
-    rx,ry,rz,rt: numpy.ndarray
+    **Parameters:**
+    
+    + rx,ry,rz,rt: numpy.ndarray
         1D array of non-dimensional particle positions of shape (N)
-    pk4d: list
+    + pk4d: list
         A mapping on which points should use which horizontal kernel.
-    hkernel:
+    + hkernel:
         A horizontal numpy kernel that contains all the horizontal kernels needed.
-    russian_doll: list of list(s)
+    + russian_doll: list of list(s)
         The inheritance sequence when some of the node is masked.
-    funcs: list of compileable functions
+    + funcs: list of compileable functions
         The weight function of each kernel in the inheritance sequence. 
-    tkernel: str
+    + tkernel: str
         What kind of operation to do in the temporal dimension: 
         'linear', 'nearest' interpolation, or 'dt'
-    zkernel: str
+    + zkernel: str
         What kind of operation to do in the vertical: 
         'linear', 'nearest' interpolation, or 'dz'
-    bottom_scheme: str
+    + bottom_scheme: str
         Whether to assume there is a ghost point with same value at the bottom boundary.
         Choose None for vertical flux, 'no flux' for most other cases. 
 
-    Returns:
-    -------- 
-    weight: numpy.ndarray
+    **Returns:**
+
+    + weight: numpy.ndarray
         The weight of interpolation/derivative for the points with shape (N,M), 
         M is the num of node in the largest kernel. 
     '''

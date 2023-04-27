@@ -21,39 +21,39 @@ def NoneIn(lst):
             break
     return ans
 
-@njit
-def spherical2cartesian(Y, X, R=6371.0):
-    """
-    Convert spherical coordinates to cartesian.
+# @njit
+# def spherical2cartesian(Y, X, R=6371.0):
+#     """
+#     Convert spherical coordinates to cartesian.
 
-    Parameters:
-    ------------
-    Y: np.array
-        Spherical Y coordinate (latitude)
-    X: np.array
-        Spherical X coordinate (longitude)
-    R: scalar
-        Earth radius in km
-        If None, use geopy default
+#     **Parameters:**
     
-    Returns:
-    ---------
-    x: np.array
-        Cartesian x coordinate
-    y: np.array
-        Cartesian y coordinate
-    z: np.array
-        Cartesian z coordinate
-    """
+#     + Y: np.array
+#         Spherical Y coordinate (latitude)
+#     + X: np.array
+#         Spherical X coordinate (longitude)
+#     + R: scalar
+#         Earth radius in km
+#         If None, use geopy default
+    
+#     **Returns:**
+    
+#     + x: np.array
+#         Cartesian x coordinate
+#     + y: np.array
+#         Cartesian y coordinate
+#     + z: np.array
+#         Cartesian z coordinate
+#     """
 
-    # Convert
-    Y_rad = np.deg2rad(Y)
-    X_rad = np.deg2rad(X)
-    x = R * np.cos(Y_rad) * np.cos(X_rad)
-    y = R * np.cos(Y_rad) * np.sin(X_rad)
-    z = R * np.sin(Y_rad)
+#     # Convert
+#     Y_rad = np.deg2rad(Y)
+#     X_rad = np.deg2rad(X)
+#     x = R * np.cos(Y_rad) * np.cos(X_rad)
+#     y = R * np.cos(Y_rad) * np.sin(X_rad)
+#     z = R * np.sin(Y_rad)
 
-    return x, y, z
+#     return x, y, z
 
 @njit
 def find_ind_z(array, value):
@@ -180,22 +180,22 @@ def find_rel_z(depth,some_z,some_dz):
     '''
     find the rel-coords of the vertical coords
 
-    Paramters:
-    -----------
-    depth: numpy.ndarray
+    **Paramters:**
+    
+    + depth: numpy.ndarray
         1D array for the depth of interest in meters. More negative means deeper. 
-    some_z: numpy.ndarray
+    + some_z: numpy.ndarray
         The depth of reference depth.
-    some_dz: numpy.ndarray
+    + some_dz: numpy.ndarray
         dz_i = abs(z_{i+1}- z_i)
 
-    Returns:
-    ---------
-    iz: numpy.ndarray
+    **Returns:**
+    
+    + iz: numpy.ndarray
         Indexes of the reference z level
-    rz: numpy.ndarray
+    + rz: numpy.ndarray
         Non-dimensional distance to the reference z level
-    dz: numpy.ndarray
+    + dz: numpy.ndarray
         distance between the reference z level and the next one. 
     '''
     izs = np.zeros_like(depth)
@@ -220,20 +220,20 @@ def find_rel_time(time,ts):
     '''
     find the rel-coords of the temporal coords
 
-    Paramters:
-    -----------
-    time: numpy.ndarray
+    **Paramters:**
+    
+    + time: numpy.ndarray
         1D array for the time since 1970-01-01 in seconds. 
-    ts: numpy.ndarray
+    + ts: numpy.ndarray
         The time of model time steps also in seconds. 
 
-    Returns:
-    ---------
-    it: numpy.ndarray
+    **Returns:**
+    
+    + it: numpy.ndarray
         Indexes of the reference t level
-    rt: numpy.ndarray
+    + rt: numpy.ndarray
         Non-dimensional distance to the reference t level
-    dt: numpy.ndarray
+    + dt: numpy.ndarray
         distance between the reference t level and the next one. 
     '''
     its = np.zeros(time.shape)
