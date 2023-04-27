@@ -3,8 +3,7 @@ from OceInterp.kernelNweight import KnW
 from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
-from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len,local_to_latlon,to_180,get_combination
-from OceInterp.lat2ind import find_px_py,weight_f_node
+from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len,local_to_latlon,to_180,get_combination,find_px_py,weight_f_node
 
 import warnings
 import numpy as np
@@ -278,16 +277,16 @@ class position():
         '''
         Create a subset of the position object
 
-        Parameters:
-        ----------------
-        which: numpy.ndarray
+        **Parameters:**
+        
+        + which: numpy.ndarray
             Define which points survive the subset operation.
             It be an array of either boolean or int.
             The selection is similar to that of selecting from a 1D numpy array.
 
-        Returns:
-        -------------
-        the_subset: position object
+        **Returns:**
+        
+        + the_subset: position object
             The selected positions. 
         '''
         p = position()
