@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 
 from OceInterp.topology import topology
-from OceInterp.utils import create_tree,_general_len
-from OceInterp.lat2ind import *
+# from OceInterp.utils import create_tree,_general_len
+from OceInterp.utils import *
 
 no_alias = {
     'XC':'XC',
