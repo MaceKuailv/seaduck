@@ -1,6 +1,6 @@
 from OceInterp.OceData import OceData
-from OceInterp.kernelNweight import KnW
-from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
+from OceInterp.kernelNweight import KnW,_translate_to_tendency,find_pk_4d
+# from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from OceInterp.smart_read import smart_read as sread
 from OceInterp.get_masks import get_masked
 from OceInterp.utils import local_to_latlon,get_key_by_value,_general_len,local_to_latlon,to_180,get_combination,find_px_py,weight_f_node
