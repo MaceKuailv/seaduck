@@ -1,7 +1,7 @@
-from OceInterp.lagrangian import particle,uknw,vknw
-from OceInterp.eulerian import position
-from OceInterp.OceData import OceData
-from OceInterp.kernelNweight import KnW
+from seaduck.lagrangian import particle,uknw,vknw
+from seaduck.eulerian import position
+from seaduck.OceData import OceData
+from seaduck.kernelNweight import KnW
 
 import numpy as np
 import warnings

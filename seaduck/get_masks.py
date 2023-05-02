@@ -2,9 +2,9 @@ import numpy as np
 import xarray as xr 
 import copy
 import warnings
-from OceInterp.topology import topology
-from OceInterp.smart_read import smart_read
-from OceInterp.RuntimeConf import rcParam
+from seaduck.topology import topology
+from seaduck.smart_read import smart_read
+from seaduck.RuntimeConf import rcParam
 
 def mask_u_node(maskC,tp):
     '''

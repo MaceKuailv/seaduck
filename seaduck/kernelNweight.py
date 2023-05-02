@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import copy
 
 # from OceInterp.kernel_and_weight import kernel_weight,get_weight_cascade
-from OceInterp.topology import topology
-from OceInterp.utils import get_combination
-from OceInterp.RuntimeConf import rcParam
+from seaduck.topology import topology
+from seaduck.utils import get_combination
+from seaduck.RuntimeConf import rcParam
 
 # default kernel for interpolation.
 default_kernel = np.array([

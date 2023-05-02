@@ -2,9 +2,9 @@ import numpy as np
 import copy
 from numba import njit
 
-from OceInterp.kernelNweight import KnW
-from OceInterp.eulerian import position
-from OceInterp.utils import to_180,find_rel_time,find_rx_ry_oceanparcel
+from seaduck.kernelNweight import KnW
+from seaduck.eulerian import position
+from seaduck.utils import to_180,find_rel_time,find_rx_ry_oceanparcel
 
 deg2m = 6271e3*np.pi/180
 
