@@ -2,9 +2,9 @@ import xarray as xr
 import numpy as np
 import pandas as pd
 
-from OceInterp.topology import topology
+from seaduck.topology import topology
 # from OceInterp.utils import create_tree,_general_len
-from OceInterp.utils import *
+from seaduck.utils import *
 
 no_alias = {
     'XC':'XC',

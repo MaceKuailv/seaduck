@@ -2,7 +2,7 @@
 import numpy as np
 from numba import njit
 import copy
-from OceInterp.RuntimeConf import rcParam
+from seaduck.RuntimeConf import rcParam
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
