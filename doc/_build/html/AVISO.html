@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field. &#8212; My sample book</title>
+    <title>Lagrangian particle demonstration in a periodic domain. &#8212; My sample book</title>
   
   
   
@@ -63,7 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries." href="IGP.html" />
-    <link rel="prev" title="OceInterp Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer." href="Global_ECCO.html" />
+    <link rel="prev" title="Lagrangian and Eulerian demonstration on ECCO" href="Global_ECCO.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -162,23 +162,23 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">OceInterp.OceData</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">OceInterp.topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">OceInterp.eulerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">OceInterp.lagrangian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">OceInterp.OceInterp</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">OceInterp.kernelNweight</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">OceInterp.smart_read</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">OceInterp.get_masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">OceInterp.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">seaduck.kernelNweight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">seaduck.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_in_one.html">All API References (for exporting)</a></li>
 </ul>
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lagrangian particle demonstration in a periodic domain.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
 </ul>
 
@@ -363,7 +363,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</h1>
+    <h1>Lagrangian particle demonstration in a periodic domain.</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -373,8 +373,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wenrui-jiang-tom-haine-feb-23">Wenrui Jiang, Tom Haine Feb ‘23</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-aviso-velocity-field-dataset-is-a-lat-lon-grid-with-staggered-velocity-it-s-a-snapshot-from-a-single-time-see-below">The AVISO velocity field dataset is a lat-lon grid with staggered velocity. It’s a snapshot from a single time (see below).</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords">Initialize OceInterp package. Then create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-object-also-contains-a-tp-topology-object-it-looks-at-the-shape-of-the-coordinate-data-in-this-case-based-on-longitude-range-it-thinks-the-type-is-x-periodic-which-is-correct-for-the-southern-ocean">The object also contains a <code class="docutils literal notranslate"><span class="pre">tp</span></code> (topology) object. It looks at the shape of the coordinate data. In this case, based on longitude range, it thinks the type is <code class="docutils literal notranslate"><span class="pre">x_periodic</span></code>, which is correct for the Southern Ocean.</a></li>
 </ul>
@@ -409,10 +408,10 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-particle-demonstration-in-a-periodic-domain-particles-are-simulated-in-the-southern-ocean-aviso-altimetrey-velocity-field">
-<h1>Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-periodic-domain-particles-are-simulated-in-the-southern-ocean-aviso-altimetrey-velocity-field" title="Permalink to this headline">#</a></h1>
-<div class="section" id="wenrui-jiang-tom-haine-feb-23">
-<h2>Wenrui Jiang, Tom Haine Feb ‘23<a class="headerlink" href="#wenrui-jiang-tom-haine-feb-23" title="Permalink to this headline">#</a></h2>
+  <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-particle-demonstration-in-a-periodic-domain">
+<h1>Lagrangian particle demonstration in a periodic domain.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-periodic-domain" title="Permalink to this headline">#</a></h1>
+<p><strong>Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</strong></p>
+<p>Author: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
@@ -423,24 +422,14 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="the-aviso-velocity-field-dataset-is-a-lat-lon-grid-with-staggered-velocity-it-s-a-snapshot-from-a-single-time-see-below">
-<h2>The AVISO velocity field dataset is a lat-lon grid with staggered velocity. It’s a snapshot from a single time (see below).<a class="headerlink" href="#the-aviso-velocity-field-dataset-is-a-lat-lon-grid-with-staggered-velocity-it-s-a-snapshot-from-a-single-time-see-below" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
+<div class="section" id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this headline">#</a></h2>
+<p>The AVISO velocity field dataset is a lat-lon grid with staggered velocity. It’s a snapshot from a single time (see below).</p>
+<div class="alert alert-block alert-warning">
+<b>Download:</b> Uncomment the following cell if you are running the notebook for the first time and does not have the data. 
+</div><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget https://zenodo.org/record/7838605/files/aviso_example.nc
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2023-04-17 19:06:13--  https://zenodo.org/record/7838605/files/aviso_example.nc
-Resolving zenodo.org (zenodo.org)... 188.185.124.72
-Connecting to zenodo.org (zenodo.org)|188.185.124.72|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 98016669 (93M) [application/octet-stream]
-Saving to: ‘aviso_example.nc.1’
-
-aviso_example.nc.1   15%[==&gt;                 ]  14.16M   681KB/s    eta 1m 59s 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !wget https://zenodo.org/record/7838605/files/aviso_example.nc</span>
 </pre></div>
 </div>
 </div>
@@ -841,8 +830,8 @@ Attributes: (12/42)
 <h2>Initialize OceInterp package. Then create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords<a class="headerlink" href="#initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">OceInterp</span> <span class="k">as</span> <span class="nn">oi</span>
-<span class="n">oce</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaduck</span> <span class="k">as</span> <span class="nn">sd</span>
+<span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -955,7 +944,7 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
 <h2>Now create the <code class="docutils literal notranslate"><span class="pre">OceInterp.lagrangian.particle</span></code> object.<a class="headerlink" href="#now-create-the-oceinterp-lagrangian-particle-object" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">oce</span><span class="p">,</span>
                 <span class="c1"># save_raw = True,</span>
                 <span class="c1"># transport = True,</span>
@@ -1066,16 +1055,16 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "oceanography"
+            mode: "python"
         },
         kernelOptions: {
-            name: "oceanography",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'oceanography'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -1094,7 +1083,7 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</p>
+        <p class="prev-next-title">Lagrangian and Eulerian demonstration on ECCO</p>
       </div>
     </a>
     <a class="right-next"
@@ -1124,8 +1113,7 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wenrui-jiang-tom-haine-feb-23">Wenrui Jiang, Tom Haine Feb ‘23</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-aviso-velocity-field-dataset-is-a-lat-lon-grid-with-staggered-velocity-it-s-a-snapshot-from-a-single-time-see-below">The AVISO velocity field dataset is a lat-lon grid with staggered velocity. It’s a snapshot from a single time (see below).</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords">Initialize OceInterp package. Then create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-object-also-contains-a-tp-topology-object-it-looks-at-the-shape-of-the-coordinate-data-in-this-case-based-on-longitude-range-it-thinks-the-type-is-x-periodic-which-is-correct-for-the-southern-ocean">The object also contains a <code class="docutils literal notranslate"><span class="pre">tp</span></code> (topology) object. It looks at the shape of the coordinate data. In this case, based on longitude range, it thinks the type is <code class="docutils literal notranslate"><span class="pre">x_periodic</span></code>, which is correct for the Southern Ocean.</a></li>
 </ul>
