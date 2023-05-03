@@ -6,3 +6,5 @@ test*.ipynb
 *.png
 *.jpg
 .vscode/
+dist/
+build/
