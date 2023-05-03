@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OceInterp Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer. &#8212; My sample book</title>
+    <title>Lagrangian and Eulerian demonstration on ECCO &#8212; My sample book</title>
   
   
   
@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'Global_ECCO';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field." href="AVISO.html" />
+    <link rel="next" title="Lagrangian particle demonstration in a periodic domain." href="AVISO.html" />
     <link rel="prev" title="All API References (for exporting)" href="all_in_one.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -164,23 +164,23 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">OceInterp.OceData</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">OceInterp.topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">OceInterp.eulerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">OceInterp.lagrangian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">OceInterp.OceInterp</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">OceInterp.kernelNweight</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">OceInterp.smart_read</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">OceInterp.get_masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">OceInterp.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">seaduck.kernelNweight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">seaduck.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_in_one.html">All API References (for exporting)</a></li>
 </ul>
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="AVISO.html">Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
 </ul>
 
@@ -365,7 +365,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>OceInterp Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</h1>
+    <h1>Lagrangian and Eulerian demonstration on ECCO</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -375,18 +375,17 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wenrui-jiang-tom-haine-feb-23">Wenrui Jiang, Tom Haine Feb ‘23</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ecco-mitgcm-run-is-a-low-resolution-global-state-estimate-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">The ECCO MITgcm run is a low-resolution global state estimate, available on SciServer. The simulation is opened using the OceanSpy package.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">See: https://dev-poseidon-ocean.pantheonsite.io/products/datasets/.</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-following-is-not-necessary-but-it-s-faster-if-you-have-masku-and-maskv-at-hand">The following is not necessary, but it’s faster if you have <code class="docutils literal notranslate"><span class="pre">maskU</span></code> and <code class="docutils literal notranslate"><span class="pre">maskV</span></code> at hand.</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package-then-set-the-debug-level">Initialize OceInterp package. Then set the debug level.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-seaduck-package-then-set-the-debug-level">Initialize seaduck package. Then set the debug level.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specify-the-parameters-for-the-particles-number-positions-start-time">Specify the parameters for the particles (number, positions, start time).</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-particle-positions">Plot the particle positions</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-explore-the-interpolation-function-in-oceinterp">Let’s explore the interpolation function in <code class="docutils literal notranslate"><span class="pre">OceInterp</span></code>:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-explore-the-interpolation-function-in-seaduck">Let’s explore the interpolation function in <code class="docutils literal notranslate"><span class="pre">seaduck</span></code>:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolate-these-ecco-fields-onto-the-particle-positions">Interpolate these ECCO fields onto the particle positions.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-interpolated-salinity-field">Plot the interpolated salinity field.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-interpolated-u-field">Plot the interpolated <span class="math notranslate nohighlight">\(u\)</span> field.</a></li>
@@ -420,10 +419,10 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="oceinterp-lagrangian-particle-demonstration-this-version-uses-the-ecco-mitgcm-velocity-field-data-available-on-sciserver">
-<h1><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.<a class="headerlink" href="#oceinterp-lagrangian-particle-demonstration-this-version-uses-the-ecco-mitgcm-velocity-field-data-available-on-sciserver" title="Permalink to this headline">#</a></h1>
-<div class="section" id="wenrui-jiang-tom-haine-feb-23">
-<h2>Wenrui Jiang, Tom Haine Feb ‘23<a class="headerlink" href="#wenrui-jiang-tom-haine-feb-23" title="Permalink to this headline">#</a></h2>
+  <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-and-eulerian-demonstration-on-ecco">
+<h1>Lagrangian and Eulerian demonstration on ECCO<a class="headerlink" href="#lagrangian-and-eulerian-demonstration-on-ecco" title="Permalink to this headline">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">seaduck</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</p>
+<p>authors: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -431,7 +430,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">import</span> <span class="nn">oceanspy</span> <span class="k">as</span> <span class="nn">ospy</span>
 </pre></div>
-</div>
 </div>
 </div>
 </div>
@@ -469,12 +467,12 @@ ECCO v4r4 3D dataset, ocean simulations on LLC90 grid (monthly mean output)
 </div>
 </div>
 </div>
-<div class="section" id="initialize-oceinterp-package-then-set-the-debug-level">
-<h2>Initialize OceInterp package. Then set the debug level.<a class="headerlink" href="#initialize-oceinterp-package-then-set-the-debug-level" title="Permalink to this headline">#</a></h2>
+<div class="section" id="initialize-seaduck-package-then-set-the-debug-level">
+<h2>Initialize seaduck package. Then set the debug level.<a class="headerlink" href="#initialize-seaduck-package-then-set-the-debug-level" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">OceInterp</span> <span class="k">as</span> <span class="nn">oi</span>
-<span class="n">oi</span><span class="o">.</span><span class="n">rcParam</span><span class="p">[</span><span class="s1">&#39;debug_level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;very_high&#39;</span>   <span class="c1"># Options are: &#39;high&#39;,&#39;very_high&#39;,&#39;not that high&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaduck</span> <span class="k">as</span> <span class="nn">sd</span>
+<span class="n">sd</span><span class="o">.</span><span class="n">rcParam</span><span class="p">[</span><span class="s1">&#39;debug_level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;very_high&#39;</span>   <span class="c1"># Options are: &#39;high&#39;,&#39;very_high&#39;,&#39;not that high&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -540,11 +538,11 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
 </div>
 </div>
 </div>
-<div class="section" id="let-s-explore-the-interpolation-function-in-oceinterp">
-<h2>Let’s explore the interpolation function in <code class="docutils literal notranslate"><span class="pre">OceInterp</span></code>:<a class="headerlink" href="#let-s-explore-the-interpolation-function-in-oceinterp" title="Permalink to this headline">#</a></h2>
+<div class="section" id="let-s-explore-the-interpolation-function-in-seaduck">
+<h2>Let’s explore the interpolation function in <code class="docutils literal notranslate"><span class="pre">seaduck</span></code>:<a class="headerlink" href="#let-s-explore-the-interpolation-function-in-seaduck" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">oi</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -590,7 +588,7 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Interpolate these ECCO fields onto the particle positions.<a class="headerlink" href="#interpolate-these-ecco-fields-onto-the-particle-positions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">,(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">),</span><span class="n">eta</span><span class="p">,</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,[</span><span class="s1">&#39;SALT&#39;</span><span class="p">,(</span><span class="s1">&#39;UVELMASS&#39;</span><span class="p">,</span><span class="s1">&#39;VVELMASS&#39;</span><span class="p">),</span><span class="s1">&#39;ETAN&#39;</span><span class="p">,</span><span class="s1">&#39;maskC&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">,(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">),</span><span class="n">eta</span><span class="p">,</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,[</span><span class="s1">&#39;SALT&#39;</span><span class="p">,(</span><span class="s1">&#39;UVELMASS&#39;</span><span class="p">,</span><span class="s1">&#39;VVELMASS&#39;</span><span class="p">),</span><span class="s1">&#39;ETAN&#39;</span><span class="p">,</span><span class="s1">&#39;maskC&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -687,7 +685,7 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h3>Record the salinity along the particle trajectories as well as their (lat,lon) positions.<a class="headerlink" href="#record-the-salinity-along-the-particle-trajectories-as-well-as-their-lat-lon-positions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,[</span><span class="n">s</span><span class="p">,</span><span class="n">raw</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">]</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,[</span><span class="n">s</span><span class="p">,</span><span class="n">raw</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,</span>
                                  <span class="p">[</span><span class="s1">&#39;SALT&#39;</span><span class="p">,</span><span class="s1">&#39;__particle.raw&#39;</span><span class="p">,</span><span class="s1">&#39;__particle.lat&#39;</span><span class="p">,</span><span class="s1">&#39;__particle.lon&#39;</span><span class="p">],</span>
                                  <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t_bnds</span><span class="p">,</span>
                                  <span class="n">lagrangian</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -772,7 +770,7 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h3>1. Kernel object<a class="headerlink" href="#kernel-object" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">KnW</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">kernelNweight</span><span class="o">.</span><span class="n">KnW</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">KnW</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">kernelNweight</span><span class="o">.</span><span class="n">KnW</span>
 </pre></div>
 </div>
 </div>
@@ -800,7 +798,7 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h3>Apply the kernels to the ECCO fields:<a class="headerlink" href="#apply-the-kernels-to-the-ecco-fields" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">dsdz</span><span class="p">,(</span><span class="n">d2udx2</span><span class="p">,</span><span class="n">dvdt</span><span class="p">)]</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,{</span><span class="s1">&#39;SALT&#39;</span><span class="p">:</span><span class="n">dz_kernel</span><span class="p">,(</span><span class="s1">&#39;UVELMASS&#39;</span><span class="p">,</span><span class="s1">&#39;VVELMASS&#39;</span><span class="p">):(</span><span class="n">dx2_kernel</span><span class="p">,</span><span class="n">dt_kernel</span><span class="p">)},</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">dsdz</span><span class="p">,(</span><span class="n">d2udx2</span><span class="p">,</span><span class="n">dvdt</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,{</span><span class="s1">&#39;SALT&#39;</span><span class="p">:</span><span class="n">dz_kernel</span><span class="p">,(</span><span class="s1">&#39;UVELMASS&#39;</span><span class="p">,</span><span class="s1">&#39;VVELMASS&#39;</span><span class="p">):(</span><span class="n">dx2_kernel</span><span class="p">,</span><span class="n">dt_kernel</span><span class="p">)},</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -845,16 +843,16 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "oceanography"
+            mode: "python"
         },
         kernelOptions: {
-            name: "oceanography",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'oceanography'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -881,7 +879,7 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</p>
+        <p class="prev-next-title">Lagrangian particle demonstration in a periodic domain.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -903,18 +901,17 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wenrui-jiang-tom-haine-feb-23">Wenrui Jiang, Tom Haine Feb ‘23</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ecco-mitgcm-run-is-a-low-resolution-global-state-estimate-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">The ECCO MITgcm run is a low-resolution global state estimate, available on SciServer. The simulation is opened using the OceanSpy package.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">See: https://dev-poseidon-ocean.pantheonsite.io/products/datasets/.</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-following-is-not-necessary-but-it-s-faster-if-you-have-masku-and-maskv-at-hand">The following is not necessary, but it’s faster if you have <code class="docutils literal notranslate"><span class="pre">maskU</span></code> and <code class="docutils literal notranslate"><span class="pre">maskV</span></code> at hand.</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package-then-set-the-debug-level">Initialize OceInterp package. Then set the debug level.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-seaduck-package-then-set-the-debug-level">Initialize seaduck package. Then set the debug level.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specify-the-parameters-for-the-particles-number-positions-start-time">Specify the parameters for the particles (number, positions, start time).</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-particle-positions">Plot the particle positions</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-explore-the-interpolation-function-in-oceinterp">Let’s explore the interpolation function in <code class="docutils literal notranslate"><span class="pre">OceInterp</span></code>:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-explore-the-interpolation-function-in-seaduck">Let’s explore the interpolation function in <code class="docutils literal notranslate"><span class="pre">seaduck</span></code>:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolate-these-ecco-fields-onto-the-particle-positions">Interpolate these ECCO fields onto the particle positions.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-interpolated-salinity-field">Plot the interpolated salinity field.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-interpolated-u-field">Plot the interpolated <span class="math notranslate nohighlight">\(u\)</span> field.</a></li>

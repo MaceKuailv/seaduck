@@ -62,7 +62,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'all_in_one';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="OceInterp Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer." href="Global_ECCO.html" />
+    <link rel="next" title="Lagrangian and Eulerian demonstration on ECCO" href="Global_ECCO.html" />
     <link rel="prev" title="seaduck.utils" href="api_reference/apiref_utils.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -177,8 +177,8 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="AVISO.html">Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
 </ul>
 
@@ -1423,7 +1423,7 @@ It has to be shaped like a cross</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'WVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dont_fly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#seaduck.eulerian.position" title="seaduck.eulerian.position"><code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="api_reference/apiref_eulerian.html#seaduck.eulerian.position" title="seaduck.eulerian.position"><code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code></a></p>
 <p>The Lagrangian particle object. Simply a eulerian position object that know how to move itself.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
@@ -2414,7 +2414,7 @@ If None, use geopy default</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</p>
+        <p class="prev-next-title">Lagrangian and Eulerian demonstration on ECCO</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

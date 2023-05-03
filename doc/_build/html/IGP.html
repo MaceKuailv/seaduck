@@ -62,7 +62,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'IGP';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field." href="AVISO.html" />
+    <link rel="prev" title="Lagrangian particle demonstration in a periodic domain." href="AVISO.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -161,23 +161,23 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">OceInterp.OceData</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">OceInterp.topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">OceInterp.eulerian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">OceInterp.lagrangian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">OceInterp.OceInterp</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">OceInterp.kernelNweight</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">OceInterp.smart_read</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">OceInterp.get_masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">OceInterp.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">seaduck.kernelNweight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">seaduck.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="all_in_one.html">All API References (for exporting)</a></li>
 </ul>
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> Lagrangian particle demonstration. This version uses the ECCO MITgcm velocity field data available on SciServer.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="AVISO.html">Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
 </ul>
 
@@ -388,7 +388,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-particle-object">Create the particle object.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-particle-positions-from-the-oi-eulerian-position-objects">Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">oi.eulerian.position</span></code> objects.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-results">Plot results.</a></li>
 </ul>
             </nav>
@@ -12011,8 +12011,8 @@ component of the Iceland Greenland Seas Project (IGP).</dd><dt><span>OceanSpy_pr
 <h2>Initialize OceInterp package.<a class="headerlink" href="#initialize-oceinterp-package" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">OceInterp</span> <span class="k">as</span> <span class="nn">oi</span>
-<span class="n">oce</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaduck</span> <span class="k">as</span> <span class="nn">sd</span>
+<span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12115,7 +12115,7 @@ no SN in dataset, skip
 <h2>Create the particle object.<a class="headerlink" href="#create-the-particle-object" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">oi</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">oce</span><span class="p">,</span>
                 <span class="n">continue_criterion</span> <span class="o">=</span> <span class="n">continue_criterion</span><span class="p">,</span>
                 <span class="n">uname</span> <span class="o">=</span> <span class="s1">&#39;utrans&#39;</span><span class="p">,</span>
@@ -12391,8 +12391,8 @@ no SN in dataset, skip
 </div>
 </div>
 </div>
-<div class="section" id="retrieve-the-particle-positions-from-the-oi-eulerian-position-objects">
-<h2>Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">oi.eulerian.position</span></code> objects.<a class="headerlink" href="#retrieve-the-particle-positions-from-the-oi-eulerian-position-objects" title="Permalink to this headline">#</a></h2>
+<div class="section" id="retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">
+<h2>Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.<a class="headerlink" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
@@ -12433,16 +12433,16 @@ no SN in dataset, skip
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "oceanography"
+            mode: "python"
         },
         kernelOptions: {
-            name: "oceanography",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'oceanography'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -12461,7 +12461,7 @@ no SN in dataset, skip
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Lagrangian particle demonstration in a periodic domain. Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</p>
+        <p class="prev-next-title">Lagrangian particle demonstration in a periodic domain.</p>
       </div>
     </a>
 </div></div>
@@ -12498,7 +12498,7 @@ no SN in dataset, skip
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-particle-object">Create the particle object.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-particle-positions-from-the-oi-eulerian-position-objects">Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">oi.eulerian.position</span></code> objects.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-results">Plot results.</a></li>
 </ul>
   </nav></div>
