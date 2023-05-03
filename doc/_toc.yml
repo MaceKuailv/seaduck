@@ -1,0 +1,26 @@
+format: jb-book
+root: intro
+parts:
+- caption: Tutorial
+  chapters:
+  - file: how_to_install
+  - file: notebooks
+    sections:
+    - file: network_of_object
+  - file: reference
+    sections:
+    - file: api_reference/apiref_OceData.rst
+    - file: api_reference/apiref_topology.rst
+    - file: api_reference/apiref_eulerian.rst
+    - file: api_reference/apiref_lagrangian.rst
+    - file: api_reference/apiref_OceInterp.rst
+    - file: api_reference/apiref_kernelNweight.rst
+    - file: api_reference/apiref_smartread.rst
+    - file: api_reference/apiref_getmasks.rst
+    - file: api_reference/apiref_utils.rst
+    - file: all_in_one
+- caption: Examples
+  chapters:
+  - file: Global_ECCO
+  - file: AVISO 
+  - file: IGP
