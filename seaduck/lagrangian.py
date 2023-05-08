@@ -360,11 +360,11 @@ class particle(position):
             which = np.ones(self.N).astype(bool)
         sub = self.subset(which)
         if self.face is not None:
-            Vol = self.ocedata['vol'][sub.iz,sub.face,sub.iy,sub.ix]
+            Vol = self.ocedata['vol'][sub.izl_lin-1,sub.face,sub.iy,sub.ix]
         else:
-            Vol = self.ocedata['vol'][sub.iz,sub.iy,sub.ix]
+            Vol = self.ocedata['vol'][sub.izl_lin-1,sub.iy,sub.ix]
         self.Vol[which] = Vol
-        
+
     def get_u_du(self,which = None):
         '''
         Read the velocity and velocity derivatives in all three dimensions 
@@ -688,6 +688,26 @@ class particle(position):
         This method will note done the raw info of the particle trajectories. 
         With those info, one could reconstruct the analytical trajectories to arbitrary position. 
         '''
+        # # A check on vertical velocity
+        # wwww = copy.deepcopy(self.w)
+        # ddww = copy.deepcopy(self.dw)
+        # self.get_u_du()
+        # if not np.allclose(wwww,self.w ,rtol = 1e-4):
+        #     print(wwww,self.w)
+        #     assert np.allclose(wwww,self.w ,rtol = 1e-4)
+        # if not np.allclose(ddww,self.dw,rtol = 1e-4):
+        #     print(ddww,self.dw)
+        #     assert np.allclose(ddww,self.dw,rtol = 1e-4)
+        
+        # ddww = copy.deepcopy(self.dw)
+        # wxia = np.array(self.ocedata[self.wname])[self.izl_lin,self.face,self.iy,self.ix]
+        # wsha = np.array(self.ocedata[self.wname])[self.izl_lin-1,self.face,self.iy,self.ix]
+        # volu = np.array(self.ocedata['vol'])[self.izl_lin-1,self.face,self.iy,self.ix]
+        # print(self.dzl_lin,self.ocedata.dZl[self.izl_lin-1])
+        # assert np.allclose(self.Vol,volu)
+        # assert np.allclose(ddww,(wsha-wxia)/volu)
+        
+        
         if which is None:
             which = np.ones(self.N).astype(bool)
         where = np.where(which)[0]
@@ -986,6 +1006,19 @@ class particle(position):
         + which: numpy.ndarray
             Boolean or int array that specify the subset of points to do the operation. 
         '''
+        # # A test on whether at the beginning of the step things are alright
+        # wwww = copy.deepcopy(self.w)
+        # ddww = copy.deepcopy(self.dw)
+        # iizz = copy.deepcopy(self.izl_lin)
+        # self.get_u_du()
+        # assert (self.izl_lin == iizz).all()
+        # if not np.allclose(wwww,self.w ,rtol = 1e-4):
+        #     print(wwww,self.w)
+        #     assert np.allclose(wwww,self.w ,rtol = 1e-4)
+        # if not np.allclose(ddww,self.dw,rtol = 1e-4):
+        #     print(ddww,self.dw)
+        #     assert np.allclose(ddww,self.dw,rtol = 1e-4)
+            
         if which is None:
             which = np.ones(self.N).astype(bool)
         if isinstance(tf,float):
@@ -993,8 +1026,8 @@ class particle(position):
         
         tf = tf[which]
         
-        if self.out_of_bound().any():
-            raise Exception('this step should always be after trim...')
+        # if self.out_of_bound().any():
+        #     raise Exception('this step should always be after trim...')
         if self.rzl_lin is not None:
             xs = [self.rx[which],self.ry[which],self.rzl_lin[which]-1/2]
         else:
