@@ -183,7 +183,7 @@ class particle(position):
     + transport: Boolean
         If transport is true, pass in names of the volume/mass transport across cell wall in m^3/3
         else,  just pass velocity that is in m/s
-    + stop_criterion: function that take particle as input
+    + callback: function that take particle as input
         A callback function that takes particle as input. Return boolean array that determines which particle should still be going. 
         Users can also define customized functions here. 
     + max_iteration: int
@@ -196,7 +196,7 @@ class particle(position):
                 dont_fly = True,
                 save_raw = False,
                 transport = False,
-                stop_criterion = None,
+                callback = None,
                 max_iteration = 200,
                 **kwarg
                 ):
@@ -238,7 +238,7 @@ class particle(position):
             self.dvknw=dvknw_s
         
         #  user defined function to stop integration. 
-        self.stop_criterion = stop_criterion
+        self.callback = callback
         
         # whether u,v,w is in m^3/s or m/s
         self.transport = transport
@@ -1133,8 +1133,8 @@ class particle(position):
         tol = 0.5
         tf = t1 - self.t
         todo = abs(tf)>tol
-        if self.stop_criterion is not None:
-            todo = np.logical_and(todo,self.stop_criterion(self))
+        if self.callback is not None:
+            todo = np.logical_and(todo,self.callback(self))
         trim_tol = 1e-12
         for i in range(self.max_iteration):
             if i > 50:
@@ -1154,8 +1154,8 @@ class particle(position):
             self.get_u_du(todo)
             tf = t1 - self.t
             todo = abs(tf)>tol
-            if self.stop_criterion is not None:
-                todo = np.logical_and(todo,self.stop_criterion(self))
+            if self.callback is not None:
+                todo = np.logical_and(todo,self.callback(self))
             if sum(todo) == 0:
                 break
             if self.save_raw:
