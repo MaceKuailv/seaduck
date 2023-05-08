@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from seaduck.topology import topology
-# from OceInterp.utils import create_tree,_general_len
+from seaduck.utils import _general_len
 from seaduck.utils import *
 
 no_alias = {
