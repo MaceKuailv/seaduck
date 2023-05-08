@@ -381,15 +381,12 @@ class position():
         if knw.vkernel == 'nearest':
             return copy.deepcopy(self.iz.astype(int))
         elif knw.vkernel in ['dz','linear']:
-            try:
-                self.iz_lin
-            except AttributeError:
-                (
-                    self.iz_lin,
-                    self.rz_lin,
-                    self.dz_bin,
-                    self.bz_lin
-                ) = self.ocedata.find_rel_v_lin(self.dep)
+            (
+                self.iz_lin,
+                self.rz_lin,
+                self.dz_bin,
+                self.bz_lin
+            ) = self.ocedata.find_rel_v_lin(self.dep)
             return np.vstack([self.iz_lin.astype(int),self.iz_lin.astype(int)-1]).T
         else:
             raise Exception('vkernel not supported')
@@ -409,15 +406,12 @@ class position():
         if knw.vkernel == 'nearest':
             return copy.deepcopy(self.izl.astype(int))
         elif knw.vkernel in ['dz','linear']:
-            try:
-                self.izl_lin
-            except AttributeError:
-                (
-                    self.izl_lin,
-                    self.rzl_lin,
-                    self.dzl_bin,
-                    self.bzl_lin
-                ) = self.ocedata.find_rel_vl_lin(self.dep)
+            (
+                self.izl_lin,
+                self.rzl_lin,
+                self.dzl_bin,
+                self.bzl_lin
+            ) = self.ocedata.find_rel_vl_lin(self.dep)
             return np.vstack([self.izl_lin.astype(int),
                               self.izl_lin.astype(int)-1]).T
         else:
@@ -437,15 +431,12 @@ class position():
         if knw.tkernel == 'nearest':
             return copy.deepcopy(self.it.astype(int))
         elif knw.tkernel in ['dt','linear']:
-            try:
-                self.it_lin
-            except AttributeError:
-                (
-                    self.it_lin,
-                    self.rt_lin,
-                    self.dt_bin,
-                    self.bt_lin
-                ) = self.ocedata.find_rel_t_lin(self.t)
+            (
+                self.it_lin,
+                self.rt_lin,
+                self.dt_bin,
+                self.bt_lin
+            ) = self.ocedata.find_rel_t_lin(self.t)
             return np.vstack([self.it_lin.astype(int),self.it_lin.astype(int)+1]).T
         else:
             raise Exception('vkernel not supported')

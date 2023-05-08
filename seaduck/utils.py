@@ -1313,7 +1313,7 @@ def find_rel_periodic(value,ts,peri):
     return its,rts,dts,bts
 
 @njit
-def find_rel_z(depth,some_z,some_dz):
+def find_rel_z(depth,some_z,some_dz,dz_above_z = True):
     '''
     find the rel-coords of the vertical coords
 
@@ -1325,6 +1325,9 @@ def find_rel_z(depth,some_z,some_dz):
         The depth of reference depth.
     + some_dz: numpy.ndarray
         dz_i = abs(z_{i+1}- z_i)
+    + dz_above_z: Boolean
+        Whether the dz as the distance between the depth level and
+        a shallower one(True) or a deeper one(False)
 
     **Returns:**
     
@@ -1347,7 +1350,10 @@ def find_rel_z(depth,some_z,some_dz):
         delta_z = d-bz
 #         except IndexError:
 #             raise IndexError('the point is too deep')
-        Delta_z = some_dz[iz]
+        if dz_above_z:
+            Delta_z = some_dz[iz]
+        else:
+            Delta_z = some_dz[iz-1]
         dzs[i] = Delta_z
         rzs[i] = delta_z/Delta_z
     return izs,rzs,dzs,bzs

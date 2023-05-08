@@ -225,8 +225,8 @@ class OceData(object):
         self.dZl = np.array(self['dZl']).astype('float32')
         
         # special treatment for dZl
-        self.dZl = np.roll(self.dZl,1)
-        self.dZl[0] = 1e-10
+        # self.dZl = np.roll(self.dZl,1)
+        # self.dZl[0] = 1e-10
         
     def tgrid2array(self):
         '''
@@ -306,7 +306,7 @@ class OceData(object):
         '''
         find the rel-coord based on vertical staggered grid using the 2-point linear scheme.
         '''
-        iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl)
+        iz,rz,dz,bz = find_rel_z(z,self.Zl,self.dZl,dz_above_z = False)
         return iz.astype(int),rz,dz,bz 
     
     def find_rel_v(self,z):

@@ -950,7 +950,7 @@ class particle(position):
             
         if self.izl_lin is not None:
             self.bzl_lin = self.ocedata.Zl[self.izl_lin]
-            self.dzl_lin = self.ocedata.dZl[self.izl_lin]
+            self.dzl_lin = self.ocedata.dZl[self.izl_lin-1]
         if self.dz is not None:
             self.dz = self.ocedata.dZ[self.iz]
         try:

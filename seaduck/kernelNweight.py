@@ -1083,21 +1083,21 @@ class KnW(object):
             rt = np.array([rt for i in range(len(rx))])
 
         if self.tkernel == 'linear':
-            rp = copy.deepcopy(rt)
-            tweight = [(1-rp).reshape((len(rp),1,1)),rp.reshape((len(rp),1,1))]
+            rpt = copy.deepcopy(rt)
+            tweight = [(1-rpt).reshape((len(rpt),1,1)),rpt.reshape((len(rpt),1,1))]
         elif self.tkernel == 'dt':
             tweight = [-1,1]
         elif self.tkernel == 'nearest':
             tweight = [1]
 
         if self.vkernel == 'linear':
-            rp = copy.deepcopy(rz)
-            zweight = [(1-rp).reshape((len(rp),1)),rp.reshape((len(rp),1))]
+            rpz = copy.deepcopy(rz)
+            zweight = [(1-rpz).reshape((len(rpz),1)),rpz.reshape((len(rpz),1))]
         elif self.vkernel == 'dz':
             zweight = [-1,1]
         elif self.vkernel == 'nearest':
             zweight = [1]
-            
+
         if pk4d is None:
 #             pk4d = [
 #                 [
