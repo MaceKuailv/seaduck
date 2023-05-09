@@ -71,7 +71,7 @@ def test_find_ind_z(z,which,od):
     iz = _u.find_ind_z(somez,z)
     try:
         lower = somez[iz]
-    except:
+    except KeyError:
         lower = -np.inf
     higher = max([somez[max([0,iz-1])],0])
     assert lower<=z
