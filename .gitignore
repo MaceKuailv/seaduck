@@ -9,4 +9,4 @@ test*.ipynb
 dist/
 build/
 seaduck.egg-info/
-seaduck/tests/Data/
+tests/Data/
