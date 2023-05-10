@@ -1,17 +1,21 @@
 import numpy as np
 import pytest
-import get_masks as gm
+import seaduck.get_masks as gm
+import seaduck.topology as topology
+from seaduck import OceData
 import oceanspy as ospy
+import xarray as xr
 
 # TODO: have a dataset that actually has maskC and is also not ECCO in the test datasets
 
-Datadir = "Data/"
-ECCO_url = "{}catalog_ECCO.yaml".format(Datadir)
+Datadir = "tests/Data/"
 curv = ospy.open_oceandataset.from_netcdf("{}MITgcm_curv_nc.nc" "".format(Datadir))
 rect = ospy.open_oceandataset.from_netcdf("{}MITgcm_rect_nc.nc" "".format(Datadir))
-ecco = ospy.open_oceandataset.from_catalog("LLC", ECCO_url)
+ecco = xr.open_zarr(Datadir+'small_ecco')
+tp = topology(ecco)
+oce = OceData(ecco)
 
-maskC,maskU,maskV,maskW = gm.get_masks(ecco)
+maskC,maskU,maskV,maskW = gm.get_masks(oce,tp)
 
 def test_maskC_contains_others():
     '''

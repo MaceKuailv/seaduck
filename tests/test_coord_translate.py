@@ -1,19 +1,18 @@
-import utils as _u
+import seaduck.utils as _u
 import oceanspy as ospy
 import pytest
 import numpy as np
-import compute as com
+import xarray as xr
 
-Datadir = "Data/"
-ECCO_url = "{}catalog_ECCO.yaml".format(Datadir)
-ecco = ospy.open_oceandataset.from_catalog("LLC", ECCO_url)
+Datadir = "tests/Data/"
+ecco = xr.open_zarr(Datadir+'small_ecco')
 
-curv = ospy.open_oceandataset.from_netcdf("{}MITgcm_curv_nc.nc" "".format(Datadir))
+curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
 
-rect = ospy.open_oceandataset.from_netcdf("{}MITgcm_rect_nc.nc" "".format(Datadir))
+rect = xr.open_dataset("{}MITgcm_rect_nc.nc" "".format(Datadir))
 
-com.missing_cs_sn(curv)
-com.missing_cs_sn(rect)
+_u.missing_cs_sn(curv)
+_u.missing_cs_sn(rect)
 
 @pytest.mark.parametrize('od',[ecco,curv,rect])
 def test_grid2array(od):

@@ -260,7 +260,7 @@ class particle(position):
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
         
-        if self.too_large:
+        if self.too_large: # pragma: no cover
             pass
         else:
             self.update_uvw_array()
@@ -378,7 +378,7 @@ class particle(position):
         '''
         if which is None:
             which = np.ones(self.N).astype(bool)
-        if self.too_large:
+        if self.too_large: # pragma: no cover
             prefetched = None
             i_min = None
             # if self.wname is not None:
@@ -1259,7 +1259,7 @@ class particle(position):
                 self.note_taking()
             self.to_next_stop(tl)
             if update[i]:
-                if self.too_large:
+                if self.too_large: # pragma: no cover
                     self.get_u_du()
                 elif 'time' not in self.ocedata[self.uname].dims:
                     pass

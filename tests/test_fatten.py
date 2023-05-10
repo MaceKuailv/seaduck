@@ -1,15 +1,14 @@
-from topology import topology
-import kernel_and_weight as kw
+from seaduck.topology import topology
+import seaduck.kernelNweight as kw
 import numpy as np
 import pytest 
 import oceanspy as ospy
+import xarray as xr
 
-Datadir = "Data/"
-ECCO_url = "{}catalog_ECCO.yaml".format(Datadir)
+Datadir = "tests/Data/"
 curv = ospy.open_oceandataset.from_netcdf("{}MITgcm_curv_nc.nc" "".format(Datadir))
 rect = ospy.open_oceandataset.from_netcdf("{}MITgcm_rect_nc.nc" "".format(Datadir))
-ECCO_url = "{}catalog_ECCO.yaml".format(Datadir)
-ecco = ospy.open_oceandataset.from_catalog("LLC", ECCO_url)
+ecco = xr.open_zarr(Datadir+'small_ecco')
 
 @pytest.mark.parametrize(
     'face',[

@@ -1,11 +1,10 @@
 import numpy as np
-from topology import topology
-import oceanspy as ospy
+from seaduck.topology import topology
+import xarray as xr
 import pytest
 
-Datadir = "Data/"
-ECCO_url = "{}catalog_ECCO.yaml".format(Datadir)
-ecco = ospy.open_oceandataset.from_catalog("LLC", ECCO_url)
+Datadir = "tests/Data/"
+ecco = xr.open_zarr(Datadir+'small_ecco')
 tp = topology(ecco)
 
 mundane = np.array([[[ 1.,  1.]],[[ 0.,  0.]],[[ 0., -0.]],[[ 1.,  1.]]])
