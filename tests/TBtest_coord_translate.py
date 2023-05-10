@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 import xarray as xr
-
+import seaduck.OceData as ocedata
 import seaduck.utils as _u
 
 Datadir = "tests/Data/"
@@ -152,7 +152,7 @@ def test_rel_3d(x, y, z, od):
 @pytest.mark.parametrize("z", [np.linspace(0, -95, 100)])
 @pytest.mark.parametrize("t", [np.zeros(100)])
 @pytest.mark.parametrize(
-    "od", [ospy.open_oceandataset.from_catalog("ECCO"), curv, rect]
+    "od", [ecco, curv, rect]
 )
 def test_rel_4d(x, y, z, t, od):
     _u.grid2array(od)

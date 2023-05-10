@@ -6,9 +6,11 @@ test*.ipynb
 *.png
 *.jpg
 .vscode/
+.coverage
 .pytest*
 dist/
 build/
 seaduck.egg-info/
 tests/Data/
 tests/Data
+assets/
