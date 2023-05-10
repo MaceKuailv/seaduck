@@ -460,9 +460,9 @@ class topology:
                     if np.isclose(rot, 0):
                         pass
                     elif np.isclose(rot, np.pi / 2):
-                        moves[k + 1 :] = [[2, 3, 1, 0][move] for move in moves[k + 1 :]]
+                        moves[k + 1:] = [[2, 3, 1, 0][move] for move in moves[k + 1:]]
                     elif np.isclose(rot, 3 * np.pi / 2):
-                        moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
+                        moves[k + 1:] = [[3, 2, 0, 1][move] for move in moves[k + 1:]]
                     face = ind[0]
                     # if the old face is on the left of the new face,
                     # the particle should be heading right

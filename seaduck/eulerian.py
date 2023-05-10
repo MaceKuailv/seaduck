@@ -1,23 +1,14 @@
 import copy
-import warnings
 
 import numpy as np
 
 from seaduck.get_masks import get_masked
 from seaduck.kernelNweight import KnW, _translate_to_tendency, find_pk_4d
 from seaduck.OceData import OceData
-
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read as sread
-from seaduck.utils import (
-    _general_len,
-    find_px_py,
-    get_combination,
-    get_key_by_value,
-    local_to_latlon,
-    to_180,
-    weight_f_node,
-)
+from seaduck.utils import (_general_len, find_px_py, get_key_by_value,
+                           local_to_latlon, weight_f_node)
 
 
 def _ind_broadcast(x, ind):
@@ -138,7 +129,10 @@ class position:
             except AttributeError:
                 raise ValueError("data not provided")
         else:
-            self.ocedata = data
+            if isinstance(data,OceData):
+                self.ocedata = data
+            else:
+                raise ValueError('Input data must be OceData')
         self.tp = self.ocedata.tp
         length = [_general_len(i) for i in [x, y, z, t]]
         self.N = max(length)
@@ -437,9 +431,7 @@ class position:
 
         # TODO: register the kernel shape
         if (
-            _in_required("X", required)
-            or _in_required("Y", required)
-            or _in_required("face", required)
+            _in_required("X", required) or _in_required("Y", required) or _in_required("face", required)
         ):
             ffc, fiy, fix = self.fatten_h(knw, ind_moves_kwarg=ind_moves_kwarg)
             if ffc is not None:
@@ -839,11 +831,11 @@ class position:
                 vind_dic = dict(zip(dims[1], vind))
                 # This only matters when dim == 'face', no need to think about 'Xp1'
                 (UfromUvel, UfromVvel, _, _) = self.ocedata.tp.four_matrix_for_uv(
-                    uind_dic["face"][:, :, 0, 0]
+                    uind_dic["face"][:,:, 0, 0]
                 )
 
                 (_, _, VfromUvel, VfromVvel) = self.ocedata.tp.four_matrix_for_uv(
-                    vind_dic["face"][:, :, 0, 0]
+                    vind_dic["face"][:,:, 0, 0]
                 )
 
                 UfromUvel = np.round(UfromUvel)
