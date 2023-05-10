@@ -9,20 +9,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lagrangian particle demonstration in a periodic domain. &#8212; My sample book</title>
-  
-  
-  
+
+
+
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
+
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 <link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-  
+
   <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
@@ -67,26 +67,26 @@ const thebe_selector_output = ".output, .cell_output"
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
-  
-  
+
+
   <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  
-  
+
+
   <a class="skip-link" href="#main-content">Skip to main content</a>
-  
+
   <input type="checkbox"
           class="sidebar-toggle"
           name="__primary"
           id="__primary"/>
   <label class="overlay overlay-primary" for="__primary"></label>
-  
+
   <input type="checkbox"
           class="sidebar-toggle"
           name="__secondary"
           id="__secondary"/>
   <label class="overlay overlay-secondary" for="__secondary"></label>
-  
+
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
@@ -107,46 +107,46 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
-  
+
     <nav class="bd-header navbar navbar-expand-lg bd-navbar">
     </nav>
-  
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
 
-  
+      <div class="bd-sidebar-primary bd-sidebar">
+
+
+
   <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
+
+
+
+
   </div>
-  
+
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
-  
+
 
 <a class="navbar-brand logo" href="intro.html">
-  
-  
-  
-  
-    
-    
-      
-    
-    
+
+
+
+
+
+
+
+
+
     <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
     <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-  
-  
+
+
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
+
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
@@ -185,39 +185,39 @@ const thebe_selector_output = ".output, .cell_output"
     </div>
 </nav></div>
     </div>
-  
-  
+
+
   <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
-  
+
   <div id="rtd-footer-container"></div>
 
 
       </div>
-      
+
       <main id="main-content" class="bd-main">
-        
-        
+
+
 
 <div class="sbt-scroll-pixel-helper"></div>
 
           <div class="bd-content">
             <div class="bd-article-container">
-              
+
               <div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
+
     <div class="header-article-items__start">
-      
+
         <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
 </label></div>
-      
+
     </div>
-  
-  
+
+
     <div class="header-article-items__end">
-      
+
         <div class="header-article-item">
 
 <div class="article-header-buttons">
@@ -231,15 +231,15 @@ const thebe_selector_output = ".output, .cell_output"
     <i class="fab fa-github"></i>
   </button>
   <ul class="dropdown-menu">
-      
-      
-      
+
+
+
       <li><a href="https://github.com/MaceKuailv/seaduck" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fab fa-github"></i>
@@ -247,16 +247,16 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">Repository</span>
 </a>
 </li>
-      
-      
-      
-      
+
+
+
+
       <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2FAVISO.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
@@ -264,7 +264,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">Open issue</span>
 </a>
 </li>
-      
+
   </ul>
 </div>
 
@@ -278,15 +278,15 @@ const thebe_selector_output = ".output, .cell_output"
     <i class="fas fa-download"></i>
   </button>
   <ul class="dropdown-menu">
-      
-      
-      
+
+
+
       <li><a href="_sources/AVISO.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
@@ -294,17 +294,17 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">.ipynb</span>
 </a>
 </li>
-      
-      
-      
-      
+
+
+
+
       <li>
 <button onclick="window.print()"
   class="btn btn-sm btn-download-pdf-button dropdown-item"
   title="Print to PDF"
   data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
@@ -312,7 +312,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">.pdf</span>
 </button>
 </li>
-      
+
   </ul>
 </div>
 
@@ -324,7 +324,7 @@ const thebe_selector_output = ".output, .cell_output"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-expand"></i>
@@ -354,20 +354,20 @@ document.write(`
     <span class="fa-solid fa-list"></span>
 </label>
 </div></div>
-      
+
     </div>
-  
+
 </div>
 </div>
-              
-              
+
+
 
 <div id="jb-print-docs-body" class="onlyprint">
     <h1>Lagrangian particle demonstration in a periodic domain.</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
-            
+
             <div>
                 <h2> Contents </h2>
             </div>
@@ -403,11 +403,11 @@ document.write(`
     </div>
 </div>
 
-              
-                
+
+
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
-                  
+
   <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-particle-demonstration-in-a-periodic-domain">
 <h1>Lagrangian particle demonstration in a periodic domain.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-periodic-domain" title="Permalink to this headline">#</a></h1>
 <p><strong>Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</strong></p>
@@ -426,7 +426,7 @@ document.write(`
 <h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this headline">#</a></h2>
 <p>The AVISO velocity field dataset is a lat-lon grid with staggered velocity. It’s a snapshot from a single time (see below).</p>
 <div class="alert alert-block alert-warning">
-<b>Download:</b> Uncomment the following cell if you are running the notebook for the first time and does not have the data. 
+<b>Download:</b> Uncomment the following cell if you are running the notebook for the first time and does not have the data.
 </div><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !wget https://zenodo.org/record/7838605/files/aviso_example.nc</span>
@@ -973,25 +973,25 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000-01-01T00:00:00
-0 left 
+0 left
 2000-01-04T10:40:00
-900 left 776 left 693 left 578 left 490 left 409 left 338 left 284 left 250 left 221 left 187 left 160 left 129 left 109 left 93 left 79 left 59 left 46 left 39 left 37 left 27 left 20 left 17 left 13 left 11 left 10 left 9 left 9 left 9 left 6 left 6 left 5 left 4 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left 
+900 left 776 left 693 left 578 left 490 left 409 left 338 left 284 left 250 left 221 left 187 left 160 left 129 left 109 left 93 left 79 left 59 left 46 left 39 left 37 left 27 left 20 left 17 left 13 left 11 left 10 left 9 left 9 left 9 left 6 left 6 left 5 left 4 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left
 2000-01-07T21:20:00
-900 left 773 left 666 left 537 left 442 left 366 left 315 left 267 left 225 left 188 left 162 left 139 left 113 left 96 left 77 left 65 left 57 left 43 left 37 left 27 left 20 left 16 left 11 left 10 left 9 left 7 left 5 left 4 left 3 left 3 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 
+900 left 773 left 666 left 537 left 442 left 366 left 315 left 267 left 225 left 188 left 162 left 139 left 113 left 96 left 77 left 65 left 57 left 43 left 37 left 27 left 20 left 16 left 11 left 10 left 9 left 7 left 5 left 4 left 3 left 3 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left
 2000-01-11T08:00:00
-900 left 779 left 654 left 547 left 458 left 385 left 331 left 293 left 249 left 202 left 171 left 142 left 119 left 111 left 95 left 86 left 69 left 62 left 49 left 38 left 31 left 22 left 17 left 14 left 11 left 9 left 9 left 8 left 7 left 7 left 5 left 5 left 5 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 
+900 left 779 left 654 left 547 left 458 left 385 left 331 left 293 left 249 left 202 left 171 left 142 left 119 left 111 left 95 left 86 left 69 left 62 left 49 left 38 left 31 left 22 left 17 left 14 left 11 left 9 left 9 left 8 left 7 left 7 left 5 left 5 left 5 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left
 2000-01-14T18:40:00
-900 left 785 left 667 left 556 left 450 left 385 left 337 left 275 left 238 left 208 left 172 left 141 left 126 left 104 left 93 left 74 left 62 left 54 left 43 left 37 left 24 left 17 left 13 left 7 left 7 left 6 left 6 left 6 left 3 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 
+900 left 785 left 667 left 556 left 450 left 385 left 337 left 275 left 238 left 208 left 172 left 141 left 126 left 104 left 93 left 74 left 62 left 54 left 43 left 37 left 24 left 17 left 13 left 7 left 7 left 6 left 6 left 6 left 3 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left
 2000-01-18T05:20:00
-900 left 779 left 661 left 533 left 444 left 384 left 328 left 276 left 233 left 200 left 171 left 147 left 123 left 100 left 88 left 68 left 52 left 43 left 36 left 34 left 29 left 22 left 19 left 18 left 16 left 14 left 12 left 12 left 10 left 7 left 6 left 4 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 
+900 left 779 left 661 left 533 left 444 left 384 left 328 left 276 left 233 left 200 left 171 left 147 left 123 left 100 left 88 left 68 left 52 left 43 left 36 left 34 left 29 left 22 left 19 left 18 left 16 left 14 left 12 left 12 left 10 left 7 left 6 left 4 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
 2000-01-21T16:00:00
-900 left 778 left 657 left 538 left 456 left 384 left 336 left 302 left 259 left 222 left 184 left 152 left 131 left 110 left 94 left 79 left 67 left 55 left 46 left 38 left 34 left 28 left 26 left 21 left 15 left 11 left 9 left 7 left 6 left 3 left 3 left 1 left 1 left 1 left 1 left 1 left 
+900 left 778 left 657 left 538 left 456 left 384 left 336 left 302 left 259 left 222 left 184 left 152 left 131 left 110 left 94 left 79 left 67 left 55 left 46 left 38 left 34 left 28 left 26 left 21 left 15 left 11 left 9 left 7 left 6 left 3 left 3 left 1 left 1 left 1 left 1 left 1 left
 2000-01-25T02:40:00
-900 left 775 left 662 left 543 left 449 left 398 left 359 left 305 left 260 left 232 left 203 left 168 left 140 left 121 left 107 left 91 left 71 left 59 left 44 left 37 left 31 left 25 left 24 left 20 left 15 left 13 left 8 left 8 left 5 left 5 left 5 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 
+900 left 775 left 662 left 543 left 449 left 398 left 359 left 305 left 260 left 232 left 203 left 168 left 140 left 121 left 107 left 91 left 71 left 59 left 44 left 37 left 31 left 25 left 24 left 20 left 15 left 13 left 8 left 8 left 5 left 5 left 5 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left
 2000-01-28T13:20:00
-900 left 785 left 667 left 545 left 462 left 395 left 343 left 302 left 258 left 224 left 197 left 169 left 152 left 138 left 120 left 98 left 91 left 72 left 56 left 46 left 40 left 33 left 31 left 28 left 24 left 19 left 17 left 16 left 13 left 12 left 9 left 6 left 4 left 4 left 3 left 2 left 1 left 1 left 1 left 1 left 1 left 
+900 left 785 left 667 left 545 left 462 left 395 left 343 left 302 left 258 left 224 left 197 left 169 left 152 left 138 left 120 left 98 left 91 left 72 left 56 left 46 left 40 left 33 left 31 left 28 left 24 left 19 left 17 left 16 left 13 left 12 left 9 left 6 left 4 left 4 left 3 left 2 left 1 left 1 left 1 left 1 left 1 left
 2000-02-01T00:00:00
-900 left 764 left 650 left 535 left 461 left 401 left 348 left 301 left 258 left 218 left 190 left 164 left 151 left 130 left 117 left 103 left 82 left 67 left 51 left 45 left 33 left 25 left 24 left 20 left 16 left 13 left 10 left 7 left 6 left 4 left 3 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 
+900 left 764 left 650 left 535 left 461 left 401 left 348 left 301 left 258 left 218 left 190 left 164 left 151 left 130 left 117 left 103 left 82 left 67 left 51 left 45 left 33 left 25 left 24 left 20 left 16 left 13 left 10 left 7 left 6 left 4 left 3 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
 </pre></div>
 </div>
 </div>
@@ -1015,7 +1015,7 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">)):</span>
     <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">lons</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    
+
     <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">330</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">300</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
@@ -1067,14 +1067,14 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
     <script>kernelName = 'python3'</script>
 
                 </article>
-              
 
-              
-              
+
+
+
                 <footer class="bd-footer-article">
-                  
+
 <div class="footer-article-items footer-article__inner">
-  
+
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
@@ -1096,15 +1096,15 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
       <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
-  
+
 </div>
 
                 </footer>
-              
+
             </div>
-            
-            
-              
+
+
+
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
   <div class="sidebar-secondary-item">
@@ -1141,48 +1141,48 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
   </nav></div>
 
 </div></div>
-              
-            
+
+
           </div>
           <footer class="bd-footer-content">
-            
+
 <div class="bd-footer-content__inner container">
-  
+
   <div class="footer-item">
-    
+
 <p class="component-author">
 By The Jupyter Book Community
 </p>
 
   </div>
-  
+
   <div class="footer-item">
-    
+
   <p class="copyright">
-    
+
       © Copyright 2022.
       <br/>
-    
+
   </p>
 
   </div>
-  
+
   <div class="footer-item">
-    
+
   </div>
-  
+
   <div class="footer-item">
-    
+
   </div>
-  
+
 </div>
           </footer>
-        
+
 
       </main>
     </div>
   </div>
-  
+
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
   <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
 <script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>

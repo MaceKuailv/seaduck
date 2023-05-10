@@ -1,4 +1,4 @@
-seaduck.eulerian 
+seaduck.eulerian
 -------------------------
 
 .. automodule:: seaduck.eulerian

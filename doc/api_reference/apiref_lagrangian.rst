@@ -2,6 +2,6 @@ seaduck.lagrangian
 ---------------------
 
 .. automodule:: seaduck.lagrangian
-   :members: 
+   :members:
    :undoc-members:
    :show-inheritance:
