@@ -119,7 +119,7 @@ def OceInterp(
             elif lagrange_token in var:
                 sublist = []
                 for snap in raw:
-                    sublist.append(snap.__dict__[var[len(lagrange_token) :]])
+                    sublist.append(snap.__dict__[var[len(lagrange_token):]])
                 R.append(sublist)
             else:
                 sublist = []

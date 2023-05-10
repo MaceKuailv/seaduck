@@ -3,8 +3,10 @@ import pandas as pd
 import xarray as xr
 
 from seaduck.topology import topology
-from seaduck.utils import *
-from seaduck.utils import _general_len
+from seaduck.utils import (_general_len, create_tree, find_cs_sn,
+                           find_rel_h_naive, find_rel_h_oceanparcel,
+                           find_rel_h_rectilinear, find_rel_nearest,
+                           find_rel_time, find_rel_z)
 
 no_alias = {
     "XC": "XC",
@@ -35,7 +37,8 @@ class OceData(object):
     + data: xarray.Dataset
         The dataset to extract grid information, create cKD tree, and topology object on.
     + alias: dict, None, or 'auto'
-        1. dict: Map the variable used by this package (key) to that used by the dataset (value).
+        1. dict: Map the variable used by this package (key) to
+           that used by the dataset (value).
         2. None (default): Do not apply alias.
         3. 'auto' (Not implemented): Automatically generate a list for the alias.
     """
@@ -43,7 +46,7 @@ class OceData(object):
     def __init__(self, data, alias=None, memory_limit=1e7):
         self._ds = data
         self.tp = topology(data)
-        if alias == None:
+        if alias is None:
             self.alias = no_alias
         elif alias == "auto":
             raise NotImplementedError("auto alias not yet implemented")
@@ -91,9 +94,11 @@ class OceData(object):
         **Returns:**
 
         + readiness: dict
-            'h': The scheme of horizontal interpolation to be used, including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
+            'h': The scheme of horizontal interpolation to be used,
+                 including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
             'Z': Whether the dataset has a vertical dimension at the center points.
-            'Zl': Whether the dataset has a vertical dimension at staggered points (vertical velocity).
+            'Zl': Whether the dataset has a vertical dimension at staggered points
+                 (vertical velocity).
             'time': Whether the dataset has a temporal dimension.
         """
         # TODO: make the check more detailed
@@ -159,7 +164,8 @@ class OceData(object):
 
     def hgrid2array(self):
         """
-        Extract the horizontal grid data into numpy arrays based on the readiness['h'] of the OceData object.
+        Extract the horizontal grid data into numpy arrays based on
+        the readiness['h'] of the OceData object.
         """
         way = self.readiness["h"]
         if self.too_large:  # pragma: no cover

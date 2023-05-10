@@ -275,7 +275,7 @@ class particle(position):
         (self.u, self.v, self.w, self.du, self.dv, self.dw, self.Vol) = [
             np.zeros(self.N).astype(float) for i in range(7)
         ]
-        if self.transport == True:
+        if self.transport:
             self.get_vol()
         self.fillna()
 
@@ -329,11 +329,11 @@ class particle(position):
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
             if self.itmax != self.itmin:
-                self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
-                self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
+                self.uarray = np.array(self.ocedata[uname][self.itmin: self.itmax + 1])
+                self.varray = np.array(self.ocedata[vname][self.itmin: self.itmax + 1])
                 if self.wname is not None:
                     self.warray = np.array(
-                        self.ocedata[wname][self.itmin : self.itmax + 1]
+                        self.ocedata[wname][self.itmin: self.itmax + 1]
                     )
                 # else:
                 #     self.warray = None
@@ -636,7 +636,7 @@ class particle(position):
             np.nan_to_num(tr, copy=False)
             tmin = np.maximum(tmin, np.minimum(tl, tr))
             tmax = np.minimum(tmax, np.maximum(tl, tr))
-        dead = tmin > tmax
+#         dead = tmin > tmax
 
         contract_time = (tmin + tmax) / 2
         contract_time = np.maximum(-max_time, contract_time)
@@ -757,14 +757,10 @@ class particle(position):
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
             self.rx = (
-                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
-                * deg2m
-                / self.dx
+                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn) * deg2m / self.dx
             )
             self.ry = (
-                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
-                * deg2m
-                / self.dy
+                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180)) * deg2m / self.dy
             )
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
@@ -956,7 +952,7 @@ class particle(position):
             print(sum(todo), "left", end=" ")
             self.analytical_step(tf, todo)
             self.update_after_cell_change()
-            if self.transport == True:
+            if self.transport:
                 self.get_vol()
             self.get_u_du(todo)
             tf = t1 - self.t

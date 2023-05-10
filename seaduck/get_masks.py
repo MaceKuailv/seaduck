@@ -35,7 +35,7 @@ def mask_u_node(maskC, tp):
 
     maskU = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC == 0)).T
-    ### find out which points are masked will make the search faster.
+    # find out which points are masked will make the search faster.
     nind = tp.ind_tend_vec(indexes.T[1:], np.ones_like(indexes.T[0], int) * 2)
     nind = np.vstack([indexes.T[0], nind])
     switch = indexes[np.where(maskC[tuple(nind)])]
@@ -68,7 +68,7 @@ def mask_v_node(maskC, tp):
     """
     maskV = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC == 0)).T
-    ### find out which points are masked will make the search faster.
+    # find out which points are masked will make the search faster.
     nind = tp.ind_tend_vec(indexes.T[1:], np.ones_like(indexes.T[0], int) * 1)
     nind = np.vstack([indexes.T[0], nind])
     switch = indexes[np.where(maskC[tuple(nind)])]

@@ -5,7 +5,6 @@ import numpy as np
 from numba import njit
 
 from seaduck.RuntimeConf import rcParam
-
 # from OceInterp.kernel_and_weight import kernel_weight,get_weight_cascade
 # from seaduck.topology import topology
 from seaduck.utils import get_combination
@@ -244,9 +243,9 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
 
     all of the following is a bit hard to understand.
     The k th (k>=0) derivative of the lagrangian polynomial is
-          \Sigma_{i\neq j} \Pi_{i<m-1-k} (x-x_i)
+          Sigma_{i\neq j} Pi_{i<m-1-k} (x-x_i)
     w_j= ----------------------------------------
-          \Pi_{i\neq j} (x_j - x_i)
+          Pi_{i\neq j} (x_j - x_i)
 
     for example: if the points are [-1,0,1] for point 0
     k = 0: w = (x-1)(x+1)/(0-1)(0+1)
@@ -631,7 +630,7 @@ def find_which_points_for_each_kernel(masked, russian_doll="default"):
     already_wet = []
     for i, doll in enumerate(russian_doll):
         wet_1d = masked[:, np.array(doll)].all(axis=1)
-        already_wet.append(np.where(wet_1d == True)[0])
+        already_wet.append(np.where(wet_1d)[0])
     point_for_each_kernel = [list(already_wet[0])]
     for i in range(1, len(russian_doll)):
         point_for_each_kernel.append(
@@ -709,9 +708,9 @@ def get_weight_4d(
     hkernel=default_kernel,
     russian_doll=default_inheritance,
     funcs=default_interp_funcs,
-    tkernel="linear",  #'dt','nearest'
-    zkernel="linear",  #'dz','nearest'
-    bottom_scheme="no flux",  # None
+    tkernel="linear",
+    zkernel="linear",
+    bottom_scheme="no flux",
 ):
     """
     Return the weight of values given particle rel-coords
@@ -768,7 +767,7 @@ def get_weight_4d(
     weight = np.zeros((len(rx), len(hkernel), nz, nt))
     for jt in range(nt):
         for jz in range(nz):
-            weight[:, :, jz, jt] = get_weight_cascade(
+            weight[:,:, jz, jt] = get_weight_cascade(
                 rx,
                 ry,
                 pk4d[jt][jz],
@@ -780,16 +779,16 @@ def get_weight_4d(
         if (zkernel == "linear") and (bottom_scheme == "no flux"):
             # whereever the bottom layer is masked,
             # replace it with a ghost point above it
-            secondlayermasked = np.isnan(weight[:, :, 0, jt]).any(axis=1)
+            secondlayermasked = np.isnan(weight[:,:, 0, jt]).any(axis=1)
             # setting the value at this level zero
-            weight[secondlayermasked, :, 0, jt] = 0
+            weight[secondlayermasked,:, 0, jt] = 0
             shouldbemasked = np.logical_and(secondlayermasked, rz < 1 / 2)
-            weight[shouldbemasked, :, 1, jt] = 0
+            weight[shouldbemasked,:, 1, jt] = 0
             # setting the vertical weight of the above value to 1
             zweight[1][secondlayermasked] = 1
         for jz in range(nz):
-            weight[:, :, jz, jt] *= zweight[jz]
-        weight[:, :, :, jt] *= tweight[jt]
+            weight[:,:, jz, jt] *= zweight[jz]
+        weight[:,:,:, jt] *= tweight[jt]
     #         break
 
     return weight
@@ -905,9 +904,13 @@ class KnW(object):
         ksort_inv = ksort.argsort()
 
         if (
-            inheritance is not None
-            and ignore_mask
-            and rcParam["debug_level"] == "very_high"
+            (
+                inheritance is not None
+            ) and (
+                ignore_mask
+            ) and (
+                rcParam["debug_level"] == "very_high"
+            )
         ):
             print(
                 "Warning:overwriting the inheritance object to None,"
@@ -964,15 +967,17 @@ class KnW(object):
         type_same = isinstance(other, type(self))
         if not type_same:
             return False
-        shpe_same = (
-            self.kernel == other.kernel
-        ).all() and self.inheritance == other.inheritance
+        shpe_same = (self.kernel == other.kernel).all() and self.inheritance == other.inheritance
         diff_same = (
-            (self.hkernel == other.hkernel)
-            and (self.vkernel == other.vkernel)
-            and (self.tkernel == other.tkernel)
+            (
+                self.hkernel == other.hkernel
+            ) and (
+                self.vkernel == other.vkernel
+            ) and (
+                self.tkernel == other.tkernel
+            )
         )
-        return type_same and shpe_same and diff_same
+        return (type_same and shpe_same and diff_same)
 
     def __hash__(self):
         return hash(
@@ -1077,7 +1082,7 @@ class KnW(object):
 
             for jt in range(nt):
                 for jz in range(nz):
-                    weight[:, :, jz, jt] = get_weight_cascade(
+                    weight[:,:, jz, jt] = get_weight_cascade(
                         rx,
                         ry,
                         pk4d[jt][jz],
@@ -1089,15 +1094,15 @@ class KnW(object):
             if (self.vkernel == "linear") and (bottom_scheme == "no flux"):
                 # whereever the bottom layer is masked,
                 # replace it with a ghost point above it
-                secondlayermasked = np.isnan(weight[:, :, 0, jt]).any(axis=1)
+                secondlayermasked = np.isnan(weight[:,:, 0, jt]).any(axis=1)
                 # setting the value at this level zero
-                weight[secondlayermasked, :, 0, jt] = 0
+                weight[secondlayermasked,:, 0, jt] = 0
                 shouldbemasked = np.logical_and(secondlayermasked, rz < 1 / 2)
-                weight[shouldbemasked, :, 1, jt] = 0
+                weight[shouldbemasked,:, 1, jt] = 0
                 # setting the vertical weight of the above value to 1
                 zweight[1][secondlayermasked] = 1
             for jz in range(nz):
-                weight[:, :, jz, jt] *= zweight[jz]
-            weight[:, :, :, jt] *= tweight[jt]
+                weight[:,:, jz, jt] *= zweight[jz]
+            weight[:,:,:, jt] *= tweight[jt]
 
         return weight
