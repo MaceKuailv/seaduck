@@ -163,7 +163,7 @@ class OceData(object):
         Extract the horizontal grid data into numpy arrays based on the readiness['h'] of the OceData object.
         '''
         way = self.readiness['h']
-        if self.too_large:
+        if self.too_large: # pragma: no cover
             print("Loading grid into memory, it's a large dataset please be patient")
             
         if way == 'oceanparcel':
@@ -181,10 +181,10 @@ class OceData(object):
             except KeyError:
                 self.dX = None
                 self.dY = None
-            if self.too_large:
+            if self.too_large: # pragma: no cover
                 print('numpy arrays of grid loaded into memory')
             self.tree = create_tree(self.XC,self.YC)  
-            if self.too_large:
+            if self.too_large: # pragma: no cover
                 print('cKD created')
                     
         if way == 'local_cartesian':
@@ -193,17 +193,17 @@ class OceData(object):
             self.dX = np.array(self['dXG']).astype('float32')
             self.dY = np.array(self['dYG']).astype('float32')
         
-            if not self.too_large:
+            if not self.too_large: # pragma: no cover
                 for var in ['XG','YG','dXC','dYC','rA']:
                     try:
                         self[var] = np.array(self[var]).astype('float32')
                     except KeyError:
                         print(f'no {var} in dataset, skip')
                         self[var] = None
-            if self.too_large:
+            if self.too_large: # pragma: no cover
                 print('numpy arrays of grid loaded into memory')
             self.tree = create_tree(self.XC,self.YC)  
-            if self.too_large:
+            if self.too_large: # pragma: no cover
                 print('cKD created')
                         
         if way == 'rectilinear':

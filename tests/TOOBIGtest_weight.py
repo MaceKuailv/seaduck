@@ -1,4 +1,4 @@
-import kernel_and_weight as kw 
+import seaduck.kernelNweight as kw 
 import pytest
 import numpy as np
 

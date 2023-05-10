@@ -1686,9 +1686,9 @@ def find_cs_sn(thetaA,phiA,thetaB,phiB):
     CS = np.sign(thetaB-thetaA)*np.sqrt(1-SN**2)
     return CS,SN
 
-def missing_cs_sn(od):
-    xc = np.deg2rad(np.array(od._ds.XC))
-    yc = np.deg2rad(np.array(od._ds.YC))
+def missing_cs_sn(ds):
+    xc = np.deg2rad(np.array(ds.XC))
+    yc = np.deg2rad(np.array(ds.YC))
     cs = np.zeros_like(xc)
     sn = np.zeros_like(xc)
     cs[0],sn[0] = find_cs_sn(
@@ -1703,8 +1703,8 @@ def missing_cs_sn(od):
         yc[:-2],xc[:-2],
         yc[2:],xc[2:]
     )
-    od._ds['CS'] = od._ds['XC']
+    od._ds['CS'] = ds['XC']
     od._ds['CS'].values = cs
     
-    od._ds['SN'] = od._ds['XC']
+    od._ds['SN'] = ds['XC']
     od._ds['SN'].values = sn
