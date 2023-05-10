@@ -6,6 +6,7 @@ test*.ipynb
 *.png
 *.jpg
 .vscode/
+.pytest*
 dist/
 build/
 seaduck.egg-info/
