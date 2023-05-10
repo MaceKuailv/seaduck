@@ -1,5 +1,4 @@
 import numpy as np
-import oceanspy as ospy
 import pytest
 import xarray as xr
 
