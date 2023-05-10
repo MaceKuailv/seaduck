@@ -10,3 +10,4 @@ dist/
 build/
 seaduck.egg-info/
 tests/Data/
+tests/Data
