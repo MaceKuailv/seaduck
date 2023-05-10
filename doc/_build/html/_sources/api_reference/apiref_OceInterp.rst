@@ -1,4 +1,4 @@
-seaduck.OceInterp 
+seaduck.OceInterp
 --------------------------
 
 .. automodule:: seaduck.OceInterp

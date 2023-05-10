@@ -1,4 +1,4 @@
-seaduck.utils 
+seaduck.utils
 ----------------------
 
 .. automodule:: seaduck.utils

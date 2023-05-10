@@ -1,4 +1,4 @@
-seaduck.topology 
+seaduck.topology
 -------------------------
 
 .. automodule:: seaduck.topology

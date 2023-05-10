@@ -1,4 +1,4 @@
-seaduck.OceData 
+seaduck.OceData
 ------------------------
 
 .. automodule:: seaduck.OceData

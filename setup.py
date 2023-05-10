@@ -1,10 +1,11 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
 setup(
-    name = 'seaduck',
-    version = '0.1.0',
-    description = 'A python package that does interpolation and lagrangian simulation',
-    author='Wenrui Jiang',
-    author_email='wjiang33@jhu.edu',
-    url = 'https://github.com/MaceKuailv/seaduck',
-    packages = find_packages()
+    name="seaduck",
+    version="0.1.0",
+    description="A python package that does interpolation and lagrangian simulation",
+    author="Wenrui Jiang",
+    author_email="wjiang33@jhu.edu",
+    url="https://github.com/MaceKuailv/seaduck",
+    packages=find_packages(),
 )

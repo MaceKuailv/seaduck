@@ -22,5 +22,5 @@ parts:
 - caption: Examples
   chapters:
   - file: Global_ECCO
-  - file: AVISO 
+  - file: AVISO
   - file: IGP

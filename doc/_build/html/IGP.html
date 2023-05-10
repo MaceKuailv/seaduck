@@ -9,20 +9,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries. &#8212; My sample book</title>
-  
-  
-  
+
+
+
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
+
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 <link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-  
+
   <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
@@ -66,26 +66,26 @@ const thebe_selector_output = ".output, .cell_output"
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
-  
-  
+
+
   <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-  
-  
+
+
   <a class="skip-link" href="#main-content">Skip to main content</a>
-  
+
   <input type="checkbox"
           class="sidebar-toggle"
           name="__primary"
           id="__primary"/>
   <label class="overlay overlay-primary" for="__primary"></label>
-  
+
   <input type="checkbox"
           class="sidebar-toggle"
           name="__secondary"
           id="__secondary"/>
   <label class="overlay overlay-secondary" for="__secondary"></label>
-  
+
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
@@ -106,46 +106,46 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
-  
+
     <nav class="bd-header navbar navbar-expand-lg bd-navbar">
     </nav>
-  
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
 
-  
+      <div class="bd-sidebar-primary bd-sidebar">
+
+
+
   <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
+
+
+
+
   </div>
-  
+
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
-  
+
 
 <a class="navbar-brand logo" href="intro.html">
-  
-  
-  
-  
-    
-    
-      
-    
-    
+
+
+
+
+
+
+
+
+
     <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
     <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-  
-  
+
+
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
+
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
@@ -184,39 +184,39 @@ const thebe_selector_output = ".output, .cell_output"
     </div>
 </nav></div>
     </div>
-  
-  
+
+
   <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
-  
+
   <div id="rtd-footer-container"></div>
 
 
       </div>
-      
+
       <main id="main-content" class="bd-main">
-        
-        
+
+
 
 <div class="sbt-scroll-pixel-helper"></div>
 
           <div class="bd-content">
             <div class="bd-article-container">
-              
+
               <div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
+
     <div class="header-article-items__start">
-      
+
         <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
 </label></div>
-      
+
     </div>
-  
-  
+
+
     <div class="header-article-items__end">
-      
+
         <div class="header-article-item">
 
 <div class="article-header-buttons">
@@ -230,15 +230,15 @@ const thebe_selector_output = ".output, .cell_output"
     <i class="fab fa-github"></i>
   </button>
   <ul class="dropdown-menu">
-      
-      
-      
+
+
+
       <li><a href="https://github.com/MaceKuailv/seaduck" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fab fa-github"></i>
@@ -246,16 +246,16 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">Repository</span>
 </a>
 </li>
-      
-      
-      
-      
+
+
+
+
       <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2FIGP.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
@@ -263,7 +263,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">Open issue</span>
 </a>
 </li>
-      
+
   </ul>
 </div>
 
@@ -277,15 +277,15 @@ const thebe_selector_output = ".output, .cell_output"
     <i class="fas fa-download"></i>
   </button>
   <ul class="dropdown-menu">
-      
-      
-      
+
+
+
       <li><a href="_sources/IGP.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
@@ -293,17 +293,17 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">.ipynb</span>
 </a>
 </li>
-      
-      
-      
-      
+
+
+
+
       <li>
 <button onclick="window.print()"
   class="btn btn-sm btn-download-pdf-button dropdown-item"
   title="Print to PDF"
   data-bs-placement="left" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
@@ -311,7 +311,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__text-container">.pdf</span>
 </button>
 </li>
-      
+
   </ul>
 </div>
 
@@ -323,7 +323,7 @@ const thebe_selector_output = ".output, .cell_output"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
-  
+
 
 <span class="btn__icon-container">
   <i class="fas fa-expand"></i>
@@ -353,20 +353,20 @@ document.write(`
     <span class="fa-solid fa-list"></span>
 </label>
 </div></div>
-      
+
     </div>
-  
+
 </div>
 </div>
-              
-              
+
+
 
 <div id="jb-print-docs-body" class="onlyprint">
     <h1>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
-            
+
             <div>
                 <h2> Contents </h2>
             </div>
@@ -396,11 +396,11 @@ document.write(`
     </div>
 </div>
 
-              
-                
+
+
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
-                  
+
   <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries">
 <h1>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries" title="Permalink to this headline">#</a></h1>
 <div class="section" id="wenrui-jiang-tom-haine-feb-23">
@@ -847,7 +847,7 @@ Attributes: (12/23)
     build_host:            compute0673
     build_date:            Fri Nov  8 01:36:45 EST 2019
     MITgcm_URL:            http://mitgcm.org
-    MITgcm_tag_id:         
+    MITgcm_tag_id:
     ...                    ...
     Nr:                    216
     OceanSpy_parameters:   {&#x27;rSphere&#x27;: 6371.0, &#x27;eq_state&#x27;: &#x27;mdjwf&#x27;, &#x27;rho0&#x27;: 1...
@@ -878,13 +878,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -933,13 +933,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -989,13 +989,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.46 MiB </td>
                         <td> 6.46 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 961) </td>
@@ -1044,13 +1044,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.46 MiB </td>
                         <td> 6.46 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 961) </td>
@@ -1102,13 +1102,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 961) </td>
@@ -1157,13 +1157,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 961) </td>
@@ -1212,13 +1212,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 960) </td>
@@ -1267,13 +1267,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 960) </td>
@@ -1325,13 +1325,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 1.70 kiB </td>
                         <td> 1.70 kiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (217,) </td>
@@ -1380,13 +1380,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 400 B </td>
                         <td> 400 B </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (50,) </td>
@@ -1435,13 +1435,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 961) </td>
@@ -1490,13 +1490,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 960) </td>
@@ -1545,13 +1545,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -1600,13 +1600,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -1655,13 +1655,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 960) </td>
@@ -1710,13 +1710,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 961) </td>
@@ -1765,13 +1765,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.46 MiB </td>
                         <td> 6.46 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 961) </td>
@@ -1820,13 +1820,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.46 MiB </td>
                         <td> 6.46 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 961) </td>
@@ -1875,13 +1875,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -1930,13 +1930,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 961) </td>
@@ -1985,13 +1985,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 960) </td>
@@ -2040,13 +2040,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.46 MiB </td>
                         <td> 6.46 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 961) </td>
@@ -2095,13 +2095,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -2150,13 +2150,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.46 MiB </td>
                         <td> 6.46 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (881, 961) </td>
@@ -2205,13 +2205,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -2260,13 +2260,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -2315,13 +2315,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 6.45 MiB </td>
                         <td> 6.45 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (880, 960) </td>
@@ -2370,13 +2370,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 322.27 MiB </td>
                         <td> 322.27 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (50, 880, 960) </td>
@@ -2448,13 +2448,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 322.60 MiB </td>
                         <td> 322.60 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (50, 880, 961) </td>
@@ -2526,13 +2526,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 322.63 MiB </td>
                         <td> 322.63 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (50, 881, 960) </td>
@@ -2604,13 +2604,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.26 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 880, 960) </td>
@@ -2718,13 +2718,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.26 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 880, 960) </td>
@@ -2832,13 +2832,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.26 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 880, 960) </td>
@@ -2946,13 +2946,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.26 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 880, 960) </td>
@@ -3060,13 +3060,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.10 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 961) </td>
@@ -3185,13 +3185,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.11 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 881, 960) </td>
@@ -3310,13 +3310,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -3435,13 +3435,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -3560,13 +3560,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.10 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 961) </td>
@@ -3685,13 +3685,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.11 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 881, 960) </td>
@@ -3810,13 +3810,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -3935,13 +3935,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -4060,13 +4060,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.10 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 961) </td>
@@ -4185,13 +4185,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.11 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 881, 960) </td>
@@ -4310,13 +4310,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -4435,13 +4435,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -4560,13 +4560,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -4685,13 +4685,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 112.98 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (359, 50, 880, 960) </td>
@@ -4810,13 +4810,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.41 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 50, 880, 961) </td>
@@ -4935,13 +4935,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.43 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 50, 881, 960) </td>
@@ -5060,13 +5060,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.30 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 50, 880, 960) </td>
@@ -5185,13 +5185,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.30 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 50, 880, 960) </td>
@@ -5310,13 +5310,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -5424,13 +5424,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 113.30 GiB </td>
                         <td> 1.26 GiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 50, 880, 960) </td>
@@ -5549,13 +5549,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -5663,13 +5663,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 961) </td>
@@ -5777,13 +5777,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 881, 960) </td>
@@ -5891,13 +5891,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6005,13 +6005,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6119,13 +6119,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6233,13 +6233,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6347,13 +6347,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6461,13 +6461,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6575,13 +6575,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6689,13 +6689,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6803,13 +6803,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -6917,13 +6917,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7031,13 +7031,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7145,13 +7145,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 961) </td>
@@ -7259,13 +7259,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 881, 960) </td>
@@ -7373,13 +7373,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7487,13 +7487,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7601,13 +7601,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7715,13 +7715,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7829,13 +7829,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -7943,13 +7943,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8057,13 +8057,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8171,13 +8171,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8285,13 +8285,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8399,13 +8399,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8513,13 +8513,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8627,13 +8627,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8741,13 +8741,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8855,13 +8855,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -8969,13 +8969,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9083,13 +9083,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9197,13 +9197,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9311,13 +9311,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9425,13 +9425,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9539,13 +9539,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9653,13 +9653,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9767,13 +9767,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9881,13 +9881,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -9995,13 +9995,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -10109,13 +10109,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 961) </td>
@@ -10223,13 +10223,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 881, 960) </td>
@@ -10337,13 +10337,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 961) </td>
@@ -10451,13 +10451,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 881, 960) </td>
@@ -10565,13 +10565,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 961) </td>
@@ -10679,13 +10679,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.81 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 881, 960) </td>
@@ -10793,13 +10793,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -10907,13 +10907,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11021,13 +11021,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11135,13 +11135,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11249,13 +11249,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11363,13 +11363,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11477,13 +11477,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11591,13 +11591,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11705,13 +11705,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -11819,13 +11819,13 @@ Attributes: (12/23)
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     <tr>
                         <th> Bytes </th>
                         <td> 2.27 GiB </td>
                         <td> 25.78 MiB </td>
                     </tr>
-                    
+
                     <tr>
                         <th> Shape </th>
                         <td> (360, 880, 960) </td>
@@ -12139,253 +12139,253 @@ no SN in dataset, skip
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2018-01-02T00:00:00
-0 left 
+0 left
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2018-01-02T03:00:00
-200 left 95 left 9 left 
+200 left 95 left 9 left
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2018-01-02T09:00:00
-200 left 73 left 24 left 4 left 
+200 left 73 left 24 left 4 left
 2018-01-02T15:00:00
-200 left 80 left 22 left 3 left 
+200 left 80 left 22 left 3 left
 2018-01-02T21:00:00
-200 left 82 left 23 left 5 left 
+200 left 82 left 23 left 5 left
 2018-01-03T03:00:00
-200 left 88 left 26 left 10 left 3 left 
+200 left 88 left 26 left 10 left 3 left
 2018-01-03T09:00:00
-200 left 92 left 30 left 10 left 3 left 
+200 left 92 left 30 left 10 left 3 left
 2018-01-03T15:00:00
-200 left 98 left 40 left 8 left 2 left 
+200 left 98 left 40 left 8 left 2 left
 2018-01-03T21:00:00
-200 left 85 left 28 left 10 left 3 left 
+200 left 85 left 28 left 10 left 3 left
 2018-01-04T03:00:00
-200 left 80 left 23 left 11 left 1 left 1 left 
+200 left 80 left 23 left 11 left 1 left 1 left
 2018-01-04T09:00:00
-200 left 93 left 29 left 10 left 6 left 1 left 
+200 left 93 left 29 left 10 left 6 left 1 left
 2018-01-04T15:00:00
-200 left 87 left 35 left 11 left 1 left 
+200 left 87 left 35 left 11 left 1 left
 2018-01-04T21:00:00
-200 left 85 left 30 left 10 left 1 left 
+200 left 85 left 30 left 10 left 1 left
 2018-01-05T03:00:00
-200 left 94 left 34 left 9 left 1 left 
+200 left 94 left 34 left 9 left 1 left
 2018-01-05T09:00:00
-200 left 91 left 32 left 10 left 2 left 
+200 left 91 left 32 left 10 left 2 left
 2018-01-05T15:00:00
-200 left 89 left 37 left 9 left 2 left 
+200 left 89 left 37 left 9 left 2 left
 2018-01-05T21:00:00
-200 left 98 left 33 left 13 left 3 left 2 left 
+200 left 98 left 33 left 13 left 3 left 2 left
 2018-01-06T03:00:00
-200 left 102 left 45 left 14 left 4 left 
+200 left 102 left 45 left 14 left 4 left
 2018-01-06T09:00:00
-200 left 106 left 40 left 12 left 5 left 
+200 left 106 left 40 left 12 left 5 left
 2018-01-06T15:00:00
-200 left 95 left 37 left 11 left 3 left 1 left 
+200 left 95 left 37 left 11 left 3 left 1 left
 2018-01-06T21:00:00
-200 left 112 left 38 left 12 left 3 left 
+200 left 112 left 38 left 12 left 3 left
 2018-01-07T03:00:00
-200 left 110 left 48 left 17 left 7 left 1 left 
+200 left 110 left 48 left 17 left 7 left 1 left
 2018-01-07T09:00:00
-200 left 104 left 50 left 18 left 4 left 2 left 
+200 left 104 left 50 left 18 left 4 left 2 left
 2018-01-07T15:00:00
-200 left 110 left 47 left 21 left 6 left 1 left 
+200 left 110 left 47 left 21 left 6 left 1 left
 2018-01-07T21:00:00
-200 left 110 left 57 left 23 left 6 left 1 left 
+200 left 110 left 57 left 23 left 6 left 1 left
 2018-01-08T03:00:00
-200 left 103 left 51 left 21 left 5 left 
+200 left 103 left 51 left 21 left 5 left
 2018-01-08T09:00:00
-200 left 108 left 52 left 16 left 3 left 
+200 left 108 left 52 left 16 left 3 left
 2018-01-08T15:00:00
-200 left 103 left 41 left 21 left 9 left 
+200 left 103 left 41 left 21 left 9 left
 2018-01-08T21:00:00
-200 left 99 left 46 left 14 left 7 left 4 left 2 left 
+200 left 99 left 46 left 14 left 7 left 4 left 2 left
 2018-01-09T03:00:00
-200 left 114 left 55 left 18 left 7 left 2 left 1 left 
+200 left 114 left 55 left 18 left 7 left 2 left 1 left
 2018-01-09T09:00:00
-200 left 99 left 44 left 16 left 6 left 3 left 
+200 left 99 left 44 left 16 left 6 left 3 left
 2018-01-09T15:00:00
-200 left 92 left 39 left 11 left 7 left 3 left 1 left 
+200 left 92 left 39 left 11 left 7 left 3 left 1 left
 2018-01-09T21:00:00
-200 left 93 left 40 left 15 left 5 left 3 left 
+200 left 93 left 40 left 15 left 5 left 3 left
 2018-01-10T03:00:00
-200 left 95 left 40 left 15 left 8 left 1 left 1 left 1 left 
+200 left 95 left 40 left 15 left 8 left 1 left 1 left 1 left
 2018-01-10T09:00:00
-200 left 94 left 46 left 14 left 7 left 4 left 1 left 1 left 
+200 left 94 left 46 left 14 left 7 left 4 left 1 left 1 left
 2018-01-10T15:00:00
-200 left 97 left 42 left 19 left 9 left 2 left 2 left 1 left 
+200 left 97 left 42 left 19 left 9 left 2 left 2 left 1 left
 2018-01-10T21:00:00
-200 left 103 left 47 left 18 left 9 left 2 left 
+200 left 103 left 47 left 18 left 9 left 2 left
 2018-01-11T03:00:00
-200 left 98 left 49 left 15 left 6 left 3 left 2 left 1 left 1 left 1 left 
+200 left 98 left 49 left 15 left 6 left 3 left 2 left 1 left 1 left 1 left
 2018-01-11T09:00:00
-200 left 102 left 47 left 19 left 5 left 3 left 1 left 1 left 
+200 left 102 left 47 left 19 left 5 left 3 left 1 left 1 left
 2018-01-11T15:00:00
-200 left 91 left 57 left 17 left 8 left 2 left 
+200 left 91 left 57 left 17 left 8 left 2 left
 2018-01-11T21:00:00
-200 left 88 left 41 left 13 left 6 left 2 left 2 left 2 left 1 left 
+200 left 88 left 41 left 13 left 6 left 2 left 2 left 2 left 1 left
 2018-01-12T03:00:00
-200 left 86 left 46 left 20 left 7 left 1 left 1 left 
+200 left 86 left 46 left 20 left 7 left 1 left 1 left
 2018-01-12T09:00:00
-200 left 92 left 43 left 19 left 11 left 4 left 2 left 1 left 
+200 left 92 left 43 left 19 left 11 left 4 left 2 left 1 left
 2018-01-12T15:00:00
-200 left 86 left 49 left 26 left 9 left 5 left 1 left 1 left 
+200 left 86 left 49 left 26 left 9 left 5 left 1 left 1 left
 2018-01-12T21:00:00
-200 left 87 left 40 left 23 left 12 left 5 left 3 left 2 left 
+200 left 87 left 40 left 23 left 12 left 5 left 3 left 2 left
 2018-01-13T03:00:00
-200 left 82 left 46 left 19 left 9 left 5 left 4 left 2 left 
+200 left 82 left 46 left 19 left 9 left 5 left 4 left 2 left
 2018-01-13T09:00:00
-200 left 74 left 42 left 23 left 12 left 8 left 3 left 1 left 
+200 left 74 left 42 left 23 left 12 left 8 left 3 left 1 left
 2018-01-13T15:00:00
-200 left 83 left 38 left 25 left 11 left 7 left 3 left 1 left 1 left 
+200 left 83 left 38 left 25 left 11 left 7 left 3 left 1 left 1 left
 2018-01-13T21:00:00
-200 left 81 left 44 left 25 left 12 left 7 left 5 left 2 left 1 left 1 left 
+200 left 81 left 44 left 25 left 12 left 7 left 5 left 2 left 1 left 1 left
 2018-01-14T03:00:00
-200 left 91 left 44 left 20 left 12 left 9 left 6 left 4 left 2 left 1 left 
+200 left 91 left 44 left 20 left 12 left 9 left 6 left 4 left 2 left 1 left
 2018-01-14T09:00:00
-200 left 91 left 40 left 21 left 11 left 8 left 7 left 4 left 2 left 1 left 
+200 left 91 left 40 left 21 left 11 left 8 left 7 left 4 left 2 left 1 left
 2018-01-14T15:00:00
-200 left 90 left 50 left 24 left 13 left 9 left 7 left 3 left 3 left 2 left 
+200 left 90 left 50 left 24 left 13 left 9 left 7 left 3 left 3 left 2 left
 2018-01-14T21:00:00
-200 left 108 left 61 left 29 left 18 left 13 left 11 left 8 left 6 left 4 left 3 left 2 left 1 left 1 left 
+200 left 108 left 61 left 29 left 18 left 13 left 11 left 8 left 6 left 4 left 3 left 2 left 1 left 1 left
 2018-01-15T03:00:00
-200 left 132 left 109 left 59 left 34 left 18 left 9 left 5 left 5 left 4 left 1 left 1 left 
+200 left 132 left 109 left 59 left 34 left 18 left 9 left 5 left 5 left 4 left 1 left 1 left
 2018-01-15T09:00:00
-200 left 133 left 122 left 93 left 54 left 24 left 14 left 11 left 7 left 5 left 4 left 4 left 3 left 2 left 
+200 left 133 left 122 left 93 left 54 left 24 left 14 left 11 left 7 left 5 left 4 left 4 left 3 left 2 left
 2018-01-15T15:00:00
-200 left 135 left 120 left 93 left 64 left 38 left 20 left 13 left 7 left 6 left 6 left 4 left 1 left 
+200 left 135 left 120 left 93 left 64 left 38 left 20 left 13 left 7 left 6 left 6 left 4 left 1 left
 2018-01-15T21:00:00
-200 left 130 left 115 left 87 left 56 left 32 left 17 left 16 left 11 left 6 left 3 left 1 left 1 left 1 left 1 left 
+200 left 130 left 115 left 87 left 56 left 32 left 17 left 16 left 11 left 6 left 3 left 1 left 1 left 1 left 1 left
 2018-01-16T03:00:00
-200 left 130 left 107 left 66 left 39 left 20 left 12 left 7 left 5 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 
+200 left 130 left 107 left 66 left 39 left 20 left 12 left 7 left 5 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left
 2018-01-16T09:00:00
-200 left 134 left 103 left 65 left 34 left 15 left 10 left 6 left 6 left 3 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 
+200 left 134 left 103 left 65 left 34 left 15 left 10 left 6 left 6 left 3 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left
 2018-01-16T15:00:00
-200 left 130 left 102 left 65 left 34 left 16 left 12 left 7 left 4 left 1 left 1 left 1 left 1 left 
+200 left 130 left 102 left 65 left 34 left 16 left 12 left 7 left 4 left 1 left 1 left 1 left 1 left
 2018-01-16T21:00:00
-200 left 130 left 113 left 79 left 39 left 16 left 12 left 7 left 5 left 2 left 
+200 left 130 left 113 left 79 left 39 left 16 left 12 left 7 left 5 left 2 left
 2018-01-17T03:00:00
-200 left 132 left 113 left 88 left 45 left 25 left 14 left 9 left 3 left 2 left 1 left 1 left 1 left 
+200 left 132 left 113 left 88 left 45 left 25 left 14 left 9 left 3 left 2 left 1 left 1 left 1 left
 2018-01-17T09:00:00
-200 left 135 left 123 left 101 left 71 left 33 left 18 left 6 left 5 left 3 left 3 left 2 left 2 left 
+200 left 135 left 123 left 101 left 71 left 33 left 18 left 6 left 5 left 3 left 3 left 2 left 2 left
 2018-01-17T15:00:00
-200 left 130 left 124 left 106 left 71 left 42 left 24 left 12 left 7 left 7 left 4 left 2 left 
+200 left 130 left 124 left 106 left 71 left 42 left 24 left 12 left 7 left 7 left 4 left 2 left
 2018-01-17T21:00:00
-200 left 132 left 121 left 89 left 52 left 31 left 18 left 11 left 10 left 9 left 7 left 6 left 4 left 2 left 
+200 left 132 left 121 left 89 left 52 left 31 left 18 left 11 left 10 left 9 left 7 left 6 left 4 left 2 left
 2018-01-18T03:00:00
-200 left 130 left 121 left 92 left 49 left 31 left 20 left 13 left 5 left 3 left 3 left 2 left 1 left 1 left 
+200 left 130 left 121 left 92 left 49 left 31 left 20 left 13 left 5 left 3 left 3 left 2 left 1 left 1 left
 2018-01-18T09:00:00
-200 left 132 left 114 left 88 left 54 left 34 left 17 left 7 left 5 left 4 left 3 left 3 left 3 left 3 left 2 left 
+200 left 132 left 114 left 88 left 54 left 34 left 17 left 7 left 5 left 4 left 3 left 3 left 3 left 3 left 2 left
 2018-01-18T15:00:00
-200 left 132 left 120 left 85 left 46 left 29 left 20 left 14 left 10 left 4 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 
+200 left 132 left 120 left 85 left 46 left 29 left 20 left 14 left 10 left 4 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
 2018-01-18T21:00:00
-200 left 131 left 104 left 79 left 49 left 32 left 18 left 9 left 6 left 5 left 3 left 1 left 1 left 1 left 1 left 1 left 
+200 left 131 left 104 left 79 left 49 left 32 left 18 left 9 left 6 left 5 left 3 left 1 left 1 left 1 left 1 left 1 left
 2018-01-19T03:00:00
-200 left 121 left 105 left 69 left 36 left 21 left 14 left 7 left 6 left 2 left 
+200 left 121 left 105 left 69 left 36 left 21 left 14 left 7 left 6 left 2 left
 2018-01-19T09:00:00
-200 left 132 left 112 left 65 left 32 left 18 left 9 left 5 left 5 left 2 left 
+200 left 132 left 112 left 65 left 32 left 18 left 9 left 5 left 5 left 2 left
 2018-01-19T15:00:00
-200 left 129 left 107 left 67 left 31 left 17 left 9 left 5 left 4 left 3 left 2 left 2 left 
+200 left 129 left 107 left 67 left 31 left 17 left 9 left 5 left 4 left 3 left 2 left 2 left
 2018-01-19T21:00:00
-200 left 128 left 105 left 65 left 34 left 14 left 6 left 5 left 4 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 
+200 left 128 left 105 left 65 left 34 left 14 left 6 left 5 left 4 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left
 2018-01-20T03:00:00
-200 left 128 left 99 left 50 left 33 left 21 left 10 left 6 left 3 left 2 left 2 left 2 left 2 left 1 left 1 left 
+200 left 128 left 99 left 50 left 33 left 21 left 10 left 6 left 3 left 2 left 2 left 2 left 2 left 1 left 1 left
 2018-01-20T09:00:00
-200 left 124 left 93 left 54 left 30 left 9 left 6 left 5 left 4 left 3 left 2 left 2 left 2 left 2 left 1 left 
+200 left 124 left 93 left 54 left 30 left 9 left 6 left 5 left 4 left 3 left 2 left 2 left 2 left 2 left 1 left
 2018-01-20T15:00:00
-200 left 125 left 94 left 51 left 27 left 15 left 9 left 6 left 5 left 5 left 2 left 2 left 
+200 left 125 left 94 left 51 left 27 left 15 left 9 left 6 left 5 left 5 left 2 left 2 left
 2018-01-20T21:00:00
-200 left 112 left 88 left 56 left 28 left 15 left 8 left 8 left 3 left 2 left 1 left 1 left 1 left 
+200 left 112 left 88 left 56 left 28 left 15 left 8 left 8 left 3 left 2 left 1 left 1 left 1 left
 2018-01-21T03:00:00
-200 left 118 left 81 left 46 left 21 left 13 left 10 left 4 left 4 left 2 left 2 left 1 left 1 left 
+200 left 118 left 81 left 46 left 21 left 13 left 10 left 4 left 4 left 2 left 2 left 1 left 1 left
 2018-01-21T09:00:00
-200 left 123 left 81 left 51 left 22 left 8 left 5 left 5 left 4 left 2 left 2 left 2 left 2 left 
+200 left 123 left 81 left 51 left 22 left 8 left 5 left 5 left 4 left 2 left 2 left 2 left 2 left
 2018-01-21T15:00:00
-200 left 119 left 86 left 44 left 23 left 13 left 7 left 5 left 4 left 3 left 2 left 1 left 
+200 left 119 left 86 left 44 left 23 left 13 left 7 left 5 left 4 left 3 left 2 left 1 left
 2018-01-21T21:00:00
-200 left 122 left 89 left 54 left 29 left 11 left 6 left 5 left 4 left 2 left 1 left 
+200 left 122 left 89 left 54 left 29 left 11 left 6 left 5 left 4 left 2 left 1 left
 2018-01-22T03:00:00
-200 left 119 left 91 left 48 left 23 left 10 left 6 left 3 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 
+200 left 119 left 91 left 48 left 23 left 10 left 6 left 3 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left
 2018-01-22T09:00:00
-200 left 118 left 93 left 58 left 29 left 16 left 8 left 8 left 6 left 4 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 
+200 left 118 left 93 left 58 left 29 left 16 left 8 left 8 left 6 left 4 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left
 2018-01-22T15:00:00
-200 left 124 left 90 left 62 left 28 left 11 left 8 left 7 left 6 left 3 left 2 left 2 left 1 left 1 left 1 left 
+200 left 124 left 90 left 62 left 28 left 11 left 8 left 7 left 6 left 3 left 2 left 2 left 1 left 1 left 1 left
 2018-01-22T21:00:00
-200 left 109 left 87 left 54 left 29 left 17 left 11 left 9 left 7 left 5 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 
+200 left 109 left 87 left 54 left 29 left 17 left 11 left 9 left 7 left 5 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
 2018-01-23T03:00:00
-200 left 116 left 93 left 63 left 33 left 18 left 10 left 8 left 6 left 5 left 3 left 2 left 1 left 
+200 left 116 left 93 left 63 left 33 left 18 left 10 left 8 left 6 left 5 left 3 left 2 left 1 left
 2018-01-23T09:00:00
-200 left 121 left 93 left 55 left 37 left 19 left 13 left 8 left 6 left 4 left 3 left 2 left 2 left 1 left 
+200 left 121 left 93 left 55 left 37 left 19 left 13 left 8 left 6 left 4 left 3 left 2 left 2 left 1 left
 2018-01-23T15:00:00
-200 left 119 left 92 left 59 left 34 left 19 left 11 left 7 left 5 left 5 left 4 left 2 left 1 left 
+200 left 119 left 92 left 59 left 34 left 19 left 11 left 7 left 5 left 5 left 4 left 2 left 1 left
 2018-01-23T21:00:00
-200 left 125 left 86 left 59 left 40 left 22 left 15 left 10 left 6 left 6 left 2 left 2 left 1 left 
+200 left 125 left 86 left 59 left 40 left 22 left 15 left 10 left 6 left 6 left 2 left 2 left 1 left
 2018-01-24T03:00:00
-200 left 126 left 98 left 49 left 28 left 17 left 13 left 10 left 7 left 6 left 3 left 2 left 
+200 left 126 left 98 left 49 left 28 left 17 left 13 left 10 left 7 left 6 left 3 left 2 left
 2018-01-24T09:00:00
-200 left 127 left 95 left 57 left 31 left 19 left 14 left 12 left 10 left 6 left 3 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 
+200 left 127 left 95 left 57 left 31 left 19 left 14 left 12 left 10 left 6 left 3 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left
 2018-01-24T15:00:00
-200 left 122 left 89 left 59 left 33 left 24 left 15 left 10 left 8 left 5 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 
+200 left 122 left 89 left 59 left 33 left 24 left 15 left 10 left 8 left 5 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
 2018-01-24T21:00:00
-200 left 121 left 92 left 52 left 29 left 21 left 15 left 11 left 8 left 6 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 
+200 left 121 left 92 left 52 left 29 left 21 left 15 left 11 left 8 left 6 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left
 2018-01-25T03:00:00
-200 left 118 left 80 left 50 left 38 left 18 left 16 left 12 left 8 left 6 left 3 left 1 left 1 left 1 left 1 left 1 left 1 left 
+200 left 118 left 80 left 50 left 38 left 18 left 16 left 12 left 8 left 6 left 3 left 1 left 1 left 1 left 1 left 1 left 1 left
 2018-01-25T09:00:00
-200 left 116 left 95 left 60 left 38 left 26 left 20 left 15 left 11 left 8 left 6 left 4 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 
+200 left 116 left 95 left 60 left 38 left 26 left 20 left 15 left 11 left 8 left 6 left 4 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left
 2018-01-25T15:00:00
-200 left 114 left 90 left 59 left 35 left 26 left 16 left 11 left 8 left 6 left 5 left 3 left 3 left 2 left 
+200 left 114 left 90 left 59 left 35 left 26 left 16 left 11 left 8 left 6 left 5 left 3 left 3 left 2 left
 2018-01-25T21:00:00
-200 left 120 left 95 left 64 left 43 left 23 left 18 left 12 left 9 left 8 left 7 left 4 left 4 left 3 left 3 left 3 left 
+200 left 120 left 95 left 64 left 43 left 23 left 18 left 12 left 9 left 8 left 7 left 4 left 4 left 3 left 3 left 3 left
 2018-01-26T03:00:00
-200 left 113 left 84 left 60 left 40 left 28 left 17 left 15 left 8 left 4 left 3 left 3 left 3 left 2 left 2 left 
+200 left 113 left 84 left 60 left 40 left 28 left 17 left 15 left 8 left 4 left 3 left 3 left 3 left 2 left 2 left
 2018-01-26T09:00:00
-200 left 115 left 88 left 60 left 44 left 29 left 26 left 21 left 13 left 8 left 6 left 5 left 2 left 2 left 
+200 left 115 left 88 left 60 left 44 left 29 left 26 left 21 left 13 left 8 left 6 left 5 left 2 left 2 left
 2018-01-26T15:00:00
-200 left 119 left 81 left 54 left 45 left 35 left 22 left 17 left 13 left 9 left 7 left 4 left 4 left 2 left 1 left 
+200 left 119 left 81 left 54 left 45 left 35 left 22 left 17 left 13 left 9 left 7 left 4 left 4 left 2 left 1 left
 2018-01-26T21:00:00
-200 left 115 left 86 left 58 left 44 left 31 left 22 left 16 left 11 left 8 left 6 left 5 left 3 left 3 left 1 left 
+200 left 115 left 86 left 58 left 44 left 31 left 22 left 16 left 11 left 8 left 6 left 5 left 3 left 3 left 1 left
 2018-01-27T03:00:00
-200 left 113 left 87 left 53 left 38 left 30 left 23 left 16 left 9 left 8 left 6 left 1 left 
+200 left 113 left 87 left 53 left 38 left 30 left 23 left 16 left 9 left 8 left 6 left 1 left
 2018-01-27T09:00:00
-200 left 117 left 85 left 53 left 36 left 29 left 20 left 17 left 10 left 8 left 7 left 3 left 2 left 
+200 left 117 left 85 left 53 left 36 left 29 left 20 left 17 left 10 left 8 left 7 left 3 left 2 left
 2018-01-27T15:00:00
-200 left 122 left 88 left 64 left 39 left 28 left 22 left 17 left 11 left 10 left 7 left 5 left 5 left 3 left 
+200 left 122 left 88 left 64 left 39 left 28 left 22 left 17 left 11 left 10 left 7 left 5 left 5 left 3 left
 2018-01-27T21:00:00
-200 left 119 left 90 left 62 left 51 left 36 left 25 left 14 left 8 left 6 left 4 left 4 left 3 left 3 left 2 left 1 left 1 left 1 left 
+200 left 119 left 90 left 62 left 51 left 36 left 25 left 14 left 8 left 6 left 4 left 4 left 3 left 3 left 2 left 1 left 1 left 1 left
 2018-01-28T03:00:00
-200 left 120 left 88 left 64 left 43 left 26 left 18 left 14 left 10 left 7 left 5 left 4 left 4 left 3 left 1 left 
+200 left 120 left 88 left 64 left 43 left 26 left 18 left 14 left 10 left 7 left 5 left 4 left 4 left 3 left 1 left
 2018-01-28T09:00:00
-200 left 113 left 91 left 59 left 44 left 31 left 24 left 17 left 13 left 7 left 6 left 5 left 4 left 3 left 3 left 2 left 
+200 left 113 left 91 left 59 left 44 left 31 left 24 left 17 left 13 left 7 left 6 left 5 left 4 left 3 left 3 left 2 left
 2018-01-28T15:00:00
-200 left 117 left 81 left 60 left 43 left 34 left 27 left 18 left 13 left 10 left 7 left 3 left 2 left 1 left 
+200 left 117 left 81 left 60 left 43 left 34 left 27 left 18 left 13 left 10 left 7 left 3 left 2 left 1 left
 2018-01-28T21:00:00
-200 left 119 left 88 left 61 left 45 left 38 left 30 left 18 left 12 left 8 left 7 left 4 left 4 left 2 left 1 left 
+200 left 119 left 88 left 61 left 45 left 38 left 30 left 18 left 12 left 8 left 7 left 4 left 4 left 2 left 1 left
 2018-01-29T03:00:00
-200 left 113 left 79 left 65 left 46 left 34 left 27 left 18 left 12 left 8 left 6 left 3 left 3 left 3 left 2 left 1 left 
+200 left 113 left 79 left 65 left 46 left 34 left 27 left 18 left 12 left 8 left 6 left 3 left 3 left 3 left 2 left 1 left
 2018-01-29T09:00:00
-200 left 115 left 81 left 63 left 46 left 36 left 27 left 18 left 9 left 4 left 2 left 1 left 
+200 left 115 left 81 left 63 left 46 left 36 left 27 left 18 left 9 left 4 left 2 left 1 left
 2018-01-29T15:00:00
-200 left 119 left 90 left 65 left 44 left 33 left 18 left 14 left 8 left 7 left 5 left 1 left 
+200 left 119 left 90 left 65 left 44 left 33 left 18 left 14 left 8 left 7 left 5 left 1 left
 2018-01-29T21:00:00
-200 left 119 left 84 left 56 left 45 left 25 left 17 left 13 left 11 left 8 left 6 left 4 left 3 left 1 left 
+200 left 119 left 84 left 56 left 45 left 25 left 17 left 13 left 11 left 8 left 6 left 4 left 3 left 1 left
 2018-01-30T03:00:00
-200 left 112 left 87 left 61 left 39 left 26 left 16 left 15 left 9 left 6 left 4 left 2 left 1 left 
+200 left 112 left 87 left 61 left 39 left 26 left 16 left 15 left 9 left 6 left 4 left 2 left 1 left
 2018-01-30T09:00:00
-200 left 119 left 94 left 68 left 44 left 17 left 14 left 12 left 6 left 4 left 3 left 2 left 1 left 1 left 
+200 left 119 left 94 left 68 left 44 left 17 left 14 left 12 left 6 left 4 left 3 left 2 left 1 left 1 left
 2018-01-30T15:00:00
-200 left 116 left 81 left 52 left 37 left 21 left 16 left 14 left 9 left 6 left 3 left 3 left 3 left 1 left 1 left 
+200 left 116 left 81 left 52 left 37 left 21 left 16 left 14 left 9 left 6 left 3 left 3 left 3 left 1 left 1 left
 2018-01-30T21:00:00
-200 left 120 left 88 left 54 left 35 left 30 left 20 left 15 left 10 left 9 left 5 left 4 left 1 left 1 left 
+200 left 120 left 88 left 54 left 35 left 30 left 20 left 15 left 10 left 9 left 5 left 4 left 1 left 1 left
 2018-01-31T03:00:00
-200 left 118 left 93 left 68 left 46 left 31 left 20 left 13 left 9 left 7 left 6 left 5 left 3 left 3 left 2 left 2 left 
+200 left 118 left 93 left 68 left 46 left 31 left 20 left 13 left 9 left 7 left 6 left 5 left 3 left 3 left 2 left 2 left
 2018-01-31T09:00:00
-200 left 121 left 96 left 64 left 43 left 27 left 22 left 18 left 11 left 7 left 3 left 3 left 2 left 1 left 1 left 
+200 left 121 left 96 left 64 left 43 left 27 left 22 left 18 left 11 left 7 left 3 left 3 left 2 left 1 left 1 left
 2018-01-31T15:00:00
-200 left 123 left 89 left 66 left 47 left 28 left 21 left 15 left 12 left 11 left 9 left 7 left 3 left 2 left 1 left 1 left 
+200 left 123 left 89 left 66 left 47 left 28 left 21 left 15 left 12 left 11 left 9 left 7 left 3 left 2 left 1 left 1 left
 2018-01-31T21:00:00
-200 left 119 left 95 left 71 left 48 left 37 left 30 left 19 left 11 left 9 left 6 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 
+200 left 119 left 95 left 71 left 48 left 37 left 30 left 19 left 11 left 9 left 6 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left
 2018-02-01T00:00:00
-200 left 103 left 58 left 28 left 11 left 5 left 3 left 2 left 
+200 left 103 left 58 left 28 left 11 left 5 left 3 left 2 left
 </pre></div>
 </div>
 </div>
@@ -12445,14 +12445,14 @@ no SN in dataset, skip
     <script>kernelName = 'python3'</script>
 
                 </article>
-              
 
-              
-              
+
+
+
                 <footer class="bd-footer-article">
-                  
+
 <div class="footer-article-items footer-article__inner">
-  
+
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
@@ -12465,15 +12465,15 @@ no SN in dataset, skip
       </div>
     </a>
 </div></div>
-  
+
 </div>
 
                 </footer>
-              
+
             </div>
-            
-            
-              
+
+
+
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
   <div class="sidebar-secondary-item">
@@ -12504,48 +12504,48 @@ no SN in dataset, skip
   </nav></div>
 
 </div></div>
-              
-            
+
+
           </div>
           <footer class="bd-footer-content">
-            
+
 <div class="bd-footer-content__inner container">
-  
+
   <div class="footer-item">
-    
+
 <p class="component-author">
 By The Jupyter Book Community
 </p>
 
   </div>
-  
+
   <div class="footer-item">
-    
+
   <p class="copyright">
-    
+
       © Copyright 2022.
       <br/>
-    
+
   </p>
 
   </div>
-  
+
   <div class="footer-item">
-    
+
   </div>
-  
+
   <div class="footer-item">
-    
+
   </div>
-  
+
 </div>
           </footer>
-        
+
 
       </main>
     </div>
   </div>
-  
+
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
   <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
 <script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
