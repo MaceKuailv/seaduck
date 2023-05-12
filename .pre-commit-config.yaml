@@ -23,7 +23,7 @@ repos:
   rev: v0.0.265
   hooks:
   - id: ruff
-    args: [--fix]
+    args: [--fix, '--exclude=tests/*']
 - repo: https://github.com/executablebooks/mdformat
   rev: 0.7.16
   hooks:

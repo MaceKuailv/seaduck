@@ -34,7 +34,7 @@ def test_get_the_neighbor_face(face, edge):
     "func", ["tp.get_the_other_edge(0,0)", "tp.mutual_direction(0,1)"]
 )
 def test_not_applicable(typ, func, error):
-    tp = topology(ecco, typ)
+    topology(ecco, typ)
     with pytest.raises(error):
         eval(func)
 

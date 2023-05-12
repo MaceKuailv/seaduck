@@ -5,8 +5,9 @@ import xarray as xr
 
 
 def smart_read(da, ind):
-    """
-    Read from a xarray.DataArray given tuple indexes, and try to do it fast.
+    """Read from a xarray.DataArray given tuple indexes.
+
+    Try to do it fast and smartly.
 
     **Parameters:**
 
