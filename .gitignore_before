@@ -1,0 +1,16 @@
+# notebooks
+test*.ipynb
+*ipy*/
+*.pyc
+*.npy
+*.png
+*.jpg
+.vscode/
+.coverage
+.pytest*
+dist/
+build/
+seaduck.egg-info/
+tests/Data/
+tests/Data
+assets/
