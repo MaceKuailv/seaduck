@@ -94,6 +94,21 @@ def local_to_latlon(u, v, cs, sn):
     return uu, vv
 
 
+@njit
+def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
+    """
+    Translate the spatial rel-coords into lat-lon-dep coords.
+    """
+    temp_x = rx * dx / deg2m
+    temp_y = ry * dy / deg2m
+    dlon = (temp_x * cs - temp_y * sn) / _np.cos(by * _np.pi / 180)
+    dlat = temp_x * sn + temp_y * cs
+    lon = dlon + bx
+    lat = dlat + by
+    dep = bzl + dzl * rzl
+    return lon, lat, dep
+
+
 def get_combination(lst, select):
     """
     Iteratively find all the combination that
