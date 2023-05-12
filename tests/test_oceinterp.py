@@ -1,7 +1,8 @@
 import numpy as np
-import xarray as xr
-import seaduck as sd
 import pytest
+import xarray as xr
+
+import seaduck as sd
 
 Datadir = "tests/Data/"
 ecco = xr.open_zarr(Datadir + "small_ecco")
@@ -41,38 +42,53 @@ t_bnds = np.array(
     ]
 ) / np.timedelta64(1, "s")
 
+
+@pytest.mark.parametrize("od,x,y,z,t", [(ecco, x, y, z, t)])
 @pytest.mark.parametrize(
-    'od,x,y,z,t',
-    [(ecco, x, y, z, t)]
-)
-@pytest.mark.parametrize(
-    'varList',
+    "varList",
     [
-        ["ETAN", "maskC"], 
+        ["ETAN", "maskC"],
         "SALT",
-        ("UVELMASS", "VVELMASS"), 
-        {("UVELMASS", "VVELMASS"):(sd.KnW(),sd.KnW())},
-    ]
+        ("UVELMASS", "VVELMASS"),
+        {("UVELMASS", "VVELMASS"): (sd.KnW(), sd.KnW())},
+    ],
 )
-def test_eulerian_oceinterp(od,
-                            varList,
-                            x,y,z,t,
-                            ):
-    R = sd.OceInterp(od,varList,x,y,z,t)
-    
+def test_eulerian_oceinterp(
+    od,
+    varList,
+    x,
+    y,
+    z,
+    t,
+):
+    sd.OceInterp(od, varList, x, y, z, t)
+
+
 @pytest.mark.parametrize(
-    'od,varList,x,y,z,t,kernel_kwarg',
-    [(ecco,("UVELMASS", "VVELMASS"), x, y, z, t,dict(hkernel="dx", h_order=2, inheritance=[[0, 1, 2, 3, 4, 5, 6, 7, 8]], tkernel="linear"))]
+    "od,varList,x,y,z,t,kernel_kwarg",
+    [
+        (
+            ecco,
+            ("UVELMASS", "VVELMASS"),
+            x,
+            y,
+            z,
+            t,
+            dict(
+                hkernel="dx",
+                h_order=2,
+                inheritance=[[0, 1, 2, 3, 4, 5, 6, 7, 8]],
+                tkernel="linear",
+            ),
+        )
+    ],
 )
-def test_diff_oceinterp(od,
-                            varList,
-                            x,y,z,t,
-                            kernel_kwarg
-                            ):
-    R = sd.OceInterp(od,varList,x,y,z,t,kernel_kwarg = kernel_kwarg)
-    
+def test_diff_oceinterp(od, varList, x, y, z, t, kernel_kwarg):
+    sd.OceInterp(od, varList, x, y, z, t, kernel_kwarg=kernel_kwarg)
+
+
 @pytest.mark.parametrize(
-    'od,varList,x,y,z,t,lagrangian,lagrange_kwarg',
+    "od,varList,x,y,z,t,lagrangian,lagrange_kwarg",
     [
         (
             ecco,
@@ -84,35 +100,45 @@ def test_diff_oceinterp(od,
             True,
             {"save_raw": True},
         )
-    ]
+    ],
 )
-@pytest.mark.parametrize(
-    'return_pt_time',
-    [True,False]
-)
+@pytest.mark.parametrize("return_pt_time", [True, False])
 @pytest.mark.filterwarnings("ignore::Warning")
-def test_largangian_oceinterp(od,
-                            varList,
-                            x,y,z,t,
-                            lagrangian,
-                            return_pt_time,
-                            lagrange_kwarg):
-    R = sd.OceInterp(od,varList,x,y,z,t,
-                     lagrangian = lagrangian,
-                     return_pt_time = return_pt_time,
-                     lagrange_kwarg = lagrange_kwarg)
+def test_largangian_oceinterp(
+    od, varList, x, y, z, t, lagrangian, return_pt_time, lagrange_kwarg
+):
+    sd.OceInterp(
+        od,
+        varList,
+        x,
+        y,
+        z,
+        t,
+        lagrangian=lagrangian,
+        return_pt_time=return_pt_time,
+        lagrange_kwarg=lagrange_kwarg,
+    )
+
 
 @pytest.mark.parametrize(
-    'od,varList,x,y,z,t,lagrangian,error',
+    "od,varList,x,y,z,t,lagrangian,error",
     [
-        (ecco,["__particle.lat", "__particle.lon"],x,y,z,t_bnds[:1],True,ValueError),
-        (ecco,["__particle.lat", "__particle.lon"],x,y,z,t,False,AttributeError),
-        (ecco,None,x,y,z,t,False,ValueError),
-        (ecco,[None],x,y,z,t,False,ValueError),
-    ]
+        (
+            ecco,
+            ["__particle.lat", "__particle.lon"],
+            x,
+            y,
+            z,
+            t_bnds[:1],
+            True,
+            ValueError,
+        ),
+        (ecco, ["__particle.lat", "__particle.lon"], x, y, z, t, False, AttributeError),
+        (ecco, None, x, y, z, t, False, ValueError),
+        (ecco, [None], x, y, z, t, False, ValueError),
+    ],
 )
 @pytest.mark.filterwarnings("ignore::Warning")
-def test_oceinterp_error(od,varList,x,y,z,t,lagrangian,error):
+def test_oceinterp_error(od, varList, x, y, z, t, lagrangian, error):
     with pytest.raises(error):
-        R = sd.OceInterp(od,varList,x,y,z,t,
-                     lagrangian = lagrangian)
+        sd.OceInterp(od, varList, x, y, z, t, lagrangian=lagrangian)

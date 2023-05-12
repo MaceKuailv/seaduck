@@ -34,7 +34,8 @@ directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 @njit
 def llc_mutual_direction(face, nface, transitive=False):
-    """
+    """Find the relative orientation of two faces.
+
     The compileable version of mutual direction for llc grid.
     See topology.mutual direction for more detail.
     """
@@ -75,7 +76,8 @@ def llc_mutual_direction(face, nface, transitive=False):
 
 @njit
 def llc_get_the_other_edge(face, edge):
-    """
+    """See what is adjacent to the face by this edge.
+
     The compileable version of get_the_other_edge for llc grid.
     See topology.get_the_other_edge for more detail.
     """
@@ -91,7 +93,8 @@ def llc_get_the_other_edge(face, edge):
 
 @njit
 def box_ind_tend(ind, tend, iymax, ixmax):
-    """
+    """Move an index in a direction.
+
     The compileable version of ind_tend for regional (box) grid.
     See topology.ind_tend for more detail.
     """
@@ -114,7 +117,8 @@ def box_ind_tend(ind, tend, iymax, ixmax):
 
 @njit
 def x_per_ind_tend(ind, tend, iymax, ixmax):
-    """
+    """Move an index in a direction.
+
     The compileable version of ind_tend for zonally periodic (x-per) grid.
     See topology.ind_tend for more detail.
     """
@@ -138,7 +142,8 @@ def x_per_ind_tend(ind, tend, iymax, ixmax):
 
 @njit
 def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
-    """
+    """Move an index in a direction.
+
     The compileable version of ind_tend for llc grid.
     See topology.ind_tend for more detail.
     """
@@ -234,7 +239,8 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
 
 @njit
 def llc_get_uv_mask_from_face(faces):
-    """
+    """Get the masking of UV points.
+
     The compileable version of get_uv_mask_from_face for llc grid.
     See topology.get_uv_mask_from_face for more detail.
     """
@@ -266,8 +272,9 @@ def llc_get_uv_mask_from_face(faces):
 
 
 class topology:
-    """
-    This is a light weight object that remembers the structure of the grid,
+    """Topology object.
+
+    A light weight object that remembers the structure of the grid,
     what is connected, what is not. The core method is simply move the index to a direction.
     In the movie kill Bill, the bride sat in a car and said "wiggle your big toe".
     After the toe moved, "the hard part is over". You get the idea.
@@ -337,10 +344,11 @@ class topology:
                     self.typ = "box"
 
     def get_the_other_edge(self, face, edge):
-        """
+        """See what is adjacent to the face by this edge.
+
         The (edge) side of the (face) is connected to
         the (nedge) side of the (nface).
-        0,1,2,3 stands for up, down, left, right
+        0,1,2,3 stands for up, down, left, right.
 
         **Parameters:**
 
@@ -366,11 +374,12 @@ class topology:
             raise NotImplementedError
 
     def mutual_direction(self, face, nface, **kwarg):
-        """
+        """Find the relative orientation of two faces.
+
         0,1,2,3 stands for up, down, left, right
         given 2 faces, the returns are
         1. the 2nd face is to which direction of the 1st face
-        2. the 1st face is to which direction of the 2nd face
+        2. the 1st face is to which direction of the 2nd face.
         """
         if self.typ == "LLC":
             return llc_mutual_direction(face, nface, **kwarg)
@@ -382,7 +391,8 @@ class topology:
             raise NotImplementedError
 
     def ind_tend(self, ind, tend, cuvg="C", **kwarg):
-        """
+        """Move an index in a direction.
+
         ind is a tuple that is face,iy,ix,
         tendency again is up, down, left, right represented by 0,1,2,3
         return the next cell.
@@ -425,10 +435,11 @@ class topology:
             raise NotImplementedError
 
     def ind_moves(self, ind, moves, **kwarg):
-        """
+        """Move an index in a serie of directions.
+
         moves being a list of directions (0,1,2,3),
         ind being the starting index,
-        return the index after moving in the directions in the list
+        return the index after moving in the directions in the list.
 
         **Parameters:**
 
@@ -460,9 +471,9 @@ class topology:
                     if np.isclose(rot, 0):
                         pass
                     elif np.isclose(rot, np.pi / 2):
-                        moves[k + 1:] = [[2, 3, 1, 0][move] for move in moves[k + 1:]]
+                        moves[k + 1 :] = [[2, 3, 1, 0][move] for move in moves[k + 1 :]]
                     elif np.isclose(rot, 3 * np.pi / 2):
-                        moves[k + 1:] = [[3, 2, 0, 1][move] for move in moves[k + 1:]]
+                        moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
                     face = ind[0]
                     # if the old face is on the left of the new face,
                     # the particle should be heading right
@@ -472,7 +483,8 @@ class topology:
         return ind
 
     def check_illegal(self, ind):
-        """
+        """Check if the index is legal.
+
         A vectorized check to see whether the index is legal,
         index can be a tuple of numpy ndarrays.
         no negative index is permitted for sanity reason.
@@ -500,7 +512,8 @@ class topology:
             return result
 
     def ind_tend_vec(self, inds, tend, **kwarg):
-        """
+        """Move many indices in a list of directions.
+
         Vectorized version for ind_tend method.
 
         **Parameters:**
@@ -541,8 +554,8 @@ class topology:
         return inds
 
     def _find_wall_between(self, ind1, ind2):
-        """
-        return the wall between two adjacent cells,
+        """Return the wall between two adjacent cells.
+
         if the input is not adjacent, error may not be raised
         This scheme is only valid if there is face in the dimensions.
         """
@@ -586,9 +599,10 @@ class topology:
                 raise Non_normal_connection
 
     def _ind_tend_U(self, ind, tend):
-        """
+        """Move an U-index in a direction.
+
         A subset of ind_tend that deal with special issues
-        that comes from staggered grid. Read ind_tend for more info
+        that comes from staggered grid. Read ind_tend for more info.
         """
         # TODO: implement different grid offset case
         if tend in [2, 3]:
@@ -603,9 +617,10 @@ class topology:
                 return self._find_wall_between(first, alter)
 
     def _ind_tend_V(self, ind, tend):
-        """
+        """Move an V-index in a direction.
+
         A subset of ind_tend that deal with special issues
-        that comes from staggered grid. Read ind_tend for more info
+        that comes from staggered grid. Read ind_tend for more info.
         """
         # TODO: implement different grid offset case
         if tend in [0, 1]:
@@ -619,7 +634,8 @@ class topology:
                 return self._find_wall_between(first, alter)
 
     def get_uv_mask_from_face(self, faces):
-        """
+        """Get the masking of UV points.
+
         The background is as following:
         For a dataset with face connection,
         when one is finding the neighboring cells for vector interpolation,
@@ -642,9 +658,7 @@ class topology:
             raise NotImplementedError
 
     def four_matrix_for_uv(self, fface):
-        """
-        Expand get_uv_mask_from_face to 2D array of faces.
-        """
+        """Expand get_uv_mask_from_face to 2D array of faces."""
         # apply get_uv_mask for the n*m matrix
         UfromUvel, UfromVvel, VfromUvel, VfromVvel = [
             np.zeros(fface.shape) for i in range(4)

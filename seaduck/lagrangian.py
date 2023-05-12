@@ -12,9 +12,7 @@ deg2m = 6271e3 * np.pi / 180
 
 @njit
 def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
-    """
-    Translate the spatial rel-coords into lat-lon-dep coords.
-    """
+    """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
     dlon = (temp_x * cs - temp_y * sn) / np.cos(by * np.pi / 180)
@@ -27,9 +25,10 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
 
 @njit
 def increment(t, u, du):
-    """
+    """Find how far it will travel in duration t.
+
     For a one dimensional particle with speed u and speed derivative du,
-    find how far it will travel in duration t
+    find how far it will travel in duration t.
 
     **Parameter:**
 
@@ -44,9 +43,10 @@ def increment(t, u, du):
 
 
 def stationary(t, u, du, x0):
-    """
+    """Find the final position after time t.
+
     For a one dimensional particle with speed u and speed derivative du
-    starting at x0, the final position after time t.
+    starting at x0, find the final position after time t.
     "Stationary" means that we are assuming there is no time dependency.
 
     **Parameter:**
@@ -68,7 +68,8 @@ def stationary(t, u, du, x0):
 
 @njit
 def stationary_time(u, du, x0):
-    """
+    """Find the amount of time to leave the cell.
+
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
@@ -98,9 +99,7 @@ def stationary_time(u, du, x0):
 
 
 def time2wall(xs, us, dus):
-    """
-    Apply stationary_time three times for all three dimensions.
-    """
+    """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
         tl, tr = stationary_time(us[i], dus[i], xs[i])
@@ -110,11 +109,12 @@ def time2wall(xs, us, dus):
 
 
 def which_early(tf, ts):
-    """
+    """Find out which event happens first.
+
     We are trying to integrate the particle to time tf.
     The first event is either:
     1. tf is reached before reaching a wall
-    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0
+    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0.
 
     **Parameters:**
 
@@ -164,7 +164,8 @@ dvknw_s = KnW(
 
 
 class particle(position):
-    """
+    """Lagrangian particle object.
+
     The Lagrangian particle object. Simply a eulerian position object
     that know how to move itself.
 
@@ -301,8 +302,8 @@ class particle(position):
             self.zzlist = [[] for i in range(self.N)]
 
     def update_uvw_array(self):
-        """
-        Update the prefetched velocity arrays.
+        """Update the prefetched velocity arrays.
+
         The way to do it is slightly different for dataset with time
         dimensions and those without.
         """
@@ -329,11 +330,11 @@ class particle(position):
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
             if self.itmax != self.itmin:
-                self.uarray = np.array(self.ocedata[uname][self.itmin: self.itmax + 1])
-                self.varray = np.array(self.ocedata[vname][self.itmin: self.itmax + 1])
+                self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
+                self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
                 if self.wname is not None:
                     self.warray = np.array(
-                        self.ocedata[wname][self.itmin: self.itmax + 1]
+                        self.ocedata[wname][self.itmin : self.itmax + 1]
                     )
                 # else:
                 #     self.warray = None
@@ -350,7 +351,8 @@ class particle(position):
                     self.warray[:, 0] = 0.0
 
     def get_vol(self, which=None):
-        """
+        """Read in the volume of the cell.
+
         For particles that has transport = True,
         volume of the cell is needed for the integration.
         This method read the volume that is calculated at __init__.
@@ -371,7 +373,8 @@ class particle(position):
         self.Vol[which] = Vol
 
     def get_u_du(self, which=None):
-        """
+        """Read the velocity at particle position.
+
         Read the velocity and velocity derivatives in all three dimensions
         using the interpolate method with the default kernel.
         Read eulerian.position.interpolate for more detail.
@@ -449,8 +452,8 @@ class particle(position):
         self.fillna()
 
     def fillna(self):
-        """
-        Fill the np.nan values to nan.
+        """Fill the np.nan values to nan.
+
         This is just to let those in rock stay in rock.
         """
         np.nan_to_num(self.u, copy=False)
@@ -461,14 +464,14 @@ class particle(position):
         np.nan_to_num(self.dw, copy=False)
 
     def note_taking(self, which=None):
-        """
+        """Record raw data into list of lists.
+
         This method is only called in save_raw = True particles.
         This method will note done the raw info of the particle
         trajectories.
         With those info, one could reconstruct the analytical
         trajectories to arbitrary position.
         """
-
         if which is None:
             which = np.ones(self.N).astype(bool)
         where = np.where(which)[0]
@@ -501,13 +504,13 @@ class particle(position):
             self.zzlist[i].append(self.dep[i])
 
     def empty_lists(self):
-        """
+        """Empty the lists.
+
         Some times the raw-data list get too long,
         It would be necessary to dump the data,
         and empty the lists containing the raw data.
         This method does the latter.
         """
-
         self.itlist = [[] for i in range(self.N)]
         self.fclist = [[] for i in range(self.N)]
         self.iylist = [[] for i in range(self.N)]
@@ -528,8 +531,8 @@ class particle(position):
         self.zzlist = [[] for i in range(self.N)]
 
     def out_of_bound(self):
-        """
-        Return particles that are out of the cell bound.
+        """Return particles that are out of the cell bound.
+
         This is most likely due to numerical error of one sort or another.
         If local cartesian is used, there would be more out_of_bound error.
         """
@@ -542,8 +545,8 @@ class particle(position):
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
     def trim(self, verbose=False, tol=1e-6):
-        """
-        Move the particles from outside the cell into the cell.
+        """Move the particles from outside the cell into the cell.
+
         At the same time change the velocity accordingly.
         In the mean time, creating some negiligible error in time.
 
@@ -610,7 +613,8 @@ class particle(position):
                 print(f"converting {zmin} to 0")
 
     def _contract(self):
-        """
+        """Warp time to move particle into cell.
+
         If particles are not in the cell,
         perform some timewarp to put them as close to the cell as possible.
         This is not used in the main routine. Because it was not deemed
@@ -636,7 +640,7 @@ class particle(position):
             np.nan_to_num(tr, copy=False)
             tmin = np.maximum(tmin, np.minimum(tl, tr))
             tmax = np.minimum(tmax, np.maximum(tl, tr))
-#         dead = tmin > tmax
+        #         dead = tmin > tmax
 
         contract_time = (tmin + tmax) / 2
         contract_time = np.maximum(-max_time, contract_time)
@@ -664,7 +668,8 @@ class particle(position):
         self.t[out] += contract_time
 
     def update_after_cell_change(self):
-        """
+        """Update properties after particles cross wall.
+
         A wall event is triggered when particle reached the wall.
         This method handle the coords translation as a particle cross
         a wall.
@@ -757,16 +762,21 @@ class particle(position):
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
             self.rx = (
-                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn) * deg2m / self.dx
+                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
+                * deg2m
+                / self.dx
             )
             self.ry = (
-                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180)) * deg2m / self.dy
+                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
+                * deg2m
+                / self.dy
             )
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
     def analytical_step(self, tf, which=None):
-        """
+        """Integrate the particle with velocity.
+
         The core method.
         A set of particles trying to integrate for time tf
         (could be negative).
@@ -783,7 +793,6 @@ class particle(position):
             Boolean or int array that specify the subset of points to
             do the operation.
         """
-
         if which is None:
             which = np.ones(self.N).astype(bool)
         if isinstance(tf, float):
@@ -903,8 +912,8 @@ class particle(position):
             self.izl_lin[which] = tiz
 
     def deepcopy(self):
-        """
-        Return a clone of the object.
+        """Return a clone of the object.
+
         The object is a position object, and thus cannot move any more.
         """
         p = position()
@@ -921,9 +930,9 @@ class particle(position):
         return p
 
     def to_next_stop(self, t1):
-        """
-        Integrate all particles towards time tl
-        by repeatedly calling analytical step.
+        """Integrate all particles towards time tl.
+
+        This is done by repeatedly calling analytical step.
         Or at least try to do so before maximum_iteration is reached.
         If the maximum time is reached,
         we also force all particle's internal clock to be tl.
@@ -976,8 +985,7 @@ class particle(position):
     def to_list_of_time(
         self, normal_stops, update_stops="default", return_in_between=True
     ):
-        """
-        Integrate the particles to a list of time.
+        """Integrate the particles to a list of time.
 
         **Parameters:**
 

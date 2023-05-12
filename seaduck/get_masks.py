@@ -11,7 +11,8 @@ from seaduck.smart_read import smart_read
 
 
 def mask_u_node(maskC, tp):
-    """
+    """Mask out U-points.
+
     for MITgcm indexing, U is defined on the left of the cell,
     When the C grid is dry, U are either:
     a. dry;
@@ -32,7 +33,6 @@ def mask_u_node(maskC, tp):
         numpy array with the same shape as the model spacial coordinates.
         1 for wet U-walls (including interface between wet and dry), 0 for dry ones.
     """
-
     maskU = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC == 0)).T
     # find out which points are masked will make the search faster.
@@ -45,12 +45,13 @@ def mask_u_node(maskC, tp):
 
 
 def mask_v_node(maskC, tp):
-    """
+    """Mask out v-points.
+
     for MITgcm indexing, V is defined on the "south" side of the cell,
     When the C grid is dry, V are either:
     a. dry;
     b. on the interface, where the cell to the downside is wet.
-    if b is the case, we need to unmask the vdata
+    if b is the case, we need to unmask the vdata.
 
     **Parameters:**
 
@@ -79,12 +80,13 @@ def mask_v_node(maskC, tp):
 def mask_w_node(maskC, tp=None):
     # this one does not need tp object
     # if you pass something into it by mistake, it will be ignored.
-    """
+    """Mask out W-points.
+
     for MITgcm indexing, W is defined on the top of the cell,
     When the C grid is dry, W are either:
     a. dry;
     b. on the interface, where the cell above is wet.
-    if b is the case, we need to unmask the wdata
+    if b is the case, we need to unmask the wdata.
 
     **Parameters:**
 
@@ -107,7 +109,8 @@ def mask_w_node(maskC, tp=None):
 
 
 def get_masks(od, tp):
-    """
+    """Mask all staggered valocity points.
+
     A wrapper around mask_u_node, mask_v_node, mask_w_node.
     If there is no maskC in the dataset, just return nothing is masked.
 
@@ -166,7 +169,8 @@ def get_masks(od, tp):
 
 
 def get_masked(od, ind, gridtype="C"):
-    """
+    """Return whether points are masked.
+
     Return whether the indexes of intersts are masked or not.
 
     **Parameters:**

@@ -347,4 +347,15 @@ tags
 # Ignore code-workspaces
 *.code-workspace
 
+# User Defined
+test*.ipynb
+*.npy
+*.png
+*.jpg
+.vscode/
+tests/Data
+assets/
+*.pyc
+*.nc
+
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,vim,visualstudiocode,pycharm

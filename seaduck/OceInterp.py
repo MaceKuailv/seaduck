@@ -23,11 +23,12 @@ def OceInterp(
     update_stops="default",
     return_in_between=True,
     return_pt_time=True,
-    kernel_kwarg = {},
+    kernel_kwarg={},
 ):
-    """
+    """Interp for people who just want to take a quick look.
+
     **This is the centerpiece function of the package, through which
-    you can access almost all of its functionality.**
+    you can access almost all of its functionality.**.
 
     **Parameters:**
 
@@ -55,7 +56,7 @@ def OceInterp(
     + return_pt_time: bool
         Specifies whether to return the time of all the steps.
     + kernel_kwarg: dict
-        keyword arguments to pass into seaduck.KnW object. 
+        keyword arguments to pass into seaduck.KnW object.
     """
     if not isinstance(od, OceData):
         od = OceData(od)
@@ -120,7 +121,7 @@ def OceInterp(
             elif lagrange_token in var:
                 sublist = []
                 for snap in raw:
-                    sublist.append(snap.__dict__[var[len(lagrange_token):]])
+                    sublist.append(snap.__dict__[var[len(lagrange_token) :]])
                 R.append(sublist)
             else:
                 sublist = []
