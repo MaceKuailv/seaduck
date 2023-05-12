@@ -603,7 +603,7 @@ class position:
             temp = []
             for var in varName:
                 a_knw = knw.get(var)
-                if (a_knw is None) or not (isinstance(a_knw, KnW)):
+                if (a_knw is None) or not (isinstance(a_knw, (tuple,KnW))):
                     raise ValueError(
                         f"Variable {var} does not have a proper corresponding kernel"
                     )

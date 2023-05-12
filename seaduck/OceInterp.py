@@ -23,7 +23,7 @@ def OceInterp(
     update_stops="default",
     return_in_between=True,
     return_pt_time=True,
-    **kernel_kwarg,
+    kernel_kwarg = {},
 ):
     """
     **This is the centerpiece function of the package, through which
@@ -54,6 +54,8 @@ def OceInterp(
         but also at every point in time when the speed is updated.
     + return_pt_time: bool
         Specifies whether to return the time of all the steps.
+    + kernel_kwarg: dict
+        keyword arguments to pass into seaduck.KnW object. 
     """
     if not isinstance(od, OceData):
         od = OceData(od)
@@ -70,7 +72,6 @@ def OceInterp(
         pass
     else:
         raise ValueError("varList type not recognized.")
-
     if isinstance(kernelList, list):
         pass
     elif kernelList is None:
@@ -101,7 +102,7 @@ def OceInterp(
         try:
             assert len(t) > 1
         except AssertionError:
-            raise Exception(
+            raise ValueError(
                 "There needs to be at least two time steps to run the lagrangian particle"
             )
         t_start = t[0]
