@@ -65,7 +65,7 @@ def test_combination(lst, select):
     sn = np.sqrt(1-cs**2)
     uu,vv = _u.local_to_latlon(u, v, cs, sn)
     assert np.isclose(np.hypot(uu,vv),np.hypot(u,v))
-    
+
 @pytest.mark.parametrize(
     'lst',[[1,2,3],np.arange(3)]
 )
@@ -75,11 +75,11 @@ def test_combination(lst, select):
 def test_combination(lst,select):
     the_ls = _u.get_combination(lst,select)
     assert len(the_ls) == math.factorial(len(lst))/(math.factorial(select))/(math.factorial(len(lst) - select))
-    
+
 def test_none_in():
     assert _u.NoneIn([1,2,None])
     assert not (_u.NoneIn([1,2,3]))
-                
+
 def test_cs_sn():
     _u.missing_cs_sn(curv)
     assert isinstance(curv['CS'],xr.DataArray)

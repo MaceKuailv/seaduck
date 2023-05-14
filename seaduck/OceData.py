@@ -146,15 +146,9 @@ class OceData(object):
         # TODO:
         pass
 
-<<<<<<< HEAD
-    def show_alias(self):
-        """Print out the alias in a nice pd.DataFrame format."""
-=======
     def show_alias(self): # pragma: no cover
-        """
-        print out the alias in a nice pd.DataFrame format.
-        """
->>>>>>> main
+        """Print out the alias in a nice pd.DataFrame format."""
+
         return pd.DataFrame.from_dict(
             self.alias, orient="index", columns=["original name"]
         )

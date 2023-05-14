@@ -9,29 +9,10 @@ from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, to_180, rel2lat
 
 deg2m = 6271e3 * np.pi / 180
 
-
 @njit
-<<<<<<< HEAD
-def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
-    """Translate the spatial rel-coords into lat-lon-dep coords."""
-    temp_x = rx * dx / deg2m
-    temp_y = ry * dy / deg2m
-    dlon = (temp_x * cs - temp_y * sn) / np.cos(by * np.pi / 180)
-    dlat = temp_x * sn + temp_y * cs
-    lon = dlon + bx
-    lat = dlat + by
-    dep = bzl + dzl * rzl
-    return lon, lat, dep
-
-
-@njit
-def increment(t, u, du):
+def increment(t, u, du): # pragma: no cover
     """Find how far it will travel in duration t.
 
-=======
-def increment(t, u, du): # pragma: no cover
-    """
->>>>>>> main
     For a one dimensional particle with speed u and speed derivative du,
     find how far it will travel in duration t.
 
@@ -72,14 +53,9 @@ def stationary(t, u, du, x0):
 
 
 @njit
-<<<<<<< HEAD
-def stationary_time(u, du, x0):
+def stationary_time(u, du, x0):  # pragma: no cover
     """Find the amount of time to leave the cell.
 
-=======
-def stationary_time(u, du, x0): # pragma: no cover
-    """
->>>>>>> main
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
@@ -339,15 +315,9 @@ class particle(position):
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
-<<<<<<< HEAD
-            if self.itmax != self.itmin:
-                self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
-                self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
-=======
             if self.itmax != self.itmin:# pragma: no cover
                 self.uarray = np.array(self.ocedata[uname][self.itmin: self.itmax + 1])
                 self.varray = np.array(self.ocedata[vname][self.itmin: self.itmax + 1])
->>>>>>> main
                 if self.wname is not None:
                     self.warray = np.array(
                         self.ocedata[wname][self.itmin : self.itmax + 1]
@@ -546,15 +516,9 @@ class particle(position):
         self.yylist = [[] for i in range(self.N)]
         self.zzlist = [[] for i in range(self.N)]
 
-<<<<<<< HEAD
-    def out_of_bound(self):
+    def out_of_bound(self): # pragma: no cover
         """Return particles that are out of the cell bound.
 
-=======
-    def out_of_bound(self): # pragma: no cover
-        """
-        Return particles that are out of the cell bound.
->>>>>>> main
         This is most likely due to numerical error of one sort or another.
         If local cartesian is used, there would be more out_of_bound error.
         """
@@ -634,14 +598,9 @@ class particle(position):
             if verbose: # pragma: no cover
                 print(f"converting {zmin} to 0")
 
-<<<<<<< HEAD
-    def _contract(self):
+    def _contract(self): # pragma: no cover
         """Warp time to move particle into cell.
 
-=======
-    def _contract(self): # pragma: no cover
-        """
->>>>>>> main
         If particles are not in the cell,
         perform some timewarp to put them as close to the cell as possible.
         This is not used in the main routine. Because it was not deemed
