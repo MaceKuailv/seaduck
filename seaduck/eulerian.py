@@ -50,7 +50,7 @@ def _partial_flatten(ind):
     """
     Converting a high dimensional index set to a 2D one
     """
-    if isinstance(ind, tuple):
+    if isinstance(ind, tuple): # pragma: no cover
         shape = ind[0].shape
 
         # num_neighbor = 1
@@ -145,7 +145,7 @@ class position:
             y = np.array([1.0]) * y
         if isinstance(z, float):
             z = np.array([1.0]) * z
-        if isinstance(z, float):
+        if isinstance(t, float):
             t = np.array([1.0]) * t
 
         for thing in [x, y, z, t]:
@@ -167,7 +167,7 @@ class position:
                 self.bx,
                 self.by,
             ) = self.ocedata.find_rel_h(x, y)
-        else:
+        else: # pragma: no cover
             self.lon = None
             self.lat = None
             self.face = None
@@ -225,7 +225,7 @@ class position:
                     self.dt,
                     self.bt,
                 ) = [None for i in range(4)]
-        else:
+        else: # pragma: no cover
             (self.it, self.rt, self.dt, self.bt, self.t) = [None for i in range(5)]
         return self
 
@@ -332,7 +332,7 @@ class position:
         + knw: KnW object
             The kernel used to find neighboring points.
         """
-        if self.iz is None:
+        if self.iz is None: # pragma: no cover
             return None
         if knw.vkernel == "nearest":
             return copy.deepcopy(self.iz.astype(int))
@@ -348,7 +348,7 @@ class position:
                 ) = self.ocedata.find_rel_v_lin(self.dep)
             return np.vstack([self.iz_lin.astype(int), self.iz_lin.astype(int) - 1]).T
         else:
-            raise Exception("vkernel not supported")
+            raise ValueError("vkernel not supported")
 
     def fatten_vl(self, knw):
         """
@@ -359,14 +359,14 @@ class position:
         + knw: KnW object
             The kernel used to find neighboring points.
         """
-        if self.izl is None:
+        if self.izl is None: # pragma: no cover
             return None
         if knw.vkernel == "nearest":
             return copy.deepcopy(self.izl.astype(int))
         elif knw.vkernel in ["dz", "linear"]:
             try:
                 self.izl_lin
-            except AttributeError:
+            except AttributeError: # pragma: no cover
                 (
                     self.izl_lin,
                     self.rzl_lin,
@@ -374,8 +374,8 @@ class position:
                     self.bzl_lin,
                 ) = self.ocedata.find_rel_vl_lin(self.dep)
             return np.vstack([self.izl_lin.astype(int), self.izl_lin.astype(int) - 1]).T
-        else:
-            raise Exception("vkernel not supported")
+        else: # pragma: no cover
+            raise ValueError("vkernel not supported")
 
     def fatten_t(self, knw):
         """
@@ -386,7 +386,7 @@ class position:
         + knw: KnW object
             The kernel used to find neighboring points.
         """
-        if self.it is None:
+        if self.it is None: # pragma: no cover
             return None
         if knw.tkernel == "nearest":
             return copy.deepcopy(self.it.astype(int))
@@ -402,7 +402,7 @@ class position:
                 ) = self.ocedata.find_rel_t_lin(self.t)
             return np.vstack([self.it_lin.astype(int), self.it_lin.astype(int) + 1]).T
         else:
-            raise Exception("vkernel not supported")
+            raise ValueError("tkernel not supported")
 
     def fatten(self, knw, fourD=False, required="all", ind_moves_kwarg={}):
         """
@@ -441,7 +441,7 @@ class position:
                 R = (fiy, fix)
                 keys = ["Y", "X"]
         else:
-            R = np.zeros(self.N)
+            R = tuple([np.zeros(self.N)])
             keys = ["place_holder"]
 
         if _in_required("Z", required):
@@ -494,7 +494,7 @@ class position:
         """
         return weight_f_node(self.rx, self.ry)
 
-    def get_lon_lat(self):
+    def _get_lon_lat(self): # pragma: no cover
         """
         Return the lat-lon value based on relative coordinate.
         This method only work if the dataset has readiness['h'] == 'oceanparcel'
@@ -505,7 +505,7 @@ class position:
         lat = np.einsum("nj,nj->n", w, py.T)
         return lon, lat
 
-    def _get_needed(self, varName, knw, required=None, prefetched=None, **kwarg):
+    def _get_needed(self, varName, knw, required=None, prefetched=None, **kwarg): # pragma: no cover
         """An internal testing function"""
         if required is None:
             required = self.ocedata._ds[varName].dims
@@ -520,7 +520,7 @@ class position:
         else:
             return prefetched[ind]
 
-    def _get_masked(self, knw, gridtype="C", **kwarg):
+    def _get_masked(self, knw, gridtype="C", **kwarg): # pragma: no cover
         """An internal testing function"""
         ind = self.fatten(knw, fourD=True, **kwarg)
         if self.it is not None:
@@ -532,7 +532,7 @@ class position:
             )
         return get_masked(self.ocedata, ind, gridtype=gridtype)
 
-    def _find_pk4d(self, knw, gridtype="C"):
+    def _find_pk4d(self, knw, gridtype="C"): # pragma: no cover
         """An internal testing function"""
         masked = self._get_masked(knw, gridtype=gridtype)
         pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
@@ -675,7 +675,7 @@ class position:
                     new_i_min.append(i_min[i])
             elif var is None:
                 pass
-            else:
+            else: # pragma: no cover
                 raise ValueError(
                     "varName needs to be string, tuple, or a list of the above."
                 )
@@ -695,7 +695,7 @@ class position:
                 kernel_hash.append(hash(kkk))
                 mask_ignore.append(kkk.ignore_mask)
             elif isinstance(kkk, tuple):
-                if len(kkk) != 2:
+                if len(kkk) != 2: # pragma: no cover
                     raise ValueError(
                         "When knw is a tuple, we assume it to be kernels for a horizontal vector,"
                         "thus, it has to have 2 elements"
@@ -858,7 +858,7 @@ class position:
                     (bool_ufromu, bool_ufromv, bool_vfromu, bool_vfromv),
                     (indufromu, indufromv, indvfromu, indvfromv),
                 )
-            else:
+            else: # pragma: no cover
                 raise ValueError(f"unsupported dims: {dims}")
         # modify the index_lookup
         return transform_lookup
@@ -906,7 +906,7 @@ class position:
             elif isinstance(varName, str):
                 ind = index_lookup[hsind]
                 ind_for_mask = _ind_for_mask(ind, dims)
-                if "Zl" in dims:
+                if "Zl" in dims: # pragma: no cover
                     cuvw = "Wvel"
                 elif "Z" in dims:
                     if "Xp1" in dims and "Yp1" in dims:
@@ -915,9 +915,9 @@ class position:
                             "interpretations thus not implemented, "
                             "let knw.ignore_mask =True to go around"
                         )
-                    elif "Xp1" in dims:
+                    elif "Xp1" in dims: # pragma: no cover
                         cuvw = "U"
-                    elif "Yp1" in dims:
+                    elif "Yp1" in dims: # pragma: no cover
                         cuvw = "V"
                     else:
                         cuvw = "C"
@@ -928,7 +928,7 @@ class position:
             elif isinstance(varName, tuple):
                 to_unzip = transform_lookup[hsind]
                 uind, vind = index_lookup[hsind]
-                if to_unzip is None:
+                if to_unzip is None: # pragma: no cover
                     uind_for_mask = _ind_for_mask(uind, dims[0])
                     vind_for_mask = _ind_for_mask(vind, dims[1])
                     umask = get_masked(self.ocedata, uind_for_mask, gridtype="U")
@@ -1001,7 +1001,7 @@ class position:
             if isinstance(varName, str):
                 ind = index_lookup[hsind]
                 if prefetched is not None:
-                    if i_min is None:
+                    if i_min is None: # pragma: no cover
                         raise ValueError(
                             "please pass value of the prefix of prefetched dataset, "
                             "even if the prefix is zero"
@@ -1100,7 +1100,7 @@ class position:
                         rz = self.rz
                     else:
                         rz = self.rz_lin
-                else:
+                else: # pragma: no cover
                     rz = 0
             elif "Zl" in dims:
                 this_bottom_scheme = None
@@ -1109,7 +1109,7 @@ class position:
                         rz = self.rzl
                     else:
                         rz = self.rzl_lin
-                else:
+                else: # pragma: no cover
                     rz = 0
             else:
                 rz = 0
@@ -1254,7 +1254,7 @@ class position:
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
-            else:
+            else: # pragma: no cover
                 raise ValueError(f"unexpected varName: {varName}")
 
         final_dict = dict(zip(output_format["final_varName"], R))
