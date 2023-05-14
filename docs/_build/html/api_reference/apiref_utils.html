@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seaduck.utils &#8212; My sample book</title>
+
+
+
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_utils';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="All API References (for exporting)" href="../all_in_one.html" />
+    <link rel="prev" title="seaduck.get_masks" href="apiref_getmasks.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+
+
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+
+      <div class="bd-sidebar-primary bd-sidebar">
+
+
+
+  <div class="sidebar-header-items sidebar-primary__section">
+
+
+
+
+  </div>
+
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+
+<a class="navbar-brand logo" href="../intro.html">
+
+
+
+
+
+
+
+
+
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+
+
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to ODucks
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Network of Object</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../reference.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_kernelNweight.html">seaduck.kernelNweight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+
+
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+
+      <main id="main-content" class="bd-main">
+
+
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+
+    <div class="header-article-items__start">
+
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+
+    </div>
+
+
+    <div class="header-article-items__end">
+
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+
+
+
+      <li><a href="https://github.com/MaceKuailv/seaduck" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+
+
+
+
+      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2Fapi_reference/apiref_utils.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+
+
+
+      <li><a href="../_sources/api_reference/apiref_utils.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+
+
+
+
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+
+    </div>
+
+</div>
+</div>
+
+
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>seaduck.utils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+
+        </div>
+    </div>
+</div>
+
+
+
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+
+  <div class="section" id="module-seaduck.utils">
+<span id="seaduck-utils"></span><h1>seaduck.utils<a class="headerlink" href="#module-seaduck.utils" title="Permalink to this headline">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.NoneIn">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">NoneIn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.NoneIn" title="Permalink to this definition">#</a></dt>
+<dd><p>See if there is a None in the iterable object. Return a Boolean.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.create_tree">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">create_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.create_tree" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a cKD tree object.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>X,Y: np.ndarray</dt><dd><p>longitude and latitude of the grid location</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>R: float</dt><dd><p>The radius in kilometers of the planet.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>leafsize: int</dt><dd><p>When to switch to brute force search.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_cs_sn">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_cs_sn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetaA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thetaB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phiB</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_cs_sn" title="Permalink to this definition">#</a></dt>
+<dd><p>theta is the angle
+between the meridian crossing point A
+and the geodesic connecting A and B</p>
+<p>this function return cos and sin of theta</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_ind_h">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_h" title="Permalink to this definition">#</a></dt>
+<dd><p>use ckd tree to find the horizontal indexes,</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_ind_nearest">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_nearest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_nearest" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the index of the nearest value in the array to the given value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_ind_periodic">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_periodic" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the index of the nearest value in the array to the given value, where the values are periodic.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_ind_t">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_t" title="Permalink to this definition">#</a></dt>
+<dd><p>find the index of the latest time that is before the given time</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_ind_z">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_z" title="Permalink to this definition">#</a></dt>
+<dd><p>find the index of the nearest level that is lower than the given level</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_px_py">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_px_py</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">XG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">YG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridoffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_px_py" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the nearest 4 corner points. This is used in oceanparcel interpolation scheme.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_h_naive">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_h_naive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_h_naive" title="Permalink to this definition">#</a></dt>
+<dd><p>very similar to find_rel_time/v
+rx,ry,dx,dy are defined the same way
+for example
+rx = “how much to the right of the node”/”size of the cell in left-right direction”
+dx = “size of the cell in left-right direction”</p>
+<p>cs,sn is just the cos and sin of the grid orientation.
+It will come in handy when we transfer vectors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_h_oceanparcel">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_h_oceanparcel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">XG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">YG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_h_oceanparcel" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the rel-coords using the rectilinear scheme</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_h_rectilinear">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_h_rectilinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_h_rectilinear" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the rel-coords using the rectilinear scheme</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_nearest">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_nearest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_nearest" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the rel-coords based on the find_ind_nearest method.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_periodic">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_periodic" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the rel-coords based on the find_ind_periodic method.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_time">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_time" title="Permalink to this definition">#</a></dt>
+<dd><p>find the rel-coords of the temporal coords</p>
+<p><strong>Paramters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>time: numpy.ndarray</dt><dd><p>1D array for the time since 1970-01-01 in seconds.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ts: numpy.ndarray</dt><dd><p>The time of model time steps also in seconds.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>it: numpy.ndarray</dt><dd><p>Indexes of the reference t level</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>rt: numpy.ndarray</dt><dd><p>Non-dimensional distance to the reference t level</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dt: numpy.ndarray</dt><dd><p>distance between the reference t level and the next one.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel_z">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dz</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_z" title="Permalink to this definition">#</a></dt>
+<dd><p>find the rel-coords of the vertical coords</p>
+<p><strong>Paramters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>depth: numpy.ndarray</dt><dd><p>1D array for the depth of interest in meters. More negative means deeper.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>some_z: numpy.ndarray</dt><dd><p>The depth of reference depth.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>some_dz: numpy.ndarray</dt><dd><p>dz_i = abs(z_{i+1}- z_i)</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>iz: numpy.ndarray</dt><dd><p>Indexes of the reference z level</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>rz: numpy.ndarray</dt><dd><p>Non-dimensional distance to the reference z level</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dz: numpy.ndarray</dt><dd><p>distance between the reference z level and the next one.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rx_ry_naive">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rx_ry_naive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rx_ry_naive" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the non-dimensional coords using the local cartesian scheme</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rx_ry_oceanparcel">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rx_ry_oceanparcel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">px</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rx_ry_oceanparcel" title="Permalink to this definition">#</a></dt>
+<dd><p>find the non-dimensional horizontal distance using the oceanparcel scheme.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.get_combination">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">get_combination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.get_combination" title="Permalink to this definition">#</a></dt>
+<dd><p>Iteratively find all the combination that
+has (select) amount of elements
+and every element belongs to lst
+This is almost the same as the one in itertools.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.get_key_by_value">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">get_key_by_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.get_key_by_value" title="Permalink to this definition">#</a></dt>
+<dd><p>Find one of the keys in a dictionary that correspond to the given value</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>d: dictionaty</dt><dd><p>dictionary to lookup key from</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>value: object</dt><dd><p>A object that has __eq__ method.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.local_to_latlon">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">local_to_latlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.local_to_latlon" title="Permalink to this definition">#</a></dt>
+<dd><p>convert local vector to north-east</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.missing_cs_sn">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">missing_cs_sn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.missing_cs_sn" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.rel_lon">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">rel_lon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_lon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.rel_lon" title="Permalink to this definition">#</a></dt>
+<dd><p>Change the definition of 0 longitude.
+Return how much east one need to go from ref_lon to x
+This function aims to address the confusion caused by the discontinuity in longitude.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.spherical2cartesian">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">spherical2cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.spherical2cartesian" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert spherical coordinates to cartesian.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Y: np.array</dt><dd><p>Spherical Y coordinate (latitude)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>X: np.array</dt><dd><p>Spherical X coordinate (longitude)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>R: scalar</dt><dd><p>Earth radius in km
+If None, use geopy default</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x: np.array</dt><dd><p>Cartesian x coordinate</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>y: np.array</dt><dd><p>Cartesian y coordinate</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z: np.array</dt><dd><p>Cartesian z coordinate</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.to_180">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">to_180</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.to_180" title="Permalink to this definition">#</a></dt>
+<dd><p>convert any longitude scale to [-180,180)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.weight_f_node">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">weight_f_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.weight_f_node" title="Permalink to this definition">#</a></dt>
+<dd><p>assign weight based on the non-dimensional coords to the four corner points.</p>
+</dd></dl>
+
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./api_reference"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+
+
+
+
+                <footer class="bd-footer-article">
+
+<div class="footer-article-items footer-article__inner">
+
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="apiref_getmasks.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">seaduck.get_masks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../all_in_one.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">All API References (for exporting)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+
+</div>
+
+                </footer>
+
+            </div>
+
+
+
+
+          </div>
+          <footer class="bd-footer-content">
+
+<div class="bd-footer-content__inner container">
+
+  <div class="footer-item">
+
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+
+  <div class="footer-item">
+
+  <p class="copyright">
+
+      © Copyright 2022.
+      <br/>
+
+  </p>
+
+  </div>
+
+  <div class="footer-item">
+
+  </div>
+
+  <div class="footer-item">
+
+  </div>
+
+</div>
+          </footer>
+
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

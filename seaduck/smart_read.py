@@ -4,10 +4,16 @@ import numpy as np
 import xarray as xr
 
 
+<<<<<<< HEAD
 def smart_read(da, ind):
     """Read from a xarray.DataArray given tuple indexes.
 
     Try to do it fast and smartly.
+=======
+def smart_read(da, ind): # pragma: no cover
+    """
+    Read from a xarray.DataArray given tuple indexes, and try to do it fast.
+>>>>>>> main
 
     **Parameters:**
 
