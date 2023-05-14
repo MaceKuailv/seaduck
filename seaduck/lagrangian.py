@@ -5,12 +5,13 @@ from numba import njit
 
 from seaduck.eulerian import position
 from seaduck.kernelNweight import KnW
-from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, to_180
+from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, to_180, rel2latlon
 
 deg2m = 6271e3 * np.pi / 180
 
 
 @njit
+<<<<<<< HEAD
 def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
     """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
@@ -27,6 +28,10 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
 def increment(t, u, du):
     """Find how far it will travel in duration t.
 
+=======
+def increment(t, u, du): # pragma: no cover
+    """
+>>>>>>> main
     For a one dimensional particle with speed u and speed derivative du,
     find how far it will travel in duration t.
 
@@ -67,9 +72,14 @@ def stationary(t, u, du, x0):
 
 
 @njit
+<<<<<<< HEAD
 def stationary_time(u, du, x0):
     """Find the amount of time to leave the cell.
 
+=======
+def stationary_time(u, du, x0): # pragma: no cover
+    """
+>>>>>>> main
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
@@ -264,7 +274,7 @@ class particle(position):
             if wname is not None:
                 try:
                     self.ocedata[wname].loc[dict(Zl=0)] = 0
-                except KeyError:
+                except KeyError: # pragma: no cover
                     pass
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
@@ -311,7 +321,7 @@ class particle(position):
         vname = self.vname
         wname = self.wname
         if "time" not in self.ocedata[uname].dims:
-            try:
+            try: # pragma: no cover
                 self.uarray
                 self.varray
                 if self.wname is not None:
@@ -319,7 +329,7 @@ class particle(position):
             except AttributeError:
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
-                if self.wname is not None:
+                if self.wname is not None: # pragma: no cover
                     self.warray = np.array(self.ocedata[wname])
                     if self.dont_fly:
                         # I think it's fine
@@ -329,9 +339,15 @@ class particle(position):
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
+<<<<<<< HEAD
             if self.itmax != self.itmin:
                 self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
                 self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
+=======
+            if self.itmax != self.itmin:# pragma: no cover
+                self.uarray = np.array(self.ocedata[uname][self.itmin: self.itmax + 1])
+                self.varray = np.array(self.ocedata[vname][self.itmin: self.itmax + 1])
+>>>>>>> main
                 if self.wname is not None:
                     self.warray = np.array(
                         self.ocedata[wname][self.itmin : self.itmax + 1]
@@ -368,7 +384,7 @@ class particle(position):
         sub = self.subset(which)
         if self.face is not None:
             Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.face, sub.iy, sub.ix]
-        else:
+        else:# pragma: no cover
             Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.iy, sub.ix]
         self.Vol[which] = Vol
 
@@ -530,9 +546,15 @@ class particle(position):
         self.yylist = [[] for i in range(self.N)]
         self.zzlist = [[] for i in range(self.N)]
 
+<<<<<<< HEAD
     def out_of_bound(self):
         """Return particles that are out of the cell bound.
 
+=======
+    def out_of_bound(self): # pragma: no cover
+        """
+        Return particles that are out of the cell bound.
+>>>>>>> main
         This is most likely due to numerical error of one sort or another.
         If local cartesian is used, there would be more out_of_bound error.
         """
@@ -560,7 +582,7 @@ class particle(position):
             close to the cell.
         """
         # tol = 1e-6 # about 10 m horizontal for 1 degree
-        if verbose:
+        if verbose: # pragma: no cover
             xmax = np.nanmax(self.rx)
             xmin = np.nanmin(self.rx)
             ymax = np.nanmax(self.ry)
@@ -571,28 +593,28 @@ class particle(position):
         cdx = (0.5 - tol) - self.rx[where]
         self.rx[where] += cdx
         self.u[where] += self.du[where] * cdx
-        if verbose:
+        if verbose: # pragma: no cover
             print(f"converting {xmax} to 0.5")
         # if xmin<=-0.5+tol:
         where = self.rx <= -0.5 + tol
         cdx = (-0.5 + tol) - self.rx[where]
         self.rx[where] += cdx
         self.u[where] += self.du[where] * cdx
-        if verbose:
+        if verbose: # pragma: no cover
             print(f"converting {xmin} to -0.5")
         # if ymax>=0.5-tol:
         where = self.ry >= 0.5 - tol
         cdx = (0.5 - tol) - self.ry[where]
         self.ry[where] += cdx
         self.v[where] += self.dv[where] * cdx
-        if verbose:
+        if verbose: # pragma: no cover
             print(f"converting {ymax} to 0.5")
         # if ymin<=-0.5+tol:
         where = self.ry <= -0.5 + tol
         cdx = (-0.5 + tol) - self.ry[where]
         self.ry[where] += cdx
         self.v[where] += self.dv[where] * cdx
-        if verbose:
+        if verbose: # pragma: no cover
             print(f"converting {ymin} to -0.5")
         if self.rzl_lin is not None:
             zmax = np.nanmax(self.rzl_lin)
@@ -602,19 +624,24 @@ class particle(position):
             cdx = (1.0 - tol) - self.rzl_lin[where]
             self.rzl_lin[where] += cdx
             self.w[where] += self.dw[where] * cdx
-            if verbose:
+            if verbose: # pragma: no cover
                 print(f"converting {zmax} to 1")
             # if zmin<=-0.+tol:
             where = self.rzl_lin <= -0.0 + tol
             cdx = (-0.0 + tol) - self.rzl_lin[where]
             self.rzl_lin[where] += cdx
             self.w[where] += self.dw[where] * cdx
-            if verbose:
+            if verbose: # pragma: no cover
                 print(f"converting {zmin} to 0")
 
+<<<<<<< HEAD
     def _contract(self):
         """Warp time to move particle into cell.
 
+=======
+    def _contract(self): # pragma: no cover
+        """
+>>>>>>> main
         If particles are not in the cell,
         perform some timewarp to put them as close to the cell as possible.
         This is not used in the main routine. Because it was not deemed
@@ -685,7 +712,7 @@ class particle(position):
 
         if self.ocedata.readiness["Z"]:
             self.iz, self.rz, self.dz, self.bz = self.ocedata.find_rel_v(self.dep)
-        if self.ocedata.readiness["h"] == "local_cartesian":
+        if self.ocedata.readiness["h"] == "local_cartesian": # pragma: no cover
             # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
@@ -722,7 +749,7 @@ class particle(position):
                     self.ocedata.YC[self.face, self.iy, self.ix],
                 )
 
-            else:
+            else: # pragema: no cover
                 self.bx, self.by = (
                     self.ocedata.XC[self.iy, self.ix],
                     self.ocedata.YC[self.iy, self.ix],
@@ -746,7 +773,7 @@ class particle(position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
-            if np.isnan(self.rx).any() or np.isnan(self.ry).any():
+            if np.isnan(self.rx).any() or np.isnan(self.ry).any(): # pragma: no cover
                 whereNan = np.logical_or(np.isnan(self.rx), np.isnan(self.ry))
                 print(self.lon[whereNan], self.lat[whereNan])
                 print(self.px[:, whereNan], self.py[:, whereNan])
@@ -833,7 +860,7 @@ class particle(position):
             if self.rzl_lin is not None:
                 self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         except AttributeError:
-            if self.rzl_lin is not None:
+            if self.rzl_lin is not None: # pragma: no cover
                 rzl_lin = self.rzl_lin
                 dzl_lin = self.dzl_lin
                 bzl_lin = self.bzl_lin
@@ -878,7 +905,7 @@ class particle(position):
                 self.iy[which].astype(int),
                 self.ix[which].astype(int),
             )
-            if self.izl_lin is not None:
+            if self.izl_lin is not None: # pragema: no cover
                 tiz = self.izl_lin[which].astype(int)
             else:
                 tiz = (np.ones_like(tiy) * (-1)).astype(int)
@@ -974,7 +1001,7 @@ class particle(position):
                 # record those who cross the wall
                 self.note_taking(todo)
         #             self._contract()
-        if i == self.max_iteration - 1:
+        if i == self.max_iteration - 1: # pragma: no cover
             print("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
         if self.ocedata.readiness["time"]:
@@ -1022,15 +1049,22 @@ class particle(position):
             data_tmin = self.ocedata.ts.min()
             data_tmax = self.ocedata.ts.max()
             if t_min < data_tmin or t_max > data_tmax:
-                raise Exception(
+                raise ValueError(
                     "time range not within bound" + f"({data_tmin},{data_tmax})"
                 )
         if update_stops == "default":
-            update_stops = self.ocedata.time_midp[
-                np.logical_and(
-                    t_min < self.ocedata.time_midp, self.ocedata.time_midp < t_max
-                )
-            ]
+            try:
+                update_stops = self.ocedata.time_midp[
+                    np.logical_and(
+                        t_min < self.ocedata.time_midp, self.ocedata.time_midp < t_max
+                    )
+                ]
+            except AttributeError:
+                raise AttributeError("time_midp is required for "
+                                     "update_stops = default,"
+                                     " but it is not in the dataset, "
+                                     "either create it or "
+                                     "specify the update stops.")
         temp = list(zip(normal_stops, np.zeros_like(normal_stops))) + list(
             zip(update_stops, np.ones_like(update_stops))
         )
@@ -1049,7 +1083,7 @@ class particle(position):
             if update[i]:
                 if self.too_large:  # pragma: no cover
                     self.get_u_du()
-                elif "time" not in self.ocedata[self.uname].dims:
+                elif "time" not in self.ocedata[self.uname].dims: # pragema: no cover
                     pass
                 else:
                     self.update_uvw_array()

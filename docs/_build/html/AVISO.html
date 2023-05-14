@@ -1,0 +1,1193 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lagrangian particle demonstration in a periodic domain. &#8212; My sample book</title>
+
+
+
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'AVISO';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries." href="IGP.html" />
+    <link rel="prev" title="Lagrangian and Eulerian demonstration on ECCO" href="Global_ECCO.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+
+
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+
+      <div class="bd-sidebar-primary bd-sidebar">
+
+
+
+  <div class="sidebar-header-items sidebar-primary__section">
+
+
+
+
+  </div>
+
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+
+<a class="navbar-brand logo" href="intro.html">
+
+
+
+
+
+
+
+
+
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+
+
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to ODucks
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">Network of Object</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_kernelNweight.html">seaduck.kernelNweight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">seaduck.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all_in_one.html">All API References (for exporting)</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lagrangian particle demonstration in a periodic domain.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+
+
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+
+      <main id="main-content" class="bd-main">
+
+
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+
+    <div class="header-article-items__start">
+
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+
+    </div>
+
+
+    <div class="header-article-items__end">
+
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+
+
+
+      <li><a href="https://github.com/MaceKuailv/seaduck" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+
+
+
+
+      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2FAVISO.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+
+
+
+      <li><a href="_sources/AVISO.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+
+
+
+
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+
+    </div>
+
+</div>
+</div>
+
+
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lagrangian particle demonstration in a periodic domain.</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords">Initialize OceInterp package. Then create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-object-also-contains-a-tp-topology-object-it-looks-at-the-shape-of-the-coordinate-data-in-this-case-based-on-longitude-range-it-thinks-the-type-is-x-periodic-which-is-correct-for-the-southern-ocean">The object also contains a <code class="docutils literal notranslate"><span class="pre">tp</span></code> (topology) object. It looks at the shape of the coordinate data. In this case, based on longitude range, it thinks the type is <code class="docutils literal notranslate"><span class="pre">x_periodic</span></code>, which is correct for the Southern Ocean.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-ve-prepared-the-bathtub-that-the-ducks-are-going-to-swim-passively-drift-in-now-decide-where-and-when-to-drop-them">We’ve prepared the bathtub that the ducks are going to swim (passively drift) in. Now decide where and when to drop them.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#we-need-a-1d-numpy-array-of-lon-lat-dep-and-time-it-is-as-simple-as-that">We need a 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array of <code class="docutils literal notranslate"><span class="pre">lon,</span> <span class="pre">lat,</span> <span class="pre">dep</span></code>, and <code class="docutils literal notranslate"><span class="pre">time</span></code>. It is as simple as that.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-where-the-particles-start-on-the-map">Here is where the particles start on the map:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-aviso-velocity-data-only-has-the-horizontal-velocity-component-and-is-independent-of-depth-so-the-z-dimension-is-not-needed">The AVISO velocity data only has the horizontal velocity component, and is independent of depth. So the <code class="docutils literal notranslate"><span class="pre">z</span></code> dimension is not needed.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-aviso-velocity-field-is-a-snapshot-and-does-not-have-a-time-dimension-therefore-the-time-here-only-refers-to-the-particle-trajectories">The AVISO velocity field is a snapshot and does not have a time dimension. Therefore, the time here only refers to the particle trajectories.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-date-does-not-matter-but-the-duration-does-see-below-the-standard-format-is-seconds-since-1970-01-01-00-00">The date does not matter, but the duration does (see below). The standard format is seconds since <code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00</span></code>.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-the-duration-of-the-simulation-end-before-start-means-integrate-backwards-in-time">Define the duration of the simulation (end before start means integrate backwards in time).</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#now-create-the-oceinterp-lagrangian-particle-object">Now create the <code class="docutils literal notranslate"><span class="pre">OceInterp.lagrangian.particle</span></code> object.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notice-how-we-define-when-to-dump-output-normal-stops-and-when-to-update-the-velocity-field-update-stops-by-default-the-stops-returned-by-the-integration-is-the-combination-union-of-normal-stops-and-update-stops-raw-is-a-list-of-oceinterp-eulerian-position-objects-with-the-same-length-as-stops">Notice how we define when to dump output (<code class="docutils literal notranslate"><span class="pre">normal_stops</span></code>) and when to update the velocity field (<code class="docutils literal notranslate"><span class="pre">update_stops</span></code>). By default, the <code class="docutils literal notranslate"><span class="pre">stops</span></code> returned by the integration is the combination (union) of <code class="docutils literal notranslate"><span class="pre">normal_stops</span></code> and <code class="docutils literal notranslate"><span class="pre">update_stops</span></code>. <code class="docutils literal notranslate"><span class="pre">raw</span></code> is a list of <code class="docutils literal notranslate"><span class="pre">OceInterp.eulerian.position</span></code> objects with the same length as <code class="docutils literal notranslate"><span class="pre">stops</span></code>.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-the-information-from-the-position-objects">Extract the information from the position objects.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-particles-passed-through-the-dateline-periodic-boundary-here-is-some-pre-processing-to-handle-the-plot">Some particles passed through the dateline (periodic boundary). Here is some pre-processing to handle the plot.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#here-are-the-trajectories">Here are the trajectories:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+
+  <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-particle-demonstration-in-a-periodic-domain">
+<h1>Lagrangian particle demonstration in a periodic domain.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-periodic-domain" title="Permalink to this headline">#</a></h1>
+<p><strong>Particles are simulated in the Southern Ocean AVISO altimetrey velocity field.</strong></p>
+<p>Author: Wenrui Jiang, Tom Haine Feb ‘23</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this headline">#</a></h2>
+<p>The AVISO velocity field dataset is a lat-lon grid with staggered velocity. It’s a snapshot from a single time (see below).</p>
+<div class="alert alert-block alert-warning">
+<b>Download:</b> Uncomment the following cell if you are running the notebook for the first time and does not have the data.
+</div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !wget https://zenodo.org/record/7838605/files/aviso_example.nc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;aviso_example.nc&#39;</span><span class="p">)</span>
+<span class="n">ds</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewBox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewBox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt;
+Dimensions:  (X: 3600, Xp1: 3600, Y: 1700, Yp1: 1700, time: 1)
+Coordinates:
+  * X        (X) float32 -179.9 -179.8 -179.7 -179.6 ... 179.7 179.8 179.9 180.0
+  * Xp1      (Xp1) float32 -179.9 -179.9 -179.8 -179.6 ... 179.8 179.9 179.9
+  * Y        (Y) float32 -80.1 -80.0 -79.9 -79.8 -79.7 ... 89.5 89.6 89.7 89.8
+  * Yp1      (Yp1) float32 -80.15 -80.05 -79.95 -79.85 ... 89.55 89.65 89.75
+  * time     (time) datetime64[ns] 2017-01-01
+Data variables:
+    u        (Yp1, X) float64 ...
+    v        (Y, Xp1) float64 ...
+    lon      (X) float32 -179.9 -179.8 -179.7 -179.6 ... 179.7 179.8 179.9 180.0
+    lat      (Y) float32 -80.1 -80.0 -79.9 -79.8 -79.7 ... 89.5 89.6 89.7 89.8
+Attributes: (12/42)
+    Conventions:                     CF-1.6
+    Metadata_Conventions:            Unidata Dataset Discovery v1.0
+    cdm_data_type:                   Grid
+    comment:                         Sea Surface Height measured by Altimetry...
+    contact:                         aviso@altimetry.fr
+    creator_email:                   aviso@altimetry.fr
+    ...                              ...
+    summary:                         CLS Delayed-Time Level-4 sea surface hei...
+    time_coverage_duration:          P1D
+    time_coverage_end:               2017-01-01T12:00:00Z
+    time_coverage_resolution:        P1D
+    time_coverage_start:             2016-12-31T12:00:00Z
+    title:                           DT merged all satellites Global Gridded ...</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-1cbf51c2-a326-4f02-89b7-6102a36ed4ac' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-1cbf51c2-a326-4f02-89b7-6102a36ed4ac' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>X</span>: 3600</li><li><span class='xr-has-index'>Xp1</span>: 3600</li><li><span class='xr-has-index'>Y</span>: 1700</li><li><span class='xr-has-index'>Yp1</span>: 1700</li><li><span class='xr-has-index'>time</span>: 1</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-ce9756f6-facd-4eda-ab4c-17ad7cc74dbc' class='xr-section-summary-in' type='checkbox'  checked><label for='section-ce9756f6-facd-4eda-ab4c-17ad7cc74dbc' class='xr-section-summary' >Coordinates: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>X</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-179.9 -179.8 ... 179.9 180.0</div><input id='attrs-74dc2b03-bd99-4766-82e8-a8002c891110' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-74dc2b03-bd99-4766-82e8-a8002c891110' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8263061a-3fd8-43f9-b3a4-c5104478693a' class='xr-var-data-in' type='checkbox'><label for='data-8263061a-3fd8-43f9-b3a4-c5104478693a' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>X</dd><dt><span>bounds :</span></dt><dd>lon_bnds</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>valid_max :</span></dt><dd>180.0</dd><dt><span>valid_min :</span></dt><dd>-179.89999389648438</dd></dl></div><div class='xr-var-data'><pre>array([-179.9, -179.8, -179.7, ...,  179.8,  179.9,  180. ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Xp1</span></div><div class='xr-var-dims'>(Xp1)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-179.9 -179.9 ... 179.9 179.9</div><input id='attrs-9d06f33f-0e10-4daa-b783-a6c25007dd34' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-9d06f33f-0e10-4daa-b783-a6c25007dd34' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a0e663ea-f78e-4923-8c88-a454ca59fd3f' class='xr-var-data-in' type='checkbox'><label for='data-a0e663ea-f78e-4923-8c88-a454ca59fd3f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-179.95, -179.85, -179.75, ...,  179.75,  179.85,  179.95],
+      dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Y</span></div><div class='xr-var-dims'>(Y)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-80.1 -80.0 -79.9 ... 89.7 89.8</div><input id='attrs-86c55ba9-ddda-4798-a533-41dd559745bd' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-86c55ba9-ddda-4798-a533-41dd559745bd' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-864d9e72-5846-43bc-bb4b-8cc544b10a0c' class='xr-var-data-in' type='checkbox'><label for='data-864d9e72-5846-43bc-bb4b-8cc544b10a0c' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>Y</dd><dt><span>bounds :</span></dt><dd>lat_bnds</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>valid_max :</span></dt><dd>89.80000152587891</dd><dt><span>valid_min :</span></dt><dd>-80.0999984741211</dd></dl></div><div class='xr-var-data'><pre>array([-80.1     , -80.      , -79.9     , ...,  89.6     ,  89.700005,
+        89.8     ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Yp1</span></div><div class='xr-var-dims'>(Yp1)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-80.15 -80.05 ... 89.65 89.75</div><input id='attrs-0f8fb5fd-2d4b-4d1c-a3bb-9fe30ec46308' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-0f8fb5fd-2d4b-4d1c-a3bb-9fe30ec46308' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-819d3410-31a6-4b5d-ac1f-9c35d0e9cf0c' class='xr-var-data-in' type='checkbox'><label for='data-819d3410-31a6-4b5d-ac1f-9c35d0e9cf0c' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-80.15    , -80.049995, -79.95    , ...,  89.55    ,  89.65    ,
+        89.75    ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2017-01-01</div><input id='attrs-6b8ac648-9d27-433e-8a70-41b3f3fddd2c' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-6b8ac648-9d27-433e-8a70-41b3f3fddd2c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-badfbbd5-ca6b-42d3-a155-15afc9ae8da8' class='xr-var-data-in' type='checkbox'><label for='data-badfbbd5-ca6b-42d3-a155-15afc9ae8da8' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>T</dd><dt><span>long_name :</span></dt><dd>Time</dd><dt><span>standard_name :</span></dt><dd>time</dd></dl></div><div class='xr-var-data'><pre>array([&#x27;2017-01-01T00:00:00.000000000&#x27;], dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-2e742a88-8f9e-4e1a-8a96-24b7e85f293e' class='xr-section-summary-in' type='checkbox'  checked><label for='section-2e742a88-8f9e-4e1a-8a96-24b7e85f293e' class='xr-section-summary' >Data variables: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>u</span></div><div class='xr-var-dims'>(Yp1, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-3ffeeb83-803c-4020-b682-441a4f133e9a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-3ffeeb83-803c-4020-b682-441a4f133e9a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-aa33ab42-dd62-4bc6-8ae5-cd17e21a8641' class='xr-var-data-in' type='checkbox'><label for='data-aa33ab42-dd62-4bc6-8ae5-cd17e21a8641' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>[6120000 values with dtype=float64]</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>v</span></div><div class='xr-var-dims'>(Y, Xp1)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-149bcf54-6238-4ba5-9f79-9ae779cbbca5' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-149bcf54-6238-4ba5-9f79-9ae779cbbca5' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a6263598-ba55-4efd-90c8-ccf9c986eb2e' class='xr-var-data-in' type='checkbox'><label for='data-a6263598-ba55-4efd-90c8-ccf9c986eb2e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>[6120000 values with dtype=float64]</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>lon</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-c0571415-6686-416b-b130-07b0438b4824' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-c0571415-6686-416b-b130-07b0438b4824' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-29a31620-e2ac-4997-ba1e-962040961399' class='xr-var-data-in' type='checkbox'><label for='data-29a31620-e2ac-4997-ba1e-962040961399' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>X</dd><dt><span>bounds :</span></dt><dd>lon_bnds</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>valid_max :</span></dt><dd>180.0</dd><dt><span>valid_min :</span></dt><dd>-179.89999389648438</dd></dl></div><div class='xr-var-data'><pre>array([-179.9, -179.8, -179.7, ...,  179.8,  179.9,  180. ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>lat</span></div><div class='xr-var-dims'>(Y)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-640d1fb4-1c66-4800-b1dd-13184ffd2036' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-640d1fb4-1c66-4800-b1dd-13184ffd2036' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-822af13b-b5e1-4a26-99a5-09ce6efb7cb7' class='xr-var-data-in' type='checkbox'><label for='data-822af13b-b5e1-4a26-99a5-09ce6efb7cb7' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>Y</dd><dt><span>bounds :</span></dt><dd>lat_bnds</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>valid_max :</span></dt><dd>89.80000152587891</dd><dt><span>valid_min :</span></dt><dd>-80.0999984741211</dd></dl></div><div class='xr-var-data'><pre>array([-80.1     , -80.      , -79.9     , ...,  89.6     ,  89.700005,
+        89.8     ], dtype=float32)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-7a4b59d0-04d7-4647-8eca-6c5e1c7bd961' class='xr-section-summary-in' type='checkbox'  ><label for='section-7a4b59d0-04d7-4647-8eca-6c5e1c7bd961' class='xr-section-summary' >Attributes: <span>(42)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>Conventions :</span></dt><dd>CF-1.6</dd><dt><span>Metadata_Conventions :</span></dt><dd>Unidata Dataset Discovery v1.0</dd><dt><span>cdm_data_type :</span></dt><dd>Grid</dd><dt><span>comment :</span></dt><dd>Sea Surface Height measured by Altimetry and derived variables</dd><dt><span>contact :</span></dt><dd>aviso@altimetry.fr</dd><dt><span>creator_email :</span></dt><dd>aviso@altimetry.fr</dd><dt><span>creator_name :</span></dt><dd>SSALTO/DUACS-MR</dd><dt><span>creator_url :</span></dt><dd>http://www.aviso.altimetry.fr</dd><dt><span>date_created :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>date_issued :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>date_modified :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>geospatial_lat_max :</span></dt><dd>89.80000152587891</dd><dt><span>geospatial_lat_min :</span></dt><dd>-80.0999984741211</dd><dt><span>geospatial_lat_resolution :</span></dt><dd>0.09999999999999432</dd><dt><span>geospatial_lat_units :</span></dt><dd>degrees_north</dd><dt><span>geospatial_lon_max :</span></dt><dd>180.0</dd><dt><span>geospatial_lon_min :</span></dt><dd>-179.89999389648438</dd><dt><span>geospatial_lon_resolution :</span></dt><dd>0.1</dd><dt><span>geospatial_lon_units :</span></dt><dd>degrees_east</dd><dt><span>geospatial_vertical_max :</span></dt><dd>0.0</dd><dt><span>geospatial_vertical_min :</span></dt><dd>0.0</dd><dt><span>geospatial_vertical_positive :</span></dt><dd>down</dd><dt><span>geospatial_vertical_resolution :</span></dt><dd>point</dd><dt><span>geospatial_vertical_units :</span></dt><dd>m</dd><dt><span>history :</span></dt><dd>2021-03-18 17:28:12Z: Creation</dd><dt><span>institution :</span></dt><dd>CLS, CNES</dd><dt><span>keywords :</span></dt><dd>Oceans &gt; Ocean Topography &gt; Sea Surface Height</dd><dt><span>keywords_vocabulary :</span></dt><dd>NetCDF COARDS Climate and Forecast Standard Names</dd><dt><span>platform :</span></dt><dd>Altika OSTM/Jason-2 Haiyang-2A Cryosat-2 Jason-3 Sentinel-3A Sentinel-3B</dd><dt><span>processing_level :</span></dt><dd>L4</dd><dt><span>product_version :</span></dt><dd>1.0</dd><dt><span>project :</span></dt><dd>SSALTO/DUACS-MR</dd><dt><span>reference :</span></dt><dd>http://www.aviso.altimetry.fr</dd><dt><span>source :</span></dt><dd>Altimetry measurements</dd><dt><span>ssalto_duacs_comment :</span></dt><dd>The reference mission used for the altimeter inter-calibration processing is Topex/Poseidon between 1993-01-01 and 2002-04-23, Jason-1 between 2002-04-24 and 2008-10-18, OSTM/Jason-2 between 2008-10-19 and 2016-06-25, Jason-3 since 2016-06-25.</dd><dt><span>standard_name_vocabulary :</span></dt><dd>NetCDF Climate and Forecast (CF) Metadata Convention Standard Name Table v37</dd><dt><span>summary :</span></dt><dd>CLS Delayed-Time Level-4 sea surface height and derived variables measured by multi-satellite altimetry observations over the Global Ocean. Merging method is based on Multiscale interpolation (Ubelmann et al., 2021)</dd><dt><span>time_coverage_duration :</span></dt><dd>P1D</dd><dt><span>time_coverage_end :</span></dt><dd>2017-01-01T12:00:00Z</dd><dt><span>time_coverage_resolution :</span></dt><dd>P1D</dd><dt><span>time_coverage_start :</span></dt><dd>2016-12-31T12:00:00Z</dd><dt><span>title :</span></dt><dd>DT merged all satellites Global Gridded CLS Sea Surface Height L4 product and derived variables</dd></dl></div></li></ul></div></div></div></div>
+</div>
+</div>
+<div class="section" id="initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords">
+<h2>Initialize OceInterp package. Then create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords<a class="headerlink" href="#initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaduck</span> <span class="k">as</span> <span class="nn">sd</span>
+<span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning:overwriting the inheritance oject to None, because we ignore masking
+Warning:overwriting the inheritance oject to None, because we ignore masking
+Warning:overwriting the inheritance oject to None, because we ignore masking
+Warning:overwriting the inheritance oject to None, because we ignore masking
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="the-object-also-contains-a-tp-topology-object-it-looks-at-the-shape-of-the-coordinate-data-in-this-case-based-on-longitude-range-it-thinks-the-type-is-x-periodic-which-is-correct-for-the-southern-ocean">
+<h3>The object also contains a <code class="docutils literal notranslate"><span class="pre">tp</span></code> (topology) object. It looks at the shape of the coordinate data. In this case, based on longitude range, it thinks the type is <code class="docutils literal notranslate"><span class="pre">x_periodic</span></code>, which is correct for the Southern Ocean.<a class="headerlink" href="#the-object-also-contains-a-tp-topology-object-it-looks-at-the-shape-of-the-coordinate-data-in-this-case-based-on-longitude-range-it-thinks-the-type-is-x-periodic-which-is-correct-for-the-southern-ocean" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span><span class="o">.</span><span class="n">tp</span><span class="o">.</span><span class="n">typ</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;x_periodic&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="we-ve-prepared-the-bathtub-that-the-ducks-are-going-to-swim-passively-drift-in-now-decide-where-and-when-to-drop-them">
+<h2>We’ve prepared the bathtub that the ducks are going to swim (passively drift) in. Now decide where and when to drop them.<a class="headerlink" href="#we-ve-prepared-the-bathtub-that-the-ducks-are-going-to-swim-passively-drift-in-now-decide-where-and-when-to-drop-them" title="Permalink to this headline">#</a></h2>
+<div class="section" id="we-need-a-1d-numpy-array-of-lon-lat-dep-and-time-it-is-as-simple-as-that">
+<h3>We need a 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array of <code class="docutils literal notranslate"><span class="pre">lon,</span> <span class="pre">lat,</span> <span class="pre">dep</span></code>, and <code class="docutils literal notranslate"><span class="pre">time</span></code>. It is as simple as that.<a class="headerlink" href="#we-need-a-1d-numpy-array-of-lon-lat-dep-and-time-it-is-as-simple-as-that" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the number of particles here.</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">9e2</span><span class="p">)</span>
+
+<span class="c1"># Increase this if you want more in x direction.</span>
+<span class="n">skew</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># Change the vertical depth of the particles here.</span>
+<span class="n">sqrtN</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># Change the horizontal range here. </span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="n">sqrtN</span><span class="o">*</span><span class="n">skew</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="n">sqrtN</span><span class="o">//</span><span class="n">skew</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="here-is-where-the-particles-start-on-the-map">
+<h2>Here is where the particles start on the map:<a class="headerlink" href="#here-is-where-the-particles-start-on-the-map" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">170.0</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="s1">&#39;r+&#39;</span><span class="p">,</span><span class="n">markersize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">transform</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/efee1331e7cd0a6c6a37106a48934d4e2118187fdabd9fd8bb87206445674586.png" src="_images/efee1331e7cd0a6c6a37106a48934d4e2118187fdabd9fd8bb87206445674586.png" />
+</div>
+</div>
+</div>
+<div class="section" id="the-aviso-velocity-data-only-has-the-horizontal-velocity-component-and-is-independent-of-depth-so-the-z-dimension-is-not-needed">
+<h2>The AVISO velocity data only has the horizontal velocity component, and is independent of depth. So the <code class="docutils literal notranslate"><span class="pre">z</span></code> dimension is not needed.<a class="headerlink" href="#the-aviso-velocity-data-only-has-the-horizontal-velocity-component-and-is-independent-of-depth-so-the-z-dimension-is-not-needed" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="the-aviso-velocity-field-is-a-snapshot-and-does-not-have-a-time-dimension-therefore-the-time-here-only-refers-to-the-particle-trajectories">
+<h2>The AVISO velocity field is a snapshot and does not have a time dimension. Therefore, the time here only refers to the particle trajectories.<a class="headerlink" href="#the-aviso-velocity-field-is-a-snapshot-and-does-not-have-a-time-dimension-therefore-the-time-here-only-refers-to-the-particle-trajectories" title="Permalink to this headline">#</a></h2>
+<div class="section" id="the-date-does-not-matter-but-the-duration-does-see-below-the-standard-format-is-seconds-since-1970-01-01-00-00">
+<h3>The date does not matter, but the duration does (see below). The standard format is seconds since <code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00</span></code>.<a class="headerlink" href="#the-date-does-not-matter-but-the-duration-does-see-below-the-standard-format-is-seconds-since-1970-01-01-00-00" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="s1">&#39;2000-01-01&#39;</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+     <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="define-the-duration-of-the-simulation-end-before-start-means-integrate-backwards-in-time">
+<h2>Define the duration of the simulation (end before start means integrate backwards in time).<a class="headerlink" href="#define-the-duration-of-the-simulation-end-before-start-means-integrate-backwards-in-time" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tf</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;2000-02-01&#39;</span><span class="p">)</span>
+     <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="now-create-the-oceinterp-lagrangian-particle-object">
+<h2>Now create the <code class="docutils literal notranslate"><span class="pre">OceInterp.lagrangian.particle</span></code> object.<a class="headerlink" href="#now-create-the-oceinterp-lagrangian-particle-object" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">oce</span><span class="p">,</span>
+                <span class="c1"># save_raw = True,</span>
+                <span class="c1"># transport = True,</span>
+                <span class="n">uname</span> <span class="o">=</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="n">vname</span> <span class="o">=</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="n">wname</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;OceInterp.lagrangian.particle at 0x7fc58052dfa0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="perform-the-particle-trajectory-simulation">
+<h2>Perform the particle trajectory simulation.<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this headline">#</a></h2>
+<div class="section" id="notice-how-we-define-when-to-dump-output-normal-stops-and-when-to-update-the-velocity-field-update-stops-by-default-the-stops-returned-by-the-integration-is-the-combination-union-of-normal-stops-and-update-stops-raw-is-a-list-of-oceinterp-eulerian-position-objects-with-the-same-length-as-stops">
+<h3>Notice how we define when to dump output (<code class="docutils literal notranslate"><span class="pre">normal_stops</span></code>) and when to update the velocity field (<code class="docutils literal notranslate"><span class="pre">update_stops</span></code>). By default, the <code class="docutils literal notranslate"><span class="pre">stops</span></code> returned by the integration is the combination (union) of <code class="docutils literal notranslate"><span class="pre">normal_stops</span></code> and <code class="docutils literal notranslate"><span class="pre">update_stops</span></code>. <code class="docutils literal notranslate"><span class="pre">raw</span></code> is a list of <code class="docutils literal notranslate"><span class="pre">OceInterp.eulerian.position</span></code> objects with the same length as <code class="docutils literal notranslate"><span class="pre">stops</span></code>.<a class="headerlink" href="#notice-how-we-define-when-to-dump-output-normal-stops-and-when-to-update-the-velocity-field-update-stops-by-default-the-stops-returned-by-the-integration-is-the-combination-union-of-normal-stops-and-update-stops-raw-is-a-list-of-oceinterp-eulerian-position-objects-with-the-same-length-as-stops" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">normal_stops</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tf</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">stops</span><span class="p">,</span><span class="n">raw</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">to_list_of_time</span><span class="p">(</span><span class="n">normal_stops</span> <span class="o">=</span> <span class="n">normal_stops</span><span class="p">,</span><span class="n">update_stops</span> <span class="o">=</span> <span class="p">[])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000-01-01T00:00:00
+0 left
+2000-01-04T10:40:00
+900 left 776 left 693 left 578 left 490 left 409 left 338 left 284 left 250 left 221 left 187 left 160 left 129 left 109 left 93 left 79 left 59 left 46 left 39 left 37 left 27 left 20 left 17 left 13 left 11 left 10 left 9 left 9 left 9 left 6 left 6 left 5 left 4 left 3 left 2 left 2 left 2 left 1 left 1 left 1 left
+2000-01-07T21:20:00
+900 left 773 left 666 left 537 left 442 left 366 left 315 left 267 left 225 left 188 left 162 left 139 left 113 left 96 left 77 left 65 left 57 left 43 left 37 left 27 left 20 left 16 left 11 left 10 left 9 left 7 left 5 left 4 left 3 left 3 left 3 left 3 left 2 left 2 left 1 left 1 left 1 left 1 left
+2000-01-11T08:00:00
+900 left 779 left 654 left 547 left 458 left 385 left 331 left 293 left 249 left 202 left 171 left 142 left 119 left 111 left 95 left 86 left 69 left 62 left 49 left 38 left 31 left 22 left 17 left 14 left 11 left 9 left 9 left 8 left 7 left 7 left 5 left 5 left 5 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left
+2000-01-14T18:40:00
+900 left 785 left 667 left 556 left 450 left 385 left 337 left 275 left 238 left 208 left 172 left 141 left 126 left 104 left 93 left 74 left 62 left 54 left 43 left 37 left 24 left 17 left 13 left 7 left 7 left 6 left 6 left 6 left 3 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left
+2000-01-18T05:20:00
+900 left 779 left 661 left 533 left 444 left 384 left 328 left 276 left 233 left 200 left 171 left 147 left 123 left 100 left 88 left 68 left 52 left 43 left 36 left 34 left 29 left 22 left 19 left 18 left 16 left 14 left 12 left 12 left 10 left 7 left 6 left 4 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
+2000-01-21T16:00:00
+900 left 778 left 657 left 538 left 456 left 384 left 336 left 302 left 259 left 222 left 184 left 152 left 131 left 110 left 94 left 79 left 67 left 55 left 46 left 38 left 34 left 28 left 26 left 21 left 15 left 11 left 9 left 7 left 6 left 3 left 3 left 1 left 1 left 1 left 1 left 1 left
+2000-01-25T02:40:00
+900 left 775 left 662 left 543 left 449 left 398 left 359 left 305 left 260 left 232 left 203 left 168 left 140 left 121 left 107 left 91 left 71 left 59 left 44 left 37 left 31 left 25 left 24 left 20 left 15 left 13 left 8 left 8 left 5 left 5 left 5 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left
+2000-01-28T13:20:00
+900 left 785 left 667 left 545 left 462 left 395 left 343 left 302 left 258 left 224 left 197 left 169 left 152 left 138 left 120 left 98 left 91 left 72 left 56 left 46 left 40 left 33 left 31 left 28 left 24 left 19 left 17 left 16 left 13 left 12 left 9 left 6 left 4 left 4 left 3 left 2 left 1 left 1 left 1 left 1 left 1 left
+2000-02-01T00:00:00
+900 left 764 left 650 left 535 left 461 left 401 left 348 left 301 left 258 left 218 left 190 left 164 left 151 left 130 left 117 left 103 left 82 left 67 left 51 left 45 left 33 left 25 left 24 left 20 left 16 left 13 left 10 left 7 left 6 left 4 left 3 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 2 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left 1 left
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="extract-the-information-from-the-position-objects">
+<h2>Extract the information from the position objects.<a class="headerlink" href="#extract-the-information-from-the-position-objects" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">lats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="some-particles-passed-through-the-dateline-periodic-boundary-here-is-some-pre-processing-to-handle-the-plot">
+<h2>Some particles passed through the dateline (periodic boundary). Here is some pre-processing to handle the plot.<a class="headerlink" href="#some-particles-passed-through-the-dateline-periodic-boundary-here-is-some-pre-processing-to-handle-the-plot" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">)):</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">lons</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">330</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">300</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">lons</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">*</span><span class="mi">360</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="here-are-the-trajectories">
+<h2>Here are the trajectories:<a class="headerlink" href="#here-are-the-trajectories" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">170.0</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lons</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">lats</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="s1">&#39;darkblue&#39;</span><span class="p">,</span><span class="n">lw</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span><span class="n">transform</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;cartopy.mpl.feature_artist.FeatureArtist at 0x7fc4f2c3bd00&gt;
+</pre></div>
+</div>
+<img alt="_images/cb264ebb2758787a338fa3d524f0c72db9303a0a4ab374f315f863b538e5a4f9.png" src="_images/cb264ebb2758787a338fa3d524f0c72db9303a0a4ab374f315f863b538e5a4f9.png" />
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+
+
+
+
+                <footer class="bd-footer-article">
+
+<div class="footer-article-items footer-article__inner">
+
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Global_ECCO.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lagrangian and Eulerian demonstration on ECCO</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="IGP.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+
+</div>
+
+                </footer>
+
+            </div>
+
+
+
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package-then-create-the-ocedata-object-which-provides-methods-to-translate-between-lat-lon-and-grid-oriented-coords">Initialize OceInterp package. Then create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-object-also-contains-a-tp-topology-object-it-looks-at-the-shape-of-the-coordinate-data-in-this-case-based-on-longitude-range-it-thinks-the-type-is-x-periodic-which-is-correct-for-the-southern-ocean">The object also contains a <code class="docutils literal notranslate"><span class="pre">tp</span></code> (topology) object. It looks at the shape of the coordinate data. In this case, based on longitude range, it thinks the type is <code class="docutils literal notranslate"><span class="pre">x_periodic</span></code>, which is correct for the Southern Ocean.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-ve-prepared-the-bathtub-that-the-ducks-are-going-to-swim-passively-drift-in-now-decide-where-and-when-to-drop-them">We’ve prepared the bathtub that the ducks are going to swim (passively drift) in. Now decide where and when to drop them.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#we-need-a-1d-numpy-array-of-lon-lat-dep-and-time-it-is-as-simple-as-that">We need a 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array of <code class="docutils literal notranslate"><span class="pre">lon,</span> <span class="pre">lat,</span> <span class="pre">dep</span></code>, and <code class="docutils literal notranslate"><span class="pre">time</span></code>. It is as simple as that.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-where-the-particles-start-on-the-map">Here is where the particles start on the map:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-aviso-velocity-data-only-has-the-horizontal-velocity-component-and-is-independent-of-depth-so-the-z-dimension-is-not-needed">The AVISO velocity data only has the horizontal velocity component, and is independent of depth. So the <code class="docutils literal notranslate"><span class="pre">z</span></code> dimension is not needed.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-aviso-velocity-field-is-a-snapshot-and-does-not-have-a-time-dimension-therefore-the-time-here-only-refers-to-the-particle-trajectories">The AVISO velocity field is a snapshot and does not have a time dimension. Therefore, the time here only refers to the particle trajectories.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-date-does-not-matter-but-the-duration-does-see-below-the-standard-format-is-seconds-since-1970-01-01-00-00">The date does not matter, but the duration does (see below). The standard format is seconds since <code class="docutils literal notranslate"><span class="pre">1970-01-01</span> <span class="pre">00:00</span></code>.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-the-duration-of-the-simulation-end-before-start-means-integrate-backwards-in-time">Define the duration of the simulation (end before start means integrate backwards in time).</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#now-create-the-oceinterp-lagrangian-particle-object">Now create the <code class="docutils literal notranslate"><span class="pre">OceInterp.lagrangian.particle</span></code> object.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notice-how-we-define-when-to-dump-output-normal-stops-and-when-to-update-the-velocity-field-update-stops-by-default-the-stops-returned-by-the-integration-is-the-combination-union-of-normal-stops-and-update-stops-raw-is-a-list-of-oceinterp-eulerian-position-objects-with-the-same-length-as-stops">Notice how we define when to dump output (<code class="docutils literal notranslate"><span class="pre">normal_stops</span></code>) and when to update the velocity field (<code class="docutils literal notranslate"><span class="pre">update_stops</span></code>). By default, the <code class="docutils literal notranslate"><span class="pre">stops</span></code> returned by the integration is the combination (union) of <code class="docutils literal notranslate"><span class="pre">normal_stops</span></code> and <code class="docutils literal notranslate"><span class="pre">update_stops</span></code>. <code class="docutils literal notranslate"><span class="pre">raw</span></code> is a list of <code class="docutils literal notranslate"><span class="pre">OceInterp.eulerian.position</span></code> objects with the same length as <code class="docutils literal notranslate"><span class="pre">stops</span></code>.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-the-information-from-the-position-objects">Extract the information from the position objects.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-particles-passed-through-the-dateline-periodic-boundary-here-is-some-pre-processing-to-handle-the-plot">Some particles passed through the dateline (periodic boundary). Here is some pre-processing to handle the plot.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#here-are-the-trajectories">Here are the trajectories:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+
+
+          </div>
+          <footer class="bd-footer-content">
+
+<div class="bd-footer-content__inner container">
+
+  <div class="footer-item">
+
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+
+  <div class="footer-item">
+
+  <p class="copyright">
+
+      © Copyright 2022.
+      <br/>
+
+  </p>
+
+  </div>
+
+  <div class="footer-item">
+
+  </div>
+
+  <div class="footer-item">
+
+  </div>
+
+</div>
+          </footer>
+
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

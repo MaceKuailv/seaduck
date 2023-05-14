@@ -6,6 +6,7 @@ import seaduck as sd
 
 Datadir = "tests/Data/"
 ecco = xr.open_zarr(Datadir + "small_ecco")
+oce = sd.OceData(ecco)
 
 N = int(1e2)
 
@@ -45,7 +46,15 @@ t_bnds = np.array(
 
 @pytest.mark.parametrize("od,x,y,z,t", [(ecco, x, y, z, t)])
 @pytest.mark.parametrize(
+<<<<<<< HEAD
     "varList",
+=======
+    'od,x,y,z,t',
+    [(oce, x, y, z, t)]
+)
+@pytest.mark.parametrize(
+    'varList',
+>>>>>>> main
     [
         ["ETAN", "maskC"],
         "SALT",
@@ -91,7 +100,7 @@ def test_diff_oceinterp(od, varList, x, y, z, t, kernel_kwarg):
     "od,varList,x,y,z,t,lagrangian,lagrange_kwarg",
     [
         (
-            ecco,
+            oce,
             ["SALT", "__particle.raw", "__particle.lat", "__particle.lon"],
             x,
             y,
@@ -123,6 +132,7 @@ def test_largangian_oceinterp(
 @pytest.mark.parametrize(
     "od,varList,x,y,z,t,lagrangian,error",
     [
+<<<<<<< HEAD
         (
             ecco,
             ["__particle.lat", "__particle.lon"],
@@ -137,6 +147,13 @@ def test_largangian_oceinterp(
         (ecco, None, x, y, z, t, False, ValueError),
         (ecco, [None], x, y, z, t, False, ValueError),
     ],
+=======
+        (oce,["__particle.lat", "__particle.lon"],x,y,z,t_bnds[:1],True,ValueError),
+        (oce,["__particle.lat", "__particle.lon"],x,y,z,t,False,AttributeError),
+        (oce,None,x,y,z,t,False,ValueError),
+        (oce,[None],x,y,z,t,False,ValueError),
+    ]
+>>>>>>> main
 )
 @pytest.mark.filterwarnings("ignore::Warning")
 def test_oceinterp_error(od, varList, x, y, z, t, lagrangian, error):

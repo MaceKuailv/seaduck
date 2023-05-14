@@ -5,6 +5,11 @@ import pytest
 
 import seaduck.utils as _u
 
+<<<<<<< HEAD
+=======
+Datadir = "tests/Data/"
+curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
+>>>>>>> main
 
 def test_rel_lon():
     assert _u.rel_lon(-5, 125) == 230
@@ -43,6 +48,7 @@ def test_local_to_latlon():
     u = 1
     v = 0.618
     cs = np.random.random()
+<<<<<<< HEAD
     sn = np.sqrt(1 - cs**2)
     uu, vv = _u.local_to_latlon(u, v, cs, sn)
     assert np.isclose(np.hypot(uu, vv), np.hypot(u, v))
@@ -55,3 +61,26 @@ def test_combination(lst, select):
     assert len(the_ls) == math.factorial(len(lst)) / (math.factorial(select)) / (
         math.factorial(len(lst) - select)
     )
+=======
+    sn = np.sqrt(1-cs**2)
+    uu,vv = _u.local_to_latlon(u, v, cs, sn)
+    assert np.isclose(np.hypot(uu,vv),np.hypot(u,v))
+    
+@pytest.mark.parametrize(
+    'lst',[[1,2,3],np.arange(3)]
+)
+@pytest.mark.parametrize(
+    'select',[1,3]
+)
+def test_combination(lst,select):
+    the_ls = _u.get_combination(lst,select)
+    assert len(the_ls) == math.factorial(len(lst))/(math.factorial(select))/(math.factorial(len(lst) - select))
+    
+def test_none_in():
+    assert _u.NoneIn([1,2,None])
+    assert not (_u.NoneIn([1,2,3]))
+                
+def test_cs_sn():
+    _u.missing_cs_sn(curv)
+    assert isinstance(curv['CS'],xr.DataArray)
+>>>>>>> main

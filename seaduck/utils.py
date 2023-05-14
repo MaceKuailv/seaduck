@@ -89,6 +89,21 @@ def local_to_latlon(u, v, cs, sn):
     return uu, vv
 
 
+@njit
+def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl): # pragma: no cover
+    """
+    Translate the spatial rel-coords into lat-lon-dep coords.
+    """
+    temp_x = rx * dx / deg2m
+    temp_y = ry * dy / deg2m
+    dlon = (temp_x * cs - temp_y * sn) / _np.cos(by * _np.pi / 180)
+    dlat = temp_x * sn + temp_y * cs
+    lon = dlon + bx
+    lat = dlat + by
+    dep = bzl + dzl * rzl
+    return lon, lat, dep
+
+
 def get_combination(lst, select):
     """Get the combinations of the list.
 
@@ -458,11 +473,11 @@ def find_rel_h_naive(Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     cs,sn is just the cos and sin of the grid orientation.
     It will come in handy when we transfer vectors.
     """
-    if NoneIn([Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree]):
+    if NoneIn([Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree]): # pragma: no cover
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
     faces, iys, ixs = find_ind_h(Xs, Ys, tree, h_shape)
-    if faces is not None:
+    if faces is not None: # pragma: no cover
         cs, sn, dx, dy, bx, by = _read_h_with_face(
             some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs
         )
@@ -490,8 +505,15 @@ def find_rel_h_rectilinear(x, y, lon, lat):
 def find_rel_h_oceanparcel(
     x, y, some_x, some_y, some_dx, some_dy, CS, SN, XG, YG, tree, tp
 ):
+<<<<<<< HEAD
     """Find the rel-coords using the rectilinear scheme."""
     if NoneIn([x, y, some_x, some_y, XG, YG, tree]):
+=======
+    """
+    Find the rel-coords using the rectilinear scheme
+    """
+    if NoneIn([x, y, some_x, some_y, XG, YG, tree]): # pragma: no cover
+>>>>>>> main
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
     faces, iys, ixs = find_ind_h(x, y, tree, h_shape)

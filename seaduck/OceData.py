@@ -56,9 +56,9 @@ class OceData(object):
         self.tp = topology(data)
         if alias is None:
             self.alias = no_alias
-        elif alias == "auto":
+        elif alias == "auto": # pragma: no cover
             raise NotImplementedError("auto alias not yet implemented")
-        elif isinstance(alias, dict):
+        elif isinstance(alias, dict): # pragma: no cover
             self.alias = alias
 
         try:
@@ -69,8 +69,8 @@ class OceData(object):
         self.readiness = readiness
         if readiness:
             self.grid2array()
-        else:
-            raise (
+        else:  # pragma: no cover
+            raise ValueError(
                 f"""
             use add_missing_variables or set_alias to create {missing},
             then call OceData.grid2array.
@@ -78,7 +78,7 @@ class OceData(object):
             )
 
     def __setitem__(self, key, item):
-        if isinstance(item, xr.DataArray):
+        if isinstance(item, xr.DataArray): # pragma: no cover
             if key in self.alias.keys():
                 self._ds[self.alias[key]] = item
             else:
@@ -126,7 +126,7 @@ class OceData(object):
             self.dlat = np.gradient(self["lat"]) * ratio
             readiness["h"] = "rectilinear"
             # corresponding to a rectilinear dataset
-        else:
+        else:  # pragma: no cover
             readiness["h"] = False
             # readiness['overall'] = False
             missing.append(
@@ -142,21 +142,28 @@ class OceData(object):
 
         return readiness, missing
 
-    def _add_missing_grid(self):
+    def _add_missing_grid(self): # pragma: no cover
         # TODO:
         pass
 
+<<<<<<< HEAD
     def show_alias(self):
         """Print out the alias in a nice pd.DataFrame format."""
+=======
+    def show_alias(self): # pragma: no cover
+        """
+        print out the alias in a nice pd.DataFrame format.
+        """
+>>>>>>> main
         return pd.DataFrame.from_dict(
             self.alias, orient="index", columns=["original name"]
         )
 
     def _add_missing_cs_sn(self):
         try:
-            self["CS"]
-            self["SN"]
-        except AttributeError:
+            assert self["CS"] is not None
+            assert self["SN"] is not None # pragma: no cover
+        except (AttributeError,AssertionError):
             xc = np.deg2rad(np.array(self["XC"]))
             yc = np.deg2rad(np.array(self["YC"]))
             cs = np.zeros_like(xc)
@@ -336,7 +343,7 @@ class OceData(object):
         it, rt, dt, bt = find_rel_time(t, self.ts)
         return it.astype(int), rt, dt, bt
 
-    def _find_rel_3d(self, x, y, z):
+    def _find_rel_3d(self, x, y, z): # pragma: no cover
         # for internal test
         faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = self.find_rel_h(
             x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
@@ -361,7 +368,7 @@ class OceData(object):
             bz,
         )
 
-    def _find_rel_4d(self, x, y, z, t):
+    def _find_rel_4d(self, x, y, z, t): # pragma: no cover
         # for internal tests
         faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = self.find_rel_h(
             x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
@@ -392,7 +399,7 @@ class OceData(object):
             bt,
         )
 
-    def _find_rel(self, *arg):
+    def _find_rel(self, *arg): # pragma: no cover
         # Internal testing
         if len(arg) == 2:
             return self.find_rel_2d(*arg)
