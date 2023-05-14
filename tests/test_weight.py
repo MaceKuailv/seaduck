@@ -88,13 +88,46 @@ def test_cascade_weight(rx, ry, pk, clause):
             ]
         ),
         np.array([[0, 0]]),
+        np.array([
+            [0,0],
+            [0,1],
+            [1,0],
+            [1,1]
+        ])
     ],
 )
 def test_interp_func(kernel, rx, ry, clause):
-    func = kw.kernel_weight_x(kernel)
+    func = kw.get_func(kernel)
     weight = func(rx, ry)
     assert weight.shape == (1, len(kernel))
     assert eval(clause)
+
+@pytest.mark.parametrize(
+    'ktype',['dx','dy']
+)
+@pytest.mark.parametrize(
+    'horder',[0,1]
+)
+def test_create_different_square(ktype,horder):
+    k = np.array([
+            [0,0],
+            [0,1],
+            [1,0],
+            [1,1]
+        ])
+    kw.get_func(k,hkernel= ktype,h_order = horder)
+
+@pytest.mark.parametrize(
+    'hkernel',['dx','dy']
+)
+def test_auto_doll(hkernel):
+    k = np.array([
+            [0,0],
+            [0,1],
+            [1,0],
+            [1,1]
+        ])
+    kw.auto_doll(k,hkernel = hkernel)
 
 
 @pytest.mark.parametrize(
@@ -134,7 +167,7 @@ def test_interp_func(kernel, rx, ry, clause):
 )
 @pytest.mark.parametrize("order", [1, 2])
 def test_dx(kernel, rx, ry, order):
-    func = kw.kernel_weight_x(kernel, ktype="x", order=order)
+    func = kw.get_func(kernel, hkernel="dx", h_order=order)
     weight = func(rx, ry)
     assert weight.shape == (1, len(kernel))
     assert np.allclose(0, np.sum(weight))
@@ -163,7 +196,7 @@ def test_dx(kernel, rx, ry, order):
 )
 @pytest.mark.parametrize("order", [1, 2])
 def test_dy(kernel, rx, ry, order):
-    func = kw.kernel_weight_x(kernel, ktype="y", order=order)
+    func = kw.get_func(kernel, hkernel="dy", h_order=order)
     weight = func(rx, ry)
     assert weight.shape == (1, len(kernel))
     assert np.allclose(0, np.sum(weight))
@@ -202,8 +235,16 @@ def test_dy(kernel, rx, ry, order):
             3,
         ),
         (np.array([[0, 0]]), 1),
+        (
+            np.array([
+            [0,0],
+            [0,1],
+            [1,0],
+            [1,1]
+        ]),2
+        )
     ],
 )
 def test_order_too_high_error(kernel, order, ktype):
     with pytest.raises(Exception):
-        kw.kernel_weight_x(kernel, ktype=ktype, order=order)
+        kw.kernel_weight(kernel, ktype=ktype, order=order)
