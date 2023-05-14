@@ -145,14 +145,14 @@ def get_masks(od, tp):
         maskU = mask_u_node(maskC, tp)
         od._ds["maskU"] = od._ds["Z"] + od._ds["XG"]
         od._ds["maskU"].values = maskU
-    else:
+    else: # pragma: no cover
         maskU = np.array(od._ds["maskU"])
     if "maskV" not in keys:
         print("creating maskV,this is going to be very slow!")
         maskV = mask_v_node(maskC, tp)
         od._ds["maskV"] = od._ds["Z"] + od._ds["YG"]
         od._ds["maskV"].values = maskV
-    else:
+    else: # pragma: no cover
         maskV = np.array(od._ds["maskV"])
     if "maskWvel" not in keys:
         # there is a maskW with W meaning West in ECCO
@@ -160,7 +160,7 @@ def get_masks(od, tp):
         maskW = mask_w_node(maskC)
         od._ds["maskWvel"] = od._ds["Z"] + od._ds["YC"]
         od._ds["maskWvel"].values = maskW
-    else:
+    else: # pragma: no cover
         maskW = np.array(od._ds["maskWvel"])
     return maskC, maskU, maskV, maskW
 
@@ -171,7 +171,7 @@ def get_masked(od, ind, gridtype="C"):
 
     **Parameters:**
 
-    + od: OceDataset object
+    + od: OceData object
         Dataset to find mask values from.
     + ind: tuple of numpy.ndarray
         Indexes of grid points.
@@ -200,7 +200,7 @@ def get_masked(od, ind, gridtype="C"):
         "Wvel": lambda x: x if x != "Z" else "Zl",
     }
     if name not in keys:
-        if rcParam["debug_level"] in ["high", "very_high"]:
+        if rcParam["debug_level"] in ["high", "very_high"]: # pragma: no cover
             print(f"creating {name}, this is going to be slow!")
         small_mask = func_dic[gridtype](maskC, tp)
         dims = tuple(map(rename_dic[gridtype], od._ds.maskC.dims))

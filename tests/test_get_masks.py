@@ -1,5 +1,4 @@
 import numpy as np
-import oceanspy as ospy
 import pytest
 import xarray as xr
 
@@ -10,8 +9,8 @@ from seaduck import OceData
 # TODO: have a dataset that actually has maskC and is also not ECCO in the test datasets
 
 Datadir = "tests/Data/"
-curv = ospy.open_oceandataset.from_netcdf("{}MITgcm_curv_nc.nc" "".format(Datadir))
-rect = ospy.open_oceandataset.from_netcdf("{}MITgcm_rect_nc.nc" "".format(Datadir))
+curv = OceData(xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir)))
+rect = OceData(xr.open_dataset("{}MITgcm_rect_nc.nc" "".format(Datadir)))
 ecco = xr.open_zarr(Datadir + "small_ecco")
 tp = topology(ecco)
 oce = OceData(ecco)
@@ -38,5 +37,11 @@ def test_not_the_same():
 @pytest.mark.parametrize("od", [rect, curv])
 def test_without_maskC(od):
     with pytest.warns(Warning):
-        maskC, maskU, maskV, maskW = gm.get_masks(od)
+        maskC, maskU, maskV, maskW = gm.get_masks(od,od.tp)
     assert maskU.all()
+
+@pytest.mark.parametrize("od", [rect, curv])
+def test_get_masked_without_maskC(od):
+    with pytest.warns(Warning):
+        hello = gm.get_masked(od,(1,1))
+    assert hello == 1
