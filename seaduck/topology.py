@@ -33,7 +33,7 @@ directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @njit
-def llc_mutual_direction(face, nface, transitive=False): # pragma: no cover
+def llc_mutual_direction(face, nface, transitive=False):  # pragma: no cover
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
@@ -75,7 +75,7 @@ def llc_mutual_direction(face, nface, transitive=False): # pragma: no cover
 
 
 @njit
-def llc_get_the_other_edge(face, edge): # pragma: no cover
+def llc_get_the_other_edge(face, edge):  # pragma: no cover
     """See what is adjacent to the face by this edge.
 
     The compileable version of get_the_other_edge for llc grid.
@@ -92,7 +92,7 @@ def llc_get_the_other_edge(face, edge): # pragma: no cover
 
 
 @njit
-def box_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
+def box_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
     """Move an index in a direction.
 
     The compileable version of ind_tend for regional (box) grid.
@@ -116,7 +116,7 @@ def box_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
 
 
 @njit
-def x_per_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
+def x_per_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
     """Move an index in a direction.
 
     The compileable version of ind_tend for zonally periodic (x-per) grid.
@@ -141,7 +141,7 @@ def x_per_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
 
 
 @njit
-def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0): # pragma: no cover
+def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):  # pragma: no cover
     """Move an index in a direction.
 
     The compileable version of ind_tend for llc grid.
@@ -238,7 +238,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0): # pragma: no cover
 
 
 @njit
-def llc_get_uv_mask_from_face(faces): # pragma: no cover
+def llc_get_uv_mask_from_face(faces):  # pragma: no cover
     """Get the masking of UV points.
 
     The compileable version of get_uv_mask_from_face for llc grid.
@@ -299,14 +299,14 @@ class topology:
         except KeyError:
             try:
                 h_shape = (int(od["lat"].shape[0]), int(od["lon"].shape[0]))
-            except KeyError: # pragma: no cover
+            except KeyError:  # pragma: no cover
                 raise KeyError(
                     "Either XC or lat/lon is needed to create the topology object"
                 )
         self.h_shape = h_shape
         try:
             self.itmax = len(od["time"]) - 1
-        except (KeyError, TypeError): # pragma: no cover
+        except (KeyError, TypeError):  # pragma: no cover
             self.itmax = 0
         try:
             self.izmax = len(od["Z"]) - 1
@@ -324,7 +324,7 @@ class topology:
                     self.typ = "LLC"
                     # we can potentially generate the face connection in runtime
                     # say, put the csv file on cloud
-                elif self.num_face == 6: # pragma: no cover
+                elif self.num_face == 6:  # pragma: no cover
                     self.typ = "cubed_sphere"
             elif len(h_shape) == 2:
                 self.iymax, self.ixmax = h_shape
@@ -410,7 +410,7 @@ class topology:
             Use gridoffset keyword when you are dealing with different grid-indexing,
             -1 for MITgcm (default), 1 for NEMO.
         """
-        if -1 in ind: # pragma: no cover
+        if -1 in ind:  # pragma: no cover
             # meaning invalid point
             return tuple([-1 for i in ind])
         #         if tend not in [0,1,2,3]:
@@ -473,7 +473,7 @@ class topology:
                         pass
                     elif np.isclose(rot, np.pi / 2):
                         moves[k + 1 :] = [[2, 3, 1, 0][move] for move in moves[k + 1 :]]
-                    elif np.isclose(rot, 3 * np.pi / 2): # pragma: no cover
+                    elif np.isclose(rot, 3 * np.pi / 2):  # pragma: no cover
                         moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
                     face = ind[0]
                     # if the old face is on the left of the new face,
@@ -548,7 +548,9 @@ class topology:
                 particle_on_edge = True
                 n_ind = ind
             inds[:, j] = np.array(n_ind).ravel()
-        if particle_on_edge and rcParam["debug_level"] == "very_high": # pragma: no cover
+        if (
+            particle_on_edge and rcParam["debug_level"] == "very_high"
+        ):  # pragma: no cover
             print("Warning:Some points are on the edge")
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)
@@ -575,7 +577,7 @@ class topology:
                 return "U", R
             elif iyr > iyo:
                 return "V", R
-            else: # pragma: no cover
+            else:  # pragma: no cover
                 raise IndexError("there is no wall between a cell and itself")
                 # This error can be raised when there is three instead of four points in a corner
         else:
@@ -586,7 +588,7 @@ class topology:
                     return "V", R
                 elif d2to1 == 2:
                     return "U", R
-                else: # pragma: no cover
+                else:  # pragma: no cover
                     raise Non_normal_connection
             elif d2to1 in [0, 3]:
                 R = ind1
@@ -594,9 +596,9 @@ class topology:
                     return "V", R
                 elif d1to2 == 2:
                     return "U", R
-                else: # pragma: no cover
+                else:  # pragma: no cover
                     raise Non_normal_connection
-            else: # pragma: no cover
+            else:  # pragma: no cover
                 raise Non_normal_connection
 
     def _ind_tend_U(self, ind, tend):

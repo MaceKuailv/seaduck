@@ -44,12 +44,9 @@ t_bnds = np.array(
 ) / np.timedelta64(1, "s")
 
 
+@pytest.mark.parametrize("od,x,y,z,t", [(oce, x, y, z, t)])
 @pytest.mark.parametrize(
-    'od,x,y,z,t',
-    [(oce, x, y, z, t)]
-)
-@pytest.mark.parametrize(
-    'varList',
+    "varList",
     [
         ["ETAN", "maskC"],
         "SALT",
@@ -127,11 +124,20 @@ def test_largangian_oceinterp(
 @pytest.mark.parametrize(
     "od,varList,x,y,z,t,lagrangian,error",
     [
-        (oce,["__particle.lat", "__particle.lon"],x,y,z,t_bnds[:1],True,ValueError),
-        (oce,["__particle.lat", "__particle.lon"],x,y,z,t,False,AttributeError),
-        (oce,None,x,y,z,t,False,ValueError),
-        (oce,[None],x,y,z,t,False,ValueError),
-    ]
+        (
+            oce,
+            ["__particle.lat", "__particle.lon"],
+            x,
+            y,
+            z,
+            t_bnds[:1],
+            True,
+            ValueError,
+        ),
+        (oce, ["__particle.lat", "__particle.lon"], x, y, z, t, False, AttributeError),
+        (oce, None, x, y, z, t, False, ValueError),
+        (oce, [None], x, y, z, t, False, ValueError),
+    ],
 )
 @pytest.mark.filterwarnings("ignore::Warning")
 def test_oceinterp_error(od, varList, x, y, z, t, lagrangian, error):

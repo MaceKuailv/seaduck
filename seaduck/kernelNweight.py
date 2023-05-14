@@ -28,7 +28,7 @@ default_kernels = [
 
 
 # It just tell you what the kernels look like
-def show_kernels(kernels=default_kernels): # pragma: no cover
+def show_kernels(kernels=default_kernels):  # pragma: no cover
     """Plot a small scatter plot of the shape of a list of kernel.
 
     **Parameters:**
@@ -78,6 +78,7 @@ def _translate_to_tendency(k):
         for j in range(x):
             tend.append(3)  # right
     return tend
+
 
 def kernel_weight_x(kernel, ktype="interp", order=0):
     """Return the function that calculate the interpolation/derivative weight.
@@ -155,7 +156,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     y_poly = np.array(y_poly).astype(float)
 
     @njit
-    def the_interp_func(rx, ry): # pragma: no cover
+    def the_interp_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, x_poly, y_poly
         n = len(rx)
         m = len(kernel)
@@ -211,7 +212,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @njit
-    def the_x_func(rx, ry): # pragma: no cover
+    def the_x_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, x_poly, order
         n = len(rx)
         m = len(kernel)
@@ -232,7 +233,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @njit
-    def the_x_maxorder_func(rx, ry): # pragma: no cover
+    def the_x_maxorder_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, order
         n = len(rx)
         m = len(kernel)
@@ -250,7 +251,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @njit
-    def the_y_func(rx, ry): # pragma: no cover
+    def the_y_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, y_poly, order
         n = len(rx)
         m = len(kernel)
@@ -271,7 +272,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @njit
-    def the_y_maxorder_func(rx, ry): # pragma: no cover
+    def the_y_maxorder_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, order
         n = len(rx)
         m = len(kernel)
@@ -365,7 +366,7 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     y_poly = np.array(y_poly).astype(float)
 
     @njit
-    def the_square_func(rx, ry): # pragma: no cover
+    def the_square_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, y_poly, x_poly, xorder, yorder
         n = len(rx)
         mx = len(xs)
@@ -587,7 +588,7 @@ def get_weight_4d(
     tkernel="linear",
     zkernel="linear",
     bottom_scheme="no flux",
-): # pragma: no cover
+):  # pragma: no cover
     """Return the weight of values given particle rel-coords.
 
     **Parameters:**
@@ -705,7 +706,7 @@ def get_func(kernel, hkernel="interp", h_order=0):
 
     layer_3 = layer_2.get(h_order)
     if layer_3 is None:
-        if rcParam["debug_level"] == "very_high": # pragma: no cover
+        if rcParam["debug_level"] == "very_high":  # pragma: no cover
             print("Creating new weight function," " the first time is going to be slow")
         layer_2[h_order] = kernel_weight(kernel, ktype=hkernel, order=h_order)
     layer_3 = layer_2[h_order]
@@ -783,7 +784,7 @@ class KnW(object):
             (inheritance is not None)
             and (ignore_mask)
             and (rcParam["debug_level"] == "very_high")
-        ): # pragma: no cover
+        ):  # pragma: no cover
             print(
                 "Warning:overwriting the inheritance object to None,"
                 " because we ignore masking"
@@ -795,7 +796,7 @@ class KnW(object):
             inheritance = [[i for i in range(len(kernel))]]
         elif isinstance(inheritance, list):
             pass
-        else: # pragma: no cover
+        else:  # pragma: no cover
             raise ValueError("Unknown type of inherirance")
 
         self.kernel = kernel[ksort]
@@ -816,17 +817,15 @@ class KnW(object):
             for a_kernel in self.kernels
         ]
 
-    def same_hsize(self, other): # pragma: no cover
+    def same_hsize(self, other):  # pragma: no cover
         """Return True if 2 KnW object has the same horizontal size."""
-
         type_same = isinstance(other, type(self))
         if not type_same:
             raise TypeError("the argument is not a KnW object")
         return (self.kernel == other.kernel).all()
 
-    def same_size(self, other): # pragma: no cover
+    def same_size(self, other):  # pragma: no cover
         """Return True if 2 KnW object has the same 4D size."""
-        
         only_size = {"dz": 2, "linear": 2, "dt": 2, "nearest": 1}
         hsize_same = self.same_hsize(other)
         vsize_same = only_size[self.vkernel] == only_size[other.vkernel]
@@ -835,7 +834,7 @@ class KnW(object):
 
     def __eq__(self, other):
         type_same = isinstance(other, type(self))
-        if not type_same: # pragma: no cover
+        if not type_same:  # pragma: no cover
             return False
         shpe_same = (
             self.kernel == other.kernel
@@ -906,9 +905,13 @@ class KnW(object):
             nt = 1
 
         weight = np.zeros((len(rx), len(self.kernel), nz, nt))
-        if isinstance(rz, (int, float)) and self.vkernel != "nearest": # pragma: no cover
+        if (
+            isinstance(rz, (int, float)) and self.vkernel != "nearest"
+        ):  # pragma: no cover
             rz = np.array([rz for i in range(len(rx))])
-        if isinstance(rt, (int, float)) and self.tkernel != "nearest": # pragma: no cover
+        if (
+            isinstance(rt, (int, float)) and self.tkernel != "nearest"
+        ):  # pragma: no cover
             rt = np.array([rt for i in range(len(rx))])
 
         if self.tkernel == "linear":
@@ -917,7 +920,7 @@ class KnW(object):
                 (1 - rpt).reshape((len(rpt), 1, 1)),
                 rpt.reshape((len(rpt), 1, 1)),
             ]
-        elif self.tkernel == "dt": # pragma: no cover
+        elif self.tkernel == "dt":  # pragma: no cover
             tweight = [-1, 1]
         elif self.tkernel == "nearest":
             tweight = [1]
@@ -941,7 +944,7 @@ class KnW(object):
                 for jz in range(nz):
                     weight[:, self.inheritance[0], jz, jt] = self.hfuncs[0](rx, ry)
         else:
-            if nt != len(pk4d) or nz != len(pk4d[0]): # pragma: no cover
+            if nt != len(pk4d) or nz != len(pk4d[0]):  # pragma: no cover
                 raise ValueError("The kernel and the input pk4d does not match")
 
             for jt in range(nt):
@@ -955,7 +958,9 @@ class KnW(object):
                         funcs=self.hfuncs,
                     )
         for jt in range(nt):
-            if (self.vkernel == "linear") and (bottom_scheme == "no flux"): # pragma: no cover
+            if (self.vkernel == "linear") and (
+                bottom_scheme == "no flux"
+            ):  # pragma: no cover
                 # whereever the bottom layer is masked,
                 # replace it with a ghost point above it
                 secondlayermasked = np.isnan(weight[:, :, 0, jt]).any(axis=1)
