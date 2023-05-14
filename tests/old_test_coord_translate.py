@@ -3,6 +3,9 @@ import pytest
 import xarray as xr
 import seaduck.OceData as ocedata
 import seaduck.utils as _u
+'''
+This test does not run. it is for confidence.
+'''
 
 Datadir = "tests/Data/"
 ecco = xr.open_zarr(Datadir + "small_ecco")
@@ -15,10 +18,10 @@ _u.missing_cs_sn(curv)
 _u.missing_cs_sn(rect)
 
 
-@pytest.mark.parametrize("od", [ecco, curv, rect])
-def test_grid2array(od):
-    _u.grid2array(od)
-    assert _u.XC.any()
+# @pytest.mark.parametrize("od", [ecco, curv, rect])
+# def test_grid2array(od):
+#     _u.grid2array(od)
+#     assert _u.XC.any()
 
 
 @pytest.mark.parametrize(

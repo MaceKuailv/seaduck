@@ -443,7 +443,7 @@ class topology:
         if self.check_illegal(ind):
             return tuple([-1 for i in ind])  # the origin is invalid
         if not set(moves).issubset({0, 1, 2, 3}):
-            raise Exception("Illegal move. Must be 0,1,2,3")
+            raise ValueError("Illegal move. Must be 0,1,2,3")
         if self.typ in ["LLC", "cubed_sphere"]:
             face, iy, ix = ind
             for k in range(len(moves)):
@@ -562,7 +562,7 @@ class topology:
                 return "U", R
             elif iyr > iyo:
                 return "V", R
-            else:
+            else: # pragma: no cover
                 raise IndexError("there is no wall between a cell and itself")
                 # This error can be raised when there is three instead of four points in a corner
         else:
@@ -573,7 +573,7 @@ class topology:
                     return "V", R
                 elif d2to1 == 2:
                     return "U", R
-                else:
+                else: # pragma: no cover
                     raise Non_normal_connection
             elif d2to1 in [0, 3]:
                 R = ind1
@@ -581,9 +581,9 @@ class topology:
                     return "V", R
                 elif d1to2 == 2:
                     return "U", R
-                else:
+                else: # pragma: no cover
                     raise Non_normal_connection
-            else:
+            else: # pragma: no cover
                 raise Non_normal_connection
 
     def _ind_tend_U(self, ind, tend):
