@@ -88,12 +88,7 @@ def test_cascade_weight(rx, ry, pk, clause):
             ]
         ),
         np.array([[0, 0]]),
-        np.array([
-            [0,0],
-            [0,1],
-            [1,0],
-            [1,1]
-        ])
+        np.array([[0, 0], [0, 1], [1, 0], [1, 1]]),
     ],
 )
 def test_interp_func(kernel, rx, ry, clause):
@@ -102,32 +97,18 @@ def test_interp_func(kernel, rx, ry, clause):
     assert weight.shape == (1, len(kernel))
     assert eval(clause)
 
-@pytest.mark.parametrize(
-    'ktype',['dx','dy']
-)
-@pytest.mark.parametrize(
-    'horder',[0,1]
-)
-def test_create_different_square(ktype,horder):
-    k = np.array([
-            [0,0],
-            [0,1],
-            [1,0],
-            [1,1]
-        ])
-    kw.get_func(k,hkernel= ktype,h_order = horder)
 
-@pytest.mark.parametrize(
-    'hkernel',['dx','dy']
-)
+@pytest.mark.parametrize("ktype", ["dx", "dy"])
+@pytest.mark.parametrize("horder", [0, 1])
+def test_create_different_square(ktype, horder):
+    k = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    kw.get_func(k, hkernel=ktype, h_order=horder)
+
+
+@pytest.mark.parametrize("hkernel", ["dx", "dy"])
 def test_auto_doll(hkernel):
-    k = np.array([
-            [0,0],
-            [0,1],
-            [1,0],
-            [1,1]
-        ])
-    kw.auto_doll(k,hkernel = hkernel)
+    k = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    kw.auto_doll(k, hkernel=hkernel)
 
 
 @pytest.mark.parametrize(
@@ -235,14 +216,7 @@ def test_dy(kernel, rx, ry, order):
             3,
         ),
         (np.array([[0, 0]]), 1),
-        (
-            np.array([
-            [0,0],
-            [0,1],
-            [1,0],
-            [1,1]
-        ]),2
-        )
+        (np.array([[0, 0], [0, 1], [1, 0], [1, 1]]), 2),
     ],
 )
 def test_order_too_high_error(kernel, order, ktype):

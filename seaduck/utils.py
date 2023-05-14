@@ -505,15 +505,9 @@ def find_rel_h_rectilinear(x, y, lon, lat):
 def find_rel_h_oceanparcel(
     x, y, some_x, some_y, some_dx, some_dy, CS, SN, XG, YG, tree, tp
 ):
-<<<<<<< HEAD
     """Find the rel-coords using the rectilinear scheme."""
-    if NoneIn([x, y, some_x, some_y, XG, YG, tree]):
-=======
-    """
-    Find the rel-coords using the rectilinear scheme
-    """
+
     if NoneIn([x, y, some_x, some_y, XG, YG, tree]): # pragma: no cover
->>>>>>> main
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
     faces, iys, ixs = find_ind_h(x, y, tree, h_shape)

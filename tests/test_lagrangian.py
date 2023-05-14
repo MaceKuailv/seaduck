@@ -4,9 +4,9 @@ import pytest
 import xarray as xr
 
 Datadir = "tests/Data/"
-aviso = xr.open_dataset(Datadir+'aviso_example.nc')
+aviso = xr.open_dataset(Datadir + "aviso_example.nc")
 ecco = xr.open_zarr(Datadir + "small_ecco")
-curv = xr.open_dataset(Datadir+'MITgcm_curv_nc.nc')
+curv = xr.open_dataset(Datadir + "MITgcm_curv_nc.nc")
 
 oce = sd.OceData(aviso)
 eco = sd.OceData(ecco)
@@ -29,7 +29,7 @@ x, y = np.meshgrid(x, y)
 x = x.ravel()
 y = y.ravel()
 z = None
-zz = np.ones_like(x)*(-10.0)
+zz = np.ones_like(x) * (-10.0)
 
 start_time = "1992-02-01"
 t = (
@@ -51,42 +51,52 @@ p = sd.particle(
     vname="v",
     wname=None,
 )
-ecco_p = sd.particle(x = x,y=y,z=zz,t=t,data=eco,transport = True)
+ecco_p = sd.particle(x=x, y=y, z=zz, t=t, data=eco, transport=True)
 
 normal_stops = np.linspace(t[0], tf, 5)
 
+
 def test_vol_mode():
-#     ecco_p = sd.particle(x = x,y=y,z=zz,t=t,data=eco,transport = True)
-    stops, raw = ecco_p.to_list_of_time(normal_stops=[t[0],tf])
+    #     ecco_p = sd.particle(x = x,y=y,z=zz,t=t,data=eco,transport = True)
+    stops, raw = ecco_p.to_list_of_time(normal_stops=[t[0], tf])
+
 
 def test_to_list_of_time():
-    stops, raw = p.to_list_of_time(normal_stops=normal_stops, update_stops=[normal_stops[1]])
-    
+    stops, raw = p.to_list_of_time(
+        normal_stops=normal_stops, update_stops=[normal_stops[1]]
+    )
+
+
 def test_analytical_step():
     p.analytical_step(10.0)
-    
+
+
 def test_callback():
     curv_p = sd.particle(
-        y = np.array([70.5]), 
-        x = np.array([-14.]),
-        z = np.array([-10.]),
-        t = np.array([1832320850.0]),
-        data = cuv,
-        uname = 'U',
-        vname = 'V',
-        wname = 'W',
-        callback = lambda pt: pt.lon>-14.01
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([1832320850.0]),
+        data=cuv,
+        uname="U",
+        vname="V",
+        wname="W",
+        callback=lambda pt: pt.lon > -14.01,
     )
-    curv_p.to_list_of_time(normal_stops=[1832320850.0,1832320880.0],update_stops = [])
-    
+    curv_p.to_list_of_time(normal_stops=[1832320850.0, 1832320880.0], update_stops=[])
+
+
 @pytest.mark.parametrize(
-    'statement,error',
+    "statement,error",
     [
-        ('p.note_taking()',AttributeError),
-        ('p.to_list_of_time(normal_stops = [0.0,1.0])',AttributeError),
-        ('ecco_p.to_list_of_time(normal_stops = [0.0,1.0],update_stops = [])',ValueError)
-    ]
+        ("p.note_taking()", AttributeError),
+        ("p.to_list_of_time(normal_stops = [0.0,1.0])", AttributeError),
+        (
+            "ecco_p.to_list_of_time(normal_stops = [0.0,1.0],update_stops = [])",
+            ValueError,
+        ),
+    ],
 )
-def test_lagrange_error(statement,error):
+def test_lagrange_error(statement, error):
     with pytest.raises(error):
         eval(statement)

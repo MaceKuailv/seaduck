@@ -36,7 +36,7 @@ def test_convert(od):
     ocedata(od)
 =======
     oo = ocedata(od)
-    
+
 @pytest.mark.parametrize(
     'data',[curv_prime,curv_prprm,curv_prprp]
 )

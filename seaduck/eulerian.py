@@ -52,15 +52,9 @@ def _ind_broadcast(x, ind):
 
 
 def _partial_flatten(ind):
-<<<<<<< HEAD
     """Convert a high dimensional index set to a 2D one."""
-    if isinstance(ind, tuple):
-=======
-    """
-    Converting a high dimensional index set to a 2D one
-    """
+
     if isinstance(ind, tuple): # pragma: no cover
->>>>>>> main
         shape = ind[0].shape
 
         # num_neighbor = 1
@@ -508,17 +502,10 @@ class position:
         """Find weight for the corner points interpolation."""
         return weight_f_node(self.rx, self.ry)
 
-<<<<<<< HEAD
-    def get_lon_lat(self):
+    def _get_lon_lat(self): # pragma: no cover
         """Return the lat-lon value based on relative coordinate.
 
         This method only work if the dataset has readiness['h'] == 'oceanparcel'.
-=======
-    def _get_lon_lat(self): # pragma: no cover
-        """
-        Return the lat-lon value based on relative coordinate.
-        This method only work if the dataset has readiness['h'] == 'oceanparcel'
->>>>>>> main
         """
         px, py = self.get_px_py()
         w = self.get_f_node_weight()
@@ -526,12 +513,8 @@ class position:
         lat = np.einsum("nj,nj->n", w, py.T)
         return lon, lat
 
-<<<<<<< HEAD
-    def _get_needed(self, varName, knw, required=None, prefetched=None, **kwarg):
-=======
+
     def _get_needed(self, varName, knw, required=None, prefetched=None, **kwarg): # pragma: no cover
-        """An internal testing function"""
->>>>>>> main
         if required is None:
             required = self.ocedata._ds[varName].dims
         ind = self.fatten(knw, required=required, **kwarg)
@@ -545,12 +528,7 @@ class position:
         else:
             return prefetched[ind]
 
-<<<<<<< HEAD
-    def _get_masked(self, knw, gridtype="C", **kwarg):
-=======
     def _get_masked(self, knw, gridtype="C", **kwarg): # pragma: no cover
-        """An internal testing function"""
->>>>>>> main
         ind = self.fatten(knw, fourD=True, **kwarg)
         if self.it is not None:
             ind = ind[1:]
@@ -561,12 +539,7 @@ class position:
             )
         return get_masked(self.ocedata, ind, gridtype=gridtype)
 
-<<<<<<< HEAD
-    def _find_pk4d(self, knw, gridtype="C"):
-=======
     def _find_pk4d(self, knw, gridtype="C"): # pragma: no cover
-        """An internal testing function"""
->>>>>>> main
         masked = self._get_masked(knw, gridtype=gridtype)
         pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
         return pk4d

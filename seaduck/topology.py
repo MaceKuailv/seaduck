@@ -33,14 +33,9 @@ directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @njit
-<<<<<<< HEAD
-def llc_mutual_direction(face, nface, transitive=False):
+def llc_mutual_direction(face, nface, transitive=False): # pragma: no cover
     """Find the relative orientation of two faces.
 
-=======
-def llc_mutual_direction(face, nface, transitive=False): # pragma: no cover
-    """
->>>>>>> main
     The compileable version of mutual direction for llc grid.
     See topology.mutual direction for more detail.
     """
@@ -80,14 +75,9 @@ def llc_mutual_direction(face, nface, transitive=False): # pragma: no cover
 
 
 @njit
-<<<<<<< HEAD
-def llc_get_the_other_edge(face, edge):
+def llc_get_the_other_edge(face, edge): # pragma: no cover
     """See what is adjacent to the face by this edge.
 
-=======
-def llc_get_the_other_edge(face, edge): # pragma: no cover
-    """
->>>>>>> main
     The compileable version of get_the_other_edge for llc grid.
     See topology.get_the_other_edge for more detail.
     """
@@ -102,14 +92,9 @@ def llc_get_the_other_edge(face, edge): # pragma: no cover
 
 
 @njit
-<<<<<<< HEAD
-def box_ind_tend(ind, tend, iymax, ixmax):
+def box_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
     """Move an index in a direction.
 
-=======
-def box_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
-    """
->>>>>>> main
     The compileable version of ind_tend for regional (box) grid.
     See topology.ind_tend for more detail.
     """
@@ -131,14 +116,9 @@ def box_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
 
 
 @njit
-<<<<<<< HEAD
-def x_per_ind_tend(ind, tend, iymax, ixmax):
+def x_per_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
     """Move an index in a direction.
 
-=======
-def x_per_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
-    """
->>>>>>> main
     The compileable version of ind_tend for zonally periodic (x-per) grid.
     See topology.ind_tend for more detail.
     """
@@ -161,14 +141,9 @@ def x_per_ind_tend(ind, tend, iymax, ixmax): # pragma: no cover
 
 
 @njit
-<<<<<<< HEAD
-def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
+def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0): # pragma: no cover
     """Move an index in a direction.
 
-=======
-def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0): # pragma: no cover
-    """
->>>>>>> main
     The compileable version of ind_tend for llc grid.
     See topology.ind_tend for more detail.
     """
@@ -263,14 +238,9 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0): # pragma: no cover
 
 
 @njit
-<<<<<<< HEAD
-def llc_get_uv_mask_from_face(faces):
+def llc_get_uv_mask_from_face(faces): # pragma: no cover
     """Get the masking of UV points.
 
-=======
-def llc_get_uv_mask_from_face(faces): # pragma: no cover
-    """
->>>>>>> main
     The compileable version of get_uv_mask_from_face for llc grid.
     See topology.get_uv_mask_from_face for more detail.
     """
@@ -502,15 +472,9 @@ class topology:
                     if np.isclose(rot, 0):
                         pass
                     elif np.isclose(rot, np.pi / 2):
-<<<<<<< HEAD
                         moves[k + 1 :] = [[2, 3, 1, 0][move] for move in moves[k + 1 :]]
-                    elif np.isclose(rot, 3 * np.pi / 2):
-                        moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
-=======
-                        moves[k + 1:] = [[2, 3, 1, 0][move] for move in moves[k + 1:]]
                     elif np.isclose(rot, 3 * np.pi / 2): # pragma: no cover
-                        moves[k + 1:] = [[3, 2, 0, 1][move] for move in moves[k + 1:]]
->>>>>>> main
+                        moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
                     face = ind[0]
                     # if the old face is on the left of the new face,
                     # the particle should be heading right
