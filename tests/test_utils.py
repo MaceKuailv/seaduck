@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 import pytest
+import xarray as xr
 
 import seaduck.utils as _u
 

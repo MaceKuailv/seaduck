@@ -47,7 +47,7 @@ def test_antarctica_error(face, edge):
 
 def test_mutual_face():
     e1, e2 = tp.mutual_direction(0, 1)
-    assert isinstance(e1, int)
+    assert e1 in [0, 1, 2, 3]
 
 
 @pytest.mark.parametrize(

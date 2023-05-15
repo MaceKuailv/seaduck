@@ -23,7 +23,7 @@ repos:
   rev: v0.0.265
   hooks:
   - id: ruff
-    args: [--fix, '--exclude=tests/*']
+    args: [--fix, '--exclude=tests/*', '--exclude=seaduck/__init__.py']
 - repo: https://github.com/executablebooks/mdformat
   rev: 0.7.16
   hooks:

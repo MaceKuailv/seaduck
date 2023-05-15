@@ -39,7 +39,7 @@ def test_cascade(masked, ans):
     ],
 )
 def test_cascade_weight(rx, ry, pk, clause):
-    kw.get_weight_cascade(rx, ry, pk)
+    w = kw.get_weight_cascade(rx, ry, pk)
     assert eval(clause)
 
 
