@@ -1,5 +1,8 @@
 import numpy as np
-import pandas as pd
+try: # pragma: no cover
+    import pandas as _pd
+except ImportError: # pragma: no cover
+    pass
 import xarray as xr
 
 from seaduck.topology import topology
@@ -148,9 +151,12 @@ class OceData(object):
 
     def show_alias(self):  # pragma: no cover
         """Print out the alias in a nice pd.DataFrame format."""
-        return pd.DataFrame.from_dict(
-            self.alias, orient="index", columns=["original name"]
-        )
+        try:
+            return _pd.DataFrame.from_dict(
+                self.alias, orient="index", columns=["original name"]
+            )
+        except NameError:
+            raise NameError('pandas is needed to perform this function.')
 
     def _add_missing_cs_sn(self):
         try:

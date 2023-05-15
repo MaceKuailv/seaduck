@@ -2,7 +2,7 @@ import numpy as _np
 
 # Required dependencies (private)
 import xarray as _xr
-from numba import njit
+from seaduck.RuntimeConf import compileable
 from scipy import spatial
 
 
@@ -41,8 +41,7 @@ def get_key_by_value(d, value):
             return k
     return None
 
-
-@njit
+@compileable
 def spherical2cartesian(Y, X, R=6371.0):  # pragma: no cover
     """Convert spherical coordinates to cartesian.
 
@@ -75,9 +74,10 @@ def spherical2cartesian(Y, X, R=6371.0):  # pragma: no cover
     return x, y, z
 
 
-@njit
+@compileable
 def to_180(x):  # pragma: no cover
     """Convert any longitude scale to [-180,180)."""
+
     x = x % 360
     return x + (-1) * (x // 180) * 360
 
@@ -88,10 +88,10 @@ def local_to_latlon(u, v, cs, sn):
     vv = u * sn + v * cs
     return uu, vv
 
-
-@njit
+@compileable
 def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):  # pragma: no cover
     """Translate the spatial rel-coords into lat-lon-dep coords."""
+
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
     dlon = (temp_x * cs - temp_y * sn) / _np.cos(by * _np.pi / 180)
@@ -171,10 +171,10 @@ def NoneIn(lst):
             break
     return ans
 
-
-@njit
+@compileable
 def find_ind_z(array, value):  # pragma: no cover
     """Find the index of the nearest level that is lower."""
+
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
     if array[idx] > value:
@@ -184,10 +184,10 @@ def find_ind_z(array, value):  # pragma: no cover
     idx = int(idx)
     return idx, array[idx]
 
-
-@njit
+@compileable
 def find_ind_t(array, value):  # pragma: no cover
     """Find the index of the latest time that is before the time."""
+
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
     if array[idx] > value:
@@ -195,17 +195,16 @@ def find_ind_t(array, value):  # pragma: no cover
     idx = int(idx)
     return idx, array[idx]
 
-
-@njit
+@compileable
 def find_ind_nearest(array, value):  # pragma: no cover
     """Find the index of the nearest value to the given value."""
+
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
     idx = int(idx)
     return idx, array[idx]
 
-
-@njit
+@compileable
 def find_ind_periodic(array, value, peri):  # pragma: no cover
     """Find the index of the nearest value to the given value.
 
@@ -231,10 +230,10 @@ def find_ind_h(Xs, Ys, tree, h_shape):  # pragma: no cover
         iys, ixs = _np.unravel_index((index1d), h_shape)
     return faces, iys, ixs
 
-
-@njit
+@compileable
 def find_rel_nearest(value, ts):  # pragma: no cover
     """Find the rel-coords based on the find_ind_nearest method."""
+
     its = _np.zeros_like(value)
     rts = _np.ones_like(value) * 0.0
     # the way to create zeros with float32 type
@@ -260,10 +259,10 @@ def find_rel_nearest(value, ts):  # pragma: no cover
         bts[i] = bt
     return its, rts, dts, bts
 
-
-@njit
+@compileable
 def find_rel_periodic(value, ts, peri):  # pragma: no cover
     """Find the rel-coords based on the find_ind_periodic method."""
+
     its = _np.zeros_like(value)
     rts = _np.ones_like(value) * 0.0
     # the way to create zeros with float32 type
@@ -289,8 +288,7 @@ def find_rel_periodic(value, ts, peri):  # pragma: no cover
         bts[i] = bt
     return its, rts, dts, bts
 
-
-@njit
+@compileable
 def find_rel_z(depth, some_z, some_dz, dz_above_z=True):  # pragma: no cover
     """Find the rel-coords of the vertical coords.
 
@@ -337,8 +335,7 @@ def find_rel_z(depth, some_z, some_dz, dz_above_z=True):  # pragma: no cover
         rzs[i] = delta_z / Delta_z
     return izs, rzs, dzs, bzs
 
-
-@njit
+@compileable
 def find_rel_time(time, ts):  # pragma: no cover
     """Find the rel-coords of the temporal coords.
 
@@ -374,12 +371,12 @@ def find_rel_time(time, ts):  # pragma: no cover
         bts[i] = bt
     return its, rts, dts, bts
 
-
-@njit
+@compileable
 def _read_h_with_face(
     some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs
 ):  # pragma: no cover
     """Read the grid coords when there is a face dimension to it."""
+
     n = len(ixs)
 
     bx = _np.ones_like(ixs) * 0.0
@@ -410,12 +407,12 @@ def _read_h_with_face(
 
     return cs, sn, dx, dy, bx, by
 
-
-@njit
+@compileable
 def _read_h_without_face(
     some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs
 ):  # pragma: no cover
     """Read _read_h_with_face for more info."""
+
     # TODO ADD test if those are Nones.
     n = len(ixs)
     if some_dx is not None and some_dy is not None:
@@ -446,10 +443,10 @@ def _read_h_without_face(
 
     return cs, sn, dx, dy, bx, by
 
-
-@njit
+@compileable
 def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):  # pragma: no cover
     """Find the non-dimensional coords using the local cartesian scheme."""
+
     dlon = to_180(x - bx)
     dlat = to_180(y - by)
     rx = (dlon * _np.cos(by * _np.pi / 180) * cs + dlat * sn) * deg2m / dx
@@ -551,8 +548,7 @@ def find_px_py(XG, YG, tp, *ind, gridoffset=-1):
 
     return px, py
 
-
-@njit
+@compileable
 def find_rx_ry_oceanparcel(x, y, px, py):  # pragma: no cover
     """Find the non-dimensional horizontal distance.
 

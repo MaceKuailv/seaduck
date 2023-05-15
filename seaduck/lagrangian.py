@@ -1,19 +1,17 @@
 import copy
 
 import numpy as np
-from numba import njit
 
 from seaduck.eulerian import position
 from seaduck.kernelNweight import KnW
-from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, rel2latlon, to_180
+from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, to_180, rel2latlon
+from seaduck.RuntimeConf import compileable
 
 deg2m = 6271e3 * np.pi / 180
 
-
-@njit
-def increment(t, u, du):  # pragma: no cover
+@compileable
+def increment(t, u, du): # pragma: no cover
     """Find how far it will travel in duration t.
-
     For a one dimensional particle with speed u and speed derivative du,
     find how far it will travel in duration t.
 
@@ -52,11 +50,10 @@ def stationary(t, u, du, x0):
     incr[nans] = (u * t)[nans]
     return incr + x0
 
-
-@njit
-def stationary_time(u, du, x0):  # pragma: no cover
+@compileable
+def stationary_time(u, du, x0): # pragma: no cover
     """Find the amount of time to leave the cell.
-
+    
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
     The time could be negative.
 

@@ -1,13 +1,12 @@
 import copy
+try: # pragma: no cover
+    import matplotlib.pyplot as _plt
+except ImportError: # pragma: no cover
+    pass
 
-import matplotlib.pyplot as plt
 import numpy as np
-from numba import njit
 
-from seaduck.RuntimeConf import rcParam
-
-# from OceInterp.kernel_and_weight import kernel_weight,get_weight_cascade
-# from seaduck.topology import topology
+from seaduck.RuntimeConf import rcParam,compileable
 from seaduck.utils import get_combination
 
 # default kernel for interpolation.
@@ -37,9 +36,13 @@ def show_kernels(kernels=default_kernels):  # pragma: no cover
         Each of the element is a (n,2) shaped array,
         where n is the number of element in the kernel.
     """
+    try:
+        _plt
+    except NameError:
+        raise NameError('maptlotlib.pyplot is needed to use this function.')
     for i, k in enumerate(kernels):
         x, y = k.T
-        plt.plot(x + 0.1 * i, y + 0.1 * i, "+")
+        _plt.plot(x + 0.1 * i, y + 0.1 * i, "+")
 
 
 def _translate_to_tendency(k):
@@ -155,8 +158,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     x_poly = np.array(x_poly).astype(float)
     y_poly = np.array(y_poly).astype(float)
 
-    @njit
-    def the_interp_func(rx, ry):  # pragma: no cover
+    @compileable
+    def the_interp_func(rx, ry): # pragma: no cover
         nonlocal kernel, xs, ys, x_poly, y_poly
         n = len(rx)
         m = len(kernel)
@@ -211,8 +214,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
                 weight[:, i] = xthing + ything - 1
         return weight
 
-    @njit
-    def the_x_func(rx, ry):  # pragma: no cover
+    @compileable
+    def the_x_func(rx, ry): # pragma: no cover
         nonlocal kernel, xs, ys, x_poly, order
         n = len(rx)
         m = len(kernel)
@@ -232,8 +235,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
                         weight[:, i] /= x - other
         return weight
 
-    @njit
-    def the_x_maxorder_func(rx, ry):  # pragma: no cover
+    @compileable
+    def the_x_maxorder_func(rx, ry): # pragma: no cover
         nonlocal kernel, xs, ys, order
         n = len(rx)
         m = len(kernel)
@@ -250,8 +253,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
                 weight[:, i] = 0.0
         return weight
 
-    @njit
-    def the_y_func(rx, ry):  # pragma: no cover
+    @compileable
+    def the_y_func(rx, ry): # pragma: no cover
         nonlocal kernel, xs, ys, y_poly, order
         n = len(rx)
         m = len(kernel)
@@ -271,7 +274,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
                         weight[:, i] /= y - other
         return weight
 
-    @njit
+    @compileable
     def the_y_maxorder_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, order
         n = len(rx)
@@ -365,7 +368,7 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     x_poly = np.array(x_poly).astype(float)
     y_poly = np.array(y_poly).astype(float)
 
-    @njit
+    @compileable
     def the_square_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, y_poly, x_poly, xorder, yorder
         n = len(rx)
