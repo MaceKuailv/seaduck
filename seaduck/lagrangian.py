@@ -1,16 +1,15 @@
 import copy
 
 import numpy as np
-from numba import njit
 
 from seaduck.eulerian import position
 from seaduck.kernelNweight import KnW
 from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, to_180, rel2latlon
+from seaduck.RuntimeConf import compileable
 
 deg2m = 6271e3 * np.pi / 180
 
-
-@njit
+@compileable
 def increment(t, u, du): # pragma: no cover
     """
     For a one dimensional particle with speed u and speed derivative du,
@@ -51,7 +50,7 @@ def stationary(t, u, du, x0):
     return incr + x0
 
 
-@njit
+@compileable
 def stationary_time(u, du, x0): # pragma: no cover
     """
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
