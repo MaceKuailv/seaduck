@@ -191,7 +191,7 @@ def find_ind_t(array, value):  # pragma: no cover
     """Find the index of the latest time that is before the time."""
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
-    if array[idx] > value:
+    if array[idx] > value and idx != 0:
         idx -= 1
     idx = int(idx)
     return idx, array[idx]
@@ -250,7 +250,7 @@ def find_rel_nearest(value, ts):  # pragma: no cover
         t = value[i]
         it, bt = find_ind_nearest(ts, t)
         delta_t = t - bt
-        if delta_t * DT[i] > 0:
+        if delta_t * DT[it] > 0:
             Delta_t = DT[it + 1]
         else:
             Delta_t = DT[it]
@@ -367,7 +367,10 @@ def find_rel_time(time, ts):  # pragma: no cover
     for i, t in enumerate(time):
         it, bt = find_ind_t(ts, t)
         delta_t = t - bt
-        Delta_t = ts[it + 1] - ts[it]
+        if it < len(ts) - 1:
+            Delta_t = ts[it + 1] - ts[it]
+        else:
+            Delta_t = ts[it] - ts[it - 1]
         rt = delta_t / Delta_t
         its[i] = it
         rts[i] = rt
