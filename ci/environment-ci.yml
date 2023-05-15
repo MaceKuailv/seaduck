@@ -13,3 +13,4 @@ dependencies:
 - sphinx
 - sphinx-autoapi
 - pooch
+- zarr
