@@ -1,12 +1,13 @@
 import copy
-try: # pragma: no cover
+
+try:  # pragma: no cover
     import matplotlib.pyplot as _plt
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     pass
 
 import numpy as np
 
-from seaduck.RuntimeConf import rcParam,compileable
+from seaduck.RuntimeConf import compileable, rcParam
 from seaduck.utils import get_combination
 
 # default kernel for interpolation.
@@ -39,7 +40,7 @@ def show_kernels(kernels=default_kernels):  # pragma: no cover
     try:
         _plt
     except NameError:
-        raise NameError('maptlotlib.pyplot is needed to use this function.')
+        raise NameError("maptlotlib.pyplot is needed to use this function.")
     for i, k in enumerate(kernels):
         x, y = k.T
         _plt.plot(x + 0.1 * i, y + 0.1 * i, "+")
@@ -159,7 +160,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     y_poly = np.array(y_poly).astype(float)
 
     @compileable
-    def the_interp_func(rx, ry): # pragma: no cover
+    def the_interp_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, x_poly, y_poly
         n = len(rx)
         m = len(kernel)
@@ -215,7 +216,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @compileable
-    def the_x_func(rx, ry): # pragma: no cover
+    def the_x_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, x_poly, order
         n = len(rx)
         m = len(kernel)
@@ -236,7 +237,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @compileable
-    def the_x_maxorder_func(rx, ry): # pragma: no cover
+    def the_x_maxorder_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, order
         n = len(rx)
         m = len(kernel)
@@ -254,7 +255,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         return weight
 
     @compileable
-    def the_y_func(rx, ry): # pragma: no cover
+    def the_y_func(rx, ry):  # pragma: no cover
         nonlocal kernel, xs, ys, y_poly, order
         n = len(rx)
         m = len(kernel)
