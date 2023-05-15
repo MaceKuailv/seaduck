@@ -1,7 +1,7 @@
 PROJECT := seaduck
 CONDA := conda
 CONDAFLAGS :=
-COV_REPORT := html
+COV_REPORT := term-missing
 
 default: qa unit-tests type-check
 
