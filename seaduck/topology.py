@@ -3,7 +3,7 @@ import copy
 
 import numpy as np
 
-from seaduck.RuntimeConf import rcParam, compileable
+from seaduck.RuntimeConf import compileable, rcParam
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
@@ -72,6 +72,7 @@ def llc_mutual_direction(face, nface, transitive=False):  # pragma: no cover
     else:
         raise ValueError("The two faces are not connected (transitive = False)")
 
+
 @compileable
 def llc_get_the_other_edge(face, edge):  # pragma: no cover
     """See what is adjacent to the face by this edge.
@@ -87,6 +88,7 @@ def llc_get_the_other_edge(face, edge):  # pragma: no cover
         )
     nedge_n = np.where(face_connect[nface] == face)
     return nface, nedge_n[0][0]
+
 
 @compileable
 def box_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
@@ -111,6 +113,7 @@ def box_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
         return (-1, -1)
     return (iy, ix)
 
+
 @compileable
 def x_per_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
     """Move an index in a direction.
@@ -134,6 +137,7 @@ def x_per_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
     if ix < 0:
         return (iy, ixmax + ix + 1)
     return (iy, ix)
+
 
 @compileable
 def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):  # pragma: no cover
@@ -230,6 +234,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):  # pragma: no cover
                 else:
                     raise ValueError("gridoffset must be -1,1 or 1")
     return (face, iy, ix)
+
 
 @compileable
 def llc_get_uv_mask_from_face(faces):  # pragma: no cover

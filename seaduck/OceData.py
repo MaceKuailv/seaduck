@@ -1,7 +1,8 @@
 import numpy as np
-try: # pragma: no cover
+
+try:  # pragma: no cover
     import pandas as _pd
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     pass
 import xarray as xr
 
@@ -156,7 +157,7 @@ class OceData(object):
                 self.alias, orient="index", columns=["original name"]
             )
         except NameError:
-            raise NameError('pandas is needed to perform this function.')
+            raise NameError("pandas is needed to perform this function.")
 
     def _add_missing_cs_sn(self):
         try:
