@@ -2,9 +2,8 @@
 import copy
 
 import numpy as np
-from numba import njit
 
-from seaduck.RuntimeConf import rcParam
+from seaduck.RuntimeConf import rcParam, compileable
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
@@ -32,7 +31,7 @@ llc_face_connect = np.array(
 directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
-@njit
+@compileable
 def llc_mutual_direction(face, nface, transitive=False):  # pragma: no cover
     """Find the relative orientation of two faces.
 
@@ -73,8 +72,7 @@ def llc_mutual_direction(face, nface, transitive=False):  # pragma: no cover
     else:
         raise ValueError("The two faces are not connected (transitive = False)")
 
-
-@njit
+@compileable
 def llc_get_the_other_edge(face, edge):  # pragma: no cover
     """See what is adjacent to the face by this edge.
 
@@ -90,8 +88,7 @@ def llc_get_the_other_edge(face, edge):  # pragma: no cover
     nedge_n = np.where(face_connect[nface] == face)
     return nface, nedge_n[0][0]
 
-
-@njit
+@compileable
 def box_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
     """Move an index in a direction.
 
@@ -114,8 +111,7 @@ def box_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
         return (-1, -1)
     return (iy, ix)
 
-
-@njit
+@compileable
 def x_per_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
     """Move an index in a direction.
 
@@ -139,8 +135,7 @@ def x_per_ind_tend(ind, tend, iymax, ixmax):  # pragma: no cover
         return (iy, ixmax + ix + 1)
     return (iy, ix)
 
-
-@njit
+@compileable
 def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):  # pragma: no cover
     """Move an index in a direction.
 
@@ -236,8 +231,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):  # pragma: no cover
                     raise ValueError("gridoffset must be -1,1 or 1")
     return (face, iy, ix)
 
-
-@njit
+@compileable
 def llc_get_uv_mask_from_face(faces):  # pragma: no cover
     """Get the masking of UV points.
 
