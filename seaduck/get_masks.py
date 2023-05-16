@@ -147,14 +147,14 @@ def get_masks(od, tp):
         maskU = mask_u_node(maskC, tp)
         od._ds["maskU"] = od._ds["Z"] + od._ds["XG"]
         od._ds["maskU"].values = maskU
-    else: 
+    else:
         maskU = np.array(od._ds["maskU"])
     if "maskV" not in keys:
         print("creating maskV,this is going to be very slow!")
         maskV = mask_v_node(maskC, tp)
         od._ds["maskV"] = od._ds["Z"] + od._ds["YG"]
         od._ds["maskV"].values = maskV
-    else: 
+    else:
         maskV = np.array(od._ds["maskV"])
     if "maskWvel" not in keys:
         # there is a maskW with W meaning West in ECCO
@@ -162,7 +162,7 @@ def get_masks(od, tp):
         maskW = mask_w_node(maskC)
         od._ds["maskWvel"] = od._ds["Z"] + od._ds["YC"]
         od._ds["maskWvel"].values = maskW
-    else: 
+    else:
         maskW = np.array(od._ds["maskWvel"])
     return maskC, maskU, maskV, maskW
 
