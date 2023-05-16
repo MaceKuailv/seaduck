@@ -350,10 +350,10 @@ tags
 # User Defined
 test*.ipynb
 *.npy
-*.png
 *.jpg
 .vscode/
 tests/Data
+tests/testDat*
 assets/
 *.pyc
 *.nc
