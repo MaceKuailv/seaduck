@@ -37,11 +37,12 @@ def test_not_the_same():
 @pytest.mark.parametrize("od", [rect, curv])
 def test_without_maskC(od):
     with pytest.warns(Warning):
-        maskC, maskU, maskV, maskW = gm.get_masks(od,od.tp)
+        maskC, maskU, maskV, maskW = gm.get_masks(od, od.tp)
     assert maskU.all()
+
 
 @pytest.mark.parametrize("od", [rect, curv])
 def test_get_masked_without_maskC(od):
     with pytest.warns(Warning):
-        hello = gm.get_masked(od,(1,1))
+        hello = gm.get_masked(od, (1, 1))
     assert hello == 1

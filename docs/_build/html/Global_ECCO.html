@@ -137,13 +137,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 
-
-
-
-
-    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-
+    <p class="title logo__title">My sample book</p>
 
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -160,7 +154,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">Network of Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -425,9 +420,9 @@ document.write(`
 <p>authors: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">oceanspy</span> <span class="k">as</span> <span class="nn">ospy</span>
 </pre></div>
 </div>
@@ -441,7 +436,7 @@ document.write(`
 <h2>See: <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">https://dev-poseidon-ocean.pantheonsite.io/products/datasets/</a>.<a class="headerlink" href="#see-https-dev-poseidon-ocean-pantheonsite-io-products-datasets" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ecco</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s1">&#39;ECCO&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ecco</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;ECCO&quot;</span><span class="p">)</span>
 <span class="c1"># ecco = ospy.open_oceandataset.from_catalog(&#39;daily_ecco&#39;)</span>
 </pre></div>
 </div>
@@ -472,7 +467,10 @@ ECCO v4r4 3D dataset, ocean simulations on LLC90 grid (monthly mean output)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaduck</span> <span class="k">as</span> <span class="nn">sd</span>
-<span class="n">sd</span><span class="o">.</span><span class="n">rcParam</span><span class="p">[</span><span class="s1">&#39;debug_level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;very_high&#39;</span>   <span class="c1"># Options are: &#39;high&#39;,&#39;very_high&#39;,&#39;not that high&#39;</span>
+
+<span class="n">sd</span><span class="o">.</span><span class="n">rcParam</span><span class="p">[</span>
+    <span class="s2">&quot;debug_level&quot;</span>
+<span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;very_high&quot;</span>  <span class="c1"># Options are: &#39;high&#39;,&#39;very_high&#39;,&#39;not that high&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -498,23 +496,24 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
 <span class="n">sqrtN</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
 
 <span class="c1"># Change the longitude and latitude positions of the particles here</span>
-<span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">19</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span><span class="n">sqrtN</span><span class="p">)</span>
-<span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span><span class="mi">57</span><span class="p">,</span><span class="n">sqrtN</span><span class="p">)</span>
+<span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">19</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="n">sqrtN</span><span class="p">)</span>
+<span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="n">sqrtN</span><span class="p">)</span>
 
 <span class="c1"># Compute intermediate grid variables</span>
-<span class="n">xxx</span><span class="p">,</span><span class="n">yyy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">)</span>
+<span class="n">xxx</span><span class="p">,</span> <span class="n">yyy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">xxx</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">yyy</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-<span class="n">x</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">levels</span><span class="p">)</span>
-<span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">levels</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">levels</span><span class="p">)</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">levels</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
 <span class="c1"># Change the times here</span>
-<span class="n">start_time</span> <span class="o">=</span> <span class="s1">&#39;1998-12-15&#39;</span>
-<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
-     <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="s2">&quot;1998-12-15&quot;</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -523,11 +522,11 @@ Warning:overwriting the inheritance oject to None, because we ignore masking
 <h3>Plot the particle positions<a class="headerlink" href="#plot-the-particle-positions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xxx</span><span class="p">,</span><span class="n">yyy</span><span class="p">,</span><span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xxx</span><span class="p">,</span> <span class="n">yyy</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">70</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -588,7 +587,9 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Interpolate these ECCO fields onto the particle positions.<a class="headerlink" href="#interpolate-these-ecco-fields-onto-the-particle-positions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">,(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">),</span><span class="n">eta</span><span class="p">,</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,[</span><span class="s1">&#39;SALT&#39;</span><span class="p">,(</span><span class="s1">&#39;UVELMASS&#39;</span><span class="p">,</span><span class="s1">&#39;VVELMASS&#39;</span><span class="p">),</span><span class="s1">&#39;ETAN&#39;</span><span class="p">,</span><span class="s1">&#39;maskC&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="n">eta</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span>
+    <span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;SALT&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;UVELMASS&quot;</span><span class="p">,</span> <span class="s2">&quot;VVELMASS&quot;</span><span class="p">),</span> <span class="s2">&quot;ETAN&quot;</span><span class="p">,</span> <span class="s2">&quot;maskC&quot;</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">t</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -598,13 +599,13 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Plot the interpolated salinity field.<a class="headerlink" href="#plot-the-interpolated-salinity-field" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">70</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Salinity (psu)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Salinity (psu)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -620,13 +621,13 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Plot the interpolated <span class="math notranslate nohighlight">\(u\)</span> field.<a class="headerlink" href="#plot-the-interpolated-u-field" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="n">u</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">u</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">70</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Zonal Velocity (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Zonal Velocity (m/s)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -642,13 +643,13 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Plot the interpolated <span class="math notranslate nohighlight">\(\eta\)</span> field.<a class="headerlink" href="#plot-the-interpolated-eta-field" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="n">eta</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">eta</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">70</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Sea Surface Height (m)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sea Surface Height (m)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -666,13 +667,15 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h3>Define the <code class="docutils literal notranslate"><span class="pre">start_time</span></code> and <code class="docutils literal notranslate"><span class="pre">end_time</span></code>. Here the particles are integrated backwards in time.<a class="headerlink" href="#define-the-start-time-and-end-time-here-the-particles-are-integrated-backwards-in-time" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="s1">&#39;1998-12-15&#39;</span>
-<span class="n">end_time</span> <span class="o">=</span> <span class="s1">&#39;1998-09&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="s2">&quot;1998-12-15&quot;</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="s2">&quot;1998-09&quot;</span>
 
-<span class="n">t_bnds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">),</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span>  <span class="n">end_time</span><span class="p">)</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">)</span>
-<span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<span class="n">t_bnds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -685,13 +688,17 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h3>Record the salinity along the particle trajectories as well as their (lat,lon) positions.<a class="headerlink" href="#record-the-salinity-along-the-particle-trajectories-as-well-as-their-lat-lon-positions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,[</span><span class="n">s</span><span class="p">,</span><span class="n">raw</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,</span>
-                                 <span class="p">[</span><span class="s1">&#39;SALT&#39;</span><span class="p">,</span><span class="s1">&#39;__particle.raw&#39;</span><span class="p">,</span><span class="s1">&#39;__particle.lat&#39;</span><span class="p">,</span><span class="s1">&#39;__particle.lon&#39;</span><span class="p">],</span>
-                                 <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t_bnds</span><span class="p">,</span>
-                                 <span class="n">lagrangian</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                                 <span class="n">return_pt_time</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                                 <span class="n">lagrange_kwarg</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;save_raw&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
-                                    <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span>
+    <span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;SALT&quot;</span><span class="p">,</span> <span class="s2">&quot;__particle.raw&quot;</span><span class="p">,</span> <span class="s2">&quot;__particle.lat&quot;</span><span class="p">,</span> <span class="s2">&quot;__particle.lon&quot;</span><span class="p">],</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">z</span><span class="p">,</span>
+    <span class="n">t_bnds</span><span class="p">,</span>
+    <span class="n">lagrangian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_pt_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">lagrange_kwarg</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;save_raw&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -747,12 +754,12 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Plot the interpolated salinity field on the final particle positions.<a class="headerlink" href="#plot-the-interpolated-salinity-field-on-the-final-particle-positions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">lat</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">lat</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span><span class="mi">70</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;salinity map&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;salinity map&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -781,9 +788,11 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">default</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">()</span>
-<span class="n">dz_kernel</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">(</span><span class="n">vkernel</span> <span class="o">=</span> <span class="s1">&#39;dz&#39;</span><span class="p">)</span>
-<span class="n">dx2_kernel</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">(</span><span class="n">hkernel</span> <span class="o">=</span> <span class="s1">&#39;dx&#39;</span><span class="p">,</span><span class="n">h_order</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="n">inheritance</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]],</span><span class="n">tkernel</span> <span class="o">=</span> <span class="s1">&#39;linear&#39;</span><span class="p">)</span>
-<span class="n">dt_kernel</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">(</span><span class="n">tkernel</span> <span class="o">=</span> <span class="s1">&#39;dt&#39;</span><span class="p">)</span>
+<span class="n">dz_kernel</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">(</span><span class="n">vkernel</span><span class="o">=</span><span class="s2">&quot;dz&quot;</span><span class="p">)</span>
+<span class="n">dx2_kernel</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">(</span>
+    <span class="n">hkernel</span><span class="o">=</span><span class="s2">&quot;dx&quot;</span><span class="p">,</span> <span class="n">h_order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">inheritance</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]],</span> <span class="n">tkernel</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span>
+<span class="p">)</span>
+<span class="n">dt_kernel</span> <span class="o">=</span> <span class="n">KnW</span><span class="p">(</span><span class="n">tkernel</span><span class="o">=</span><span class="s2">&quot;dt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -798,7 +807,14 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h3>Apply the kernels to the ECCO fields:<a class="headerlink" href="#apply-the-kernels-to-the-ecco-fields" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">dsdz</span><span class="p">,(</span><span class="n">d2udx2</span><span class="p">,</span><span class="n">dvdt</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,{</span><span class="s1">&#39;SALT&#39;</span><span class="p">:</span><span class="n">dz_kernel</span><span class="p">,(</span><span class="s1">&#39;UVELMASS&#39;</span><span class="p">,</span><span class="s1">&#39;VVELMASS&#39;</span><span class="p">):(</span><span class="n">dx2_kernel</span><span class="p">,</span><span class="n">dt_kernel</span><span class="p">)},</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">dsdz</span><span class="p">,</span> <span class="p">(</span><span class="n">d2udx2</span><span class="p">,</span> <span class="n">dvdt</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span>
+    <span class="n">ecco</span><span class="o">.</span><span class="n">_ds</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&quot;SALT&quot;</span><span class="p">:</span> <span class="n">dz_kernel</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;UVELMASS&quot;</span><span class="p">,</span> <span class="s2">&quot;VVELMASS&quot;</span><span class="p">):</span> <span class="p">(</span><span class="n">dx2_kernel</span><span class="p">,</span> <span class="n">dt_kernel</span><span class="p">)},</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">z</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -814,13 +830,13 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
 <h2>Plot one of the differentiated fields on the initial particle positions.<a class="headerlink" href="#plot-one-of-the-differentiated-fields-on-the-initial-particle-positions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="n">d2udx2</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">d2udx2</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">70</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Second Derivative of the Zonal Velocity (m/s per grid scale squared)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Second Derivative of the Zonal Velocity (m/s per grid scale squared)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -843,16 +859,16 @@ OceInterp(od, varList, x, y, z, t, kernelList=None, lagrangian=False, lagrange_k
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "oceanography"
         },
         kernelOptions: {
-            name: "python3",
+            name: "oceanography",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'oceanography'</script>
 
                 </article>
 

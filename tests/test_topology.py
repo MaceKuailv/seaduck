@@ -12,6 +12,7 @@ ecco = xr.open_zarr(Datadir + "small_ecco")
 
 tp = topology(ecco)
 
+
 @pytest.mark.parametrize("face", [1, 2, 4, 5, 6, 7, 8, 10, 11])
 @pytest.mark.parametrize("edge", [0, 1, 2, 3])
 def test_get_the_neighbor_face(face, edge):
@@ -38,23 +39,15 @@ def test_not_applicable(typ, func, error):
         eval(func)
 
 
-@pytest.mark.parametrize(
-    "face,edge", 
-    [
-        (0,1),
-        (3,1),
-        (9,3),
-        (12,3)
-    ]
-)
-def test_antarctica_error(face,edge):
+@pytest.mark.parametrize("face,edge", [(0, 1), (3, 1), (9, 3), (12, 3)])
+def test_antarctica_error(face, edge):
     with pytest.raises(IndexError):
         nf, ne = tp.get_the_other_edge(face, edge)
 
 
 def test_mutual_face():
     e1, e2 = tp.mutual_direction(0, 1)
-    assert isinstance(e1, int)
+    assert e1 in [0, 1, 2, 3]
 
 
 @pytest.mark.parametrize(
@@ -73,13 +66,13 @@ def test_mutual_face():
 def test_llc_ind_tend(ind, tend, result):
     res = tp.ind_tend(ind, tend)
     assert res == result
-    
-@pytest.mark.parametrize(
-    'ds',[curv,rect]
-)
+
+
+@pytest.mark.parametrize("ds", [curv, rect])
 def test_other_ind_tend(ds):
     temp_tp = topology(ds)
-    temp_tp.ind_tend((0,0),3)
+    temp_tp.ind_tend((0, 0), 3)
+
 
 mundane = np.array([[[1.0, 1.0]], [[0.0, 0.0]], [[0.0, -0.0]], [[1.0, 1.0]]])
 
@@ -99,56 +92,64 @@ def test_4_matrix(fface, cis):
         assert np.allclose(ans, mundane)
     else:
         assert not np.allclose(ans, mundane)
-        
+
+
 @pytest.mark.parametrize(
-    'stmt,error',[
-        ("tp.ind_tend((1,45,45),0,cuvg = 'G')",NotImplementedError),
-        ("tp.ind_tend((1,45,45),0,cuvg = 'other')",ValueError),
-        ("tp.ind_moves((1,45,45),['left','left'])",ValueError)
-    ]
+    "stmt,error",
+    [
+        ("tp.ind_tend((1,45,45),0,cuvg = 'G')", NotImplementedError),
+        ("tp.ind_tend((1,45,45),0,cuvg = 'other')", ValueError),
+        ("tp.ind_moves((1,45,45),['left','left'])", ValueError),
+    ],
 )
-def test_other_errors(stmt,error):
+def test_other_errors(stmt, error):
     with pytest.raises(error):
         eval(stmt)
-        
+
+
 def test_ind_moves_with1illegal():
-    tp.ind_moves((1,-1,89),[0,0])
-    
+    tp.ind_moves((1, -1, 89), [0, 0])
+
+
 @pytest.mark.parametrize(
-    'ind,tend,ans',[
-        ((1,45,45),0,(1 ,46,45)),
-        ((1,45,45),2,(1 ,45,44)),
-        ((1,0 ,0 ),2,(12,89,0 )),
-        ((1,0 ,0 ),1,(0 ,89,0 )),
-        ((4,45,89),3,(8 ,0 ,45)),
-    ]
+    "ind,tend,ans",
+    [
+        ((1, 45, 45), 0, (1, 46, 45)),
+        ((1, 45, 45), 2, (1, 45, 44)),
+        ((1, 0, 0), 2, (12, 89, 0)),
+        ((1, 0, 0), 1, (0, 89, 0)),
+        ((4, 45, 89), 3, (8, 0, 45)),
+    ],
 )
-def test_ind_tend_v(ind,tend,ans):
-    res = tp.ind_tend(ind,tend,cuvg = 'V')
+def test_ind_tend_v(ind, tend, ans):
+    res = tp.ind_tend(ind, tend, cuvg="V")
     assert res == ans
-    
+
+
 @pytest.mark.parametrize(
-    'ans,tend,ind',[
-        ((1,45,45),1,(1 ,46,45)),
-        ((1,45,44),2,(1 ,45,45)),
-        ((1,0 ,0 ),0,(12,89,0 )),
-        ((4,45,89),1,(8 ,0 ,45)),
-    ]
+    "ans,tend,ind",
+    [
+        ((1, 45, 45), 1, (1, 46, 45)),
+        ((1, 45, 44), 2, (1, 45, 45)),
+        ((1, 0, 0), 0, (12, 89, 0)),
+        ((4, 45, 89), 1, (8, 0, 45)),
+    ],
 )
-def test_ind_tend_u(ind,tend,ans):
-    res = tp.ind_tend(ind,tend,cuvg = 'U')
+def test_ind_tend_u(ind, tend, ans):
+    res = tp.ind_tend(ind, tend, cuvg="U")
     assert res == ans
-    
+
+
 def test_wall_between():
     # it is a bit hard to think about an example
-    # that uses this case from higher level. 
-    uv,R = tp._find_wall_between((11,0,45),(8,89,45))
-    assert uv == 'V'
-    assert R == (11,0,45)
-    # It does not make sense to parametrize now. 
-    uv,R = tp._find_wall_between((8,45,0),(7,45,89))
-    assert uv == 'U'
-    assert R == (8,45,0 )
+    # that uses this case from higher level.
+    uv, R = tp._find_wall_between((11, 0, 45), (8, 89, 45))
+    assert uv == "V"
+    assert R == (11, 0, 45)
+    # It does not make sense to parametrize now.
+    uv, R = tp._find_wall_between((8, 45, 0), (7, 45, 89))
+    assert uv == "U"
+    assert R == (8, 45, 0)
 
 
 # def test_fatten_ind_h_ecco():
