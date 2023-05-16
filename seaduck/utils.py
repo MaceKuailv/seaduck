@@ -44,7 +44,7 @@ def get_key_by_value(d, value):
 
 
 @compileable
-def spherical2cartesian(Y, X, R=6371.0):  # pragma: no cover
+def spherical2cartesian(Y, X, R=6371.0): 
     """Convert spherical coordinates to cartesian.
 
     **Parameters:**
@@ -77,7 +77,7 @@ def spherical2cartesian(Y, X, R=6371.0):  # pragma: no cover
 
 
 @compileable
-def to_180(x):  # pragma: no cover
+def to_180(x): 
     """Convert any longitude scale to [-180,180)."""
     x = x % 360
     return x + (-1) * (x // 180) * 360
@@ -91,7 +91,7 @@ def local_to_latlon(u, v, cs, sn):
 
 
 @compileable
-def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):  # pragma: no cover
+def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl): 
     """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
@@ -174,7 +174,7 @@ def NoneIn(lst):
 
 
 @compileable
-def find_ind_z(array, value):  # pragma: no cover
+def find_ind_z(array, value):  
     """Find the index of the nearest level that is lower."""
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
@@ -187,7 +187,7 @@ def find_ind_z(array, value):  # pragma: no cover
 
 
 @compileable
-def find_ind_t(array, value):  # pragma: no cover
+def find_ind_t(array, value):  
     """Find the index of the latest time that is before the time."""
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
@@ -198,7 +198,7 @@ def find_ind_t(array, value):  # pragma: no cover
 
 
 @compileable
-def find_ind_nearest(array, value):  # pragma: no cover
+def find_ind_nearest(array, value):  
     """Find the index of the nearest value to the given value."""
     array = _np.asarray(array)
     idx = _np.argmin(_np.abs(array - value))
@@ -207,7 +207,7 @@ def find_ind_nearest(array, value):  # pragma: no cover
 
 
 @compileable
-def find_ind_periodic(array, value, peri):  # pragma: no cover
+def find_ind_periodic(array, value, peri):  
     """Find the index of the nearest value to the given value.
 
     Here the values are assumed to be periodic.
@@ -221,7 +221,7 @@ def find_ind_periodic(array, value, peri):  # pragma: no cover
 deg2m = 6271e3 * _np.pi / 180
 
 
-def find_ind_h(Xs, Ys, tree, h_shape):  # pragma: no cover
+def find_ind_h(Xs, Ys, tree, h_shape):  
     """Use ckd tree to find the horizontal indexes,."""
     x, y, z = spherical2cartesian(Ys, Xs)
     _, index1d = tree.query(_np.array([x, y, z]).T)
@@ -234,7 +234,7 @@ def find_ind_h(Xs, Ys, tree, h_shape):  # pragma: no cover
 
 
 @compileable
-def find_rel_nearest(value, ts):  # pragma: no cover
+def find_rel_nearest(value, ts):  
     """Find the rel-coords based on the find_ind_nearest method."""
     its = _np.zeros_like(value)
     rts = _np.ones_like(value) * 0.0
@@ -263,7 +263,7 @@ def find_rel_nearest(value, ts):  # pragma: no cover
 
 
 @compileable
-def find_rel_periodic(value, ts, peri):  # pragma: no cover
+def find_rel_periodic(value, ts, peri):  
     """Find the rel-coords based on the find_ind_periodic method."""
     its = _np.zeros_like(value)
     rts = _np.ones_like(value) * 0.0
@@ -292,7 +292,7 @@ def find_rel_periodic(value, ts, peri):  # pragma: no cover
 
 
 @compileable
-def find_rel_z(depth, some_z, some_dz, dz_above_z=True):  # pragma: no cover
+def find_rel_z(depth, some_z, some_dz, dz_above_z=True):  
     """Find the rel-coords of the vertical coords.
 
     **Paramters:**
@@ -340,7 +340,7 @@ def find_rel_z(depth, some_z, some_dz, dz_above_z=True):  # pragma: no cover
 
 
 @compileable
-def find_rel_time(time, ts):  # pragma: no cover
+def find_rel_time(time, ts):  
     """Find the rel-coords of the temporal coords.
 
     **Paramters:**
@@ -382,7 +382,7 @@ def find_rel_time(time, ts):  # pragma: no cover
 @compileable
 def _read_h_with_face(
     some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs
-):  # pragma: no cover
+):  
     """Read the grid coords when there is a face dimension to it."""
     n = len(ixs)
 
@@ -418,7 +418,7 @@ def _read_h_with_face(
 @compileable
 def _read_h_without_face(
     some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs
-):  # pragma: no cover
+):  
     """Read _read_h_with_face for more info."""
     # TODO ADD test if those are Nones.
     n = len(ixs)
@@ -452,7 +452,7 @@ def _read_h_without_face(
 
 
 @compileable
-def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):  # pragma: no cover
+def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):  
     """Find the non-dimensional coords using the local cartesian scheme."""
     dlon = to_180(x - bx)
     dlat = to_180(y - by)
@@ -477,11 +477,11 @@ def find_rel_h_naive(Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     """
     if NoneIn(
         [Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree]
-    ):  # pragma: no cover
+    ):    
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
     faces, iys, ixs = find_ind_h(Xs, Ys, tree, h_shape)
-    if faces is not None:  # pragma: no cover
+    if faces is not None:  
         cs, sn, dx, dy, bx, by = _read_h_with_face(
             some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs
         )
@@ -510,7 +510,7 @@ def find_rel_h_oceanparcel(
     x, y, some_x, some_y, some_dx, some_dy, CS, SN, XG, YG, tree, tp
 ):
     """Find the rel-coords using the rectilinear scheme."""
-    if NoneIn([x, y, some_x, some_y, XG, YG, tree]):  # pragma: no cover
+    if NoneIn([x, y, some_x, some_y, XG, YG, tree]):  
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
     faces, iys, ixs = find_ind_h(x, y, tree, h_shape)
@@ -557,7 +557,7 @@ def find_px_py(XG, YG, tp, *ind, gridoffset=-1):
 
 
 @compileable
-def find_rx_ry_oceanparcel(x, y, px, py):  # pragma: no cover
+def find_rx_ry_oceanparcel(x, y, px, py):  
     """Find the non-dimensional horizontal distance.
 
     This is done using the oceanparcel scheme.
