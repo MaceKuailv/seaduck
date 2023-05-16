@@ -1,16 +1,6 @@
----
-jupytext:
-  formats: md:myst
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.11.5
-kernelspec:
-  display_name: Python 3
-  language: python
-  name: python3
----
+______________________________________________________________________
+
+## jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3
 
 # Network of Object
 
@@ -40,7 +30,7 @@ MyST Markdown notebooks are defined by two things:
 
 1. YAML metadata that is needed to understand if / how it should convert text files to notebooks (including information about the kernel needed).
    See the YAML at the top of this page for example.
-2. The presence of `{code-cell}` directives, which will be executed with your book.
+1. The presence of `{code-cell}` directives, which will be executed with your book.
 
 That's all that is needed to get started!
 

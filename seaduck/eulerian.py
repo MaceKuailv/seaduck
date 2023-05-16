@@ -5,15 +5,20 @@ import numpy as np
 from seaduck.get_masks import get_masked
 from seaduck.kernelNweight import KnW, _translate_to_tendency, find_pk_4d
 from seaduck.OceData import OceData
+
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read as sread
-from seaduck.utils import (_general_len, find_px_py, get_key_by_value,
-                           local_to_latlon, weight_f_node)
+from seaduck.utils import (
+    _general_len,
+    find_px_py,
+    get_key_by_value,
+    local_to_latlon,
+    weight_f_node,
+)
 
 
 def _ind_broadcast(x, ind):
-    """
-    Perform a "cartesian product" on two fattened dimensions
+    """Perform a "cartesian product" on two fattened dimensions.
 
     **Parameters:**
 
@@ -47,10 +52,8 @@ def _ind_broadcast(x, ind):
 
 
 def _partial_flatten(ind):
-    """
-    Converting a high dimensional index set to a 2D one
-    """
-    if isinstance(ind, tuple): # pragma: no cover
+    """Convert a high dimensional index set to a 2D one."""
+    if isinstance(ind, tuple):  # pragma: no cover
         shape = ind[0].shape
 
         # num_neighbor = 1
@@ -70,9 +73,7 @@ def _partial_flatten(ind):
 
 
 def _in_required(name, required):
-    """
-    see if a name is in required.
-    """
+    """See if a name is in required."""
     if required == "all":
         return True
     else:
@@ -80,7 +81,8 @@ def _in_required(name, required):
 
 
 def _ind_for_mask(ind, dims):
-    """
+    """Find the index for masking.
+
     If dims does not include a vertical dimension, assume to be 0.
     If dims has a temporal dimension, take it away.
     Return the index for masking.
@@ -92,8 +94,8 @@ def _ind_for_mask(ind, dims):
 
 
 def _subtract_i_min(ind, i_min):
-    """
-    Subtract the index prefix from the actual index.
+    """Subtract the index prefix from the actual index.
+
     This is used when one is reading from a prefetched subset of the data.
     """
     temp_ind = []
@@ -103,15 +105,16 @@ def _subtract_i_min(ind, i_min):
 
 
 class position:
-    """
-    The position object that performs the interpolation.
+    """The position object that performs the interpolation.
+
     Create a empty one by default.
     To actually do interpolation, use from_latlon method to tell the ducks where they are.
     """
 
     #     self.ind_h_dict = {}
     def from_latlon(self, x=None, y=None, z=None, t=None, data=None):
-        """
+        """Fill in the coord info using lat-lon-dep-time dims.
+
         Use the methods from the ocedata to transform
         from lat-lon-dep-time coords to rel-coords
         store the output in the position object.
@@ -129,10 +132,10 @@ class position:
             except AttributeError:
                 raise ValueError("data not provided")
         else:
-            if isinstance(data,OceData):
+            if isinstance(data, OceData):
                 self.ocedata = data
             else:
-                raise ValueError('Input data must be OceData')
+                raise ValueError("Input data must be OceData")
         self.tp = self.ocedata.tp
         length = [_general_len(i) for i in [x, y, z, t]]
         self.N = max(length)
@@ -167,7 +170,7 @@ class position:
                 self.bx,
                 self.by,
             ) = self.ocedata.find_rel_h(x, y)
-        else: # pragma: no cover
+        else:  # pragma: no cover
             self.lon = None
             self.lat = None
             self.face = None
@@ -225,13 +228,12 @@ class position:
                     self.dt,
                     self.bt,
                 ) = [None for i in range(4)]
-        else: # pragma: no cover
+        else:  # pragma: no cover
             (self.it, self.rt, self.dt, self.bt, self.t) = [None for i in range(5)]
         return self
 
     def subset(self, which):
-        """
-        Create a subset of the position object
+        """Create a subset of the position object.
 
         **Parameters:**
 
@@ -261,14 +263,15 @@ class position:
         return p
 
     def fatten_h(self, knw, ind_moves_kwarg={}):
-        """
+        """Fatten horizontal indices.
+
         Fatten means to find the neighboring points of the points of interest based on the kernel.
         faces,iys,ixs are 1d arrays of size n.
         We are applying a kernel of size m.
         This is going to return a n * m array of indexes.
         A very slim vector is now a matrix, and hence the name.
         each row represen all the node needed for interpolation of a single point.
-        "h" represent we are only doing it on the horizontal plane
+        "h" represent we are only doing it on the horizontal plane.
 
         **Parameters:**
 
@@ -324,15 +327,16 @@ class position:
             return None, n_iys.astype("int"), n_ixs.astype("int")
 
     def fatten_v(self, knw):
-        """
-        Finding the neighboring center grid points in the vertical direction.
+        """Fatten in vertical center coord.
+
+        Find the neighboring center grid points in the vertical direction.
 
         **Parameters:**
 
         + knw: KnW object
             The kernel used to find neighboring points.
         """
-        if self.iz is None: # pragma: no cover
+        if self.iz is None:  # pragma: no cover
             return None
         if knw.vkernel == "nearest":
             return copy.deepcopy(self.iz.astype(int))
@@ -351,7 +355,8 @@ class position:
             raise ValueError("vkernel not supported")
 
     def fatten_vl(self, knw):
-        """
+        """Fatten in vertical staggered coord.
+
         Finding the neighboring staggered grid points in the vertical direction.
 
         **Parameters:**
@@ -359,14 +364,14 @@ class position:
         + knw: KnW object
             The kernel used to find neighboring points.
         """
-        if self.izl is None: # pragma: no cover
+        if self.izl is None:  # pragma: no cover
             return None
         if knw.vkernel == "nearest":
             return copy.deepcopy(self.izl.astype(int))
         elif knw.vkernel in ["dz", "linear"]:
             try:
                 self.izl_lin
-            except AttributeError: # pragma: no cover
+            except AttributeError:  # pragma: no cover
                 (
                     self.izl_lin,
                     self.rzl_lin,
@@ -374,11 +379,12 @@ class position:
                     self.bzl_lin,
                 ) = self.ocedata.find_rel_vl_lin(self.dep)
             return np.vstack([self.izl_lin.astype(int), self.izl_lin.astype(int) - 1]).T
-        else: # pragma: no cover
+        else:  # pragma: no cover
             raise ValueError("vkernel not supported")
 
     def fatten_t(self, knw):
-        """
+        """Fatten in the temporal coord.
+
         Finding the neighboring center grid points in the temporal dimension.
 
         **Parameters:**
@@ -386,7 +392,7 @@ class position:
         + knw: KnW object
             The kernel used to find neighboring points.
         """
-        if self.it is None: # pragma: no cover
+        if self.it is None:  # pragma: no cover
             return None
         if knw.tkernel == "nearest":
             return copy.deepcopy(self.it.astype(int))
@@ -405,7 +411,8 @@ class position:
             raise ValueError("tkernel not supported")
 
     def fatten(self, knw, fourD=False, required="all", ind_moves_kwarg={}):
-        """
+        """Fatten in all the required dimensions.
+
         Finding the neighboring center grid points in all 4 dimensions.
 
         **Parameters:**
@@ -431,7 +438,9 @@ class position:
 
         # TODO: register the kernel shape
         if (
-            _in_required("X", required) or _in_required("Y", required) or _in_required("face", required)
+            _in_required("X", required)
+            or _in_required("Y", required)
+            or _in_required("face", required)
         ):
             ffc, fiy, fix = self.fatten_h(knw, ind_moves_kwarg=ind_moves_kwarg)
             if ffc is not None:
@@ -470,8 +479,8 @@ class position:
         return tuple([R[i] for i in required])
 
     def get_px_py(self):
-        """
-        Get the nearest 4 corner points of the given point.
+        """Get the nearest 4 corner points of the given point.
+
         Used for oceanparcel style horizontal interpolation.
         """
         if self.face is not None:
@@ -489,15 +498,13 @@ class position:
             )
 
     def get_f_node_weight(self):
-        """
-        The weight for the corner points interpolation
-        """
+        """Find weight for the corner points interpolation."""
         return weight_f_node(self.rx, self.ry)
 
-    def _get_lon_lat(self): # pragma: no cover
-        """
-        Return the lat-lon value based on relative coordinate.
-        This method only work if the dataset has readiness['h'] == 'oceanparcel'
+    def _get_lon_lat(self):  # pragma: no cover
+        """Return the lat-lon value based on relative coordinate.
+
+        This method only work if the dataset has readiness['h'] == 'oceanparcel'.
         """
         px, py = self.get_px_py()
         w = self.get_f_node_weight()
@@ -505,8 +512,9 @@ class position:
         lat = np.einsum("nj,nj->n", w, py.T)
         return lon, lat
 
-    def _get_needed(self, varName, knw, required=None, prefetched=None, **kwarg): # pragma: no cover
-        """An internal testing function"""
+    def _get_needed(
+        self, varName, knw, required=None, prefetched=None, **kwarg
+    ):  # pragma: no cover
         if required is None:
             required = self.ocedata._ds[varName].dims
         ind = self.fatten(knw, required=required, **kwarg)
@@ -520,8 +528,7 @@ class position:
         else:
             return prefetched[ind]
 
-    def _get_masked(self, knw, gridtype="C", **kwarg): # pragma: no cover
-        """An internal testing function"""
+    def _get_masked(self, knw, gridtype="C", **kwarg):  # pragma: no cover
         ind = self.fatten(knw, fourD=True, **kwarg)
         if self.it is not None:
             ind = ind[1:]
@@ -532,14 +539,14 @@ class position:
             )
         return get_masked(self.ocedata, ind, gridtype=gridtype)
 
-    def _find_pk4d(self, knw, gridtype="C"): # pragma: no cover
-        """An internal testing function"""
+    def _find_pk4d(self, knw, gridtype="C"):  # pragma: no cover
         masked = self._get_masked(knw, gridtype=gridtype)
         pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
         return pk4d
 
     def _register_interpolation_input(self, varName, knw, prefetched=None, i_min=None):
-        """
+        """Register the input of interpolation function.
+
         Part of the interpolation function.
         Register the input of the interpolation function.
         For the input format, go to interpolation for more details.
@@ -603,7 +610,7 @@ class position:
             temp = []
             for var in varName:
                 a_knw = knw.get(var)
-                if (a_knw is None) or not (isinstance(a_knw, (tuple,KnW))):
+                if (a_knw is None) or not (isinstance(a_knw, (tuple, KnW))):
                     raise ValueError(
                         f"Variable {var} does not have a proper corresponding kernel"
                     )
@@ -675,7 +682,7 @@ class position:
                     new_i_min.append(i_min[i])
             elif var is None:
                 pass
-            else: # pragma: no cover
+            else:  # pragma: no cover
                 raise ValueError(
                     "varName needs to be string, tuple, or a list of the above."
                 )
@@ -695,7 +702,7 @@ class position:
                 kernel_hash.append(hash(kkk))
                 mask_ignore.append(kkk.ignore_mask)
             elif isinstance(kkk, tuple):
-                if len(kkk) != 2: # pragma: no cover
+                if len(kkk) != 2:  # pragma: no cover
                     raise ValueError(
                         "When knw is a tuple, we assume it to be kernels for a horizontal vector,"
                         "thus, it has to have 2 elements"
@@ -744,7 +751,8 @@ class position:
         )
 
     def _fatten_required_index_and_register(self, hash_index, main_dict):
-        """
+        """Fatten for the interpolation process.
+
         Perform the fatten process for each unique token. Register the result as a dict.
 
         **Parameters:**
@@ -793,7 +801,8 @@ class position:
         return index_lookup
 
     def _transform_vector_and_register(self, index_lookup, hash_index, main_dict):
-        """
+        """Transform vectors for interpolation.
+
         Perform the vector transformation.
         This is to say that sometimes u velocity becomes v velocity for datasets with face topology.
           Register the result as a dict.
@@ -831,11 +840,11 @@ class position:
                 vind_dic = dict(zip(dims[1], vind))
                 # This only matters when dim == 'face', no need to think about 'Xp1'
                 (UfromUvel, UfromVvel, _, _) = self.ocedata.tp.four_matrix_for_uv(
-                    uind_dic["face"][:,:, 0, 0]
+                    uind_dic["face"][:, :, 0, 0]
                 )
 
                 (_, _, VfromUvel, VfromVvel) = self.ocedata.tp.four_matrix_for_uv(
-                    vind_dic["face"][:,:, 0, 0]
+                    vind_dic["face"][:, :, 0, 0]
                 )
 
                 UfromUvel = np.round(UfromUvel)
@@ -858,7 +867,7 @@ class position:
                     (bool_ufromu, bool_ufromv, bool_vfromu, bool_vfromv),
                     (indufromu, indufromv, indvfromu, indvfromv),
                 )
-            else: # pragma: no cover
+            else:  # pragma: no cover
                 raise ValueError(f"unsupported dims: {dims}")
         # modify the index_lookup
         return transform_lookup
@@ -866,7 +875,8 @@ class position:
     def _mask_value_and_register(
         self, index_lookup, transform_lookup, hash_mask, hash_index, main_dict
     ):
-        """
+        """Create masks for interpolation.
+
         Perform the masking process and register in a dictionary.
 
         **Parameters:**
@@ -906,7 +916,7 @@ class position:
             elif isinstance(varName, str):
                 ind = index_lookup[hsind]
                 ind_for_mask = _ind_for_mask(ind, dims)
-                if "Zl" in dims: # pragma: no cover
+                if "Zl" in dims:  # pragma: no cover
                     cuvw = "Wvel"
                 elif "Z" in dims:
                     if "Xp1" in dims and "Yp1" in dims:
@@ -915,9 +925,9 @@ class position:
                             "interpretations thus not implemented, "
                             "let knw.ignore_mask =True to go around"
                         )
-                    elif "Xp1" in dims: # pragma: no cover
+                    elif "Xp1" in dims:  # pragma: no cover
                         cuvw = "U"
-                    elif "Yp1" in dims: # pragma: no cover
+                    elif "Yp1" in dims:  # pragma: no cover
                         cuvw = "V"
                     else:
                         cuvw = "C"
@@ -928,7 +938,7 @@ class position:
             elif isinstance(varName, tuple):
                 to_unzip = transform_lookup[hsind]
                 uind, vind = index_lookup[hsind]
-                if to_unzip is None: # pragma: no cover
+                if to_unzip is None:  # pragma: no cover
                     uind_for_mask = _ind_for_mask(uind, dims[0])
                     vind_for_mask = _ind_for_mask(vind, dims[1])
                     umask = get_masked(self.ocedata, uind_for_mask, gridtype="U")
@@ -966,8 +976,7 @@ class position:
         main_dict,
         prefetch_dict,
     ):
-        """
-        Read the data and register them as dict.
+        """Read the data and register them as dict.
 
         **Parameters:**
 
@@ -1001,7 +1010,7 @@ class position:
             if isinstance(varName, str):
                 ind = index_lookup[hsind]
                 if prefetched is not None:
-                    if i_min is None: # pragma: no cover
+                    if i_min is None:  # pragma: no cover
                         raise ValueError(
                             "please pass value of the prefix of prefetched dataset, "
                             "even if the prefix is zero"
@@ -1056,8 +1065,7 @@ class position:
     def _compute_weight_and_register(
         self, mask_lookup, hash_weight, hash_mask, main_dict
     ):
-        """
-        Read the data and register them as dict.
+        """Compute the weights and register them as dict.
 
         **Parameters:**
 
@@ -1100,7 +1108,7 @@ class position:
                         rz = self.rz
                     else:
                         rz = self.rz_lin
-                else: # pragma: no cover
+                else:  # pragma: no cover
                     rz = 0
             elif "Zl" in dims:
                 this_bottom_scheme = None
@@ -1109,7 +1117,7 @@ class position:
                         rz = self.rzl
                     else:
                         rz = self.rzl_lin
-                else: # pragma: no cover
+                else:  # pragma: no cover
                     rz = 0
             else:
                 rz = 0
@@ -1164,7 +1172,8 @@ class position:
     def interpolate(
         self, varName, knw, vec_transform=True, prefetched=None, i_min=None
     ):
-        """
+        """Do interpolation.
+
         This is the method that does the actual interpolation/derivative.
         It is a combination of the following methods:
         _register_interpolation_input,
@@ -1172,7 +1181,7 @@ class position:
         _transform_vector_and_register,
         _read_data_and_register,
         _mask_value_and_register,
-        _compute_weight_and_registe,
+        _compute_weight_and_registe,.
 
         **Parameters:**
 
@@ -1254,7 +1263,7 @@ class position:
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
-            else: # pragma: no cover
+            else:  # pragma: no cover
                 raise ValueError(f"unexpected varName: {varName}")
 
         final_dict = dict(zip(output_format["final_varName"], R))

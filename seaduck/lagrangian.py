@@ -4,16 +4,18 @@ import numpy as np
 
 from seaduck.eulerian import position
 from seaduck.kernelNweight import KnW
-from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, to_180, rel2latlon
 from seaduck.RuntimeConf import compileable
+from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, rel2latlon, to_180
 
 deg2m = 6271e3 * np.pi / 180
 
+
 @compileable
-def increment(t, u, du): # pragma: no cover
-    """
+def increment(t, u, du):  # pragma: no cover
+    """Find how far it will travel in duration t.
+
     For a one dimensional particle with speed u and speed derivative du,
-    find how far it will travel in duration t
+    find how far it will travel in duration t.
 
     **Parameter:**
 
@@ -28,9 +30,10 @@ def increment(t, u, du): # pragma: no cover
 
 
 def stationary(t, u, du, x0):
-    """
+    """Find the final position after time t.
+
     For a one dimensional particle with speed u and speed derivative du
-    starting at x0, the final position after time t.
+    starting at x0, find the final position after time t.
     "Stationary" means that we are assuming there is no time dependency.
 
     **Parameter:**
@@ -51,8 +54,9 @@ def stationary(t, u, du, x0):
 
 
 @compileable
-def stationary_time(u, du, x0): # pragma: no cover
-    """
+def stationary_time(u, du, x0):  # pragma: no cover
+    """Find the amount of time to leave the cell.
+
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
@@ -82,9 +86,7 @@ def stationary_time(u, du, x0): # pragma: no cover
 
 
 def time2wall(xs, us, dus):
-    """
-    Apply stationary_time three times for all three dimensions.
-    """
+    """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
         tl, tr = stationary_time(us[i], dus[i], xs[i])
@@ -94,11 +96,12 @@ def time2wall(xs, us, dus):
 
 
 def which_early(tf, ts):
-    """
+    """Find out which event happens first.
+
     We are trying to integrate the particle to time tf.
     The first event is either:
     1. tf is reached before reaching a wall
-    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0
+    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0.
 
     **Parameters:**
 
@@ -148,7 +151,8 @@ dvknw_s = KnW(
 
 
 class particle(position):
-    """
+    """Lagrangian particle object.
+
     The Lagrangian particle object. Simply a eulerian position object
     that know how to move itself.
 
@@ -247,7 +251,7 @@ class particle(position):
             if wname is not None:
                 try:
                     self.ocedata[wname].loc[dict(Zl=0)] = 0
-                except KeyError: # pragma: no cover
+                except KeyError:  # pragma: no cover
                     pass
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
@@ -285,8 +289,8 @@ class particle(position):
             self.zzlist = [[] for i in range(self.N)]
 
     def update_uvw_array(self):
-        """
-        Update the prefetched velocity arrays.
+        """Update the prefetched velocity arrays.
+
         The way to do it is slightly different for dataset with time
         dimensions and those without.
         """
@@ -294,7 +298,7 @@ class particle(position):
         vname = self.vname
         wname = self.wname
         if "time" not in self.ocedata[uname].dims:
-            try: # pragma: no cover
+            try:  # pragma: no cover
                 self.uarray
                 self.varray
                 if self.wname is not None:
@@ -302,7 +306,7 @@ class particle(position):
             except AttributeError:
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
-                if self.wname is not None: # pragma: no cover
+                if self.wname is not None:  # pragma: no cover
                     self.warray = np.array(self.ocedata[wname])
                     if self.dont_fly:
                         # I think it's fine
@@ -312,12 +316,12 @@ class particle(position):
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
-            if self.itmax != self.itmin:# pragma: no cover
-                self.uarray = np.array(self.ocedata[uname][self.itmin: self.itmax + 1])
-                self.varray = np.array(self.ocedata[vname][self.itmin: self.itmax + 1])
+            if self.itmax != self.itmin:  # pragma: no cover
+                self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
+                self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
                 if self.wname is not None:
                     self.warray = np.array(
-                        self.ocedata[wname][self.itmin: self.itmax + 1]
+                        self.ocedata[wname][self.itmin : self.itmax + 1]
                     )
                 # else:
                 #     self.warray = None
@@ -334,7 +338,8 @@ class particle(position):
                     self.warray[:, 0] = 0.0
 
     def get_vol(self, which=None):
-        """
+        """Read in the volume of the cell.
+
         For particles that has transport = True,
         volume of the cell is needed for the integration.
         This method read the volume that is calculated at __init__.
@@ -350,12 +355,13 @@ class particle(position):
         sub = self.subset(which)
         if self.face is not None:
             Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.face, sub.iy, sub.ix]
-        else:# pragma: no cover
+        else:  # pragma: no cover
             Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.iy, sub.ix]
         self.Vol[which] = Vol
 
     def get_u_du(self, which=None):
-        """
+        """Read the velocity at particle position.
+
         Read the velocity and velocity derivatives in all three dimensions
         using the interpolate method with the default kernel.
         Read eulerian.position.interpolate for more detail.
@@ -433,8 +439,8 @@ class particle(position):
         self.fillna()
 
     def fillna(self):
-        """
-        Fill the np.nan values to nan.
+        """Fill the np.nan values to nan.
+
         This is just to let those in rock stay in rock.
         """
         np.nan_to_num(self.u, copy=False)
@@ -445,14 +451,14 @@ class particle(position):
         np.nan_to_num(self.dw, copy=False)
 
     def note_taking(self, which=None):
-        """
+        """Record raw data into list of lists.
+
         This method is only called in save_raw = True particles.
         This method will note done the raw info of the particle
         trajectories.
         With those info, one could reconstruct the analytical
         trajectories to arbitrary position.
         """
-
         if which is None:
             which = np.ones(self.N).astype(bool)
         where = np.where(which)[0]
@@ -485,13 +491,13 @@ class particle(position):
             self.zzlist[i].append(self.dep[i])
 
     def empty_lists(self):
-        """
+        """Empty the lists.
+
         Some times the raw-data list get too long,
         It would be necessary to dump the data,
         and empty the lists containing the raw data.
         This method does the latter.
         """
-
         self.itlist = [[] for i in range(self.N)]
         self.fclist = [[] for i in range(self.N)]
         self.iylist = [[] for i in range(self.N)]
@@ -511,9 +517,9 @@ class particle(position):
         self.yylist = [[] for i in range(self.N)]
         self.zzlist = [[] for i in range(self.N)]
 
-    def out_of_bound(self): # pragma: no cover
-        """
-        Return particles that are out of the cell bound.
+    def out_of_bound(self):  # pragma: no cover
+        """Return particles that are out of the cell bound.
+
         This is most likely due to numerical error of one sort or another.
         If local cartesian is used, there would be more out_of_bound error.
         """
@@ -526,8 +532,8 @@ class particle(position):
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
     def trim(self, verbose=False, tol=1e-6):
-        """
-        Move the particles from outside the cell into the cell.
+        """Move the particles from outside the cell into the cell.
+
         At the same time change the velocity accordingly.
         In the mean time, creating some negiligible error in time.
 
@@ -541,7 +547,7 @@ class particle(position):
             close to the cell.
         """
         # tol = 1e-6 # about 10 m horizontal for 1 degree
-        if verbose: # pragma: no cover
+        if verbose:  # pragma: no cover
             xmax = np.nanmax(self.rx)
             xmin = np.nanmin(self.rx)
             ymax = np.nanmax(self.ry)
@@ -552,28 +558,28 @@ class particle(position):
         cdx = (0.5 - tol) - self.rx[where]
         self.rx[where] += cdx
         self.u[where] += self.du[where] * cdx
-        if verbose: # pragma: no cover
+        if verbose:  # pragma: no cover
             print(f"converting {xmax} to 0.5")
         # if xmin<=-0.5+tol:
         where = self.rx <= -0.5 + tol
         cdx = (-0.5 + tol) - self.rx[where]
         self.rx[where] += cdx
         self.u[where] += self.du[where] * cdx
-        if verbose: # pragma: no cover
+        if verbose:  # pragma: no cover
             print(f"converting {xmin} to -0.5")
         # if ymax>=0.5-tol:
         where = self.ry >= 0.5 - tol
         cdx = (0.5 - tol) - self.ry[where]
         self.ry[where] += cdx
         self.v[where] += self.dv[where] * cdx
-        if verbose: # pragma: no cover
+        if verbose:  # pragma: no cover
             print(f"converting {ymax} to 0.5")
         # if ymin<=-0.5+tol:
         where = self.ry <= -0.5 + tol
         cdx = (-0.5 + tol) - self.ry[where]
         self.ry[where] += cdx
         self.v[where] += self.dv[where] * cdx
-        if verbose: # pragma: no cover
+        if verbose:  # pragma: no cover
             print(f"converting {ymin} to -0.5")
         if self.rzl_lin is not None:
             zmax = np.nanmax(self.rzl_lin)
@@ -583,18 +589,19 @@ class particle(position):
             cdx = (1.0 - tol) - self.rzl_lin[where]
             self.rzl_lin[where] += cdx
             self.w[where] += self.dw[where] * cdx
-            if verbose: # pragma: no cover
+            if verbose:  # pragma: no cover
                 print(f"converting {zmax} to 1")
             # if zmin<=-0.+tol:
             where = self.rzl_lin <= -0.0 + tol
             cdx = (-0.0 + tol) - self.rzl_lin[where]
             self.rzl_lin[where] += cdx
             self.w[where] += self.dw[where] * cdx
-            if verbose: # pragma: no cover
+            if verbose:  # pragma: no cover
                 print(f"converting {zmin} to 0")
 
-    def _contract(self): # pragma: no cover
-        """
+    def _contract(self):  # pragma: no cover
+        """Warp time to move particle into cell.
+
         If particles are not in the cell,
         perform some timewarp to put them as close to the cell as possible.
         This is not used in the main routine. Because it was not deemed
@@ -620,7 +627,7 @@ class particle(position):
             np.nan_to_num(tr, copy=False)
             tmin = np.maximum(tmin, np.minimum(tl, tr))
             tmax = np.minimum(tmax, np.maximum(tl, tr))
-#         dead = tmin > tmax
+        #         dead = tmin > tmax
 
         contract_time = (tmin + tmax) / 2
         contract_time = np.maximum(-max_time, contract_time)
@@ -648,7 +655,8 @@ class particle(position):
         self.t[out] += contract_time
 
     def update_after_cell_change(self):
-        """
+        """Update properties after particles cross wall.
+
         A wall event is triggered when particle reached the wall.
         This method handle the coords translation as a particle cross
         a wall.
@@ -664,7 +672,7 @@ class particle(position):
 
         if self.ocedata.readiness["Z"]:
             self.iz, self.rz, self.dz, self.bz = self.ocedata.find_rel_v(self.dep)
-        if self.ocedata.readiness["h"] == "local_cartesian": # pragma: no cover
+        if self.ocedata.readiness["h"] == "local_cartesian":  # pragma: no cover
             # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
@@ -701,7 +709,7 @@ class particle(position):
                     self.ocedata.YC[self.face, self.iy, self.ix],
                 )
 
-            else: # pragema: no cover
+            else:  # pragema: no cover
                 self.bx, self.by = (
                     self.ocedata.XC[self.iy, self.ix],
                     self.ocedata.YC[self.iy, self.ix],
@@ -725,7 +733,7 @@ class particle(position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
-            if np.isnan(self.rx).any() or np.isnan(self.ry).any(): # pragma: no cover
+            if np.isnan(self.rx).any() or np.isnan(self.ry).any():  # pragma: no cover
                 whereNan = np.logical_or(np.isnan(self.rx), np.isnan(self.ry))
                 print(self.lon[whereNan], self.lat[whereNan])
                 print(self.px[:, whereNan], self.py[:, whereNan])
@@ -741,16 +749,21 @@ class particle(position):
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
             self.rx = (
-                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn) * deg2m / self.dx
+                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
+                * deg2m
+                / self.dx
             )
             self.ry = (
-                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180)) * deg2m / self.dy
+                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
+                * deg2m
+                / self.dy
             )
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
     def analytical_step(self, tf, which=None):
-        """
+        """Integrate the particle with velocity.
+
         The core method.
         A set of particles trying to integrate for time tf
         (could be negative).
@@ -767,7 +780,6 @@ class particle(position):
             Boolean or int array that specify the subset of points to
             do the operation.
         """
-
         if which is None:
             which = np.ones(self.N).astype(bool)
         if isinstance(tf, float):
@@ -808,7 +820,7 @@ class particle(position):
             if self.rzl_lin is not None:
                 self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         except AttributeError:
-            if self.rzl_lin is not None: # pragma: no cover
+            if self.rzl_lin is not None:  # pragma: no cover
                 rzl_lin = self.rzl_lin
                 dzl_lin = self.dzl_lin
                 bzl_lin = self.bzl_lin
@@ -853,7 +865,7 @@ class particle(position):
                 self.iy[which].astype(int),
                 self.ix[which].astype(int),
             )
-            if self.izl_lin is not None: # pragema: no cover
+            if self.izl_lin is not None:  # pragema: no cover
                 tiz = self.izl_lin[which].astype(int)
             else:
                 tiz = (np.ones_like(tiy) * (-1)).astype(int)
@@ -887,8 +899,8 @@ class particle(position):
             self.izl_lin[which] = tiz
 
     def deepcopy(self):
-        """
-        Return a clone of the object.
+        """Return a clone of the object.
+
         The object is a position object, and thus cannot move any more.
         """
         p = position()
@@ -905,9 +917,9 @@ class particle(position):
         return p
 
     def to_next_stop(self, t1):
-        """
-        Integrate all particles towards time tl
-        by repeatedly calling analytical step.
+        """Integrate all particles towards time tl.
+
+        This is done by repeatedly calling analytical step.
         Or at least try to do so before maximum_iteration is reached.
         If the maximum time is reached,
         we also force all particle's internal clock to be tl.
@@ -949,7 +961,7 @@ class particle(position):
                 # record those who cross the wall
                 self.note_taking(todo)
         #             self._contract()
-        if i == self.max_iteration - 1: # pragma: no cover
+        if i == self.max_iteration - 1:  # pragma: no cover
             print("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
         if self.ocedata.readiness["time"]:
@@ -960,8 +972,7 @@ class particle(position):
     def to_list_of_time(
         self, normal_stops, update_stops="default", return_in_between=True
     ):
-        """
-        Integrate the particles to a list of time.
+        """Integrate the particles to a list of time.
 
         **Parameters:**
 
@@ -1009,11 +1020,13 @@ class particle(position):
                     )
                 ]
             except AttributeError:
-                raise AttributeError("time_midp is required for "
-                                     "update_stops = default,"
-                                     " but it is not in the dataset, "
-                                     "either create it or "
-                                     "specify the update stops.")
+                raise AttributeError(
+                    "time_midp is required for "
+                    "update_stops = default,"
+                    " but it is not in the dataset, "
+                    "either create it or "
+                    "specify the update stops."
+                )
         temp = list(zip(normal_stops, np.zeros_like(normal_stops))) + list(
             zip(update_stops, np.ones_like(update_stops))
         )
@@ -1032,7 +1045,7 @@ class particle(position):
             if update[i]:
                 if self.too_large:  # pragma: no cover
                     self.get_u_du()
-                elif "time" not in self.ocedata[self.uname].dims: # pragema: no cover
+                elif "time" not in self.ocedata[self.uname].dims:  # pragema: no cover
                     pass
                 else:
                     self.update_uvw_array()

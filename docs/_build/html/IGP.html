@@ -134,13 +134,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 
-
-
-
-
-    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-
+    <p class="title logo__title">My sample book</p>
 
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -157,7 +151,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">Network of Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -422,7 +417,7 @@ document.write(`
 <h2>See: <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter">https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter</a> and <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">https://dev-poseidon-ocean.pantheonsite.io/products/datasets/</a>.<a class="headerlink" href="#see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s1">&#39;IGPwinter&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;IGPwinter&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -441,7 +436,7 @@ Citation:
 <h2>Artificially create an open boundary in depth.<a class="headerlink" href="#artificially-create-an-open-boundary-in-depth" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Z</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span><span class="n">Zl</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Z</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">Zl</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
 <span class="n">ds</span>
 </pre></div>
 </div>
@@ -12012,6 +12007,7 @@ component of the Iceland Greenland Seas Project (IGP).</dd><dt><span>OceanSpy_pr
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaduck</span> <span class="k">as</span> <span class="nn">sd</span>
+
 <span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -12030,12 +12026,12 @@ no SN in dataset, skip
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Nx</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">Nz</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">22</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="n">Nx</span><span class="p">)</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="n">Nz</span><span class="p">)</span>
-<span class="n">x</span><span class="p">,</span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">22</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="n">Nx</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="n">Nz</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="mf">71.</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="mf">71.0</span>
 </pre></div>
 </div>
 </div>
@@ -12045,9 +12041,10 @@ no SN in dataset, skip
 <h2>…and at the beginning of the simulation…<a class="headerlink" href="#and-at-the-beginning-of-the-simulation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="s1">&#39;2018-01-02&#39;</span>
-<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
-     <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="s2">&quot;2018-01-02&quot;</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12057,8 +12054,9 @@ no SN in dataset, skip
 <h2>…and integrate forward in time for one month.<a class="headerlink" href="#and-integrate-forward-in-time-for-one-month" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tf</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;2018-02-01&#39;</span><span class="p">)</span>
-     <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;1970-01-01&#39;</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tf</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;2018-02-01&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span>
+    <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12068,8 +12066,8 @@ no SN in dataset, skip
 <h2>Here is where the particles start on the map:<a class="headerlink" href="#here-is-where-the-particles-start-on-the-map" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s1">&#39;XC&#39;</span><span class="p">],</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s1">&#39;YC&#39;</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s1">&#39;Depth&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">10</span><span class="p">),</span><span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;XC&quot;</span><span class="p">],</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;YC&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;Depth&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -12089,10 +12087,10 @@ no SN in dataset, skip
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">continue_criterion</span><span class="p">(</span><span class="n">pt</span><span class="p">):</span>
-    <span class="n">x_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span><span class="o">&gt;-</span><span class="mi">43</span><span class="p">)</span>
-    <span class="n">y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span><span class="o">&lt;</span><span class="mf">77.5</span><span class="p">,</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span><span class="o">&gt;</span><span class="mf">57.5</span><span class="p">)</span>
-    <span class="n">z_</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dep</span><span class="o">&gt;-</span><span class="mi">750</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span><span class="n">y_</span><span class="p">),</span><span class="n">z_</span><span class="p">)</span>
+    <span class="n">x_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">43</span><span class="p">)</span>
+    <span class="n">y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">&lt;</span> <span class="mf">77.5</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">&gt;</span> <span class="mf">57.5</span><span class="p">)</span>
+    <span class="n">z_</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dep</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">750</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">),</span> <span class="n">z_</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12103,9 +12101,9 @@ no SN in dataset, skip
 <h2>Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.<a class="headerlink" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span><span class="p">[</span><span class="s1">&#39;utrans&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">oce</span><span class="p">[</span><span class="s1">&#39;drF&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">oce</span><span class="p">[</span><span class="s1">&#39;dyG&#39;</span><span class="p">]</span>
-<span class="n">oce</span><span class="p">[</span><span class="s1">&#39;vtrans&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">oce</span><span class="p">[</span><span class="s1">&#39;drF&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">oce</span><span class="p">[</span><span class="s1">&#39;dxG&#39;</span><span class="p">]</span>
-<span class="n">oce</span><span class="p">[</span><span class="s1">&#39;wtrans&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">oce</span><span class="p">[</span><span class="s1">&#39;rA&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span><span class="p">[</span><span class="s2">&quot;utrans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;U&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;drF&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;dyG&quot;</span><span class="p">]</span>
+<span class="n">oce</span><span class="p">[</span><span class="s2">&quot;vtrans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;drF&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;dxG&quot;</span><span class="p">]</span>
+<span class="n">oce</span><span class="p">[</span><span class="s2">&quot;wtrans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;W&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;rA&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -12115,15 +12113,19 @@ no SN in dataset, skip
 <h2>Create the particle object.<a class="headerlink" href="#create-the-particle-object" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">oce</span><span class="p">,</span>
-                <span class="n">continue_criterion</span> <span class="o">=</span> <span class="n">continue_criterion</span><span class="p">,</span>
-                <span class="n">uname</span> <span class="o">=</span> <span class="s1">&#39;utrans&#39;</span><span class="p">,</span>
-                <span class="n">vname</span> <span class="o">=</span> <span class="s1">&#39;vtrans&#39;</span><span class="p">,</span>
-                <span class="n">wname</span> <span class="o">=</span> <span class="s1">&#39;wtrans&#39;</span><span class="p">,</span>
-                <span class="c1"># save_raw = True,</span>
-                <span class="n">transport</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span>
+    <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">oce</span><span class="p">,</span>
+    <span class="n">continue_criterion</span><span class="o">=</span><span class="n">continue_criterion</span><span class="p">,</span>
+    <span class="n">uname</span><span class="o">=</span><span class="s2">&quot;utrans&quot;</span><span class="p">,</span>
+    <span class="n">vname</span><span class="o">=</span><span class="s2">&quot;vtrans&quot;</span><span class="p">,</span>
+    <span class="n">wname</span><span class="o">=</span><span class="s2">&quot;wtrans&quot;</span><span class="p">,</span>
+    <span class="c1"># save_raw = True,</span>
+    <span class="n">transport</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12133,7 +12135,7 @@ no SN in dataset, skip
 <h2>Perform the particle trajectory simulation.<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,</span><span class="n">raw</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">to_list_of_time</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tf</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,</span> <span class="n">raw</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">to_list_of_time</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tf</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -12406,11 +12408,11 @@ no SN in dataset, skip
 <h2>Plot results.<a class="headerlink" href="#plot-results" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s1">&#39;XC&#39;</span><span class="p">],</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s1">&#39;YC&#39;</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s1">&#39;Depth&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">10</span><span class="p">),</span><span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span><span class="n">lw</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">35</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">65</span><span class="p">,</span><span class="mi">72</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;XC&quot;</span><span class="p">],</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;YC&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;Depth&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="s2">&quot;gold&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">35</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">65</span><span class="p">,</span> <span class="mi">72</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>

@@ -1,15 +1,23 @@
 import numpy as np
-try: # pragma: no cover
+
+try:  # pragma: no cover
     import pandas as _pd
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     pass
 import xarray as xr
 
 from seaduck.topology import topology
-from seaduck.utils import (_general_len, create_tree, find_cs_sn,
-                           find_rel_h_naive, find_rel_h_oceanparcel,
-                           find_rel_h_rectilinear, find_rel_nearest,
-                           find_rel_time, find_rel_z)
+from seaduck.utils import (
+    _general_len,
+    create_tree,
+    find_cs_sn,
+    find_rel_h_naive,
+    find_rel_h_oceanparcel,
+    find_rel_h_rectilinear,
+    find_rel_nearest,
+    find_rel_time,
+    find_rel_z,
+)
 
 no_alias = {
     "XC": "XC",
@@ -31,7 +39,8 @@ no_alias = {
 
 
 class OceData(object):
-    """
+    """Ocean dataset.
+
     Class that enables variable aliasing, topology extraction, and 4-D translation
     between latitude-longitude-depth-time grid and relative description.
 
@@ -51,9 +60,9 @@ class OceData(object):
         self.tp = topology(data)
         if alias is None:
             self.alias = no_alias
-        elif alias == "auto": # pragma: no cover
+        elif alias == "auto":  # pragma: no cover
             raise NotImplementedError("auto alias not yet implemented")
-        elif isinstance(alias, dict): # pragma: no cover
+        elif isinstance(alias, dict):  # pragma: no cover
             self.alias = alias
 
         try:
@@ -73,7 +82,7 @@ class OceData(object):
             )
 
     def __setitem__(self, key, item):
-        if isinstance(item, xr.DataArray): # pragma: no cover
+        if isinstance(item, xr.DataArray):  # pragma: no cover
             if key in self.alias.keys():
                 self._ds[self.alias[key]] = item
             else:
@@ -91,7 +100,8 @@ class OceData(object):
                 return self._ds[key]
 
     def check_readiness(self):
-        """
+        """Return readiness.
+
         Function that checks what kind of interpolation is supported.
 
         **Returns:**
@@ -136,26 +146,24 @@ class OceData(object):
 
         return readiness, missing
 
-    def _add_missing_grid(self): # pragma: no cover
+    def _add_missing_grid(self):  # pragma: no cover
         # TODO:
         pass
 
-    def show_alias(self): # pragma: no cover
-        """
-        print out the alias in a nice pd.DataFrame format.
-        """
+    def show_alias(self):  # pragma: no cover
+        """Print out the alias in a nice pd.DataFrame format."""
         try:
             return _pd.DataFrame.from_dict(
                 self.alias, orient="index", columns=["original name"]
             )
         except NameError:
-            raise NameError('pandas is needed to perform this function.')
+            raise NameError("pandas is needed to perform this function.")
 
     def _add_missing_cs_sn(self):
         try:
             assert self["CS"] is not None
-            assert self["SN"] is not None # pragma: no cover
-        except (AttributeError,AssertionError):
+            assert self["SN"] is not None  # pragma: no cover
+        except (AttributeError, AssertionError):
             xc = np.deg2rad(np.array(self["XC"]))
             yc = np.deg2rad(np.array(self["YC"]))
             cs = np.zeros_like(xc)
@@ -169,9 +177,9 @@ class OceData(object):
             self["SN"] = sn
 
     def hgrid2array(self):
-        """
-        Extract the horizontal grid data into numpy arrays based on
-        the readiness['h'] of the OceData object.
+        """Extract the horizontal grid data into numpy arrays.
+
+        This is done based on the readiness['h'] of the OceData object.
         """
         way = self.readiness["h"]
         if self.too_large:  # pragma: no cover
@@ -222,16 +230,12 @@ class OceData(object):
             self.lat = np.array(self["lat"]).astype("float32")
 
     def vgrid2array(self):
-        """
-        Extract the vertical center point grid data into numpy arrays.
-        """
+        """Extract the vertical center point grid data into numpy arrays."""
         self.Z = np.array(self["Z"]).astype("float32")
         self.dZ = np.array(self["dZ"]).astype("float32")
 
     def vlgrid2array(self):
-        """
-        Extract the vertical staggered point grid data into numpy arrays.
-        """
+        """Extract the vertical staggered point grid data into numpy arrays."""
         self.Zl = np.array(self["Zl"]).astype("float32")
         self.dZl = np.array(self["dZl"]).astype("float32")
 
@@ -240,9 +244,7 @@ class OceData(object):
         # self.dZl[0] = 1e-10
 
     def tgrid2array(self):
-        """
-        Extract the temporal grid data into numpy arrays.
-        """
+        """Extract the temporal grid data into numpy arrays."""
         self.t_base = 0
         self.ts = np.array(self["time"])
         self.ts = (self.ts).astype(float) / 1e9
@@ -253,9 +255,7 @@ class OceData(object):
             self.time_midp = (self.ts[1:] + self.ts[:-1]) / 2
 
     def grid2array(self):
-        """
-        Assemble all the extraction methods, based on the readiness of the OceData object.
-        """
+        """Assemble all the extraction methods."""
         if self.readiness["h"]:
             self.hgrid2array()
         if self.readiness["Z"]:
@@ -266,7 +266,8 @@ class OceData(object):
             self.tgrid2array()
 
     def find_rel_h(self, x, y):
-        """
+        """Find the horizontal rel-coordinate.
+
         Find the horizontal rel-coordinate of the given 4-D position based on readiness['h'].
 
         **Parameters:**
@@ -313,48 +314,36 @@ class OceData(object):
         return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
 
     def find_rel_vl(self, z):
-        """
-        find the rel-coord based on vertical staggered grid using the nearest neighbor scheme.
-        """
+        """Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Zl)
         return iz.astype(int), rz, dz, bz
 
     def find_rel_vl_lin(self, z):
-        """
-        find the rel-coord based on vertical staggered grid using the 2-point linear scheme.
-        """
+        """Find the rel-coord based on vertical staggered grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl, dz_above_z=False)
         return iz.astype(int), rz, dz, bz
 
     def find_rel_v(self, z):
-        """
-        find the rel-coord based on vertical center grid using the nearest neighbor scheme.
-        """
+        """Find the rel-coord based on vertical center grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl)
         return (iz - 1).astype(int), rz - 0.5, dz, bz
 
     def find_rel_v_lin(self, z):
-        """
-        find the rel-coord based on vertical center grid using the 2-point linear scheme.
-        """
+        """Find the rel-coord based on vertical center grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Z, self.dZ)
         return iz.astype(int), rz, dz, bz
 
     def find_rel_t(self, t):
-        """
-        find the rel-coord based along the temporal direction using the nearest neighbor scheme.
-        """
+        """Find the rel-coord based along the temporal direction using the nearest neighbor scheme."""
         it, rt, dt, bt = find_rel_nearest(t, self.ts)
         return it.astype(int), rt, dt, bt
 
     def find_rel_t_lin(self, t):
-        """
-        find the rel-coord based along the temporal direction using the 2-point linear scheme.
-        """
+        """Find the rel-coord based along the temporal direction using the 2-point linear scheme."""
         it, rt, dt, bt = find_rel_time(t, self.ts)
         return it.astype(int), rt, dt, bt
 
-    def _find_rel_3d(self, x, y, z): # pragma: no cover
+    def _find_rel_3d(self, x, y, z):  # pragma: no cover
         # for internal test
         faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = self.find_rel_h(
             x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
@@ -379,7 +368,7 @@ class OceData(object):
             bz,
         )
 
-    def _find_rel_4d(self, x, y, z, t): # pragma: no cover
+    def _find_rel_4d(self, x, y, z, t):  # pragma: no cover
         # for internal tests
         faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = self.find_rel_h(
             x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
@@ -410,7 +399,7 @@ class OceData(object):
             bt,
         )
 
-    def _find_rel(self, *arg): # pragma: no cover
+    def _find_rel(self, *arg):  # pragma: no cover
         # Internal testing
         if len(arg) == 2:
             return self.find_rel_2d(*arg)

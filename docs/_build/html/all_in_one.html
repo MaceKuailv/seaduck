@@ -135,13 +135,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 
-
-
-
-
-    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-
+    <p class="title logo__title">My sample book</p>
 
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -158,7 +152,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">Network of Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="reference.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -400,8 +395,9 @@ document.write(`
 <span id="seaduck-oceinterp-module"></span><h2>seaduck.OceInterp module<a class="headerlink" href="#module-seaduck.OceInterp" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.OceInterp.OceInterp">
-<span class="sig-prename descclassname"><span class="pre">seaduck.OceInterp.</span></span><span class="sig-name descname"><span class="pre">OceInterp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernelList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lagrangian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lagrange_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pt_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kernel_kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.OceInterp.OceInterp" title="Permalink to this definition">#</a></dt>
-<dd><p><strong>This is the centerpiece function of the package, through which you can access almost all of its functionality.</strong></p>
+<span class="sig-prename descclassname"><span class="pre">seaduck.OceInterp.</span></span><span class="sig-name descname"><span class="pre">OceInterp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernelList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lagrangian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lagrange_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pt_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.OceInterp.OceInterp" title="Permalink to this definition">#</a></dt>
+<dd><p><strong>This is the centerpiece function of the package, through which
+you can access almost all of its functionality.</strong></p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -420,12 +416,14 @@ document.write(`
 </dl>
 </li>
 <li><dl class="simple">
-<dt>x, y, z: numpy.ndarray</dt><dd><p>The location of the particles, where x and y are in degrees, and z is in meters (deeper locations are represented by more negative values).</p>
+<dt>x, y, z: numpy.ndarray</dt><dd><p>The location of the particles, where x and y are in degrees,
+and z is in meters (deeper locations are represented by more negative values).</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>t: numpy.ndarray</dt><dd><p>In the Eulerian scheme, this represents the time of interpolation. In the Lagrangian scheme, it represents the time needed for output.</p>
+<dt>t: numpy.ndarray</dt><dd><p>In the Eulerian scheme, this represents the time of interpolation.
+In the Lagrangian scheme, it represents the time needed for output.</p>
 </dd>
 </dl>
 </li>
@@ -445,12 +443,18 @@ document.write(`
 </dl>
 </li>
 <li><dl class="simple">
-<dt>return_in_between: bool</dt><dd><p>In Lagrangian mode, this returns the interpolation not only at time t, but also at every point in time when the speed is updated.</p>
+<dt>return_in_between: bool</dt><dd><p>In Lagrangian mode, this returns the interpolation not only at time t,
+but also at every point in time when the speed is updated.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>return_pt_time: bool</dt><dd><p>Specifies whether to return the time of all the steps.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>kernel_kwarg: dict</dt><dd><p>keyword arguments to pass into seaduck.KnW object.</p>
 </dd>
 </dl>
 </li>
@@ -464,7 +468,8 @@ document.write(`
 <dt class="sig sig-object py" id="seaduck.OceData.OceData">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.OceData.</span></span><span class="sig-name descname"><span class="pre">OceData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.OceData.OceData" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class that enables variable aliasing, topology extraction, and 4-D translation between latitude-longitude-depth-time grid and relative description.</p>
+<p>Class that enables variable aliasing, topology extraction, and 4-D translation
+between latitude-longitude-depth-time grid and relative description.</p>
 <p><strong>Parameters</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -474,7 +479,8 @@ document.write(`
 </li>
 <li><dl class="simple">
 <dt>alias: dict, None, or ‘auto’</dt><dd><ol class="arabic simple">
-<li><p>dict: Map the variable used by this package (key) to that used by the dataset (value).</p></li>
+<li><p>dict: Map the variable used by this package (key) to
+that used by the dataset (value).</p></li>
 <li><p>None (default): Do not apply alias.</p></li>
 <li><p>‘auto’ (Not implemented): Automatically generate a list for the alias.</p></li>
 </ol>
@@ -487,12 +493,18 @@ document.write(`
 <span class="sig-name descname"><span class="pre">check_readiness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.OceData.OceData.check_readiness" title="Permalink to this definition">#</a></dt>
 <dd><p>Function that checks what kind of interpolation is supported.</p>
 <p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>readiness: dict</dt><dd><p>‘h’: The scheme of horizontal interpolation to be used, including ‘oceanparcel’, ‘local_cartesian’, and ‘rectilinear’.
-‘Z’: Whether the dataset has a vertical dimension at the center points.
-‘Zl’: Whether the dataset has a vertical dimension at staggered points (vertical velocity).
-‘time’: Whether the dataset has a temporal dimension.</p>
+<ul>
+<li><dl>
+<dt>readiness: dict</dt><dd><dl class="simple">
+<dt>‘h’: The scheme of horizontal interpolation to be used,</dt><dd><p>including ‘oceanparcel’, ‘local_cartesian’, and ‘rectilinear’.</p>
+</dd>
+</dl>
+<p>‘Z’: Whether the dataset has a vertical dimension at the center points.
+‘Zl’: Whether the dataset has a vertical dimension at staggered points</p>
+<blockquote>
+<div><p>(vertical velocity).</p>
+</div></blockquote>
+<p>‘time’: Whether the dataset has a temporal dimension.</p>
 </dd>
 </dl>
 </li>
@@ -586,7 +598,8 @@ document.write(`
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.OceData.OceData.hgrid2array">
 <span class="sig-name descname"><span class="pre">hgrid2array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.OceData.OceData.hgrid2array" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract the horizontal grid data into numpy arrays based on the readiness[‘h’] of the OceData object.</p>
+<dd><p>Extract the horizontal grid data into numpy arrays based on
+the readiness[‘h’] of the OceData object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1014,7 +1027,8 @@ if b is the case, we need to unmask the wdata</p>
 <dt class="sig sig-object py" id="seaduck.kernelNweight.KnW">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.kernelNweight.</span></span><span class="sig-name descname"><span class="pre">KnW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">2],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[-</span> <span class="pre">2,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inheritance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernelNweight.KnW" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class that describes anything about the interpolation/derivative kernel to be used.</p>
+<p>A class that describes anything about the
+interpolation/derivative kernel to be used.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -1046,12 +1060,14 @@ if b is the case, we need to unmask the wdata</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>h_order: int</dt><dd><p>How many derivative to take in the horizontal direction. Zero for pure interpolation</p>
+<dt>h_order: int</dt><dd><p>How many derivative to take in the horizontal direction.
+Zero for pure interpolation</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>ignore_mask: bool</dt><dd><p>Whether to diregard the masking of the dataset. You can select True if there is no
+<dt>ignore_mask: bool</dt><dd><p>Whether to diregard the masking of the dataset.
+You can select True if there is no
 inheritance, or if performance is a big concern.</p>
 </dd>
 </dl>
@@ -1074,7 +1090,8 @@ inheritance, or if performance is a big concern.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>bottom_scheme: str</dt><dd><p>Whether to assume there is a ghost point with same value at the bottom boundary.
+<dt>bottom_scheme: str</dt><dd><p>Whether to assume there is a ghost point with same value at
+the bottom boundary.
 Choose None for vertical flux, ‘no flux’ for most other cases.</p>
 </dd>
 </dl>
@@ -1083,7 +1100,8 @@ Choose None for vertical flux, ‘no flux’ for most other cases.</p>
 <p><strong>Returns:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>weight: numpy.ndarray</dt><dd><p>The weight of interpolation/derivative for the points with shape (N,M),
+<dt>weight: numpy.ndarray</dt><dd><p>The weight of interpolation/derivative for the points
+with shape (N,M),
 M is the num of node in the largest kernel.</p>
 </dd>
 </dl>
@@ -1106,7 +1124,8 @@ M is the num of node in the largest kernel.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.kernelNweight.KnW.size_hash">
 <span class="sig-name descname"><span class="pre">size_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernelNweight.KnW.size_hash" title="Permalink to this definition">#</a></dt>
-<dd><p>produce a hash value simply based on the 4D size of the KnW object</p>
+<dd><p>produce a hash value simply based on the
+4D size of the KnW object</p>
 </dd></dl>
 
 </dd></dl>
@@ -1123,12 +1142,14 @@ M is the num of node in the largest kernel.</p>
 <dd><p>faces,iys,ixs is now 1d arrays of size n.
 We are applying a kernel of size m.
 This is going to return a n * m array of indexes.
-each row represen all the node needed for interpolation of a single point.
+each row represen all the node needed for interpolation of
+a single point.
 “h” represent we are only doing it on the horizontal plane</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>faces: numpy.ndarray or None</dt><dd><p>The index of faces that the points are on. None if there is no face dimension.</p>
+<dt>faces: numpy.ndarray or None</dt><dd><p>The index of faces that the points are on. None if there is
+no face dimension.</p>
 </dd>
 </dl>
 </li>
@@ -1159,7 +1180,8 @@ time and horizontal dimensions if there is no face dimension</p>
 </li>
 <li><dl class="simple">
 <dt>maximum: int or None</dt><dd><p>None if the neighboring cell has index 1 larger than iz.
-If the value of iz == maximum, the neighboring point is just maximum.</p>
+If the value of iz == maximum,
+the neighboring point is just maximum.</p>
 </dd>
 </dl>
 </li>
@@ -1169,7 +1191,8 @@ If the value of iz == maximum, the neighboring point is just maximum.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>kernel_type: ‘linear’, ‘dz’ or ‘nearest’</dt><dd><p>Whether to fatten the index using the nearest one point or two points.</p>
+<dt>kernel_type: ‘linear’, ‘dz’ or ‘nearest’</dt><dd><p>Whether to fatten the index using the nearest one
+point or two points.</p>
 </dd>
 </dl>
 </li>
@@ -1199,12 +1222,14 @@ it means that the largest kernel have all 5 nodes
 the second kernel only contain the first and second node,
 and the last one only have the nearest neighbor.</p>
 <p>if a row of matrix looks like [1,1,1,1,1],
-the index of the row will be in the first element(list) of the return variable.</p>
+the index of the row will be in the first element(list) of the return
+variable.</p>
 <p>if a row of matrix looks like [1,1,1,1,0],
-although it fits both 2nd and 3rd kernel, 2nd has priority, so the index will
-be in the 2nd element of the return pk.</p>
+although it fits both 2nd and 3rd kernel, 2nd has priority,
+so the index will be in the 2nd element of the return pk.</p>
 <p>if a row looks like [0,0,0,0,0],
-none of the kernel can fit it, so the index will not be in the return</p>
+none of the kernel can fit it, so the index will not be in the
+return</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1233,7 +1258,8 @@ and can register to the dictionary when new ones are created.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>hkernel:</dt><dd><p>A horizontal numpy kernel that contains all the horizontal kernels needed.</p>
+<dt>hkernel:</dt><dd><p>A horizontal numpy kernel that contains all the horizontal
+kernels needed.</p>
 </dd>
 </dl>
 </li>
@@ -1260,7 +1286,8 @@ and can register to the dictionary when new ones are created.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>bottom_scheme: str</dt><dd><p>Whether to assume there is a ghost point with same value at the bottom boundary.
+<dt>bottom_scheme: str</dt><dd><p>Whether to assume there is a ghost point with same value at the
+bottom boundary.
 Choose None for vertical flux, ‘no flux’ for most other cases.</p>
 </dd>
 </dl>
@@ -1269,8 +1296,8 @@ Choose None for vertical flux, ‘no flux’ for most other cases.</p>
 <p><strong>Returns:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>weight: numpy.ndarray</dt><dd><p>The weight of interpolation/derivative for the points with shape (N,M),
-M is the num of node in the largest kernel.</p>
+<dt>weight: numpy.ndarray</dt><dd><p>The weight of interpolation/derivative for the points with
+shape (N,M), M is the num of node in the largest kernel.</p>
 </dd>
 </dl>
 </li>
@@ -1311,7 +1338,8 @@ It need to either shape like a rectangle or a cross</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>ktype: str</dt><dd><p>“interp” (default): Use both x y direction for interpolation, implies that order = 0
+<dt>ktype: str</dt><dd><p>“interp” (default): Use both x y direction for interpolation,
+implies that order = 0
 “dx”: Use only x direction for interpolation/derivative
 “dy”: Use only y direction for interpolation/derivative</p>
 </dd>
@@ -1326,7 +1354,8 @@ It need to either shape like a rectangle or a cross</p>
 <p><strong>Returns:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative weight</p>
+<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative
+weight</p>
 </dd>
 </dl>
 </li>
@@ -1337,7 +1366,8 @@ It need to either shape like a rectangle or a cross</p>
 <dt class="sig sig-object py" id="seaduck.kernelNweight.kernel_weight_s">
 <span class="sig-prename descclassname"><span class="pre">seaduck.kernelNweight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernelNweight.kernel_weight_s" title="Permalink to this definition">#</a></dt>
 <dd><p>return the function that calculate the interpolation/derivative weight
-given a rectangle-shaped (that’s where x is coming from) Lagrangian kernel.</p>
+given a rectangle-shaped (that’s where x is coming from)
+Lagrangian kernel.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -1347,12 +1377,14 @@ It has to be shaped like a rectangle</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>xorder: int</dt><dd><p>The order of derivatives in the x direction. Zero for interpolation.</p>
+<dt>xorder: int</dt><dd><p>The order of derivatives in the x direction.
+Zero for interpolation.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>yorder: int</dt><dd><p>The order of derivatives in the y direction. Zero for interpolation.</p>
+<dt>yorder: int</dt><dd><p>The order of derivatives in the y direction.
+Zero for interpolation.</p>
 </dd>
 </dl>
 </li>
@@ -1360,7 +1392,8 @@ It has to be shaped like a rectangle</p>
 <p><strong>Returns:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative weight</p>
+<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative
+weight</p>
 </dd>
 </dl>
 </li>
@@ -1381,7 +1414,8 @@ It has to be shaped like a cross</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>ktype: str</dt><dd><p>“interp” (default): Use both x y direction for interpolation, implies that order = 0
+<dt>ktype: str</dt><dd><p>“interp” (default): Use both x y direction for interpolation,
+implies that order = 0
 “x”: Use only x direction for interpolation/derivative
 “y”: Use only y direction for interpolation/derivative</p>
 </dd>
@@ -1396,7 +1430,8 @@ It has to be shaped like a cross</p>
 <p><strong>Returns:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>func(rx,ry): compilable function </dt><dd><p>function to calculate the hotizontal interpolation/derivative weight</p>
+<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative
+weight</p>
 </dd>
 </dl>
 </li>
@@ -1410,7 +1445,8 @@ It has to be shaped like a cross</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>kernels: list of numpy.ndarray</dt><dd><p>Each of the element is a (n,2) shaped array, where n is the number of element in the kernel.</p>
+<dt>kernels: list of numpy.ndarray</dt><dd><p>Each of the element is a (n,2) shaped array,
+where n is the number of element in the kernel.</p>
 </dd>
 </dl>
 </li>
@@ -1422,9 +1458,10 @@ It has to be shaped like a cross</p>
 <span id="seaduck-lagrangian-module"></span><h2>seaduck.lagrangian module<a class="headerlink" href="#module-seaduck.lagrangian" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'WVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dont_fly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'WVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dont_fly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="api_reference/apiref_eulerian.html#seaduck.eulerian.position" title="seaduck.eulerian.position"><code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code></a></p>
-<p>The Lagrangian particle object. Simply a eulerian position object that know how to move itself.</p>
+<p>The Lagrangian particle object. Simply a eulerian position object
+that know how to move itself.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -1434,36 +1471,42 @@ It has to be shaped like a cross</p>
 </li>
 <li><dl class="simple">
 <dt>uname, vname, wname: str</dt><dd><p>The variable names for the velocity/mass-transport components.
-If transport is true, pass in names of the volume/mass transport across cell wall in m^3/3
+If transport is true, pass in names of the volume/mass transport
+across cell wall in m^3/3
 else,  just pass something that is in m/s</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>dont_fly: Boolean</dt><dd><p>Sometimes there is non-zero vertical velocity at sea surface. dont_fly = True set that to zero.
+<dt>dont_fly: Boolean</dt><dd><p>Sometimes there is non-zero vertical velocity at sea surface.
+dont_fly = True set that to zero.
 An error may occur depends on the situation if set otherwise.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>save_raw: Boolean</dt><dd><p>Whether to record the analytical history of all particles in an unstructured list.</p>
+<dt>save_raw: Boolean</dt><dd><p>Whether to record the analytical history of all particles in an
+unstructured list.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>transport: Boolean</dt><dd><p>If transport is true, pass in names of the volume/mass transport across cell wall in m^3/3
+<dt>transport: Boolean</dt><dd><p>If transport is true, pass in names of the volume/mass transport
+across cell wall in m^3/3
 else,  just pass velocity that is in m/s</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>stop_criterion: function that take particle as input</dt><dd><p>A callback function that takes particle as input. Return boolean array that determines which particle should still be going.
+<dt>callback: function that take particle as input</dt><dd><p>A callback function that takes particle as input. Return boolean
+array that determines which particle should still be going.
 Users can also define customized functions here.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>max_iteration: int</dt><dd><p>The number of analytical steps allowed for the to_next_stop method.</p>
+<dt>max_iteration: int</dt><dd><p>The number of analytical steps allowed for the to_next_stop
+method.</p>
 </dd>
 </dl>
 </li>
@@ -1472,10 +1515,12 @@ Users can also define customized functions here.</p>
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle.analytical_step">
 <span class="sig-name descname"><span class="pre">analytical_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.analytical_step" title="Permalink to this definition">#</a></dt>
 <dd><p>The core method.
-A set of particles trying to integrate for time tf (could be negative).
+A set of particles trying to integrate for time tf
+(could be negative).
 at the end of the call, every particle are either:
 1. ended up somewhere within the cell after time tf.
-2. ended up on a cell wall before (if tf is negative, then “after”) tf.</p>
+2. ended up on a cell wall before
+(if tf is negative, then “after”) tf.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -1484,7 +1529,8 @@ at the end of the call, every particle are either:
 </dl>
 </li>
 <li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to do the operation.</p>
+<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to
+do the operation.</p>
 </dd>
 </dl>
 </li>
@@ -1523,7 +1569,8 @@ Read eulerian.position.interpolate for more detail.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to do the operation.</p>
+<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to
+do the operation.</p>
 </dd>
 </dl>
 </li>
@@ -1539,7 +1586,8 @@ This method read the volume that is calculated at __init__.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to do the operation.</p>
+<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points
+to do the operation.</p>
 </dd>
 </dl>
 </li>
@@ -1550,8 +1598,10 @@ This method read the volume that is calculated at __init__.</p>
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle.note_taking">
 <span class="sig-name descname"><span class="pre">note_taking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.note_taking" title="Permalink to this definition">#</a></dt>
 <dd><p>This method is only called in save_raw = True particles.
-This method will note done the raw info of the particle trajectories.
-With those info, one could reconstruct the analytical trajectories to arbitrary position.</p>
+This method will note done the raw info of the particle
+trajectories.
+With those info, one could reconstruct the analytical
+trajectories to arbitrary position.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1581,9 +1631,10 @@ the method is going to figure it out automatically.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>return_in_between: Boolean</dt><dd><p>Users can get the values of update_stops free of computational cost.
-We understand that user may sometimes don’t want those in the output.
-In that case, it that case, set it to be False, and the output will all be at normal_stops.</p>
+<dt>return_in_between: Boolean</dt><dd><p>Users can get the values of update_stops free of computational
+cost.We understand that user may sometimes don’t want those in
+the output.In that case, it that case, set it to be False,
+and the output will all be at normal_stops.</p>
 </dd>
 </dl>
 </li>
@@ -1592,8 +1643,9 @@ In that case, it that case, set it to be False, and the output will all be at no
 <ul class="simple">
 <li><dl class="simple">
 <dt>stops: list</dt><dd><p>The list of stops.
-It is the combination of normal_stops and output_stops by default.
-If return_in_between is set to be False, this is then the same as normal stops.</p>
+It is the combination of normal_stops and output_stops by
+default. f return_in_between is set to be False,
+this is then the same as normal stops.</p>
 </dd>
 </dl>
 </li>
@@ -1640,7 +1692,8 @@ Only set True if something is not going correctly</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>tol: float</dt><dd><p>The relative tolerance when particles is significantly close to the cell.</p>
+<dt>tol: float</dt><dd><p>The relative tolerance when particles is significantly
+close to the cell.</p>
 </dd>
 </dl>
 </li>
@@ -1651,14 +1704,16 @@ Only set True if something is not going correctly</p>
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle.update_after_cell_change">
 <span class="sig-name descname"><span class="pre">update_after_cell_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.update_after_cell_change" title="Permalink to this definition">#</a></dt>
 <dd><p>A wall event is triggered when particle reached the wall.
-This method handle the coords translation as a particle cross a wall.</p>
+This method handle the coords translation as a particle cross
+a wall.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle.update_uvw_array">
 <span class="sig-name descname"><span class="pre">update_uvw_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.update_uvw_array" title="Permalink to this definition">#</a></dt>
 <dd><p>Update the prefetched velocity arrays.
-The way to do it is slightly different for dataset with time dimensions and those without.</p>
+The way to do it is slightly different for dataset with time
+dimensions and those without.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1666,7 +1721,8 @@ The way to do it is slightly different for dataset with time dimensions and thos
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.lagrangian.increment">
 <span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">increment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.increment" title="Permalink to this definition">#</a></dt>
-<dd><p>For a one dimensional particle with speed u and speed derivative du, find how far it will travel in duration t</p>
+<dd><p>For a one dimensional particle with speed u and speed derivative du,
+find how far it will travel in duration t</p>
 <p><strong>Parameter:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -1696,7 +1752,8 @@ The way to do it is slightly different for dataset with time dimensions and thos
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.lagrangian.stationary">
 <span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">stationary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.stationary" title="Permalink to this definition">#</a></dt>
-<dd><p>For a one dimensional particle with speed u and speed derivative du starting at x0, the final position after time t.
+<dd><p>For a one dimensional particle with speed u and speed derivative du
+starting at x0, the final position after time t.
 “Stationary” means that we are assuming there is no time dependency.</p>
 <p><strong>Parameter:</strong></p>
 <ul class="simple">
@@ -1770,7 +1827,8 @@ The time could be negative.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.lagrangian.which_early">
 <span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">which_early</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.which_early" title="Permalink to this definition">#</a></dt>
-<dd><p>We are trying to integrate the particle to time tf. The first event is either:
+<dd><p>We are trying to integrate the particle to time tf.
+The first event is either:
 1. tf is reached before reaching a wall
 2. ts[i] is reached, and a particle hit a wall. ts[i]*tf&gt;0</p>
 <p><strong>Parameters:</strong></p>
@@ -2116,7 +2174,8 @@ and the geodesic connecting A and B</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_ind_periodic">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_periodic" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the index of the nearest value in the array to the given value, where the values are periodic.</p>
+<dd><p>Find the index of the nearest value
+in the array to the given value, where the values are periodic.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2128,13 +2187,15 @@ and the geodesic connecting A and B</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_ind_z">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_z" title="Permalink to this definition">#</a></dt>
-<dd><p>find the index of the nearest level that is lower than the given level</p>
+<dd><p>find the index of the nearest level that is lower
+than the given level</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_px_py">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_px_py</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">XG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">YG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridoffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_px_py" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the nearest 4 corner points. This is used in oceanparcel interpolation scheme.</p>
+<dd><p>Find the nearest 4 corner points.
+This is used in oceanparcel interpolation scheme.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2142,9 +2203,15 @@ and the geodesic connecting A and B</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_h_naive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_h_naive" title="Permalink to this definition">#</a></dt>
 <dd><p>very similar to find_rel_time/v
 rx,ry,dx,dy are defined the same way
-for example
-rx = “how much to the right of the node”/”size of the cell in left-right direction”
-dx = “size of the cell in left-right direction”</p>
+for example</p>
+<blockquote>
+<div><p>“how much to the right of the node”</p>
+</div></blockquote>
+<dl class="simple">
+<dt>rx = ——————————————-</dt><dd><p>“size of the cell in left-right direction”</p>
+</dd>
+</dl>
+<p>dx = “size of the cell in left-right direction”</p>
 <p>cs,sn is just the cos and sin of the grid orientation.
 It will come in handy when we transfer vectors.</p>
 </dd></dl>
@@ -2212,12 +2279,13 @@ It will come in handy when we transfer vectors.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_rel_z">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dz</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dz_above_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_z" title="Permalink to this definition">#</a></dt>
 <dd><p>find the rel-coords of the vertical coords</p>
 <p><strong>Paramters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>depth: numpy.ndarray</dt><dd><p>1D array for the depth of interest in meters. More negative means deeper.</p>
+<dt>depth: numpy.ndarray</dt><dd><p>1D array for the depth of interest in meters.
+More negative means deeper.</p>
 </dd>
 </dl>
 </li>
@@ -2228,6 +2296,12 @@ It will come in handy when we transfer vectors.</p>
 </li>
 <li><dl class="simple">
 <dt>some_dz: numpy.ndarray</dt><dd><p>dz_i = abs(z_{i+1}- z_i)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dz_above_z: Boolean</dt><dd><p>Whether the dz as the distance between the depth level and
+a shallower one(True) or a deeper one(False)</p>
 </dd>
 </dl>
 </li>
@@ -2261,7 +2335,8 @@ It will come in handy when we transfer vectors.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_rx_ry_oceanparcel">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rx_ry_oceanparcel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">px</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rx_ry_oceanparcel" title="Permalink to this definition">#</a></dt>
-<dd><p>find the non-dimensional horizontal distance using the oceanparcel scheme.</p>
+<dd><p>find the non-dimensional horizontal distance
+using the oceanparcel scheme.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2276,7 +2351,8 @@ This is almost the same as the one in itertools.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.get_key_by_value">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">get_key_by_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.get_key_by_value" title="Permalink to this definition">#</a></dt>
-<dd><p>Find one of the keys in a dictionary that correspond to the given value</p>
+<dd><p>Find one of the keys in a dictionary
+that correspond to the given value</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><dl class="simple">
@@ -2300,7 +2376,7 @@ This is almost the same as the one in itertools.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.missing_cs_sn">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">missing_cs_sn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.missing_cs_sn" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">missing_cs_sn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.missing_cs_sn" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -2308,7 +2384,8 @@ This is almost the same as the one in itertools.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">rel_lon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_lon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.rel_lon" title="Permalink to this definition">#</a></dt>
 <dd><p>Change the definition of 0 longitude.
 Return how much east one need to go from ref_lon to x
-This function aims to address the confusion caused by the discontinuity in longitude.</p>
+This function aims to address
+the confusion caused by the discontinuity in longitude.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2363,7 +2440,8 @@ If None, use geopy default</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.weight_f_node">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">weight_f_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.weight_f_node" title="Permalink to this definition">#</a></dt>
-<dd><p>assign weight based on the non-dimensional coords to the four corner points.</p>
+<dd><p>assign weight based on the non-dimensional
+coords to the four corner points.</p>
 </dd></dl>
 
 </div>
