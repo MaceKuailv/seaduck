@@ -31,7 +31,7 @@ directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @compileable
-def llc_mutual_direction(face, nface, transitive=False):  
+def llc_mutual_direction(face, nface, transitive=False):
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
@@ -73,7 +73,7 @@ def llc_mutual_direction(face, nface, transitive=False):
 
 
 @compileable
-def llc_get_the_other_edge(face, edge):  
+def llc_get_the_other_edge(face, edge):
     """See what is adjacent to the face by this edge.
 
     The compileable version of get_the_other_edge for llc grid.
@@ -90,7 +90,7 @@ def llc_get_the_other_edge(face, edge):
 
 
 @compileable
-def box_ind_tend(ind, tend, iymax, ixmax):  
+def box_ind_tend(ind, tend, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for regional (box) grid.
@@ -114,7 +114,7 @@ def box_ind_tend(ind, tend, iymax, ixmax):
 
 
 @compileable
-def x_per_ind_tend(ind, tend, iymax, ixmax):  
+def x_per_ind_tend(ind, tend, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for zonally periodic (x-per) grid.
@@ -139,7 +139,7 @@ def x_per_ind_tend(ind, tend, iymax, ixmax):
 
 
 @compileable
-def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):  
+def llc_ind_tend(ind, tendency, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for llc grid.
@@ -155,14 +155,6 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
             nface, nedge = llc_get_the_other_edge(face, 3)
             if nedge == 1:
                 face, iy, ix = [nface, 0, ixmax - iy]
-                if gridoffset == 0:
-                    pass
-                elif gridoffset == -1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 3, iymax, ixmax)
-                elif gridoffset == 1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 2, iymax, ixmax)
-                else:
-                    raise ValueError("gridoffset must be -1 or 1")
             elif nedge == 0:
                 face, iy, ix = [nface, iymax, iy]
             elif nedge == 2:
@@ -178,14 +170,6 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
                 face, iy, ix = [nface, 0, iy]
             elif nedge == 0:
                 face, iy, ix = [nface, iymax, ixmax - iy]
-                if gridoffset == 0:
-                    pass
-                elif gridoffset == -1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 3, iymax, ixmax)
-                elif gridoffset == 1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 2, iymax, ixmax)
-                else:
-                    raise ValueError("gridoffset must be -1 or 1")
             elif nedge == 2:
                 face, iy, ix = [nface, iymax - iy, 0]
             elif nedge == 3:
@@ -201,14 +185,6 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
                 face, iy, ix = [nface, iymax, ixmax - ix]
             elif nedge == 2:
                 face, iy, ix = [nface, iymax - ix, 0]
-                if gridoffset == 0:
-                    pass
-                elif gridoffset == -1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 0, iymax, ixmax)
-                elif gridoffset == 1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 1, iymax, ixmax)
-                else:
-                    raise ValueError("gridoffset must be -1,1 or 1")
             elif nedge == 3:
                 face, iy, ix = [nface, ix, ixmax]
     if tendency == 1:
@@ -224,19 +200,11 @@ def llc_ind_tend(ind, tendency, iymax, ixmax, gridoffset=0):
                 face, iy, ix = [nface, ix, 0]
             elif nedge == 3:
                 face, iy, ix = [nface, iymax - ix, ixmax]
-                if gridoffset == 0:
-                    pass
-                elif gridoffset == -1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 0, iymax, ixmax)
-                elif gridoffset == 1:
-                    face, iy, ix = llc_ind_tend((face, iy, ix), 1, iymax, ixmax)
-                else:
-                    raise ValueError("gridoffset must be -1,1 or 1")
     return (face, iy, ix)
 
 
 @compileable
-def llc_get_uv_mask_from_face(faces):  
+def llc_get_uv_mask_from_face(faces):
     """Get the masking of UV points.
 
     The compileable version of get_uv_mask_from_face for llc grid.
@@ -297,14 +265,14 @@ class topology:
         except KeyError:
             try:
                 h_shape = (int(od["lat"].shape[0]), int(od["lon"].shape[0]))
-            except KeyError:  
+            except KeyError:
                 raise KeyError(
                     "Either XC or lat/lon is needed to create the topology object"
                 )
         self.h_shape = h_shape
         try:
             self.itmax = len(od["time"]) - 1
-        except (KeyError, TypeError):  
+        except (KeyError, TypeError):
             self.itmax = 0
         try:
             self.izmax = len(od["Z"]) - 1
@@ -322,7 +290,7 @@ class topology:
                     self.typ = "LLC"
                     # we can potentially generate the face connection in runtime
                     # say, put the csv file on cloud
-                elif self.num_face == 6:  
+                elif self.num_face == 6:
                     self.typ = "cubed_sphere"
             elif len(h_shape) == 2:
                 self.iymax, self.ixmax = h_shape
@@ -408,7 +376,7 @@ class topology:
             Use gridoffset keyword when you are dealing with different grid-indexing,
             -1 for MITgcm (default), 1 for NEMO.
         """
-        if -1 in ind:  
+        if -1 in ind:
             # meaning invalid point
             return tuple([-1 for i in ind])
         #         if tend not in [0,1,2,3]:
@@ -471,7 +439,7 @@ class topology:
                         pass
                     elif np.isclose(rot, np.pi / 2):
                         moves[k + 1 :] = [[2, 3, 1, 0][move] for move in moves[k + 1 :]]
-                    elif np.isclose(rot, 3 * np.pi / 2):  
+                    elif np.isclose(rot, 3 * np.pi / 2):
                         moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
                     face = ind[0]
                     # if the old face is on the left of the new face,
@@ -546,9 +514,7 @@ class topology:
                 particle_on_edge = True
                 n_ind = ind
             inds[:, j] = np.array(n_ind).ravel()
-        if (
-            particle_on_edge and rcParam["debug_level"] == "very_high"
-        ):  
+        if particle_on_edge and rcParam["debug_level"] == "very_high":
             print("Warning:Some points are on the edge")
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)
@@ -575,7 +541,7 @@ class topology:
                 return "U", R
             elif iyr > iyo:
                 return "V", R
-            else:  
+            else:
                 raise IndexError("there is no wall between a cell and itself")
                 # This error can be raised when there is three instead of four points in a corner
         else:
@@ -586,7 +552,7 @@ class topology:
                     return "V", R
                 elif d2to1 == 2:
                     return "U", R
-                else:  
+                else:
                     raise Non_normal_connection
             elif d2to1 in [0, 3]:
                 R = ind1
@@ -594,9 +560,9 @@ class topology:
                     return "V", R
                 elif d1to2 == 2:
                     return "U", R
-                else:  
+                else:
                     raise Non_normal_connection
-            else:  
+            else:
                 raise Non_normal_connection
 
     def _ind_tend_U(self, ind, tend):
@@ -651,7 +617,7 @@ class topology:
         """
         if self.typ == "LLC":
             return llc_get_uv_mask_from_face(faces)
-        elif self.typ in ["x_periodic", "box"]:  
+        elif self.typ in ["x_periodic", "box"]:
             raise Exception(
                 "It makes no sense to tinker with face_connection when there is only one face"
             )
