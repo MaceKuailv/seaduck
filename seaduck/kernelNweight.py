@@ -371,7 +371,7 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
 
     @compileable
     def the_square_func(rx, ry):
-        nonlocal kernel, xs, ys, y_poly, x_poly, xorder, yorder
+        nonlocal kernel, xs, ys, y_poly, x_poly, xorder, yorder, xmaxorder, ymaxorder
         n = len(rx)
         mx = len(xs)
         my = len(ys)
@@ -732,7 +732,10 @@ class KnW(object):
         type_same = isinstance(other, type(self))
         if not type_same:
             raise TypeError("the argument is not a KnW object")
-        return (self.kernel == other.kernel).all()
+        try:
+            return (self.kernel == other.kernel).all()
+        except AttributeError:
+            return False
 
     def same_size(self, other):
         """Return True if 2 KnW object has the same 4D size."""
