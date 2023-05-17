@@ -17,11 +17,15 @@ wrongZknw.vkernel = "something not correct"
 wrongTknw = sd.KnW()
 wrongTknw.tkernel = "something not correct"
 
-prefetched = np.array(ecco["SALT"][slice(1, 2)])
+
+@pytest.fixture
+def prefetched(ecco):
+    return np.array(ecco["SALT"][slice(1, 2)])
+
 
 # use float number to make particle
 @pytest.fixture
-def ep():
+def ep(ecco):
     return sd.particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=ecco)
 
 
@@ -57,15 +61,18 @@ def test_dict_input(ep):
 
 
 @pytest.mark.parametrize(
-    "varname,knw,prefetched",
+    "varname,knw,num_prefetched",
     [
-        ("SALT", uknw, prefetched),
-        (("SALT", "SALT"), (uknw, uknw), (prefetched, prefetched)),
+        ("SALT", uknw, "one"),
+        (("SALT", "SALT"), (uknw, uknw), "two"),
     ],
 )
-def test_diff_prefetched(ep, varname, knw, prefetched):
+def test_diff_prefetched(ep, prefetched, varname, knw, num_prefetched):
+    prefetch = prefetched
+    if num_prefetched == "two":
+        prefetch = (prefetch, prefetch)
     ep._register_interpolation_input(
-        varname, knw, prefetched=prefetched, i_min={"SALT": (1, 0, 0, 0, 0)}
+        varname, knw, prefetched=prefetch, i_min={"SALT": (1, 0, 0, 0, 0)}
     )
 
 
@@ -74,14 +81,14 @@ def test_diff_prefetched(ep, varname, knw, prefetched):
     [
         (None, -37.5, uknw),
         (prefetched, -37.5, uknw),
-        ('ecco', np.ones((2, 2)), uknw),
-        ('ecco', np.ones(12), uknw),
-        ('ecco', np.array([-37.5, -37.4]), wrongZknw),
-        ('ecco', np.array([-37.5, -37.4]), wrongTknw),
+        ("ecco", np.ones((2, 2)), uknw),
+        ("ecco", np.ones(12), uknw),
+        ("ecco", np.array([-37.5, -37.4]), wrongZknw),
+        ("ecco", np.array([-37.5, -37.4]), wrongTknw),
     ],
 )
 def test_init_valueerror(ecco, data, x, knw):
-    if isinstance(data,str):
+    if isinstance(data, str):
         data = eval(data)
     with pytest.raises(ValueError):
         the_p = sd.particle(
@@ -95,7 +102,7 @@ def test_init_valueerror(ecco, data, x, knw):
 
 
 @pytest.mark.parametrize(
-    "varName,knw,prefetched,i_min",
+    "varName,knw,prefetch,i_min",
     [
         (1, uknw, None, None),
         ("SALT", [uknw, vknw], None, None),
@@ -108,8 +115,6 @@ def test_init_valueerror(ecco, data, x, knw):
         ("SALT", uknw, None, 1),
     ],
 )
-def test_interp_register_error(varName, knw, prefetched, i_min):
+def test_interp_register_error(ep, varName, knw, prefetch, i_min):
     with pytest.raises(ValueError):
-        ep._register_interpolation_input(
-            varName, knw, prefetched=prefetched, i_min=i_min
-        )
+        ep._register_interpolation_input(varName, knw, prefetched=prefetch, i_min=i_min)
