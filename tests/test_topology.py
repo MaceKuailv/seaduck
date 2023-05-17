@@ -5,17 +5,30 @@ import xarray as xr
 import seaduck.kernelNweight as kw
 from seaduck.topology import topology
 
-Datadir = "tests/Data/"
-curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
-rect = xr.open_dataset("{}MITgcm_rect_nc.nc" "".format(Datadir))
-ecco = xr.open_zarr(Datadir + "small_ecco")
+# Datadir = "tests/Data/"
+# curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
+# rect = xr.open_dataset("{}MITgcm_rect_nc.nc" "".format(Datadir))
+# ecco = xr.open_zarr(Datadir + "small_ecco")
 
-tp = topology(ecco)
+
+@pytest.fixture
+def tp(xr_ecco):
+    return topology(xr_ecco)
+
+
+@pytest.fixture
+def xr_rect(xr_rect):
+    return xr_rect
+
+
+@pytest.fixture
+def xr_curv(xr_curv):
+    return xr_curv
 
 
 @pytest.mark.parametrize("face", [1, 2, 4, 5, 6, 7, 8, 10, 11])
 @pytest.mark.parametrize("edge", [0, 1, 2, 3])
-def test_get_the_neighbor_face(face, edge):
+def test_get_the_neighbor_face(tp, face, edge):
     nf, ne = tp.get_the_other_edge(face, edge)
     assert nf in range(13)
     assert ne in range(4)
@@ -33,19 +46,19 @@ def test_get_the_neighbor_face(face, edge):
 @pytest.mark.parametrize(
     "func", ["tpp.get_the_other_edge(0,0)", "tpp.mutual_direction(0,1)"]
 )
-def test_not_applicable(typ, func, error):
-    tpp = topology(ecco, typ)
+def test_not_applicable(xr_ecco, typ, func, error):
+    tpp = topology(xr_ecco, typ)
     with pytest.raises(error):
         eval(func)
 
 
 @pytest.mark.parametrize("face,edge", [(0, 1), (3, 1), (9, 3), (12, 3)])
-def test_antarctica_error(face, edge):
+def test_antarctica_error(tp, face, edge):
     with pytest.raises(IndexError):
         nf, ne = tp.get_the_other_edge(face, edge)
 
 
-def test_mutual_face():
+def test_mutual_face(tp):
     e1, e2 = tp.mutual_direction(0, 1)
     assert e1 in [0, 1, 2, 3]
 
@@ -63,13 +76,14 @@ def test_mutual_face():
         ((6, 0, 0), 2, (2, 89, 89)),
     ],
 )
-def test_llc_ind_tend(ind, tend, result):
+def test_llc_ind_tend(tp, ind, tend, result):
     res = tp.ind_tend(ind, tend)
     assert res == result
 
 
-@pytest.mark.parametrize("ds", [curv, rect])
-def test_other_ind_tend(ds):
+@pytest.mark.parametrize("ds", ["xr_rect", "xr_curv"])
+def test_other_ind_tend(ds, xr_rect, xr_curv):
+    ds = eval(ds)
     temp_tp = topology(ds)
     temp_tp.ind_tend((0, 0), 3)
 
@@ -86,7 +100,7 @@ mundane = np.array([[[1.0, 1.0]], [[0.0, 0.0]], [[0.0, -0.0]], [[1.0, 1.0]]])
         (np.array([[6, 10]]), False),
     ],
 )
-def test_4_matrix(fface, cis):
+def test_4_matrix(tp, fface, cis):
     ans = np.array(tp.four_matrix_for_uv(fface))
     if cis:
         assert np.allclose(ans, mundane)
@@ -102,12 +116,12 @@ def test_4_matrix(fface, cis):
         ("tp.ind_moves((1,45,45),['left','left'])", ValueError),
     ],
 )
-def test_other_errors(stmt, error):
+def test_other_errors(tp, stmt, error):
     with pytest.raises(error):
         eval(stmt)
 
 
-def test_ind_moves_with1illegal():
+def test_ind_moves_with1illegal(tp):
     tp.ind_moves((1, -1, 89), [0, 0])
 
 
@@ -121,7 +135,7 @@ def test_ind_moves_with1illegal():
         ((4, 45, 89), 3, (8, 0, 45)),
     ],
 )
-def test_ind_tend_v(ind, tend, ans):
+def test_ind_tend_v(tp, ind, tend, ans):
     res = tp.ind_tend(ind, tend, cuvg="V")
     assert res == ans
 
@@ -135,12 +149,12 @@ def test_ind_tend_v(ind, tend, ans):
         ((4, 45, 89), 1, (8, 0, 45)),
     ],
 )
-def test_ind_tend_u(ind, tend, ans):
+def test_ind_tend_u(tp, ind, tend, ans):
     res = tp.ind_tend(ind, tend, cuvg="U")
     assert res == ans
 
 
-def test_wall_between():
+def test_wall_between(tp):
     # it is a bit hard to think about an example
     # that uses this case from higher level.
     uv, R = tp._find_wall_between((11, 0, 45), (8, 89, 45))

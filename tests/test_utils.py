@@ -6,8 +6,8 @@ import xarray as xr
 
 import seaduck.utils as _u
 
-Datadir = "tests/Data/"
-curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
+# Datadir = "tests/Data/"
+# curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
 
 
 def test_rel_lon():
@@ -66,6 +66,6 @@ def test_none_in():
     assert not (_u.NoneIn([1, 2, 3]))
 
 
-def test_cs_sn():
-    _u.missing_cs_sn(curv)
-    assert isinstance(curv["CS"], xr.DataArray)
+def test_cs_sn(xr_curv):
+    _u.missing_cs_sn(xr_curv)
+    assert isinstance(xr_curv["CS"], xr.DataArray)
