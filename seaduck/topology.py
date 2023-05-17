@@ -290,8 +290,11 @@ class topology:
                     self.typ = "LLC"
                     # we can potentially generate the face connection in runtime
                     # say, put the csv file on cloud
-                elif self.num_face == 6:
-                    self.typ = "cubed_sphere"
+                else:
+                    raise NotImplementedError(
+                        "Other complex topology is not implemented yet."
+                        "If you want to work with such data, please contact the authors."
+                    )
             elif len(h_shape) == 2:
                 self.iymax, self.ixmax = h_shape
                 self.iymax -= 1
