@@ -680,7 +680,7 @@ class particle(position):
                     self.ocedata.CS[self.face, self.iy, self.ix],
                     self.ocedata.SN[self.face, self.iy, self.ix],
                 )
-                self.dx, self.dy, self.dz = (
+                self.dx, self.dy = (
                     self.ocedata.dX[self.face, self.iy, self.ix],
                     self.ocedata.dY[self.face, self.iy, self.ix],
                 )

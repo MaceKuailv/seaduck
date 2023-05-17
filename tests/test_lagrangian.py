@@ -83,14 +83,14 @@ def test_callback(curv):
         y=np.array([70.5]),
         x=np.array([-14.0]),
         z=np.array([-10.0]),
-        t=np.array([1832320850.0]),
+        t=np.array([curv.ts[0]]),
         data=curv,
         uname="U",
         vname="V",
         wname="W",
         callback=lambda pt: pt.lon > -14.01,
     )
-    curv_p.to_list_of_time(normal_stops=[1832320850.0, 1832320880.0], update_stops=[])
+    curv_p.to_list_of_time(normal_stops=[curv.ts[0], curv.ts[-1]], update_stops=[])
 
 
 @pytest.mark.parametrize(
@@ -109,5 +109,64 @@ def test_lagrange_error(statement, error, p, ecco_p):
         eval(statement)
 
 
-def test_uvw_array():
-    pass
+def test_multidim_uvw_array(ecco_p):
+    ecco_p.it[0] += 1
+    ecco_p.update_uvw_array()
+
+
+def test_update_w_array(ecco_p, ecco):
+    ecco["u0"] = ecco["UVELMASS"].isel(time=0)
+    ecco["v0"] = ecco["VVELMASS"].isel(time=0)
+    ecco["w0"] = ecco["WVELMASS"].isel(time=0)
+    delattr(ecco_p, "warray")
+    ecco_p.uname = "u0"
+    ecco_p.vname = "v0"
+    ecco_p.wname = "w0"
+
+    ecco_p.update_uvw_array()
+
+
+def test_update_after_cell_change(ecco_p, ecco):
+    ecco["SN"] = np.array(ecco["SN"])
+    ecco["CS"] = np.array(ecco["CS"])
+    ecco_p.ocedata.readiness["h"] = "local_cartesian"
+
+    ecco_p.update_after_cell_change()
+
+
+def test_update_after_cell_change_no_face(curv):
+    curv._add_missing_cs_sn()
+    curv.readiness["h"] = "local_cartesian"
+    curv_p = sd.particle(
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([curv.ts[0]]),
+        data=curv,
+        uname="U",
+        vname="V",
+        wname="W",
+        transport=True,
+    )
+    curv_p.update_after_cell_change()
+
+
+def test_get_vol(curv):
+    curv_p = sd.particle(
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([curv.ts[0]]),
+        data=curv,
+        uname="U",
+        vname="V",
+        wname="W",
+        transport=True,
+    )
+    curv_p.get_vol()
+
+
+def test_maxiteration(ecco_p):
+    ecco_p.max_iteration = 1
+    delattr(ecco_p, "px")
+    ecco_p.to_next_stop(tf)
