@@ -65,7 +65,6 @@ def _partial_flatten(ind):
         return tuple(R)
     elif isinstance(ind, np.ndarray):
         shape = ind.shape
-
         num_neighbor = 1
         for i in range(1, len(shape)):
             num_neighbor *= shape[i]
@@ -672,7 +671,10 @@ class position:
                 if self.face is None:
                     for j in range(len(var)):
                         new_varName.append(var[j])
-                        new_prefetched.append(prefetched[i][j])
+                        if prefetched[i] is not None:
+                            new_prefetched.append(prefetched[i][j])
+                        else:
+                            new_prefetched.append(None)
                         new_knw.append(knw[i][j])
                         new_i_min.append(i_min[i])
                 else:
@@ -1112,7 +1114,7 @@ class position:
                     rz = 0
             elif "Zl" in dims:
                 this_bottom_scheme = None
-                if self.rz is not None:
+                if self.rzl is not None:
                     if knw.vkernel == "nearest":
                         rz = self.rzl
                     else:
