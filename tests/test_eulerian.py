@@ -3,11 +3,11 @@ import xarray as xr
 import seaduck as sd
 import pytest
 
-Datadir = "tests/Data/"
-ecco = xr.open_zarr(Datadir + "small_ecco")
-ecco = sd.OceData(ecco)
-avis = xr.open_dataset(Datadir + "aviso_example.nc")
-avis = sd.OceData(avis)
+# Datadir = "tests/Data/"
+# ecco = xr.open_zarr(Datadir + "small_ecco")
+# ecco = sd.OceData(ecco)
+# avis = xr.open_dataset(Datadir + "aviso_example.nc")
+# avis = sd.OceData(avis)
 
 uknw = sd.lagrangian.uknw
 vknw = sd.lagrangian.vknw
@@ -20,10 +20,12 @@ wrongTknw.tkernel = "something not correct"
 prefetched = np.array(ecco["SALT"][slice(1, 2)])
 
 # use float number to make particle
-ep = sd.particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=ecco)
+@pytest.fixture
+def ep():
+    return sd.particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=ecco)
 
 
-def test_tz_not_None():
+def test_tz_not_None(avis):
     ap = sd.position()
     ap.from_latlon(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=avis)
 
@@ -36,16 +38,16 @@ def test_tz_not_None():
         (uknw, ["Z"]),
     ],
 )
-def test_fatten(knw, required):
+def test_fatten(ep, knw, required):
     ep.fatten(knw, required=required)
 
 
 @pytest.mark.parametrize("varname,knw", [("WVELMASS", uknw), ("UVELMASS", wknw)])
-def test_interp_vertical(varname, knw):
+def test_interp_vertical(ep, varname, knw):
     ep.interpolate(varname, knw)
 
 
-def test_dict_input():
+def test_dict_input(ep):
     ep._register_interpolation_input(
         "SALT",
         {"SALT": uknw},
@@ -61,7 +63,7 @@ def test_dict_input():
         (("SALT", "SALT"), (uknw, uknw), (prefetched, prefetched)),
     ],
 )
-def test_diff_prefetched(varname, knw, prefetched):
+def test_diff_prefetched(ep, varname, knw, prefetched):
     ep._register_interpolation_input(
         varname, knw, prefetched=prefetched, i_min={"SALT": (1, 0, 0, 0, 0)}
     )
@@ -72,13 +74,15 @@ def test_diff_prefetched(varname, knw, prefetched):
     [
         (None, -37.5, uknw),
         (prefetched, -37.5, uknw),
-        (ecco, np.ones((2, 2)), uknw),
-        (ecco, np.ones(12), uknw),
-        (ecco, np.array([-37.5, -37.4]), wrongZknw),
-        (ecco, np.array([-37.5, -37.4]), wrongTknw),
+        ('ecco', np.ones((2, 2)), uknw),
+        ('ecco', np.ones(12), uknw),
+        ('ecco', np.array([-37.5, -37.4]), wrongZknw),
+        ('ecco', np.array([-37.5, -37.4]), wrongTknw),
     ],
 )
-def test_init_valueerror(data, x, knw):
+def test_init_valueerror(ecco, data, x, knw):
+    if isinstance(data,str):
+        data = eval(data)
     with pytest.raises(ValueError):
         the_p = sd.particle(
             x=x,
