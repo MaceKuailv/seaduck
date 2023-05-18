@@ -33,7 +33,13 @@ path = "tests/testData/"
 
 @pytest.fixture(scope="module")
 def xr_ecco():
-    ds = xr.open_zarr(path + "ecco.zarr")
+    fnames = pooch.retrieve(
+        url="https://zenodo.org/record/7916559/files/Data.tar.gz?download=1",
+        processor=Untar(),
+        known_hash="ab5ef7bbd3c0ba05c858e136656508"
+        "6d9873bc8271d37f7912143512b892d2d9",
+        )
+    ds = xr.open_zarr(fnames)
     rand1 = np.random.random((50, 13, 90, 90))
     rand2 = np.random.random((50, 13, 90, 90))
     rand3 = np.random.random((50, 13, 90, 90))
