@@ -41,3 +41,40 @@ def test_incomplete_data(data, curv_prime, curv_prprm, curv_prprp):
     data = eval(data)
     oo = ocedata(data)
     oo.find_rel_h(np.array([-14]), np.array([70.5]))
+
+
+def test_auto_alias(xr_curv):
+    with pytest.raises(NotImplementedError):
+        ocedata(xr_curv, alias="auto")
+
+
+def test_manual_alias(xr_curv):
+    an_alias = {
+        "dXC": "dxC",
+        "dYC": "dyC",
+        "dZ": "drC",
+        "dXG": "dxG",
+        "dYG": "dyG",
+        "dZl": "drF",
+        "SALT": "S",
+    }
+    od = ocedata(xr_curv, an_alias)
+    od["SALT"] = xr.ones_like(od._ds["XC"])
+    try:
+        import pandas
+
+        od.show_alias()
+    except ImportError:
+        with pytest.raises(NameError):
+            od.show_alias()
+
+
+def test_add_missing_grid(ecco):
+    # TODO
+    ecco._add_missing_grid()
+
+
+def test_not_h_ready(xr_curv):
+    temp = xr_curv.drop_vars(["XG", "YG"])
+    with pytest.raises(ValueError):
+        ocedata(temp)

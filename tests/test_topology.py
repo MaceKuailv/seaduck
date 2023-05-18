@@ -4,6 +4,7 @@ import xarray as xr
 
 import seaduck.kernelNweight as kw
 from seaduck.topology import topology
+from seaduck.topology import llc_mutual_direction, llc_get_uv_mask_from_face
 
 # Datadir = "tests/Data/"
 # curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
@@ -17,13 +18,13 @@ def tp(xr_ecco):
 
 
 @pytest.fixture
-def xr_rect(xr_rect):
-    return xr_rect
+def rect_tp(xr_rect):
+    return topology(xr_rect)
 
 
 @pytest.fixture
-def xr_curv(xr_curv):
-    return xr_curv
+def avis_tp(xr_aviso):
+    return topology(xr_aviso)
 
 
 @pytest.mark.parametrize("face", [1, 2, 4, 5, 6, 7, 8, 10, 11])
@@ -81,11 +82,21 @@ def test_llc_ind_tend(tp, ind, tend, result):
     assert res == result
 
 
-@pytest.mark.parametrize("ds", ["xr_rect", "xr_curv"])
-def test_other_ind_tend(ds, xr_rect, xr_curv):
-    ds = eval(ds)
-    temp_tp = topology(ds)
-    temp_tp.ind_tend((0, 0), 3)
+@pytest.mark.parametrize("temp_tp", ["avis_tp", "rect_tp"])
+@pytest.mark.parametrize("tend", [0, 1, 2, 3])
+def test_boxish_ind_tend(temp_tp, avis_tp, rect_tp, tend):
+    temp_tp = eval(temp_tp)
+    temp_tp.ind_tend((0, 0), tend)
+
+
+@pytest.mark.parametrize("temp_tp", ["avis_tp", "rect_tp"])
+@pytest.mark.parametrize("tend", [0, 3])
+@pytest.mark.parametrize("start", ["(temp_tp.ixmax, temp_tp.iymax)", "(-1,-1)"])
+def test_boundary_case(temp_tp, avis_tp, rect_tp, tend, start):
+    temp_tp = eval(temp_tp)
+    out = temp_tp.ind_tend(eval(start), tend)
+    if temp_tp.typ == "box" or start == "(-1,-1)" or tend == 0:
+        assert -1 in out
 
 
 mundane = np.array([[[1.0, 1.0]], [[0.0, 0.0]], [[0.0, -0.0]], [[1.0, 1.0]]])
@@ -106,6 +117,17 @@ def test_4_matrix(tp, fface, cis):
         assert np.allclose(ans, mundane)
     else:
         assert not np.allclose(ans, mundane)
+
+
+def test_unable_to_cereate(xr_rect):
+    temp = xr_rect.drop_vars("XC")
+    with pytest.raises(KeyError):
+        topology(temp)
+
+
+def test_create_without_time(xr_aviso):
+    temp = xr_aviso.drop_vars("time")
+    topology(temp)
 
 
 @pytest.mark.parametrize(
@@ -164,6 +186,45 @@ def test_wall_between(tp):
     uv, R = tp._find_wall_between((8, 45, 0), (7, 45, 89))
     assert uv == "U"
     assert R == (8, 45, 0)
+
+
+@pytest.mark.parametrize(
+    "face,nface,rot",
+    [
+        (4, 9, True),
+        (3, 8, True),
+        (9, 4, True),
+        (8, 3, True),
+        (0, 4, False),
+        (1, 3, False),
+    ],
+)
+def test_transitive_mututal_direction(face, nface, rot):
+    e1, e2 = llc_mutual_direction(face, nface, transitive=True)
+    isrot = (e1 // 2 + e2 // 2) % 2
+    assert isrot == rot
+
+
+@pytest.mark.parametrize("transitive,face, nface", [(True, 0, 7), (False, 4, 9)])
+def test_mutual_face_error(transitive, face, nface):
+    with pytest.raises(ValueError):
+        llc_mutual_direction(face, nface, transitive=transitive)
+
+
+def test_uv_mask():
+    faces = np.array([1, 1, 1, 1, 4])
+    llc_get_uv_mask_from_face(faces)
+
+
+def test_uv_mask_error(rect_tp):
+    faces = np.array([1, 1, 1, 1, 4])
+    with pytest.raises(Exception):
+        rect_tp.get_uv_mask_from_face(faces)
+
+
+def test_wall_between_itself(tp):
+    with pytest.raises(IndexError):
+        tp._find_wall_between((1, 14, 14), (1, 14, 14))
 
 
 # def test_fatten_ind_h_ecco():

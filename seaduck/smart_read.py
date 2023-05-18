@@ -4,7 +4,7 @@ import numpy as np
 import xarray as xr
 
 
-def smart_read(da, ind):
+def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
     """Read from a xarray.DataArray given tuple indexes.
 
     Try to do it fast and smartly.
@@ -24,9 +24,9 @@ def smart_read(da, ind):
     #     print('read called')
     the_shape = ind[0].shape
     ind = tuple([i.ravel() for i in ind])
-    memory_chunk = 3
-    xarray_more_efficient = 100
-    if da.chunks is None:
+    if len(da.dims) != len(ind):
+        raise ValueError("index does not match the number of dimensions")
+    if da.chunks is None or da.chunks == {}:
         npck = np.array(da)
         return npck[ind].reshape(the_shape)
     if (
@@ -34,13 +34,11 @@ def smart_read(da, ind):
     ):  # if the number of chunks is small don't bother
         npck = np.array(da)
         return npck[ind].reshape(the_shape)
-    cksz = orderdic(da.chunksizes)
+    cksz = orderdic(zip(da.dims, da.chunks))
     keys = list(cksz.keys())
     n = len(ind[0])
     result = np.zeros(n)
 
-    if len(keys) != len(ind):
-        raise Exception("index does not match the number of dimensions")
     new_dic = dict()
     # typically what happens is that the first a few indexes are chunked
     # here we figure out what is the last dimension chunked.
