@@ -4,10 +4,6 @@ import xarray as xr
 
 import seaduck as sd
 
-# Datadir = "tests/Data/"
-# ecco = xr.open_zarr(Datadir + "small_ecco")
-# oce = sd.OceData(ecco)
-
 N = int(1e2)
 
 # Change the vertical depth of the particles here

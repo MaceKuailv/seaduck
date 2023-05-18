@@ -9,10 +9,6 @@ from seaduck import OceData
 # TODO: have a dataset that actually has maskC and is also not ECCO in the test datasets
 
 
-# Datadir = "tests/Data/"
-
-
-# ecco = xr.open_zarr(Datadir + "small_ecco")
 @pytest.fixture
 def tp(xr_ecco):
     return topology(xr_ecco)

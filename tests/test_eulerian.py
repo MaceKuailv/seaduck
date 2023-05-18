@@ -4,26 +4,6 @@ import seaduck as sd
 import pytest
 import copy
 
-# Datadir = "tests/Data/"
-# ecco = xr.open_zarr(Datadir + "small_ecco")
-# ecco = sd.OceData(ecco)
-# avis = xr.open_dataset(Datadir + "aviso_example.nc")
-# avis = sd.OceData(avis)
-
-
-# @pytest.fixture
-# def uuknw():
-#     return sd.lagrangian.uknw
-
-
-# @pytest.fixture
-# def vvknw():
-#     return sd.lagrangian.vknw
-
-
-# @pytest.fixture
-# def wwknw():
-#     return sd.lagrangian.wknw
 
 uknw = sd.lagrangian.uknw
 vknw = sd.lagrangian.vknw
