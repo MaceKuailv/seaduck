@@ -8,38 +8,17 @@ import numpy as np
 
 from seaduck import OceData
 
-
-# # Download data if necessary
-# def pytest_configure():
-#     fnames = pooch.retrieve(
-#         url="https://zenodo.org/record/7916559/files/Data.tar.gz?download=1",
-#         processor=Untar(),
-#         known_hash="c27a566ed280f3a579dd2bf6846"
-#         "2a427d7d0d1286cdd8db2a4a035495f40f7e4",
-#     )
-#     symlink_args = dict(
-#         src=f"{os.path.commonpath(fnames)}",
-#         dst="./tests/Data",
-#         target_is_directory=True,
-#     )
-#     try:
-#         print(f"Linking {symlink_args['src']!r} to {symlink_args['dst']!r}")
-#         os.symlink(**symlink_args)
-#     except FileExistsError:
-#         os.unlink("./tests/Data")
-#         os.symlink(**symlink_args)
 path = "tests/testData/"
 
 
 @pytest.fixture(scope="module")
 def xr_ecco():
     fnames = pooch.retrieve(
-        url="https://zenodo.org/record/7916559/files/Data.tar.gz?download=1",
+        url="https://zenodo.org/record/7949168/files/ecco.tar.gz?download=1",
         processor=Untar(),
-        known_hash="ab5ef7bbd3c0ba05c858e136656508"
-        "6d9873bc8271d37f7912143512b892d2d9",
-        )
-    ds = xr.open_zarr(fnames)
+        known_hash="ab5ef7bbd3c0ba05c858e1366565086d9873bc8271d37f7912143512b892d2d9",
+    )
+    ds = xr.open_zarr(os.path.commonpath(fnames))
     rand1 = np.random.random((50, 13, 90, 90))
     rand2 = np.random.random((50, 13, 90, 90))
     rand3 = np.random.random((50, 13, 90, 90))
@@ -77,17 +56,35 @@ def xr_ecco():
 
 @pytest.fixture(scope="module")
 def xr_aviso():
-    return xr.open_zarr(path + "aviso.zarr")
+    fnames = pooch.retrieve(
+        url="https://zenodo.org/record/7949168/files/aviso.tar.gz?download=1",
+        processor=Untar(),
+        known_hash="e2377044ee4ea27aee582ede5b753fa7371d7557c11b2fa3bf90bd1dad24c287",
+    )
+    ds = xr.open_zarr(os.path.commonpath(fnames))
+    return ds
 
 
 @pytest.fixture(scope="module")
 def xr_curv():
-    return xr.open_zarr(path + "curv.zarr")
+    fnames = pooch.retrieve(
+        url="https://zenodo.org/record/7949168/files/curv.tar.gz?download=1",
+        processor=Untar(),
+        known_hash="8773c8640be1f2770782a1780afbf6564f34670e6c0052274e3cc61be2e1a055",
+    )
+    ds = xr.open_zarr(os.path.commonpath(fnames))
+    return ds
 
 
 @pytest.fixture(scope="module")
 def xr_rect():
-    return xr.open_zarr(path + "rect.zarr")
+    fnames = pooch.retrieve(
+        url="https://zenodo.org/record/7949168/files/rect.tar.gz?download=1",
+        processor=Untar(),
+        known_hash="34d0a7c22b79f0bf2926f90e99a9da7bb13a148027155cec116d4b544ace4f3b",
+    )
+    ds = xr.open_zarr(os.path.commonpath(fnames))
+    return ds
 
 
 @pytest.fixture(scope="module")

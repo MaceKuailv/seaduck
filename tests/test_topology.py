@@ -6,11 +6,6 @@ import seaduck.kernelNweight as kw
 from seaduck.topology import topology
 from seaduck.topology import llc_mutual_direction, llc_get_uv_mask_from_face
 
-# Datadir = "tests/Data/"
-# curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
-# rect = xr.open_dataset("{}MITgcm_rect_nc.nc" "".format(Datadir))
-# ecco = xr.open_zarr(Datadir + "small_ecco")
-
 
 @pytest.fixture
 def tp(xr_ecco):

@@ -3,15 +3,6 @@ import numpy as np
 import pytest
 import xarray as xr
 
-# Datadir = "tests/Data/"
-# aviso = xr.open_dataset(Datadir + "aviso_example.nc")
-# ecco = xr.open_zarr(Datadir + "small_ecco")
-# curv = xr.open_dataset(Datadir + "MITgcm_curv_nc.nc")
-
-# avis = sd.OceData(aviso)
-# eco = sd.OceData(ecco)
-# cuv = sd.OceData(curv)
-
 # Set the number of particles here.
 N = int(9)
 

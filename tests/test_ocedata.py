@@ -6,10 +6,6 @@ import seaduck.OceData as ocedata
 import seaduck.utils as _u
 
 
-# Datadir = "tests/Data/"
-# ecco = xr.open_zarr(Datadir + "small_ecco")
-# curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
-# rect = xr.open_dataset("{}MITgcm_rect_nc.nc" "".format(Datadir))
 @pytest.fixture
 def curv_prime(xr_curv, curv):
     od = xr_curv.drop_vars(["YG"])

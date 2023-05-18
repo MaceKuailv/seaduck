@@ -6,9 +6,6 @@ import xarray as xr
 
 import seaduck.utils as _u
 
-# Datadir = "tests/Data/"
-# curv = xr.open_dataset("{}MITgcm_curv_nc.nc" "".format(Datadir))
-
 
 def test_rel_lon():
     assert _u.rel_lon(-5, 125) == 230
