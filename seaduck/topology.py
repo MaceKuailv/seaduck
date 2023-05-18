@@ -39,7 +39,11 @@ def llc_mutual_direction(face, nface, transitive=False):
     """
     edge_n = np.where(llc_face_connect[face] == nface)
     nedge_n = np.where(llc_face_connect[nface] == face)
-    if edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]:
+    try:
+        found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
+    except IndexError:
+        found = False
+    if found:
         return edge_n[0][0], nedge_n[0][0]
     elif transitive:
         common = -1
@@ -108,7 +112,7 @@ def box_ind_tend(ind, tend, iymax, ixmax):
     # it would be better to raise an error here.
     if (iy > iymax) or (iy < 0):
         return (-1, -1)
-    if (iy > iymax) or (iy < 0):
+    if (ix > ixmax) or (ix < 0):
         return (-1, -1)
     return (iy, ix)
 
