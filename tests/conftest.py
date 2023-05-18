@@ -4,6 +4,7 @@ import pooch
 from pooch import Untar
 import pytest
 import xarray as xr
+import numpy as np
 
 from seaduck import OceData
 
@@ -27,27 +28,60 @@ from seaduck import OceData
 #     except FileExistsError:
 #         os.unlink("./tests/Data")
 #         os.symlink(**symlink_args)
-path = "tests/Data/"
+path = "tests/testData/"
 
 
 @pytest.fixture(scope="module")
 def xr_ecco():
-    return xr.open_zarr(path + "small_ecco")
+    ds = xr.open_zarr(path + "ecco.zarr")
+    rand1 = np.random.random((50, 13, 90, 90))
+    rand2 = np.random.random((50, 13, 90, 90))
+    rand3 = np.random.random((50, 13, 90, 90))
+    ds["UVELMASS"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Y", "Xp1")
+    )
+    ds["UVELMASS"][0] = ds.UVELMASS1
+    ds["UVELMASS"][1] = ds.UVELMASS1 * rand1
+    ds["UVELMASS"][2] = ds.UVELMASS1 * rand2
+
+    ds["WVELMASS"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Zl", "face", "Y", "X")
+    )
+    ds["WVELMASS"][0] = ds.WVELMASS1
+    ds["WVELMASS"][1] = ds.WVELMASS1 * rand1
+    ds["WVELMASS"][2] = ds.WVELMASS1 * rand2
+
+    ds["VVELMASS"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Yp1", "X")
+    )
+    ds["VVELMASS"][0] = ds.VVELMASS1
+    ds["VVELMASS"][1] = ds.VVELMASS1 * rand1
+    ds["VVELMASS"][2] = ds.VVELMASS1 * rand2
+
+    ds["SALT"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Y", "X")
+    )
+    ds["SALT_snap"] = xr.DataArray(
+        np.stack([rand3, rand1], axis=0), dims=("time_midp", "Z", "face", "Y", "X")
+    )
+    ds["ETAN"] = xr.DataArray(rand1[:3], dims=("time", "face", "Y", "X"))
+    ds["ETAN_snap"] = xr.DataArray(rand3[:2], dims=("time_midp", "face", "Y", "X"))
+    return ds
 
 
 @pytest.fixture(scope="module")
 def xr_aviso():
-    return xr.open_dataset(path + "aviso_example.nc")
+    return xr.open_zarr(path + "aviso.zarr")
 
 
 @pytest.fixture(scope="module")
 def xr_curv():
-    return xr.open_dataset(path + "MITgcm_curv_nc.nc")
+    return xr.open_zarr(path + "curv.zarr")
 
 
 @pytest.fixture(scope="module")
 def xr_rect():
-    return xr.open_dataset(path + "MITgcm_rect_nc.nc")
+    return xr.open_zarr(path + "rect.zarr")
 
 
 @pytest.fixture(scope="module")
