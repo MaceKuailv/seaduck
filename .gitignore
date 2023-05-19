@@ -357,5 +357,6 @@ tests/testDat*
 assets/
 *.pyc
 *.nc
+seaduck/version.py
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,vim,visualstudiocode,pycharm

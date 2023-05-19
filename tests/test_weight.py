@@ -2,6 +2,27 @@ import numpy as np
 import pytest
 
 import seaduck.kernelNweight as kw
+import seaduck as sd
+
+sd.rcParam["debug_level"] = "very_high"
+
+
+@pytest.fixture
+def aknw():
+    return kw.KnW(
+        inheritance=[[0, 1, 2, 3, 4, 5, 6, 7, 8]],
+        hkernel="interp",
+        vkernel="linear",
+        tkernel="dt",
+    )
+
+
+def test_same_size(aknw):
+    assert not aknw.same_size(sd.lagrangian.uknw)
+
+
+def test_equal(aknw):
+    assert not aknw == 1
 
 
 @pytest.mark.parametrize(
@@ -222,3 +243,32 @@ def test_dy(kernel, rx, ry, order):
 def test_order_too_high_error(kernel, order, ktype):
     with pytest.raises(Exception):
         kw.kernel_weight(kernel, ktype=ktype, order=order)
+
+
+def test_plot_kernel():
+    try:
+        import matplotlib
+
+        kw.show_kernels()
+    except ImportError:
+        with pytest.raises(NameError):
+            kw.show_kernels()
+
+
+def test_dt_and_bottom_scheme(aknw):
+    aknw.get_weight(np.array([0.618]), np.array([0.0618]))
+
+
+@pytest.mark.parametrize("which", ["dx", "dy"])
+def test_maxorder_dxdy_square(which):
+    kkk = np.array(
+        [[0, 0], [0, 1], [1, 0], [1, 1], [1, 2], [0, 2], [2, 2], [2, 0], [2, 1]]
+    )
+    xorder = 0
+    yorder = 0
+    if which == "dx":
+        xorder = 2
+    else:
+        yorder = 2
+    func = kw.kernel_weight_s(kkk, xorder, yorder)
+    func(np.array([0.0]), np.array([0.0]))
