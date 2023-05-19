@@ -60,9 +60,9 @@ class OceData(object):
         self.tp = topology(data)
         if alias is None:
             self.alias = no_alias
-        elif alias == "auto":  # pragma: no cover
+        elif alias == "auto":
             raise NotImplementedError("auto alias not yet implemented")
-        elif isinstance(alias, dict):  # pragma: no cover
+        elif isinstance(alias, dict):
             self.alias = alias
 
         try:
@@ -73,7 +73,7 @@ class OceData(object):
         self.readiness = readiness
         if readiness:
             self.grid2array()
-        else:  # pragma: no cover
+        else:
             raise ValueError(
                 f"""
             use add_missing_variables or set_alias to create {missing},
@@ -82,7 +82,7 @@ class OceData(object):
             )
 
     def __setitem__(self, key, item):
-        if isinstance(item, xr.DataArray):  # pragma: no cover
+        if isinstance(item, xr.DataArray):
             if key in self.alias.keys():
                 self._ds[self.alias[key]] = item
             else:
@@ -130,7 +130,7 @@ class OceData(object):
             self.dlat = np.gradient(self["lat"]) * ratio
             readiness["h"] = "rectilinear"
             # corresponding to a rectilinear dataset
-        else:  # pragma: no cover
+        else:
             readiness["h"] = False
             # readiness['overall'] = False
             missing.append(
@@ -146,11 +146,11 @@ class OceData(object):
 
         return readiness, missing
 
-    def _add_missing_grid(self):  # pragma: no cover
+    def _add_missing_grid(self):
         # TODO:
         pass
 
-    def show_alias(self):  # pragma: no cover
+    def show_alias(self):
         """Print out the alias in a nice pd.DataFrame format."""
         try:
             return _pd.DataFrame.from_dict(
@@ -161,8 +161,7 @@ class OceData(object):
 
     def _add_missing_cs_sn(self):
         try:
-            assert self["CS"] is not None
-            assert self["SN"] is not None  # pragma: no cover
+            assert (self["SN"] is not None) and (self["CS"] is not None)
         except (AttributeError, AssertionError):
             xc = np.deg2rad(np.array(self["XC"]))
             yc = np.deg2rad(np.array(self["YC"]))

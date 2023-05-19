@@ -7,3 +7,4 @@ dependencies:
 - xarray
 - scipy
 - netCDF4
+- dask

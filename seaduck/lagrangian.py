@@ -11,7 +11,7 @@ deg2m = 6271e3 * np.pi / 180
 
 
 @compileable
-def increment(t, u, du):  # pragma: no cover
+def increment(t, u, du):
     """Find how far it will travel in duration t.
 
     For a one dimensional particle with speed u and speed derivative du,
@@ -54,7 +54,7 @@ def stationary(t, u, du, x0):
 
 
 @compileable
-def stationary_time(u, du, x0):  # pragma: no cover
+def stationary_time(u, du, x0):
     """Find the amount of time to leave the cell.
 
     Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
@@ -249,10 +249,7 @@ class particle(position):
         self.dont_fly = dont_fly
         if dont_fly:
             if wname is not None:
-                try:
-                    self.ocedata[wname].loc[dict(Zl=0)] = 0
-                except KeyError:  # pragma: no cover
-                    pass
+                self.ocedata[wname].loc[dict(Zl=0)] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
 
@@ -298,7 +295,7 @@ class particle(position):
         vname = self.vname
         wname = self.wname
         if "time" not in self.ocedata[uname].dims:
-            try:  # pragma: no cover
+            try:
                 self.uarray
                 self.varray
                 if self.wname is not None:
@@ -306,7 +303,7 @@ class particle(position):
             except AttributeError:
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
-                if self.wname is not None:  # pragma: no cover
+                if self.wname is not None:
                     self.warray = np.array(self.ocedata[wname])
                     if self.dont_fly:
                         # I think it's fine
@@ -316,7 +313,7 @@ class particle(position):
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
-            if self.itmax != self.itmin:  # pragma: no cover
+            if self.itmax != self.itmin:
                 self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
                 self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
                 if self.wname is not None:
@@ -355,7 +352,7 @@ class particle(position):
         sub = self.subset(which)
         if self.face is not None:
             Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.face, sub.iy, sub.ix]
-        else:  # pragma: no cover
+        else:
             Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.iy, sub.ix]
         self.Vol[which] = Vol
 
@@ -517,7 +514,7 @@ class particle(position):
         self.yylist = [[] for i in range(self.N)]
         self.zzlist = [[] for i in range(self.N)]
 
-    def out_of_bound(self):  # pragma: no cover
+    def _out_of_bound(self):  # pragma: no cover
         """Return particles that are out of the cell bound.
 
         This is most likely due to numerical error of one sort or another.
@@ -610,7 +607,7 @@ class particle(position):
         as an option for users that requires more accuracy.
         """
         max_time = 1e3
-        out = self.out_of_bound()
+        out = self._out_of_bound()
         # out = np.logical_and(out,u!=0)
         if self.rzl_lin is not None:
             xs = [self.rx[out], self.ry[out], self.rzl_lin[out] - 1 / 2]
@@ -672,7 +669,7 @@ class particle(position):
 
         if self.ocedata.readiness["Z"]:
             self.iz, self.rz, self.dz, self.bz = self.ocedata.find_rel_v(self.dep)
-        if self.ocedata.readiness["h"] == "local_cartesian":  # pragma: no cover
+        if self.ocedata.readiness["h"] == "local_cartesian":
             # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
@@ -683,7 +680,7 @@ class particle(position):
                     self.ocedata.CS[self.face, self.iy, self.ix],
                     self.ocedata.SN[self.face, self.iy, self.ix],
                 )
-                self.dx, self.dy, self.dz = (
+                self.dx, self.dy = (
                     self.ocedata.dX[self.face, self.iy, self.ix],
                     self.ocedata.dY[self.face, self.iy, self.ix],
                 )
@@ -733,17 +730,6 @@ class particle(position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
-            if np.isnan(self.rx).any() or np.isnan(self.ry).any():  # pragma: no cover
-                whereNan = np.logical_or(np.isnan(self.rx), np.isnan(self.ry))
-                print(self.lon[whereNan], self.lat[whereNan])
-                print(self.px[:, whereNan], self.py[:, whereNan])
-                print(
-                    self.ix[whereNan],
-                    self.iy[whereNan],
-                    self.iz[whereNan],
-                    self.face[whereNan],
-                )
-                raise Exception("no tolerant for NaN!")
         except AttributeError:
             #         if True:
             dlon = to_180(self.lon - self.bx)
@@ -820,7 +806,7 @@ class particle(position):
             if self.rzl_lin is not None:
                 self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         except AttributeError:
-            if self.rzl_lin is not None:  # pragma: no cover
+            if self.rzl_lin is not None:
                 rzl_lin = self.rzl_lin
                 dzl_lin = self.dzl_lin
                 bzl_lin = self.bzl_lin
@@ -961,7 +947,7 @@ class particle(position):
                 # record those who cross the wall
                 self.note_taking(todo)
         #             self._contract()
-        if i == self.max_iteration - 1:  # pragma: no cover
+        if i == self.max_iteration - 1:
             print("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
         if self.ocedata.readiness["time"]:

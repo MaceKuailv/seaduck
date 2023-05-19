@@ -4,10 +4,6 @@ import xarray as xr
 
 import seaduck as sd
 
-Datadir = "tests/Data/"
-ecco = xr.open_zarr(Datadir + "small_ecco")
-oce = sd.OceData(ecco)
-
 N = int(1e2)
 
 # Change the vertical depth of the particles here
@@ -44,7 +40,7 @@ t_bnds = np.array(
 ) / np.timedelta64(1, "s")
 
 
-@pytest.mark.parametrize("od,x,y,z,t", [(oce, x, y, z, t)])
+@pytest.mark.parametrize("od,x,y,z,t", [("ecco", x, y, z, t)])
 @pytest.mark.parametrize(
     "varList",
     [
@@ -55,6 +51,7 @@ t_bnds = np.array(
     ],
 )
 def test_eulerian_oceinterp(
+    ecco,
     od,
     varList,
     x,
@@ -62,6 +59,7 @@ def test_eulerian_oceinterp(
     z,
     t,
 ):
+    od = eval(od)
     sd.OceInterp(od, varList, x, y, z, t)
 
 
@@ -69,7 +67,7 @@ def test_eulerian_oceinterp(
     "od,varList,x,y,z,t,kernel_kwarg",
     [
         (
-            ecco,
+            "xr_ecco",
             ("UVELMASS", "VVELMASS"),
             x,
             y,
@@ -84,7 +82,8 @@ def test_eulerian_oceinterp(
         )
     ],
 )
-def test_diff_oceinterp(od, varList, x, y, z, t, kernel_kwarg):
+def test_diff_oceinterp(xr_ecco, od, varList, x, y, z, t, kernel_kwarg):
+    od = eval(od)
     sd.OceInterp(od, varList, x, y, z, t, kernel_kwarg=kernel_kwarg)
 
 
@@ -92,7 +91,7 @@ def test_diff_oceinterp(od, varList, x, y, z, t, kernel_kwarg):
     "od,varList,x,y,z,t,lagrangian,lagrange_kwarg",
     [
         (
-            oce,
+            "ecco",
             ["SALT", "__particle.raw", "__particle.lat", "__particle.lon"],
             x,
             y,
@@ -106,8 +105,9 @@ def test_diff_oceinterp(od, varList, x, y, z, t, kernel_kwarg):
 @pytest.mark.parametrize("return_pt_time", [True, False])
 @pytest.mark.filterwarnings("ignore::Warning")
 def test_largangian_oceinterp(
-    od, varList, x, y, z, t, lagrangian, return_pt_time, lagrange_kwarg
+    ecco, od, varList, x, y, z, t, lagrangian, return_pt_time, lagrange_kwarg
 ):
+    od = eval(od)
     sd.OceInterp(
         od,
         varList,
@@ -125,7 +125,7 @@ def test_largangian_oceinterp(
     "od,varList,x,y,z,t,lagrangian,error",
     [
         (
-            oce,
+            "ecco",
             ["__particle.lat", "__particle.lon"],
             x,
             y,
@@ -134,12 +134,22 @@ def test_largangian_oceinterp(
             True,
             ValueError,
         ),
-        (oce, ["__particle.lat", "__particle.lon"], x, y, z, t, False, AttributeError),
-        (oce, None, x, y, z, t, False, ValueError),
-        (oce, [None], x, y, z, t, False, ValueError),
+        (
+            "ecco",
+            ["__particle.lat", "__particle.lon"],
+            x,
+            y,
+            z,
+            t,
+            False,
+            AttributeError,
+        ),
+        ("ecco", None, x, y, z, t, False, ValueError),
+        ("ecco", [None], x, y, z, t, False, ValueError),
     ],
 )
 @pytest.mark.filterwarnings("ignore::Warning")
-def test_oceinterp_error(od, varList, x, y, z, t, lagrangian, error):
+def test_oceinterp_error(ecco, od, varList, x, y, z, t, lagrangian, error):
+    od = eval(od)
     with pytest.raises(error):
         sd.OceInterp(od, varList, x, y, z, t, lagrangian=lagrangian)

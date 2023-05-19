@@ -3,15 +3,6 @@ import numpy as np
 import pytest
 import xarray as xr
 
-Datadir = "tests/Data/"
-aviso = xr.open_dataset(Datadir + "aviso_example.nc")
-ecco = xr.open_zarr(Datadir + "small_ecco")
-curv = xr.open_dataset(Datadir + "MITgcm_curv_nc.nc")
-
-oce = sd.OceData(aviso)
-eco = sd.OceData(ecco)
-cuv = sd.OceData(curv)
-
 # Set the number of particles here.
 N = int(9)
 
@@ -39,51 +30,58 @@ tf = (np.datetime64("1992-03-03") - np.datetime64("1970-01-01")) / np.timedelta6
     1, "s"
 )
 
-p = sd.particle(
-    x=x,
-    y=y,
-    z=z,
-    t=t,
-    data=oce,
-    # save_raw = True,
-    # transport = True,
-    uname="u",
-    vname="v",
-    wname=None,
-)
-ecco_p = sd.particle(x=x, y=y, z=zz, t=t, data=eco, transport=True)
+
+@pytest.fixture
+def p(avis):
+    return sd.particle(
+        x=x,
+        y=y,
+        z=z,
+        t=t,
+        data=avis,
+        # save_raw = True,
+        # transport = True,
+        uname="u",
+        vname="v",
+        wname=None,
+    )
+
+
+@pytest.fixture
+def ecco_p(ecco):
+    return sd.particle(x=x, y=y, z=zz, t=t, data=ecco, transport=True)
+
 
 normal_stops = np.linspace(t[0], tf, 5)
 
 
-def test_vol_mode():
-    #     ecco_p = sd.particle(x = x,y=y,z=zz,t=t,data=eco,transport = True)
+def test_vol_mode(ecco_p):
     stops, raw = ecco_p.to_list_of_time(normal_stops=[t[0], tf])
 
 
-def test_to_list_of_time():
+def test_to_list_of_time(p):
     stops, raw = p.to_list_of_time(
         normal_stops=normal_stops, update_stops=[normal_stops[1]]
     )
 
 
-def test_analytical_step():
+def test_analytical_step(p):
     p.analytical_step(10.0)
 
 
-def test_callback():
+def test_callback(curv):
     curv_p = sd.particle(
         y=np.array([70.5]),
         x=np.array([-14.0]),
         z=np.array([-10.0]),
-        t=np.array([1832320850.0]),
-        data=cuv,
+        t=np.array([curv.ts[0]]),
+        data=curv,
         uname="U",
         vname="V",
         wname="W",
         callback=lambda pt: pt.lon > -14.01,
     )
-    curv_p.to_list_of_time(normal_stops=[1832320850.0, 1832320880.0], update_stops=[])
+    curv_p.to_list_of_time(normal_stops=[curv.ts[0], curv.ts[-1]], update_stops=[])
 
 
 @pytest.mark.parametrize(
@@ -97,6 +95,69 @@ def test_callback():
         ),
     ],
 )
-def test_lagrange_error(statement, error):
+def test_lagrange_error(statement, error, p, ecco_p):
     with pytest.raises(error):
         eval(statement)
+
+
+def test_multidim_uvw_array(ecco_p):
+    ecco_p.it[0] += 1
+    ecco_p.update_uvw_array()
+
+
+def test_update_w_array(ecco_p, ecco):
+    ecco["u0"] = ecco["UVELMASS"].isel(time=0)
+    ecco["v0"] = ecco["VVELMASS"].isel(time=0)
+    ecco["w0"] = ecco["WVELMASS"].isel(time=0)
+    delattr(ecco_p, "warray")
+    ecco_p.uname = "u0"
+    ecco_p.vname = "v0"
+    ecco_p.wname = "w0"
+
+    ecco_p.update_uvw_array()
+
+
+def test_update_after_cell_change(ecco_p, ecco):
+    ecco["SN"] = np.array(ecco["SN"])
+    ecco["CS"] = np.array(ecco["CS"])
+    ecco_p.ocedata.readiness["h"] = "local_cartesian"
+
+    ecco_p.update_after_cell_change()
+
+
+def test_update_after_cell_change_no_face(curv):
+    curv._add_missing_cs_sn()
+    curv.readiness["h"] = "local_cartesian"
+    curv_p = sd.particle(
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([curv.ts[0]]),
+        data=curv,
+        uname="U",
+        vname="V",
+        wname="W",
+        transport=True,
+    )
+    curv_p.update_after_cell_change()
+
+
+def test_get_vol(curv):
+    curv_p = sd.particle(
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([curv.ts[0]]),
+        data=curv,
+        uname="U",
+        vname="V",
+        wname="W",
+        transport=True,
+    )
+    curv_p.get_vol()
+
+
+def test_maxiteration(ecco_p):
+    ecco_p.max_iteration = 1
+    delattr(ecco_p, "px")
+    ecco_p.to_next_stop(tf)
