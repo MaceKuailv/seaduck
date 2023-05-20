@@ -3,14 +3,16 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
+- dask
+- jupyter-book
 - make
+- matplotlib
 - mypy
-- myst-parser
+- netCDF4
+- pandas-stubs
+- pooch
 - pre-commit
-- pydata-sphinx-theme
 - pytest
 - pytest-cov
-- sphinx
-- sphinx-autoapi
-- pooch
+- tqdm
 - zarr

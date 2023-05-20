@@ -2,7 +2,7 @@ import copy
 
 import numpy as np
 
-from seaduck.RuntimeConf import compileable, rcParam
+from seaduck.runtime_conf import compileable, rcParam
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
@@ -634,9 +634,9 @@ class topology:
     def four_matrix_for_uv(self, fface):
         """Expand get_uv_mask_from_face to 2D array of faces."""
         # apply get_uv_mask for the n*m matrix
-        UfromUvel, UfromVvel, VfromUvel, VfromVvel = [
+        UfromUvel, UfromVvel, VfromUvel, VfromVvel = (
             np.zeros(fface.shape) for i in range(4)
-        ]
+        )
         for i in range(fface.shape[0]):
             (
                 UfromUvel[i],

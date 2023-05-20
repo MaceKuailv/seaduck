@@ -9,11 +9,15 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Topic :: Scientific/Engineering"
 ]
 dependencies = [
   "numpy",
+  "pandas",
+  "scipy",
   "xarray"
 ]
 description = "A python package that interpolates data from ocean dataset from both Eulerian and Lagrangian perspective. "
@@ -27,6 +31,15 @@ branch = true
 
 [tool.mypy]
 strict = false
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+  "matplotlib.*",
+  "numba",
+  "pooch",
+  "scipy"
+]
 
 [tool.ruff]
 ignore = [
@@ -54,8 +67,11 @@ select = [
   # isort
   "I",
   # pydocstyle
-  "D"
+  "D",
+  # pyupgrade
+  "UP"
 ]
+target-version = "py39"
 
 [tool.setuptools]
 packages = ["seaduck"]
