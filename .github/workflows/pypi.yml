@@ -35,5 +35,3 @@ jobs:
     - name: Publish a Python distribution to PyPI
       if: success() && github.event_name == 'release'
       uses: pypa/gh-action-pypi-publish@release/v1
-
-
