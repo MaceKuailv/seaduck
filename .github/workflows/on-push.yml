@@ -49,8 +49,9 @@ jobs:
     name: unit-tests
     needs: combine-environments
     runs-on: ubuntu-latest
-    matrix:
-      python-version: [3.9, 3.10, 3.11]
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
 
     steps:
     - uses: actions/checkout@v3
