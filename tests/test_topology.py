@@ -1,29 +1,12 @@
 import numpy as np
 import pytest
-import xarray as xr
 
-import seaduck.kernelNweight as kw
-from seaduck.topology import topology
-from seaduck.topology import llc_mutual_direction, llc_get_uv_mask_from_face
-
-
-@pytest.fixture
-def tp(xr_ecco):
-    return topology(xr_ecco)
-
-
-@pytest.fixture
-def rect_tp(xr_rect):
-    return topology(xr_rect)
-
-
-@pytest.fixture
-def avis_tp(xr_aviso):
-    return topology(xr_aviso)
+from seaduck.topology import llc_get_uv_mask_from_face, llc_mutual_direction, topology
 
 
 @pytest.mark.parametrize("face", [1, 2, 4, 5, 6, 7, 8, 10, 11])
 @pytest.mark.parametrize("edge", [0, 1, 2, 3])
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_get_the_neighbor_face(tp, face, edge):
     nf, ne = tp.get_the_other_edge(face, edge)
     assert nf in range(13)
@@ -40,22 +23,29 @@ def test_get_the_neighbor_face(tp, face, edge):
     ],
 )
 @pytest.mark.parametrize(
-    "func", ["tpp.get_the_other_edge(0,0)", "tpp.mutual_direction(0,1)"]
+    "func,args",
+    [
+        ("get_the_other_edge", (0, 0)),
+        ("mutual_direction", (0, 1)),
+    ],
 )
-def test_not_applicable(xr_ecco, typ, func, error):
-    tpp = topology(xr_ecco, typ)
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+def test_not_applicable(ds, typ, func, args, error):
+    tpp = topology(ds, typ)
     with pytest.raises(error):
-        eval(func)
+        getattr(tpp, func)(*args)
 
 
 @pytest.mark.parametrize("face,edge", [(0, 1), (3, 1), (9, 3), (12, 3)])
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_antarctica_error(tp, face, edge):
     with pytest.raises(IndexError):
-        nf, ne = tp.get_the_other_edge(face, edge)
+        tp.get_the_other_edge(face, edge)
 
 
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_mutual_face(tp):
-    e1, e2 = tp.mutual_direction(0, 1)
+    e1, _ = tp.mutual_direction(0, 1)
     assert e1 in [0, 1, 2, 3]
 
 
@@ -72,26 +62,27 @@ def test_mutual_face(tp):
         ((6, 0, 0), 2, (2, 89, 89)),
     ],
 )
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_llc_ind_tend(tp, ind, tend, result):
     res = tp.ind_tend(ind, tend)
     assert res == result
 
 
-@pytest.mark.parametrize("temp_tp", ["avis_tp", "rect_tp"])
 @pytest.mark.parametrize("tend", [0, 1, 2, 3])
-def test_boxish_ind_tend(temp_tp, avis_tp, rect_tp, tend):
-    temp_tp = eval(temp_tp)
-    temp_tp.ind_tend((0, 0), tend)
+@pytest.mark.parametrize("tp", ["aviso", "rect"], indirect=True)
+def test_boxish_ind_tend(tp, tend):
+    tp.ind_tend((0, 0), tend)
 
 
-@pytest.mark.parametrize("temp_tp", ["avis_tp", "rect_tp"])
 @pytest.mark.parametrize("tend", [0, 3])
-@pytest.mark.parametrize("start", ["(temp_tp.ixmax, temp_tp.iymax)", "(-1,-1)"])
-def test_boundary_case(temp_tp, avis_tp, rect_tp, tend, start):
-    temp_tp = eval(temp_tp)
-    out = temp_tp.ind_tend(eval(start), tend)
-    if temp_tp.typ == "box" or start == "(-1,-1)" or tend == 0:
+@pytest.mark.parametrize("tp", ["aviso", "rect"], indirect=True)
+def test_boundary_case(tp, tend):
+    out = tp.ind_tend((tp.ixmax, tp.iymax), tend)
+    if tp.typ == "box" or tend == 0:
         assert -1 in out
+
+    out = tp.ind_tend((-1, -1), tend)
+    assert -1 in out
 
 
 mundane = np.array([[[1.0, 1.0]], [[0.0, 0.0]], [[0.0, -0.0]], [[1.0, 1.0]]])
@@ -106,6 +97,7 @@ mundane = np.array([[[1.0, 1.0]], [[0.0, 0.0]], [[0.0, -0.0]], [[1.0, 1.0]]])
         (np.array([[6, 10]]), False),
     ],
 )
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_4_matrix(tp, fface, cis):
     ans = np.array(tp.four_matrix_for_uv(fface))
     if cis:
@@ -114,30 +106,34 @@ def test_4_matrix(tp, fface, cis):
         assert not np.allclose(ans, mundane)
 
 
-def test_unable_to_cereate(xr_rect):
-    temp = xr_rect.drop_vars("XC")
+@pytest.mark.parametrize("ds", ["rect"], indirect=True)
+def test_unable_to_cereate(ds):
+    temp = ds.drop_vars("XC")
     with pytest.raises(KeyError):
         topology(temp)
 
 
-def test_create_without_time(xr_aviso):
-    temp = xr_aviso.drop_vars("time")
+@pytest.mark.parametrize("ds", ["aviso"], indirect=True)
+def test_create_without_time(ds):
+    temp = ds.drop_vars("time")
     topology(temp)
 
 
 @pytest.mark.parametrize(
-    "stmt,error",
+    "func,args,kwargs,error",
     [
-        ("tp.ind_tend((1,45,45),0,cuvg = 'G')", NotImplementedError),
-        ("tp.ind_tend((1,45,45),0,cuvg = 'other')", ValueError),
-        ("tp.ind_moves((1,45,45),['left','left'])", ValueError),
+        ("ind_tend", ((1, 45, 45), 0), {"cuvg": "G"}, NotImplementedError),
+        ("ind_tend", ((1, 45, 45), 0), {"cuvg": "other"}, ValueError),
+        ("ind_moves", ((1, 45, 45), ["left", "left"]), {}, ValueError),
     ],
 )
-def test_other_errors(tp, stmt, error):
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
+def test_other_errors(tp, func, args, kwargs, error):
     with pytest.raises(error):
-        eval(stmt)
+        getattr(tp, func)(*args, **kwargs)
 
 
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_moves_with1illegal(tp):
     tp.ind_moves((1, -1, 89), [0, 0])
 
@@ -152,6 +148,7 @@ def test_ind_moves_with1illegal(tp):
         ((4, 45, 89), 3, (8, 0, 45)),
     ],
 )
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_tend_v(tp, ind, tend, ans):
     res = tp.ind_tend(ind, tend, cuvg="V")
     assert res == ans
@@ -166,11 +163,13 @@ def test_ind_tend_v(tp, ind, tend, ans):
         ((4, 45, 89), 1, (8, 0, 45)),
     ],
 )
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_tend_u(tp, ind, tend, ans):
     res = tp.ind_tend(ind, tend, cuvg="U")
     assert res == ans
 
 
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_wall_between(tp):
     # it is a bit hard to think about an example
     # that uses this case from higher level.
@@ -211,12 +210,14 @@ def test_uv_mask():
     llc_get_uv_mask_from_face(faces)
 
 
-def test_uv_mask_error(rect_tp):
+@pytest.mark.parametrize("tp", ["rect"], indirect=True)
+def test_uv_mask_error(tp):
     faces = np.array([1, 1, 1, 1, 4])
     with pytest.raises(Exception):
-        rect_tp.get_uv_mask_from_face(faces)
+        tp.get_uv_mask_from_face(faces)
 
 
+@pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_wall_between_itself(tp):
     with pytest.raises(IndexError):
         tp._find_wall_between((1, 14, 14), (1, 14, 14))

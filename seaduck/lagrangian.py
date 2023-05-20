@@ -3,8 +3,8 @@ import copy
 import numpy as np
 
 from seaduck.eulerian import position
-from seaduck.kernelNweight import KnW
-from seaduck.RuntimeConf import compileable
+from seaduck.kernel_weight import KnW
+from seaduck.runtime_conf import compileable
 from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, rel2latlon, to_180
 
 deg2m = 6271e3 * np.pi / 180
@@ -206,9 +206,9 @@ class particle(position):
                 self.bzl_lin,
             ) = self.ocedata.find_rel_vl_lin(self.dep)
         else:
-            (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = [
+            (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
                 None for i in range(4)
-            ]
+            )
         try:
             self.px, self.py = self.get_px_py()
         except AttributeError:
@@ -257,9 +257,9 @@ class particle(position):
             pass
         else:
             self.update_uvw_array()
-        (self.u, self.v, self.w, self.du, self.dv, self.dw, self.Vol) = [
+        (self.u, self.v, self.w, self.du, self.dv, self.dw, self.Vol) = (
             np.zeros(self.N).astype(float) for i in range(7)
-        ]
+        )
         if self.transport:
             self.get_vol()
         self.fillna()

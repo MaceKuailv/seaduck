@@ -3,8 +3,8 @@ import copy
 import numpy as np
 
 from seaduck.get_masks import get_masked
-from seaduck.kernelNweight import KnW, _translate_to_tendency, find_pk_4d
-from seaduck.OceData import OceData
+from seaduck.kernel_weight import KnW, _translate_to_tendency, find_pk_4d
+from seaduck.ocedata import OceData
 
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read as sread
@@ -193,7 +193,7 @@ class position:
                     self.rz,
                     self.dz,
                     self.bz,
-                ) = [None for i in range(4)]
+                ) = (None for i in range(4))
             if self.ocedata.readiness["Zl"]:
                 (self.izl, self.rzl, self.dzl, self.bzl) = self.ocedata.find_rel_vl(z)
             else:
@@ -202,7 +202,7 @@ class position:
                     self.rzl,
                     self.dzl,
                     self.bzl,
-                ) = [None for i in range(4)]
+                ) = (None for i in range(4))
         else:
             (
                 self.iz,
@@ -214,7 +214,7 @@ class position:
                 self.dzl,
                 self.bzl,
                 self.dep,
-            ) = [None for i in range(9)]
+            ) = (None for i in range(9))
 
         if t is not None:
             self.t = t
@@ -226,9 +226,9 @@ class position:
                     self.rt,
                     self.dt,
                     self.bt,
-                ) = [None for i in range(4)]
+                ) = (None for i in range(4))
         else:
-            (self.it, self.rt, self.dt, self.bt, self.t) = [None for i in range(5)]
+            (self.it, self.rt, self.dt, self.bt, self.t) = (None for i in range(5))
         return self
 
     def subset(self, which):
