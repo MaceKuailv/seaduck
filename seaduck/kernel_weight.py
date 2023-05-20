@@ -1,13 +1,8 @@
 import copy
 
-try:  # pragma: no cover
-    import matplotlib.pyplot as _plt
-except ImportError:  # pragma: no cover
-    pass
-
 import numpy as np
 
-from seaduck.RuntimeConf import compileable, rcParam
+from seaduck.runtime_conf import compileable, rcParam
 from seaduck.utils import get_combination
 
 # default kernel for interpolation.
@@ -20,7 +15,7 @@ default_inheritance = [
     [0, 1, 3, 5, 7],
     [0],
 ]
-weight_func = dict()
+weight_func: dict[int, str] = {}
 
 default_kernels = [
     np.array([default_kernel[i] for i in doll]) for doll in default_inheritance
@@ -38,12 +33,13 @@ def show_kernels(kernels=default_kernels):
         where n is the number of element in the kernel.
     """
     try:
-        _plt
-    except NameError:
-        raise NameError("maptlotlib.pyplot is needed to use this function.")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        raise ImportError("maptlotlib.pyplot is needed to use this function.")
+
     for i, k in enumerate(kernels):
         x, y = k.T
-        _plt.plot(x + 0.1 * i, y + 0.1 * i, "+")
+        plt.plot(x + 0.1 * i, y + 0.1 * i, "+")
 
 
 def _translate_to_tendency(k):
@@ -646,7 +642,7 @@ def auto_doll(kernel, hkernel="interp"):
     return doll
 
 
-class KnW(object):
+class KnW:
     """Kernel object.
 
     A class that describes anything about the

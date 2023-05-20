@@ -4,7 +4,7 @@ import numpy as _np
 import xarray as _xr
 from scipy import spatial
 
-from seaduck.RuntimeConf import compileable
+from seaduck.runtime_conf import compileable
 
 
 def rel_lon(x, ref_lon):

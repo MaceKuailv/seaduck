@@ -1,9 +1,11 @@
-import numpy as np
-import xarray as xr
-import seaduck as sd
-import pytest
 import copy
 
+import numpy as np
+import pytest
+
+import seaduck as sd
+
+from . import utils
 
 uknw = sd.lagrangian.uknw
 vknw = sd.lagrangian.vknw
@@ -20,25 +22,29 @@ wrongTknw.tkernel = "something not correct"
 
 
 @pytest.fixture
-def prefetched(ecco):
-    return np.array(ecco["SALT"][slice(1, 2)])
+def prefetched():
+    od = sd.OceData(utils.get_dataset("ecco"))
+    return np.array(od["SALT"][slice(1, 2)])
 
 
 # use float number to make particle
 @pytest.fixture
-def ep(ecco):
-    return sd.particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=ecco)
+def ep():
+    od = sd.OceData(utils.get_dataset("ecco"))
+    return sd.particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=od)
 
 
-def test_tz_not_None(avis):
+@pytest.mark.parametrize("od", ["aviso"], indirect=True)
+def test_tz_not_None(od):
     ap = sd.position()
-    ap.from_latlon(x=-37.5, y=-60.4586420059204, z=-9.0, t=698155200.0, data=avis)
+    ap.from_latlon(x=-37.5, y=-60.4586420059204, z=-9.0, t=698155200.0, data=od)
 
 
 @pytest.mark.parametrize("y,t", [(10.4586420059204, None), (None, 698155200.0)])
-def test_xyt_is_None(ecco, y, t):
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_xyt_is_None(od, y, t):
     ap = sd.position()
-    ap.from_latlon(x=-37.5, y=y, z=-9.0, t=t, data=ecco)
+    ap.from_latlon(x=-37.5, y=y, z=-9.0, t=t, data=od)
 
 
 @pytest.mark.parametrize(
@@ -92,7 +98,7 @@ def test_no_face_with_mask(ep):
     neo_transform_lookup = {}
     for key in transform_lookup.keys():
         neo_transform_lookup[key] = None
-    mask_lookup = ep._mask_value_and_register(
+    ep._mask_value_and_register(
         index_lookup, neo_transform_lookup, hash_mask, hash_index, main_dict
     )
 
@@ -127,13 +133,14 @@ def test_diff_prefetched(ep, prefetched, varname, knw, num_prefetched):
     [
         (None, -37.5, uknw),
         (prefetched, -37.5, uknw),
-        ("ecco", np.ones((2, 2)), uknw),
-        ("ecco", np.ones(12), uknw),
-        ("ecco", np.array([-37.5, -37.4]), wrongZknw),
-        ("ecco", np.array([-37.5, -37.4]), wrongTknw),
+        ("od", np.ones((2, 2)), uknw),
+        ("od", np.ones(12), uknw),
+        ("od", np.array([-37.5, -37.4]), wrongZknw),
+        ("od", np.array([-37.5, -37.4]), wrongTknw),
     ],
 )
-def test_init_valueerror(ecco, data, x, knw):
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_init_valueerror(od, data, x, knw):
     if isinstance(data, str):
         data = eval(data)
     with pytest.raises(ValueError):

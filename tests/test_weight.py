@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-import seaduck.kernelNweight as kw
 import seaduck as sd
+import seaduck.kernel_weight as kw
 
 sd.rcParam["debug_level"] = "very_high"
 
@@ -52,23 +52,23 @@ def test_cascade(masked, ans):
     "rx,ry", [(np.array([0]), np.array([0])), (np.array([0.5]), np.array([0.08]))]
 )
 @pytest.mark.parametrize(
-    "pk,clause",
+    "pk,expected",
     [
-        ([[], [], [], []], "np.isnan(np.sum(w))"),
-        ([[0], [], [], []], "np.allclose(1,np.sum(w))"),
-        ([[], [], [0], []], "np.allclose(1,np.sum(w))"),
+        ([[], [], [], []], np.nan),
+        ([[0], [], [], []], 1),
+        ([[], [], [0], []], 1),
     ],
 )
-def test_cascade_weight(rx, ry, pk, clause):
-    w = kw.get_weight_cascade(rx, ry, pk)
-    assert eval(clause)
+def test_cascade_weight(rx, ry, pk, expected):
+    actual = np.sum(kw.get_weight_cascade(rx, ry, pk))
+    np.testing.assert_allclose(actual, expected)
 
 
 @pytest.mark.parametrize(
-    "rx,ry,clause",
+    "rx,ry",
     [
-        (np.array([0]), np.array([0]), "np.allclose(1,weight[0,0])"),
-        (np.array([0.5]), np.array([0.08]), "np.allclose(1,np.sum(weight))"),
+        (np.array([0]), np.array([0])),
+        (np.array([0.5]), np.array([0.08])),
     ],
 )
 @pytest.mark.parametrize(
@@ -77,46 +77,19 @@ def test_cascade_weight(rx, ry, pk, clause):
         np.array(
             [[0, 0], [0, 1], [0, 2], [0, -1], [0, -2], [-1, 0], [-2, 0], [1, 0], [2, 0]]
         ),
-        np.array(
-            [
-                [0, 0],
-                [0, 1],
-                [0, -1],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
-        np.array(
-            [
-                [0, 0],
-                [0, -1],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
-        np.array(
-            [
-                [0, 0],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
-        np.array(
-            [
-                [0, 0],
-                [0, 1],
-                [0, -1],
-            ]
-        ),
+        np.array([[0, 0], [0, 1], [0, -1], [-1, 0], [1, 0]]),
+        np.array([[0, 0], [0, -1], [-1, 0], [1, 0]]),
+        np.array([[0, 0], [-1, 0], [1, 0]]),
+        np.array([[0, 0], [0, 1], [0, -1]]),
         np.array([[0, 0]]),
         np.array([[0, 0], [0, 1], [1, 0], [1, 1]]),
     ],
 )
-def test_interp_func(kernel, rx, ry, clause):
+def test_interp_func(kernel, rx, ry):
     func = kw.get_func(kernel)
     weight = func(rx, ry)
     assert weight.shape == (1, len(kernel))
-    assert eval(clause)
+    np.testing.assert_allclose(np.sum(weight), 1)
 
 
 @pytest.mark.parametrize("ktype", ["dx", "dy"])
@@ -141,30 +114,9 @@ def test_auto_doll(hkernel):
         np.array(
             [[0, 0], [0, 1], [0, 2], [0, -1], [0, -2], [-1, 0], [-2, 0], [1, 0], [2, 0]]
         ),
-        np.array(
-            [
-                [0, 0],
-                [0, 1],
-                [0, -1],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
-        np.array(
-            [
-                [0, 0],
-                [0, -1],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
-        np.array(
-            [
-                [0, 0],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
+        np.array([[0, 0], [0, 1], [0, -1], [-1, 0], [1, 0]]),
+        np.array([[0, 0], [0, -1], [-1, 0], [1, 0]]),
+        np.array([[0, 0], [-1, 0], [1, 0]]),
     ],
 )
 @pytest.mark.parametrize("order", [1, 2])
@@ -184,15 +136,7 @@ def test_dx(kernel, rx, ry, order):
         np.array(
             [[0, 0], [0, 1], [0, 2], [0, -1], [0, -2], [-1, 0], [-2, 0], [1, 0], [2, 0]]
         ),
-        np.array(
-            [
-                [0, 0],
-                [0, 1],
-                [0, -1],
-                [-1, 0],
-                [1, 0],
-            ]
-        ),
+        np.array([[0, 0], [0, 1], [0, -1], [-1, 0], [1, 0]]),
         np.array([[0, 0], [0, 1], [0, -1]]),
     ],
 )
@@ -225,15 +169,7 @@ def test_dy(kernel, rx, ry, order):
             5,
         ),
         (
-            np.array(
-                [
-                    [0, 0],
-                    [0, 1],
-                    [0, -1],
-                    [-1, 0],
-                    [1, 0],
-                ]
-            ),
+            np.array([[0, 0], [0, 1], [0, -1], [-1, 0], [1, 0]]),
             3,
         ),
         (np.array([[0, 0]]), 1),
@@ -246,13 +182,8 @@ def test_order_too_high_error(kernel, order, ktype):
 
 
 def test_plot_kernel():
-    try:
-        import matplotlib
-
-        kw.show_kernels()
-    except ImportError:
-        with pytest.raises(NameError):
-            kw.show_kernels()
+    pytest.importorskip("matplotlib.pyplot")
+    kw.show_kernels()
 
 
 def test_dt_and_bottom_scheme(aknw):
