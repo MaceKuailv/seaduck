@@ -1,0 +1,37 @@
+name: Publish to PyPI
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+  release:
+    types:
+    - published
+
+jobs:
+  packages:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/seaduck
+    permissions:
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install packages
+      run: |
+        $CONDA/bin/python -m pip install build twine
+    - name: Build distributions
+      run: |
+        $CONDA/bin/python -m build
+    - name: Check wheels
+      run: |
+        cd dist || exit
+        $CONDA/bin/python -m pip install seaduck*.whl || exit
+        $CONDA/bin/python -m twine check * || exit
+        $CONDA/bin/python -c "import seaduck"
+    - name: Publish a Python distribution to PyPI
+      if: success() && github.event_name == 'release'
+      uses: pypa/gh-action-pypi-publish@release/v1
