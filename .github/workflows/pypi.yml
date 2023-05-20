@@ -20,29 +20,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
-    - name: Get tags
-      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      shell: bash
-    - name: Install build tools
+    - name: Install packages
       run: |
-        python -m pip install --upgrade pip wheel setuptools setuptools_scm build twine
-      shell: bash
-    - name: Build binary wheel
-      run: python -m build --sdist --wheel . --outdir dist
-    - name: CheckFiles
+        $CONDA/bin/python -m pip install build twine
+    - name: Build distributions
       run: |
-        ls dist
-      shell: bash
-    - name: Test wheels
+        $CONDA/bin/python -m build
+    - name: Check wheels
       run: |
-        cd dist && python -m pip install seaduck*.whl
-        python -m twine check *
-        python -c "import seaduck; print(f'seaduck v{seaduck.__version__}')"
-      shell: bash
+        cd dist || exit
+        $CONDA/bin/python -m pip install seaduck*.whl || exit
+        $CONDA/bin/python -m twine check * || exit
+        $CONDA/bin/python -c "import seaduck"
     - name: Publish a Python distribution to PyPI
       if: success() && github.event_name == 'release'
       uses: pypa/gh-action-pypi-publish@release/v1
+
+
