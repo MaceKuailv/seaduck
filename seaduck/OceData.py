@@ -38,7 +38,7 @@ no_alias = {
 }
 
 
-class OceData(object):
+class OceData:
     """Ocean dataset.
 
     Class that enables variable aliasing, topology extraction, and 4-D translation

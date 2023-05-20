@@ -18,8 +18,5 @@ conda-env-update:
 	$(CONDA) env update $(CONDAFLAGS) -f ci/environment-ci.yml
 	$(CONDA) env update $(CONDAFLAGS) -f environment.yml
 
-
 docs-build:
 	jupyter-book build docs/
-
-# DO NOT EDIT ABOVE THIS LINE, ADD COMMANDS BELOW

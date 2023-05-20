@@ -3,9 +3,9 @@ import warnings
 import numpy as np
 
 from seaduck.eulerian import position
-from seaduck.kernelNweight import KnW
+from seaduck.kernel_weight import KnW
 from seaduck.lagrangian import particle, uknw, vknw
-from seaduck.OceData import OceData
+from seaduck.ocedata import OceData
 
 lagrange_token = "__particle."
 
