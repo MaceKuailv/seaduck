@@ -1,11 +1,65 @@
-import numpy as _np
+import functools
+import os
+
+import numpy as np
+import pooch
 
 # Required dependencies (private)
-import xarray as _xr
+import xarray as xr
 from scipy import spatial
 
 from seaduck.runtime_conf import compileable
 
+POOCH = pooch.create(
+    path=pooch.os_cache("seaduck"), base_url="doi:10.5281/zenodo.7949168", registry=None
+)
+POOCH.load_registry_from_doi()  # Automatically populate the registry
+POOCH_FETCH_KWARGS = {"progressbar": True}
+
+
+def process_ecco(ds):
+    rand1 = np.random.random((50, 13, 90, 90))
+    rand2 = np.random.random((50, 13, 90, 90))
+    rand3 = np.random.random((50, 13, 90, 90))
+    ds["UVELMASS"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Y", "Xp1")
+    )
+    ds["UVELMASS"][0] = ds.UVELMASS1
+    ds["UVELMASS"][1] = ds.UVELMASS1 * rand1
+    ds["UVELMASS"][2] = ds.UVELMASS1 * rand2
+
+    ds["WVELMASS"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Zl", "face", "Y", "X")
+    )
+    ds["WVELMASS"][0] = ds.WVELMASS1
+    ds["WVELMASS"][1] = ds.WVELMASS1 * rand1
+    ds["WVELMASS"][2] = ds.WVELMASS1 * rand2
+
+    ds["VVELMASS"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Yp1", "X")
+    )
+    ds["VVELMASS"][0] = ds.VVELMASS1
+    ds["VVELMASS"][1] = ds.VVELMASS1 * rand1
+    ds["VVELMASS"][2] = ds.VVELMASS1 * rand2
+
+    ds["SALT"] = xr.DataArray(
+        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Y", "X")
+    )
+    ds["SALT_snap"] = xr.DataArray(
+        np.stack([rand3, rand1], axis=0), dims=("time_midp", "Z", "face", "Y", "X")
+    )
+    ds["ETAN"] = xr.DataArray(rand1[:3], dims=("time", "face", "Y", "X"))
+    ds["ETAN_snap"] = xr.DataArray(rand3[:2], dims=("time_midp", "face", "Y", "X"))
+    return ds
+
+
+@functools.cache
+def get_dataset(name):
+    fnames = POOCH.fetch(f"{name}.tar.gz", pooch.Untar(), **POOCH_FETCH_KWARGS)
+    ds = xr.open_zarr(os.path.commonpath(fnames))
+    if name == "ecco":
+        return process_ecco(ds)
+    return ds
 
 def rel_lon(x, ref_lon):
     """Change the definition of 0 longitude.
@@ -67,11 +121,11 @@ def spherical2cartesian(Y, X, R=6371.0):
         Cartesian z coordinate
     """
     # Convert
-    Y_rad = _np.deg2rad(Y)
-    X_rad = _np.deg2rad(X)
-    x = R * _np.cos(Y_rad) * _np.cos(X_rad)
-    y = R * _np.cos(Y_rad) * _np.sin(X_rad)
-    z = R * _np.sin(Y_rad)
+    Y_rad = np.deg2rad(Y)
+    X_rad = np.deg2rad(X)
+    x = R * np.cos(Y_rad) * np.cos(X_rad)
+    y = R * np.cos(Y_rad) * np.sin(X_rad)
+    z = R * np.sin(Y_rad)
 
     return x, y, z
 
@@ -95,7 +149,7 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
     """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
-    dlon = (temp_x * cs - temp_y * sn) / _np.cos(by * _np.pi / 180)
+    dlon = (temp_x * cs - temp_y * sn) / np.cos(by * np.pi / 180)
     dlat = temp_x * sn + temp_y * cs
     lon = dlon + bx
     lat = dlat + by
@@ -141,24 +195,24 @@ def create_tree(X, Y, R=6371, leafsize=16):
     else:
         x = X
         y = Y
-        z = _xr.zeros_like(Y)
+        z = xr.zeros_like(Y)
 
     # Stack
     rid_value = 777777
-    if isinstance(x, _xr.DataArray):
+    if isinstance(x, xr.DataArray):
         x = x.stack(points=x.dims).fillna(rid_value).data
         y = y.stack(points=y.dims).fillna(rid_value).data
         z = z.stack(points=z.dims).fillna(rid_value).data
-    elif isinstance(x, _np.ndarray):
+    elif isinstance(x, np.ndarray):
         x = x.ravel()
-        _np.nan_to_num(x.ravel(), nan=rid_value, copy=False)
+        np.nan_to_num(x.ravel(), nan=rid_value, copy=False)
         y = y.ravel()
-        _np.nan_to_num(y.ravel(), nan=rid_value, copy=False)
+        np.nan_to_num(y.ravel(), nan=rid_value, copy=False)
         z = z.ravel()
-        _np.nan_to_num(z.ravel(), nan=rid_value, copy=False)
+        np.nan_to_num(z.ravel(), nan=rid_value, copy=False)
 
     # Construct KD-tree
-    tree = spatial.cKDTree(_np.column_stack((x, y, z)), leafsize=leafsize)
+    tree = spatial.cKDTree(np.column_stack((x, y, z)), leafsize=leafsize)
 
     return tree
 
@@ -176,8 +230,8 @@ def NoneIn(lst):
 @compileable
 def find_ind_z(array, value):
     """Find the index of the nearest level that is lower."""
-    array = _np.asarray(array)
-    idx = _np.argmin(_np.abs(array - value))
+    array = np.asarray(array)
+    idx = np.argmin(np.abs(array - value))
     if array[idx] > value:
         # z is special because it does not make
         # much sense to interpolate beyond the two layers
@@ -189,8 +243,8 @@ def find_ind_z(array, value):
 @compileable
 def find_ind_t(array, value):
     """Find the index of the latest time that is before the time."""
-    array = _np.asarray(array)
-    idx = _np.argmin(_np.abs(array - value))
+    array = np.asarray(array)
+    idx = np.argmin(np.abs(array - value))
     if array[idx] > value and idx != 0:
         idx -= 1
     idx = int(idx)
@@ -200,8 +254,8 @@ def find_ind_t(array, value):
 @compileable
 def find_ind_nearest(array, value):
     """Find the index of the nearest value to the given value."""
-    array = _np.asarray(array)
-    idx = _np.argmin(_np.abs(array - value))
+    array = np.asarray(array)
+    idx = np.argmin(np.abs(array - value))
     idx = int(idx)
     return idx, array[idx]
 
@@ -212,37 +266,37 @@ def find_ind_periodic(array, value, peri):
 
     Here the values are assumed to be periodic.
     """
-    array = _np.asarray(array)
-    idx = _np.argmin(_np.abs((array - value) % peri))
+    array = np.asarray(array)
+    idx = np.argmin(np.abs((array - value) % peri))
     idx = int(idx)
     return idx, array[idx]
 
 
-deg2m = 6271e3 * _np.pi / 180
+deg2m = 6271e3 * np.pi / 180
 
 
 def find_ind_h(Xs, Ys, tree, h_shape):
     """Use ckd tree to find the horizontal indexes,."""
     x, y, z = spherical2cartesian(Ys, Xs)
-    _, index1d = tree.query(_np.array([x, y, z]).T)
+    _, index1d = tree.query(np.array([x, y, z]).T)
     if len(h_shape) == 3:
-        faces, iys, ixs = _np.unravel_index((index1d), h_shape)
+        faces, iys, ixs = np.unravel_index((index1d), h_shape)
     elif len(h_shape) == 2:
         faces = None
-        iys, ixs = _np.unravel_index((index1d), h_shape)
+        iys, ixs = np.unravel_index((index1d), h_shape)
     return faces, iys, ixs
 
 
 @compileable
 def find_rel_nearest(value, ts):
     """Find the rel-coords based on the find_ind_nearest method."""
-    its = _np.zeros_like(value)
-    rts = _np.ones_like(value) * 0.0
+    its = np.zeros_like(value)
+    rts = np.ones_like(value) * 0.0
     # the way to create zeros with float32 type
-    dts = _np.ones_like(value) * 0.0
-    bts = _np.ones_like(value) * 0.0
+    dts = np.ones_like(value) * 0.0
+    bts = np.ones_like(value) * 0.0
 
-    DT = _np.zeros(len(ts) + 1)
+    DT = np.zeros(len(ts) + 1)
     DT[1:-1] = ts[1:] - ts[:-1]
     DT[0] = DT[1]
     DT[-1] = DT[-2]
@@ -265,13 +319,13 @@ def find_rel_nearest(value, ts):
 @compileable
 def find_rel_periodic(value, ts, peri):
     """Find the rel-coords based on the find_ind_periodic method."""
-    its = _np.zeros_like(value)
-    rts = _np.ones_like(value) * 0.0
+    its = np.zeros_like(value)
+    rts = np.ones_like(value) * 0.0
     # the way to create zeros with float32 type
-    dts = _np.ones_like(value) * 0.0
-    bts = _np.ones_like(value) * 0.0
+    dts = np.ones_like(value) * 0.0
+    bts = np.ones_like(value) * 0.0
 
-    DT = _np.zeros(len(ts) + 1)
+    DT = np.zeros(len(ts) + 1)
     DT[1:-1] = ts[1:] - ts[:-1]
     DT[0] = DT[1]
     DT[-1] = DT[-2]
@@ -317,11 +371,11 @@ def find_rel_z(depth, some_z, some_dz, dz_above_z=True):
     + dz: numpy.ndarray
         distance between the reference z level and the next one.
     """
-    izs = _np.zeros_like(depth)
-    rzs = _np.ones_like(depth) * 0.0
+    izs = np.zeros_like(depth)
+    rzs = np.ones_like(depth) * 0.0
     # the way to create zeros with float32 type
-    dzs = _np.ones_like(depth) * 0.0
-    bzs = _np.ones_like(depth) * 0.0
+    dzs = np.ones_like(depth) * 0.0
+    bzs = np.ones_like(depth) * 0.0
     for i, d in enumerate(depth):
         iz, bz = find_ind_z(some_z, d)
         izs[i] = iz
@@ -359,10 +413,10 @@ def find_rel_time(time, ts):
     + dt: numpy.ndarray
         distance between the reference t level and the next one.
     """
-    its = _np.zeros(time.shape)
-    rts = _np.ones(time.shape) * 0.0
-    dts = _np.ones(time.shape) * 0.0
-    bts = _np.ones(time.shape) * 0.0
+    its = np.zeros(time.shape)
+    rts = np.ones(time.shape) * 0.0
+    dts = np.ones(time.shape) * 0.0
+    bts = np.ones(time.shape) * 0.0
 
     for i, t in enumerate(time):
         it, bt = find_ind_t(ts, t)
@@ -384,15 +438,15 @@ def _read_h_with_face(some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs)
     """Read the grid coords when there is a face dimension to it."""
     n = len(ixs)
 
-    bx = _np.ones_like(ixs) * 0.0
-    by = _np.ones_like(ixs) * 0.0
+    bx = np.ones_like(ixs) * 0.0
+    by = np.ones_like(ixs) * 0.0
     for i in range(n):
         bx[i] = some_x[faces[i], iys[i], ixs[i]]
         by[i] = some_y[faces[i], iys[i], ixs[i]]
 
     if CS is not None and SN is not None:
-        cs = _np.ones_like(ixs) * 0.0
-        sn = _np.ones_like(ixs) * 0.0
+        cs = np.ones_like(ixs) * 0.0
+        sn = np.ones_like(ixs) * 0.0
         for i in range(n):
             cs[i] = CS[faces[i], iys[i], ixs[i]]
             sn[i] = SN[faces[i], iys[i], ixs[i]]
@@ -401,8 +455,8 @@ def _read_h_with_face(some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs)
         sn = None
 
     if some_dx is not None and some_dy is not None:
-        dx = _np.ones_like(ixs) * 0.0
-        dy = _np.ones_like(ixs) * 0.0
+        dx = np.ones_like(ixs) * 0.0
+        dy = np.ones_like(ixs) * 0.0
         for i in range(n):
             dx[i] = some_dx[faces[i], iys[i], ixs[i]]
             dy[i] = some_dy[faces[i], iys[i], ixs[i]]
@@ -419,8 +473,8 @@ def _read_h_without_face(some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs):
     # TODO ADD test if those are Nones.
     n = len(ixs)
     if some_dx is not None and some_dy is not None:
-        dx = _np.ones_like(ixs) * 0.0
-        dy = _np.ones_like(ixs) * 0.0
+        dx = np.ones_like(ixs) * 0.0
+        dy = np.ones_like(ixs) * 0.0
         for i in range(n):
             dx[i] = some_dx[iys[i], ixs[i]]
             dy[i] = some_dy[iys[i], ixs[i]]
@@ -429,8 +483,8 @@ def _read_h_without_face(some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs):
         dy = None
 
     if CS is not None and SN is not None:
-        cs = _np.ones_like(ixs) * 0.0
-        sn = _np.ones_like(ixs) * 0.0
+        cs = np.ones_like(ixs) * 0.0
+        sn = np.ones_like(ixs) * 0.0
         for i in range(n):
             cs[i] = CS[iys[i], ixs[i]]
             sn[i] = SN[iys[i], ixs[i]]
@@ -438,8 +492,8 @@ def _read_h_without_face(some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs):
         cs = None
         sn = None
 
-    bx = _np.ones_like(ixs) * 0.0
-    by = _np.ones_like(ixs) * 0.0
+    bx = np.ones_like(ixs) * 0.0
+    by = np.ones_like(ixs) * 0.0
     for i in range(n):
         bx[i] = some_x[iys[i], ixs[i]]
         by[i] = some_y[iys[i], ixs[i]]
@@ -452,8 +506,8 @@ def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):
     """Find the non-dimensional coords using the local cartesian scheme."""
     dlon = to_180(x - bx)
     dlat = to_180(y - by)
-    rx = (dlon * _np.cos(by * _np.pi / 180) * cs + dlat * sn) * deg2m / dx
-    ry = (dlat * cs - dlon * sn * _np.cos(by * _np.pi / 180)) * deg2m / dy
+    rx = (dlon * np.cos(by * np.pi / 180) * cs + dlat * sn) * deg2m / dx
+    ry = (dlat * cs - dlon * sn * np.cos(by * np.pi / 180)) * deg2m / dy
     return rx, ry
 
 
@@ -489,14 +543,14 @@ def find_rel_h_naive(Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree):
 
 def find_rel_h_rectilinear(x, y, lon, lat):
     """Find the rel-coords using the rectilinear scheme."""
-    ratio = 6371e3 * _np.pi / 180
+    ratio = 6371e3 * np.pi / 180
     ix, rx, dx, bx = find_rel_periodic(x, lon, 360.0)
     iy, ry, dy, by = find_rel_periodic(y, lat, 360.0)
-    dx = _np.cos(y * _np.pi / 180) * ratio * dx
+    dx = np.cos(y * np.pi / 180) * ratio * dx
     dy = ratio * dy
     face = None
-    cs = _np.ones_like(x)
-    sn = _np.zeros_like(x)
+    cs = np.ones_like(x)
+    sn = np.zeros_like(x)
     return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
@@ -529,10 +583,10 @@ def find_px_py(XG, YG, tp, *ind, gridoffset=-1):
     """
     N = len(ind[0])
     ind1 = tuple(
-        i for i in tp.ind_tend_vec(ind, _np.ones(N) * 3, gridoffset=gridoffset)
+        i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, gridoffset=gridoffset)
     )
-    ind2 = tuple(i for i in tp.ind_tend_vec(ind1, _np.zeros(N), gridoffset=gridoffset))
-    ind3 = tuple(i for i in tp.ind_tend_vec(ind, _np.zeros(N), gridoffset=gridoffset))
+    ind2 = tuple(i for i in tp.ind_tend_vec(ind1, np.zeros(N), gridoffset=gridoffset))
+    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N), gridoffset=gridoffset))
 
     x0 = XG[ind]
     x1 = XG[ind1]
@@ -544,8 +598,8 @@ def find_px_py(XG, YG, tp, *ind, gridoffset=-1):
     y2 = YG[ind2]
     y3 = YG[ind3]
 
-    px = _np.vstack([x0, x1, x2, x3]).astype("float64")
-    py = _np.vstack([y0, y1, y2, y3]).astype("float64")
+    px = np.vstack([x0, x1, x2, x3]).astype("float64")
+    py = np.vstack([y0, y1, y2, y3]).astype("float64")
 
     return px, py
 
@@ -556,14 +610,14 @@ def find_rx_ry_oceanparcel(x, y, px, py):
 
     This is done using the oceanparcel scheme.
     """
-    rx = _np.ones_like(x) * 0.0
-    ry = _np.ones_like(y) * 0.0
+    rx = np.ones_like(x) * 0.0
+    ry = np.ones_like(y) * 0.0
     x0 = px[0]
 
     x = to_180(x - x0)
     px = to_180(px - x0)
 
-    invA = _np.array(
+    invA = np.array(
         [
             [1.0, 0.0, 0.0, 0.0],
             [-1.0, 1.0, 0.0, 0.0],
@@ -571,8 +625,8 @@ def find_rx_ry_oceanparcel(x, y, px, py):
             [1.0, -1.0, 1.0, -1.0],
         ]
     )
-    a = _np.dot(invA, px)
-    b = _np.dot(invA, py)
+    a = np.dot(invA, px)
+    b = np.dot(invA, py)
 
     aa = a[3] * b[2] - a[2] * b[3]
     bb = a[3] * b[0] - a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + x * b[3] - y * a[3]
@@ -580,16 +634,16 @@ def find_rx_ry_oceanparcel(x, y, px, py):
 
     det2 = bb * bb - 4 * aa * cc
 
-    order1 = _np.abs(aa) < 1e-12
-    order2 = _np.logical_and(~order1, det2 >= 0)
-    #     nans   = _np.logical_and(~order1,det2< 0)
+    order1 = np.abs(aa) < 1e-12
+    order2 = np.logical_and(~order1, det2 >= 0)
+    #     nans   = np.logical_and(~order1,det2< 0)
 
     #     ry[order1] = -(cc/bb)[order1]
     ry = -(cc / bb)  # if it is supposed to be nan, just try linear solve.
-    ry[order2] = ((-bb + _np.sqrt(det2)) / (2 * aa))[order2]
-    #     ry[nans  ] = _np.nan
+    ry[order2] = ((-bb + np.sqrt(det2)) / (2 * aa))[order2]
+    #     ry[nans  ] = np.nan
 
-    rot_rectilinear = _np.abs(a[1] + a[3] * ry) < 1e-12
+    rot_rectilinear = np.abs(a[1] + a[3] * ry) < 1e-12
     rx[rot_rectilinear] = (
         (y - py[0]) / (py[1] - py[0]) + (y - py[3]) / (py[2] - py[3])
     )[rot_rectilinear] * 0.5
@@ -606,7 +660,7 @@ def weight_f_node(rx, ry):
     assign weight based on the non-dimensional
     coords to the four corner points.
     """
-    return _np.vstack(
+    return np.vstack(
         [
             (0.5 - rx) * (0.5 - ry),
             (0.5 + rx) * (0.5 - ry),
@@ -626,24 +680,24 @@ def find_cs_sn(thetaA, phiA, thetaB, phiB):
     this function return cos and sin of theta
     """
     # O being north pole
-    AO = _np.pi / 2 - thetaA
-    BO = _np.pi / 2 - thetaB
+    AO = np.pi / 2 - thetaA
+    BO = np.pi / 2 - thetaB
     dphi = phiB - phiA
     # Spherical law of cosine on AOB
-    cos_AB = _np.cos(BO) * _np.cos(AO) + _np.sin(BO) * _np.sin(AO) * _np.cos(dphi)
-    sin_AB = _np.sqrt(1 - cos_AB**2)
+    cos_AB = np.cos(BO) * np.cos(AO) + np.sin(BO) * np.sin(AO) * np.cos(dphi)
+    sin_AB = np.sqrt(1 - cos_AB**2)
     # spherical law of sine on triangle AOB
-    SN = _np.sin(BO) * _np.sin(dphi) / sin_AB
-    CS = _np.sign(thetaB - thetaA) * _np.sqrt(1 - SN**2)
+    SN = np.sin(BO) * np.sin(dphi) / sin_AB
+    CS = np.sign(thetaB - thetaA) * np.sqrt(1 - SN**2)
     return CS, SN
 
 
 def missing_cs_sn(ds):
     """Fill in the CS,SN of a dataset."""
-    xc = _np.deg2rad(_np.array(ds.XC))
-    yc = _np.deg2rad(_np.array(ds.YC))
-    cs = _np.zeros_like(xc)
-    sn = _np.zeros_like(xc)
+    xc = np.deg2rad(np.array(ds.XC))
+    yc = np.deg2rad(np.array(ds.YC))
+    cs = np.zeros_like(xc)
+    sn = np.zeros_like(xc)
     cs[0], sn[0] = find_cs_sn(yc[0], xc[0], yc[1], xc[1])
     cs[-1], sn[-1] = find_cs_sn(yc[-2], xc[-2], yc[-1], xc[-1])
     cs[1:-1], sn[1:-1] = find_cs_sn(yc[:-2], xc[:-2], yc[2:], xc[2:])
