@@ -2,8 +2,7 @@ import numpy as np
 import pytest
 
 import seaduck as sd
-
-from . import utils
+from seaduck import utils
 
 # Set the number of particles here.
 N = int(9)

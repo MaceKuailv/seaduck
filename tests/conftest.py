@@ -1,7 +1,6 @@
 import pytest
 
 import seaduck as sd
-
 from seaduck import utils
 
 
