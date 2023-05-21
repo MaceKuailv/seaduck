@@ -2,7 +2,6 @@ import functools
 import os
 
 import numpy as np
-import pooch
 
 # Required dependencies (private)
 import xarray as xr
@@ -10,11 +9,19 @@ from scipy import spatial
 
 from seaduck.runtime_conf import compileable
 
-POOCH = pooch.create(
-    path=pooch.os_cache("seaduck"), base_url="doi:10.5281/zenodo.7949168", registry=None
-)
-POOCH.load_registry_from_doi()  # Automatically populate the registry
-POOCH_FETCH_KWARGS = {"progressbar": True}
+try:
+    import pooch
+except ImportError:
+    pass
+
+@functools.cache
+def pooch_prepare():
+    POOCH = pooch.create(
+        path=pooch.os_cache("seaduck"), base_url="doi:10.5281/zenodo.7949168", registry=None
+    )
+    POOCH.load_registry_from_doi()  # Automatically populate the registry
+    POOCH_FETCH_KWARGS = {"progressbar": True}
+    return POOCH, POOCH_FETCH_KWARGS
 
 
 def process_ecco(ds):
@@ -55,6 +62,7 @@ def process_ecco(ds):
 
 @functools.cache
 def get_dataset(name):
+    POOCH, POOCH_FETCH_KWARGS = pooch_prepare()
     fnames = POOCH.fetch(f"{name}.tar.gz", pooch.Untar(), **POOCH_FETCH_KWARGS)
     ds = xr.open_zarr(os.path.commonpath(fnames))
     if name == "ecco":
