@@ -14,10 +14,13 @@ try:
 except ImportError:
     pass
 
+
 @functools.cache
 def pooch_prepare():
     POOCH = pooch.create(
-        path=pooch.os_cache("seaduck"), base_url="doi:10.5281/zenodo.7949168", registry=None
+        path=pooch.os_cache("seaduck"),
+        base_url="doi:10.5281/zenodo.7949168",
+        registry=None,
     )
     POOCH.load_registry_from_doi()  # Automatically populate the registry
     POOCH_FETCH_KWARGS = {"progressbar": True}
@@ -68,6 +71,7 @@ def get_dataset(name):
     if name == "ecco":
         return process_ecco(ds)
     return ds
+
 
 def rel_lon(x, ref_lon):
     """Change the definition of 0 longitude.
@@ -590,9 +594,7 @@ def find_px_py(XG, YG, tp, *ind, gridoffset=-1):
     This is used in oceanparcel interpolation scheme.
     """
     N = len(ind[0])
-    ind1 = tuple(
-        i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, gridoffset=gridoffset)
-    )
+    ind1 = tuple(i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, gridoffset=gridoffset))
     ind2 = tuple(i for i in tp.ind_tend_vec(ind1, np.zeros(N), gridoffset=gridoffset))
     ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N), gridoffset=gridoffset))
 
@@ -714,3 +716,37 @@ def missing_cs_sn(ds):
 
     ds["SN"] = ds["XC"]
     ds["SN"].values = sn
+
+
+def convert_time(time):
+    t0 = np.datetime64("1970-01-01")
+    one_sec = np.timedelta64(1, "s")
+    if isinstance(time, str):
+        dt = np.datetime64(time) - t0
+        return dt / one_sec
+    elif isinstance(time, np.datetime64):
+        return (time - t0) / one_sec
+
+
+def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):
+    east, west, Nlon = lon
+    south, north, Nlat = lat
+    shallow, deep, Ndep = dep
+    t_in_sec = convert_time(tim)
+
+    x = np.linspace(east, west, Nlon)
+    y = np.linspace(south, north, Nlat)
+    x, y = np.meshgrid(x, y)
+    x = x.ravel()
+    y = y.ravel()
+    levels = np.linspace(shallow, deep, Ndep)
+    x, z = np.meshgrid(x, levels)
+    y, z = np.meshgrid(y, levels)
+    x = x.ravel()
+    y = y.ravel()
+    z = z.ravel()
+
+    t = np.ones_like(x) * t_in_sec
+    if print_total_number:
+        print(f"A total {len(x)} positions defined.")
+    return x, y, z, t

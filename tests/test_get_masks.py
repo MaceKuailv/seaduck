@@ -4,8 +4,7 @@ import pytest
 import seaduck as sd
 import seaduck.get_masks as gm
 import seaduck.topology as topology
-
-from . import utils
+from seaduck import utils
 
 
 # TODO: have a dataset that actually has maskC and is also not ECCO in the test datasets

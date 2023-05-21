@@ -4,8 +4,7 @@ import numpy as np
 import pytest
 
 import seaduck as sd
-
-from . import utils
+from seaduck import utils
 
 uknw = sd.lagrangian.uknw
 vknw = sd.lagrangian.vknw
