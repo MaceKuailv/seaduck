@@ -1,13 +1,7 @@
-______________________________________________________________________
-
-## jupytext: text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.14.5 kernelspec: display_name: Python 3 (ipykernel) language: python name: python3
-
 # Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.
 
 ### Wenrui Jiang, Tom Haine Feb '23
-
 > :warning: the notebook was last ran on 2023-05-22. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb.
-
 ```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
@@ -74,8 +68,7 @@ plt.plot(x, y, "r")
 plt.colorbar()
 plt.show()
 ```
-
-![png](IGP_files/IGP_15_1.png)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_15_1.png?raw=true)
 
 ### Define a function to control when to continue simulation, or to stop it. The simulation will only continue for particles that return True.
 
@@ -138,8 +131,7 @@ plt.xlim([-35, -10])
 plt.ylim([65, 72])
 plt.show()
 ```
-
-![png](IGP_files/IGP_27_1.png)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_27_1.png?raw=true)
 
 ```{code-cell} ipython3
 
