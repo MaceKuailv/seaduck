@@ -18,10 +18,10 @@ seaduck.OceData module
    :undoc-members:
    :show-inheritance:
 
-seaduck.RuntimeConf module
+seaduck.runtime_conf module
 ----------------------------
 
-.. automodule:: seaduck.RuntimeConf
+.. automodule:: seaduck.runtime_conf
    :members:
    :undoc-members:
    :show-inheritance:
@@ -42,10 +42,10 @@ seaduck.get\_masks module
    :undoc-members:
    :show-inheritance:
 
-seaduck.kernelNweight module
+seaduck.kernel_weight module
 ------------------------------
 
-.. automodule:: seaduck.kernelNweight
+.. automodule:: seaduck.kernel_weight
    :members:
    :undoc-members:
    :show-inheritance:
