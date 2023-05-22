@@ -1,7 +1,7 @@
-seaduck.kernelNweight
+seaduck.kernel_weight
 ------------------------------
 
-.. automodule:: seaduck.kernelNweight
+.. automodule:: seaduck.kernel_weight
    :members:
    :undoc-members:
    :show-inheritance:

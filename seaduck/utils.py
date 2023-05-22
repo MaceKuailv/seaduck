@@ -535,9 +535,7 @@ def find_rel_h_naive(Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     very similar to find_rel_time/v
     rx,ry,dx,dy are defined the same way
     for example
-          "how much to the right of the node"
-    rx = -------------------------------------------
-         "size of the cell in left-right direction"
+    rx = "how much to the right of the node"/"size of the cell in left-right direction"
     dx = "size of the cell in left-right direction".
 
     cs,sn is just the cos and sin of the grid orientation.
