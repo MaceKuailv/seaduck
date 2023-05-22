@@ -23,4 +23,4 @@ parts:
   chapters:
   - file: Global_ECCO
   - file: AVISO
-  - file: IGP
+  - file: sciserver_notebooks/IGP
