@@ -10,8 +10,8 @@ logo: logo.png
 execute:
   execute_notebooks: 'auto'
   stderr_output: "remove"
-  exclude_patterns: 
-    - '*.md'
+  exclude_patterns:
+  - '*.md'
 
 # Define the name of the latex output file for PDF builds
 latex:
