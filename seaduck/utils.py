@@ -17,7 +17,7 @@ except ImportError:
 
 @functools.cache
 def pooch_prepare():
-    '''Prepare for loading datasets using pooch'''
+    """Prepare for loading datasets using pooch."""
     POOCH = pooch.create(
         path=pooch.os_cache("seaduck"),
         base_url="doi:10.5281/zenodo.7949168",
@@ -29,7 +29,7 @@ def pooch_prepare():
 
 
 def process_ecco(ds):
-    '''Add more meat to ECCO dataset after the skeleton is downloaded'''
+    """Add more meat to ECCO dataset after the skeleton is downloaded."""
     rand1 = np.random.random((50, 13, 90, 90))
     rand2 = np.random.random((50, 13, 90, 90))
     rand3 = np.random.random((50, 13, 90, 90))
@@ -67,10 +67,10 @@ def process_ecco(ds):
 
 @functools.cache
 def get_dataset(name):
-    '''Use pooch to download datasets from cloud.
+    """Use pooch to download datasets from cloud.
 
-    This is just for testing purposes. 
-    '''
+    This is just for testing purposes.
+    """
     POOCH, POOCH_FETCH_KWARGS = pooch_prepare()
     fnames = POOCH.fetch(f"{name}.tar.gz", pooch.Untar(), **POOCH_FETCH_KWARGS)
     ds = xr.open_zarr(os.path.commonpath(fnames))
@@ -725,10 +725,10 @@ def missing_cs_sn(ds):
 
 
 def convert_time(time):
-    '''Convert time into seconds after 1970-01-01
-    
-    time needs to be a string or a np.datetime64 object. 
-    '''
+    """Convert time into seconds after 1970-01-01.
+
+    time needs to be a string or a np.datetime64 object.
+    """
     t0 = np.datetime64("1970-01-01")
     one_sec = np.timedelta64(1, "s")
     if isinstance(time, str):
@@ -739,7 +739,7 @@ def convert_time(time):
 
 
 def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):
-    '''Create 4D coords for initializing position/particle'''
+    """Create 4D coords for initializing position/particle."""
     east, west, Nlon = lon
     south, north, Nlat = lat
     shallow, deep, Ndep = dep
