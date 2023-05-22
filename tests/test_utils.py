@@ -81,8 +81,8 @@ def test_easy_cube():
     west = 0.0
     south = 40.0
     north = 75.0
-    shallow = -10
-    deep = -10
+    shallow = -10.
+    deep = -10.
     time_string = "1977-01-01"
 
     Nlon = 10
