@@ -931,7 +931,7 @@ class particle(position):
             elif i > 10:
                 trim_tol = 1e-10
             self.trim(tol=trim_tol)
-            print(sum(todo), "left", end="\r")
+            print(sum(todo), "left","     ", end="\r")
             self.analytical_step(tf, todo)
             self.update_after_cell_change()
             if self.transport:
@@ -947,7 +947,7 @@ class particle(position):
                 # record those who cross the wall
                 self.note_taking(todo)
         #             self._contract()
-        print(sum(todo), "left", end=" ")
+        print(sum(todo), "left","     ", end=" ")
         if i == self.max_iteration - 1:
             print("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
