@@ -1,8 +1,9 @@
 import copy
+import logging
 
 import numpy as np
 
-from seaduck.runtime_conf import compileable, rcParam
+from seaduck.runtime_conf import compileable
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
@@ -521,8 +522,8 @@ class topology:
                 particle_on_edge = True
                 n_ind = ind
             inds[:, j] = np.array(n_ind).ravel()
-        if particle_on_edge and rcParam["debug_level"] == "very_high":
-            print("Warning:Some points are on the edge")
+        if particle_on_edge:
+            logging.warning("Some points are on the edge")
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)
         return inds
