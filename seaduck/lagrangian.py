@@ -1,4 +1,6 @@
 import copy
+import logging
+import warnings
 
 import numpy as np
 
@@ -528,7 +530,7 @@ class particle(position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, verbose=False, tol=1e-6):
+    def trim(self, tol=1e-6):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -536,65 +538,61 @@ class particle(position):
 
         **Parameters:**
 
-        + verbose: Boolean
-            Whether to dump the maximum value trimmed.
-            Only set True if something is not going correctly
         + tol: float
             The relative tolerance when particles is significantly
             close to the cell.
         """
         # tol = 1e-6 # about 10 m horizontal for 1 degree
-        if verbose:  # pragma: no cover
+        if logging.DEBUG >= logging.root.level:  # pragma: no cover
             xmax = np.nanmax(self.rx)
             xmin = np.nanmin(self.rx)
             ymax = np.nanmax(self.ry)
             ymin = np.nanmin(self.ry)
+
+            logging.debug(f"converting {xmax} to 0.5")
+            logging.debug(f"converting {xmin} to -0.5")
+            logging.debug(f"converting {ymax} to 0.5")
+            logging.debug(f"converting {ymin} to -0.5")
+
+            if self.rzl_lin is not None:
+                zmax = np.nanmax(self.rzl_lin)
+                zmin = np.nanmin(self.rzl_lin)
+                logging.debug(f"converting {zmax} to 1")
+                logging.debug(f"converting {zmin} to 0")
 
         # if xmax>=0.5-tol:
         where = self.rx >= 0.5 - tol
         cdx = (0.5 - tol) - self.rx[where]
         self.rx[where] += cdx
         self.u[where] += self.du[where] * cdx
-        if verbose:  # pragma: no cover
-            print(f"converting {xmax} to 0.5")
         # if xmin<=-0.5+tol:
         where = self.rx <= -0.5 + tol
         cdx = (-0.5 + tol) - self.rx[where]
         self.rx[where] += cdx
         self.u[where] += self.du[where] * cdx
-        if verbose:  # pragma: no cover
-            print(f"converting {xmin} to -0.5")
         # if ymax>=0.5-tol:
         where = self.ry >= 0.5 - tol
         cdx = (0.5 - tol) - self.ry[where]
         self.ry[where] += cdx
         self.v[where] += self.dv[where] * cdx
-        if verbose:  # pragma: no cover
-            print(f"converting {ymax} to 0.5")
         # if ymin<=-0.5+tol:
         where = self.ry <= -0.5 + tol
         cdx = (-0.5 + tol) - self.ry[where]
         self.ry[where] += cdx
         self.v[where] += self.dv[where] * cdx
-        if verbose:  # pragma: no cover
-            print(f"converting {ymin} to -0.5")
         if self.rzl_lin is not None:
-            zmax = np.nanmax(self.rzl_lin)
-            zmin = np.nanmin(self.rzl_lin)
+            np.nanmax(self.rzl_lin)
+            np.nanmin(self.rzl_lin)
             # if zmax>=1.-tol:
             where = self.rzl_lin >= 1.0 - tol
             cdx = (1.0 - tol) - self.rzl_lin[where]
             self.rzl_lin[where] += cdx
             self.w[where] += self.dw[where] * cdx
-            if verbose:  # pragma: no cover
-                print(f"converting {zmax} to 1")
             # if zmin<=-0.+tol:
             where = self.rzl_lin <= -0.0 + tol
             cdx = (-0.0 + tol) - self.rzl_lin[where]
             self.rzl_lin[where] += cdx
             self.w[where] += self.dw[where] * cdx
-            if verbose:  # pragma: no cover
-                print(f"converting {zmin} to 0")
 
     def _contract(self):  # pragma: no cover
         """Warp time to move particle into cell.
@@ -931,7 +929,7 @@ class particle(position):
             elif i > 10:
                 trim_tol = 1e-10
             self.trim(tol=trim_tol)
-            print(sum(todo), "left", "     ", end="\r")
+            logging.debug(sum(todo), "left")
             self.analytical_step(tf, todo)
             self.update_after_cell_change()
             if self.transport:
@@ -946,10 +944,9 @@ class particle(position):
             if self.save_raw:
                 # record those who cross the wall
                 self.note_taking(todo)
-        #             self._contract()
-        print(sum(todo), "left", "     ", end=" ")
-        if i == self.max_iteration - 1:
-            print("maximum iteration count reached")
+
+        if i == self.max_iteration - 1:  # pragma: no cover
+            warnings.warn("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
         if self.ocedata.readiness["time"]:
             self.it, self.rt, self.dt, self.bt = self.ocedata.find_rel_t(self.t)
@@ -1023,7 +1020,7 @@ class particle(position):
         self.get_u_du()
         R = []
         for i, tl in enumerate(stops):
-            print(np.datetime64(round(tl), "s"))
+            logging.info(np.datetime64(round(tl), "s"))
             if self.save_raw:
                 # save the very start of everything.
                 self.note_taking()
@@ -1042,5 +1039,4 @@ class particle(position):
                 R.append(self.deepcopy())
             if self.save_raw:
                 self.empty_lists()
-            print()
         return stops, R

@@ -21,7 +21,6 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
     + values: numpy.ndarray
         The values of the points of interest. Has the same shape as the elements in ind.
     """
-    #     print('read called')
     the_shape = ind[0].shape
     ind = tuple([i.ravel() for i in ind])
     if len(da.dims) != len(ind):
@@ -58,7 +57,7 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
     ckus, inverse = np.unique(ckbl, axis=0, return_inverse=True)
     # ckus is the individual chunks used
     if len(ckus) <= xarray_more_efficient:
-        #         print('use smart')
+        # logging.debug('use smart')
         for i, k in enumerate(ckus):
             ind_str = []
             pre = []
@@ -75,6 +74,6 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
             result[which] = npck[subind]
         return result.reshape(the_shape)
     else:
-        #         print('use xarray')
+        # logging.debug('use xarray')
         xrind = tuple([xr.DataArray(dim, dims=["x"]) for dim in ind])
         return np.array(da[xrind]).reshape(the_shape)
