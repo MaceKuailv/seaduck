@@ -1,8 +1,9 @@
 import copy
+import logging
 
 import numpy as np
 
-from seaduck.runtime_conf import compileable, rcParam
+from seaduck.runtime_conf import compileable
 
 # If you have encountered a NotImplementedError and come to this file,
 # I suggest you read the ***class topology*** near the bottom of this file.
@@ -41,7 +42,7 @@ def llc_mutual_direction(face, nface, transitive=False):
     nedge_n = np.where(llc_face_connect[nface] == face)
     try:
         found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
-    except IndexError:
+    except Exception:  # It has to be a index error, but numba does not support that
         found = False
     if found:
         return edge_n[0][0], nedge_n[0][0]
@@ -521,8 +522,8 @@ class topology:
                 particle_on_edge = True
                 n_ind = ind
             inds[:, j] = np.array(n_ind).ravel()
-        if particle_on_edge and rcParam["debug_level"] == "very_high":
-            print("Warning:Some points are on the edge")
+        if particle_on_edge:
+            logging.warning("Some points are on the edge")
         for i in range(len(inds)):
             inds[i] = inds[i].astype(int)
         return inds

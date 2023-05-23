@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 try:  # pragma: no cover
@@ -182,7 +184,9 @@ class OceData:
         """
         way = self.readiness["h"]
         if self.too_large:  # pragma: no cover
-            print("Loading grid into memory, it's a large dataset please be patient")
+            logging.warning(
+                "Loading grid into memory, it's a large dataset please be patient"
+            )
 
         if way == "oceanparcel":
             for var in ["XC", "YC", "XG", "YG"]:
@@ -191,7 +195,7 @@ class OceData:
                 try:
                     self[var] = np.array(self[var]).astype("float32")
                 except KeyError:
-                    print(f"no {var} in dataset, skip")
+                    logging.info(f"no {var} in dataset, skip")
                     self[var] = None
             try:
                 self.dX = np.array(self["dXG"]).astype("float32")
@@ -200,10 +204,10 @@ class OceData:
                 self.dX = None
                 self.dY = None
             if self.too_large:  # pragma: no cover
-                print("numpy arrays of grid loaded into memory")
+                logging.info("numpy arrays of grid loaded into memory")
             self.tree = create_tree(self.XC, self.YC)
             if self.too_large:  # pragma: no cover
-                print("cKD created")
+                logging.info("cKD created")
 
         if way == "local_cartesian":
             for var in ["XC", "YC", "CS", "SN"]:
@@ -216,13 +220,13 @@ class OceData:
                     try:
                         self[var] = np.array(self[var]).astype("float32")
                     except KeyError:
-                        print(f"no {var} in dataset, skip")
+                        logging.info(f"no {var} in dataset, skip")
                         self[var] = None
             if self.too_large:  # pragma: no cover
-                print("numpy arrays of grid loaded into memory")
+                logging.info("numpy arrays of grid loaded into memory")
             self.tree = create_tree(self.XC, self.YC)
             if self.too_large:  # pragma: no cover
-                print("cKD created")
+                logging.info("cKD created")
 
         if way == "rectilinear":
             self.lon = np.array(self["lon"]).astype("float32")

@@ -1,8 +1,7 @@
 import pytest
 
 import seaduck as sd
-
-from . import utils
+from seaduck import utils
 
 
 @pytest.fixture(scope="session")

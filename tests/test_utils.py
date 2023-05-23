@@ -67,3 +67,33 @@ def test_none_in():
 def test_cs_sn(ds):
     sd.utils.missing_cs_sn(ds)
     assert isinstance(ds["CS"], xr.DataArray)
+
+
+def test_covert_time():
+    rand = round(np.random.random() * 1e7)
+    time = np.datetime64("1970-01-01") + np.timedelta64(rand, "s")
+    ress = sd.utils.convert_time(time)
+    assert np.isclose(rand, ress, atol=1)
+
+
+def test_easy_cube():
+    east = -80.0
+    west = 0.0
+    south = 40.0
+    north = 75.0
+    shallow = -10.0
+    deep = -10.0
+    time_string = "1977-01-01"
+
+    Nlon = 10
+    Nlat = 10
+    Ndep = 1
+
+    x, y, z, t = sd.utils.easy_3d_cube(
+        (east, west, Nlon),
+        (south, north, Nlat),
+        (shallow, deep, Ndep),
+        time_string,
+        print_total_number=True,
+    )
+    assert len(x) == Nlon * Nlat * Ndep

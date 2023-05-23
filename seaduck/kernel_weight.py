@@ -1,8 +1,9 @@
 import copy
+import logging
 
 import numpy as np
 
-from seaduck.runtime_conf import compileable, rcParam
+from seaduck.runtime_conf import compileable
 from seaduck.utils import get_combination
 
 # default kernel for interpolation.
@@ -612,8 +613,7 @@ def get_func(kernel, hkernel="interp", h_order=0):
 
     layer_3 = layer_2.get(h_order)
     if layer_3 is None:
-        if rcParam["debug_level"] == "very_high":
-            print("Creating new weight function," " the first time is going to be slow")
+        logging.info("Creating new weight function, the first time is going to be slow")
         layer_2[h_order] = kernel_weight(kernel, ktype=hkernel, order=h_order)
     layer_3 = layer_2[h_order]
 
@@ -686,13 +686,9 @@ class KnW:
         # Avoid points having same distance
         ksort_inv = ksort.argsort()
 
-        if (
-            (inheritance is not None)
-            and (ignore_mask)
-            and (rcParam["debug_level"] == "very_high")
-        ):
-            print(
-                "Warning:overwriting the inheritance object to None,"
+        if (inheritance is not None) and (ignore_mask):
+            logging.info(
+                "Overwriting the inheritance object to None,"
                 " because we ignore masking"
             )
 

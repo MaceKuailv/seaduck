@@ -1,19 +1,18 @@
 rcParam = {
     "compilable": True,
-    "debug_level": "not that high",
     "dump_masks_to_local": False,
 }
 
 try:  # pragma: no cover
     from numba import njit
 
-    useJIT = True
+    rcParam["compilable"] = True
 except ImportError:  # pragma: no cover
-    useJIT = False
+    rcParam["compilable"] = False
 
 
 def compileable(func):  # pragma: no cover
-    if useJIT:
+    if rcParam["compilable"]:
         return njit(func)
     else:
         return func
