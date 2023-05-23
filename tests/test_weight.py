@@ -4,8 +4,6 @@ import pytest
 import seaduck as sd
 import seaduck.kernel_weight as kw
 
-sd.rcParam["debug_level"] = "very_high"
-
 
 @pytest.fixture
 def aknw():
