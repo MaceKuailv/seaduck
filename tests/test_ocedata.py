@@ -3,8 +3,7 @@ import pytest
 import xarray as xr
 
 import seaduck as sd
-
-from . import utils
+from seaduck import utils
 
 
 @pytest.fixture

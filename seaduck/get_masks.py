@@ -1,4 +1,5 @@
 import copy
+import logging
 import warnings
 
 import numpy as np
@@ -129,7 +130,7 @@ def get_masks(od, tp):
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
-        print("no maskC in the dataset, assuming nothing is masked.")
+        logging.warning("no maskC in the dataset, assuming nothing is masked.")
         # od._ds.C_GRID_VARIABLE.to_masked_array().mask
         maskC = np.ones_like(od._ds.XC + od._ds.Z)
         # it is inappropriate to fill in the dataset,
@@ -143,14 +144,14 @@ def get_masks(od, tp):
             "or you could set knw.ignore_mask = True"
         )
     if "maskU" not in keys:
-        print("creating maskU,this is going to be very slow!")
+        logging.info("creating maskU,this is going to be very slow!")
         maskU = mask_u_node(maskC, tp)
         od._ds["maskU"] = od._ds["Z"] + od._ds["XG"]
         od._ds["maskU"].values = maskU
     else:
         maskU = np.array(od._ds["maskU"])
     if "maskV" not in keys:
-        print("creating maskV,this is going to be very slow!")
+        logging.info("creating maskV,this is going to be very slow!")
         maskV = mask_v_node(maskC, tp)
         od._ds["maskV"] = od._ds["Z"] + od._ds["YG"]
         od._ds["maskV"].values = maskV
@@ -158,7 +159,7 @@ def get_masks(od, tp):
         maskV = np.array(od._ds["maskV"])
     if "maskWvel" not in keys:
         # there is a maskW with W meaning West in ECCO
-        print("creating maskW,this is going to be somewhat slow")
+        logging.info("creating maskW,this is going to be somewhat slow")
         maskW = mask_w_node(maskC)
         od._ds["maskWvel"] = od._ds["Z"] + od._ds["YC"]
         od._ds["maskWvel"].values = maskW
@@ -187,8 +188,6 @@ def get_masked(od, ind, gridtype="C"):
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
-        #         print('no maskC in the dataset, assuming nothing is masked.')
-        # od._ds.C_GRID_VARIABLE.to_masked_array().mask
         return np.ones_like(ind[0])
     elif gridtype == "C":
         return smart_read(od._ds.maskC, ind)
@@ -206,12 +205,10 @@ def get_masked(od, ind, gridtype="C"):
         small_mask = func_dic[gridtype](maskC, tp)
         dims = tuple(map(rename_dic[gridtype], od._ds.maskC.dims))
         sizes = tuple([len(od._ds[dim]) for dim in dims])
-        #         print(sizes)
         mask = np.zeros(sizes)
         # indexing sensitive
         old_size = small_mask.shape
         slices = tuple([slice(0, i) for i in old_size])
-        #         print(ind_str)
         mask[slices] = small_mask
         od._ds[name] = xr.DataArray(mask, dims=dims)
         return mask[ind]
