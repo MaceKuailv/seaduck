@@ -1,0 +1,879 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seaduck.lagrangian &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_lagrangian';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="seaduck.OceInterp" href="apiref_OceInterp.html" />
+    <link rel="prev" title="seaduck.eulerian" href="apiref_eulerian.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to seaduck
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
+
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../reference.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_kernelNweight.html">seaduck.kernel_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../contribute/use_git.html">Using git</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/MaceKuailv/seaduck" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2Fapi_reference/apiref_lagrangian.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/api_reference/apiref_lagrangian.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>seaduck.lagrangian</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="section" id="module-seaduck.lagrangian">
+<span id="seaduck-lagrangian"></span><h1>seaduck.lagrangian<a class="headerlink" href="#module-seaduck.lagrangian" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'WVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dont_fly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="apiref_eulerian.html#seaduck.eulerian.position" title="seaduck.eulerian.position"><code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code></a></p>
+<p>Lagrangian particle object.</p>
+<p>The Lagrangian particle object. Simply a eulerian position object
+that know how to move itself.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>kwarg: dict</dt><dd><p>The keyword argument that feed into position.from_latlon method</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>uname, vname, wname: str</dt><dd><p>The variable names for the velocity/mass-transport components.
+If transport is true, pass in names of the volume/mass transport
+across cell wall in m^3/3
+else,  just pass something that is in m/s</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dont_fly: Boolean</dt><dd><p>Sometimes there is non-zero vertical velocity at sea surface.
+dont_fly = True set that to zero.
+An error may occur depends on the situation if set otherwise.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>save_raw: Boolean</dt><dd><p>Whether to record the analytical history of all particles in an
+unstructured list.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>transport: Boolean</dt><dd><p>If transport is true, pass in names of the volume/mass transport
+across cell wall in m^3/3
+else,  just pass velocity that is in m/s</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>callback: function that take particle as input</dt><dd><p>A callback function that takes particle as input. Return boolean
+array that determines which particle should still be going.
+Users can also define customized functions here.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>max_iteration: int</dt><dd><p>The number of analytical steps allowed for the to_next_stop
+method.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.analytical_step">
+<span class="sig-name descname"><span class="pre">analytical_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.analytical_step" title="Permalink to this definition">#</a></dt>
+<dd><p>Integrate the particle with velocity.</p>
+<p>The core method.
+A set of particles trying to integrate for time tf
+(could be negative).
+at the end of the call, every particle are either:
+1. ended up somewhere within the cell after time tf.
+2. ended up on a cell wall before
+(if tf is negative, then “after”) tf.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>tf: float, numpy.ndarray</dt><dd><p>The longest duration of the simulation for each particle.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to
+do the operation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.deepcopy" title="Permalink to this definition">#</a></dt>
+<dd><p>Return a clone of the object.</p>
+<p>The object is a position object, and thus cannot move any more.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.empty_lists">
+<span class="sig-name descname"><span class="pre">empty_lists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.empty_lists" title="Permalink to this definition">#</a></dt>
+<dd><p>Empty the lists.</p>
+<p>Some times the raw-data list get too long,
+It would be necessary to dump the data,
+and empty the lists containing the raw data.
+This method does the latter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.fillna">
+<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.fillna" title="Permalink to this definition">#</a></dt>
+<dd><p>Fill the np.nan values to nan.</p>
+<p>This is just to let those in rock stay in rock.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.get_u_du">
+<span class="sig-name descname"><span class="pre">get_u_du</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.get_u_du" title="Permalink to this definition">#</a></dt>
+<dd><p>Read the velocity at particle position.</p>
+<p>Read the velocity and velocity derivatives in all three dimensions
+using the interpolate method with the default kernel.
+Read eulerian.position.interpolate for more detail.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to
+do the operation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.get_vol">
+<span class="sig-name descname"><span class="pre">get_vol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.get_vol" title="Permalink to this definition">#</a></dt>
+<dd><p>Read in the volume of the cell.</p>
+<p>For particles that has transport = True,
+volume of the cell is needed for the integration.
+This method read the volume that is calculated at __init__.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points
+to do the operation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.note_taking">
+<span class="sig-name descname"><span class="pre">note_taking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.note_taking" title="Permalink to this definition">#</a></dt>
+<dd><p>Record raw data into list of lists.</p>
+<p>This method is only called in save_raw = True particles.
+This method will note done the raw info of the particle
+trajectories.
+With those info, one could reconstruct the analytical
+trajectories to arbitrary position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.to_list_of_time">
+<span class="sig-name descname"><span class="pre">to_list_of_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_stops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.to_list_of_time" title="Permalink to this definition">#</a></dt>
+<dd><p>Integrate the particles to a list of time.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>normal_stops: iterable</dt><dd><p>The time steps that user request a output</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>update_stops: iterable, or ‘default’</dt><dd><p>The time steps that uvw array changes in the model.
+If ‘default’ is set,
+the method is going to figure it out automatically.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>return_in_between: Boolean</dt><dd><p>Users can get the values of update_stops free of computational
+cost.We understand that user may sometimes don’t want those in
+the output.In that case, it that case, set it to be False,
+and the output will all be at normal_stops.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>stops: list</dt><dd><p>The list of stops.
+It is the combination of normal_stops and output_stops by
+default. f return_in_between is set to be False,
+this is then the same as normal stops.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>R: list</dt><dd><p>A list deep copy of particle that inherited
+the interpolate method
+as well as velocity and coords info.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.to_next_stop">
+<span class="sig-name descname"><span class="pre">to_next_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.to_next_stop" title="Permalink to this definition">#</a></dt>
+<dd><p>Integrate all particles towards time tl.</p>
+<p>This is done by repeatedly calling analytical step.
+Or at least try to do so before maximum_iteration is reached.
+If the maximum time is reached,
+we also force all particle’s internal clock to be tl.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>tl: float, numpy.ndarray</dt><dd><p>The final time relative to 1970-01-01 in seconds.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.trim">
+<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.trim" title="Permalink to this definition">#</a></dt>
+<dd><p>Move the particles from outside the cell into the cell.</p>
+<p>At the same time change the velocity accordingly.
+In the mean time, creating some negiligible error in time.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>tol: float</dt><dd><p>The relative tolerance when particles is significantly
+close to the cell.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.update_after_cell_change">
+<span class="sig-name descname"><span class="pre">update_after_cell_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.update_after_cell_change" title="Permalink to this definition">#</a></dt>
+<dd><p>Update properties after particles cross wall.</p>
+<p>A wall event is triggered when particle reached the wall.
+This method handle the coords translation as a particle cross
+a wall.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.lagrangian.particle.update_uvw_array">
+<span class="sig-name descname"><span class="pre">update_uvw_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.update_uvw_array" title="Permalink to this definition">#</a></dt>
+<dd><p>Update the prefetched velocity arrays.</p>
+<p>The way to do it is slightly different for dataset with time
+dimensions and those without.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.lagrangian.increment">
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">increment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.increment" title="Permalink to this definition">#</a></dt>
+<dd><p>Find how far it will travel in duration t.</p>
+<p>For a one dimensional particle with speed u and speed derivative du,
+find how far it will travel in duration t.</p>
+<p><strong>Parameter:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>t: float, numpy.ndarray</dt><dd><p>The time duration</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>u: float, numpy.ndarray</dt><dd><p>The velocity defined at the starting point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>du: float, numpy.ndarray</dt><dd><p>The velocity gradient. Assumed to be constant.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.lagrangian.stationary">
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">stationary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.stationary" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the final position after time t.</p>
+<p>For a one dimensional particle with speed u and speed derivative du
+starting at x0, find the final position after time t.
+“Stationary” means that we are assuming there is no time dependency.</p>
+<p><strong>Parameter:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>t: float, numpy.ndarray</dt><dd><p>The time duration</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>u: float, numpy.ndarray</dt><dd><p>The velocity defined at the starting point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>du: float, numpy.ndarray</dt><dd><p>The velocity gradient. Assumed to be constant.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>x0: float, numpy.ndarray</dt><dd><p>The starting position.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.lagrangian.stationary_time">
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">stationary_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.stationary_time" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the amount of time to leave the cell.</p>
+<p>Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
+The time could be negative.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>u: numpy.ndarray</dt><dd><p>The velocity defined at the starting point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>du: numpy.ndarray</dt><dd><p>The velocity gradient. Assumed to be constant.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>x0: numpy.ndarray</dt><dd><p>The starting position.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>tl: numpy.ndarray</dt><dd><p>The time it takes to hit -0.5.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>tr: numpy.ndarray</dt><dd><p>The time it takes to hit 0.5</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.lagrangian.time2wall">
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">time2wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">us</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dus</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.time2wall" title="Permalink to this definition">#</a></dt>
+<dd><p>Apply stationary_time three times for all three dimensions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.lagrangian.which_early">
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">which_early</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.which_early" title="Permalink to this definition">#</a></dt>
+<dd><p>Find out which event happens first.</p>
+<p>We are trying to integrate the particle to time tf.
+The first event is either:
+1. tf is reached before reaching a wall
+2. ts[i] is reached, and a particle hit a wall. ts[i]*tf&gt;0.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>tf: float, numpy.ndarray</dt><dd><p>The final time</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ts: list</dt><dd><p>The list of events calculated using time2wall</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./api_reference"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="apiref_eulerian.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">seaduck.eulerian</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="apiref_OceInterp.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">seaduck.OceInterp</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
