@@ -1,6 +1,6 @@
 # Tidy it up and make Pull Request
 
-Every time you make some change, run 
+Every time you make some change, run
 
 ```shell
 git add .
@@ -19,6 +19,6 @@ This will do the style check, run pytest. If you followed the steps in ["prepare
 git push
 ```
 
-Now open your forked directory, you should be able to "start a pull request" by clicking around. 
+Now open your forked directory, you should be able to "start a pull request" by clicking around.
 
-Now, wait Mr. Duckmaster to merge your branch into the main branch. 
+Now, wait Mr. Duckmaster to merge your branch into the main branch.
