@@ -70,6 +70,10 @@ def get_dataset(name):
     """Use pooch to download datasets from cloud.
 
     This is just for testing purposes.
+    **Parameters:**
+
+    + name: string
+        The name of dataset, now support "ecco", "aviso", "curv", "rect"
     """
     POOCH, POOCH_FETCH_KWARGS = pooch_prepare()
     fnames = POOCH.fetch(f"{name}.tar.gz", pooch.Untar(), **POOCH_FETCH_KWARGS)
