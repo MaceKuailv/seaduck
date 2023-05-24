@@ -1,5 +1,5 @@
 # environment-ci.yml: Additional dependencies to run test under numba
-# Numba tends to lag python version a little. 
+# Numba tends to lag python version a little.
 channels:
 - conda-forge
 - nodefaults
