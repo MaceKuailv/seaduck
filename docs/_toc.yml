@@ -24,3 +24,10 @@ parts:
   - file: Global_ECCO
   - file: AVISO
   - file: sciserver_notebooks/IGP
+- caption: Contributing
+  chapters:
+  - file: contribute/use_git
+  - file: contribute/prep_env
+  - file: contribute/contr_cod
+  - file: contribute/contr_doc
+  - file: contribute/tidyNpr
