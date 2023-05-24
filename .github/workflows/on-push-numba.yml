@@ -1,4 +1,4 @@
-name: on-push
+name: on-push-numba
 
 on:
   push:
