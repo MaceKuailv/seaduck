@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries. &#8212; My sample book</title>
   
   
@@ -411,9 +412,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries">
+  <section class="tex2jax_ignore mathjax_ignore" id="lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries">
 <h1>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries" title="Permalink to this headline">#</a></h1>
-<div class="section" id="wenrui-jiang-tom-haine-feb-23">
+<section id="wenrui-jiang-tom-haine-feb-23">
 <h2>Wenrui Jiang, Tom Haine Feb ‘23<a class="headerlink" href="#wenrui-jiang-tom-haine-feb-23" title="Permalink to this headline">#</a></h2>
 <blockquote>
 <div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-05-23</strong> with <strong>seaduck 0.1.dev192+g81be7aa.d20230522</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.</p>
@@ -429,11 +430,11 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">
+</section>
+<section id="the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">
 <h2>The regional MITgcm run is the IGPwinter simulation, available on SciServer. The simulation is opened using the OceanSpy package.<a class="headerlink" href="#the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package" title="Permalink to this headline">#</a></h2>
-</div>
-<div class="section" id="see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">
+</section>
+<section id="see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">
 <h2>See: <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter">https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter</a> and <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">https://dev-poseidon-ocean.pantheonsite.io/products/datasets/</a>.<a class="headerlink" href="#see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -442,8 +443,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="artificially-create-an-open-boundary-in-depth">
+</section>
+<section id="artificially-create-an-open-boundary-in-depth">
 <h2>Artificially create an open boundary in depth.<a class="headerlink" href="#artificially-create-an-open-boundary-in-depth" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -452,8 +453,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="initialize-oceinterp-package">
+</section>
+<section id="initialize-oceinterp-package">
 <h2>Initialize OceInterp package.<a class="headerlink" href="#initialize-oceinterp-package" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -462,8 +463,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf">
+</section>
+<section id="initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf">
 <h2>Initialize the particles: We put the ducks on the East Greenland continental shelf…<a class="headerlink" href="#initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -479,8 +480,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="and-at-the-beginning-of-the-simulation">
+</section>
+<section id="and-at-the-beginning-of-the-simulation">
 <h2>…and at the beginning of the simulation…<a class="headerlink" href="#and-at-the-beginning-of-the-simulation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -492,8 +493,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="and-integrate-forward-in-time-for-one-month">
+</section>
+<section id="and-integrate-forward-in-time-for-one-month">
 <h2>…and integrate forward in time for one month.<a class="headerlink" href="#and-integrate-forward-in-time-for-one-month" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -504,8 +505,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="here-is-where-the-particles-start-on-the-map">
+</section>
+<section id="here-is-where-the-particles-start-on-the-map">
 <h2>Here is where the particles start on the map:<a class="headerlink" href="#here-is-where-the-particles-start-on-the-map" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -518,10 +519,10 @@ document.write(`
 </div>
 </div>
 <p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_15_1.png?raw=true" /></p>
-</div>
-<div class="section" id="define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true">
+</section>
+<section id="define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true">
 <h2>Define a function to control when to continue simulation, or to stop it. The simulation will only continue for particles that return True.<a class="headerlink" href="#define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true" title="Permalink to this headline">#</a></h2>
-<div class="section" id="this-function-filters-particles-based-on-their-geographic-position">
+<section id="this-function-filters-particles-based-on-their-geographic-position">
 <h3>This function filters particles based on their geographic position.<a class="headerlink" href="#this-function-filters-particles-based-on-their-geographic-position" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -534,9 +535,9 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">
+</section>
+</section>
+<section id="use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">
 <h2>Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.<a class="headerlink" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -547,8 +548,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="create-the-particle-object">
+</section>
+<section id="create-the-particle-object">
 <h2>Create the particle object.<a class="headerlink" href="#create-the-particle-object" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -569,8 +570,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="perform-the-particle-trajectory-simulation">
+</section>
+<section id="perform-the-particle-trajectory-simulation">
 <h2>Perform the particle trajectory simulation.<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -579,8 +580,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">
+</section>
+<section id="retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">
 <h2>Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.<a class="headerlink" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -590,8 +591,8 @@ document.write(`
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-results">
+</section>
+<section id="plot-results">
 <h2>Plot results.<a class="headerlink" href="#plot-results" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -606,8 +607,8 @@ document.write(`
 </div>
 </div>
 <p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_27_1.png?raw=true" /></p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

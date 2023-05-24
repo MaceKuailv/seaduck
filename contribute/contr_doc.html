@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Contributing to documentaion🦆 &#8212; My sample book</title>
   
   
@@ -398,14 +399,14 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="contributing-to-documentaion">
+  <section class="tex2jax_ignore mathjax_ignore" id="contributing-to-documentaion">
 <h1>Contributing to documentaion🦆<a class="headerlink" href="#contributing-to-documentaion" title="Permalink to this headline">#</a></h1>
 <p>We are using <a class="reference external" href="https://jupyterbook.org/en/stable/intro.html#">Jupyter Book</a>📙 to build the documentation. The online documentaion is hosted by <a class="reference external" href="https://pages.github.com/">github pages</a>.</p>
-<div class="section" id="add-modify">
+<section id="add-modify">
 <h2>Add/Modify<a class="headerlink" href="#add-modify" title="Permalink to this headline">#</a></h2>
 <p><a class="reference external" href="https://jupyterbook.org/en/stable/intro.html#">Jupyter Book</a>📗 support several different kinds of files as input, including <a class="reference external" href="https://jupyterbook.org/en/stable/reference/cheatsheet.html#tags">.md files</a>⬇️ <a class="reference external" href="https://docutils.sourceforge.io/docs/user/rst/cheatsheet.html">.rst files</a>📜, <a class="reference external" href="https://www.ibm.com/docs/en/watson-studio-local/1.2.3?topic=notebooks-markdown-jupyter-cheatsheet">.ipynb files</a>🐍, etc. Executable ones generally requires a slightly different procedures to the narrative files. Here are some instruction on how to work with each of them.</p>
-</div>
-<div class="section" id="text-files">
+</section>
+<section id="text-files">
 <span id="text-file"></span><h2>Text files<a class="headerlink" href="#text-files" title="Permalink to this headline">#</a></h2>
 <p>Adding  files (markdown, reStructuredText, etc) are not very different from contributing code.</p>
 <ol class="arabic simple">
@@ -422,8 +423,8 @@ document.write(`
 <li><p>Go to <code class="docutils literal notranslate"><span class="pre">seaduck/docs/_build/html</span></code>, you can either open <code class="docutils literal notranslate"><span class="pre">index.html</span></code> or the html file with the same name to the one that you have made changes to. See if it looks right to you. If not, iterate a little. Send me a message if you need help.</p></li>
 <li><p>When you are happy with the result, you can <a class="reference internal" href="tidyNpr.html"><span class="doc std std-doc">tidy things up and make a pull request</span></a>. After approval, your changes will be <a class="reference internal" href="#deploy-doc"><span class="std std-ref">deployed</span></a>.</p></li>
 </ol>
-</div>
-<div class="section" id="notebooks-that-could-be-run-any-where">
+</section>
+<section id="notebooks-that-could-be-run-any-where">
 <h2>Notebooks that could be run any where<a class="headerlink" href="#notebooks-that-could-be-run-any-where" title="Permalink to this headline">#</a></h2>
 <p>As a package that works with oceanographical datasets, almost all the demonstrations requires some supporting data. <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> provides several datasets available to be downloaded everywhere. It can be accessed simply by</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">seaduck</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -441,8 +442,8 @@ document.write(`
 <p>This step will “style” all the files and crucially strip the output of the notebooks. The first time running it is almost certainly going to fail. Don’t worry, <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>, the thing under the hood, will automatically fix most of the problems.</p>
 <p>Now, run it again. If this time it still has an error, look at the error message and see what you can do.
 3. Now, you can <a class="reference internal" href="tidyNpr.html"><span class="doc std std-doc">tidy things up and make a pull request</span></a></p>
-</div>
-<div class="section" id="cooler-sciserver-notebooks">
+</section>
+<section id="cooler-sciserver-notebooks">
 <h2>Cooler(Sciserver) notebooks<a class="headerlink" href="#cooler-sciserver-notebooks" title="Permalink to this headline">#</a></h2>
 <p>Cool stuff are not always portable. The ocean 🌊 is an example of that.
 Say you have something really cool you want to demonstrate, but the dataset it is based on is to large to distribute or it simply takes too long to run. Wouldn’t it be nice if we could have a cloud platform that host a bunch of ocean dataset that is free for everyone to use? It would be even better if the packages I need as an oceanographer is readily installed and I don’t have to worry about a thing.
@@ -493,12 +494,12 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourG
 <li><p>Change directory back to seaduck. Follow step 4 to 7 in the <a class="reference internal" href="#text-file"><span class="std std-ref">previous</span></a> section.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="deploy-documentation">
+</section>
+<section id="deploy-documentation">
 <span id="deploy-doc"></span><h2>Deploy documentation<a class="headerlink" href="#deploy-documentation" title="Permalink to this headline">#</a></h2>
 <p><a class="reference external" href="https://jupyterbook.org/en/stable/start/publish.html#publish-your-book-online-with-github-pages">https://jupyterbook.org/en/stable/start/publish.html#publish-your-book-online-with-github-pages</a></p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
