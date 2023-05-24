@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>All API References (for exporting) &#8212; My sample book</title>
   
   
@@ -403,9 +404,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="section" id="all-api-references-for-exporting">
+  <section id="all-api-references-for-exporting">
 <h1>All API References (for exporting)<a class="headerlink" href="#all-api-references-for-exporting" title="Permalink to this headline">#</a></h1>
-<div class="section" id="module-seaduck.OceInterp">
+<section id="module-seaduck.OceInterp">
 <span id="seaduck-oceinterp-module"></span><h2>seaduck.OceInterp module<a class="headerlink" href="#module-seaduck.OceInterp" title="Permalink to this headline">#</a></h2>
 <p>Interp for people who just want to take a quick look.</p>
 <p><strong>This is the centerpiece function of the package, through which
@@ -471,8 +472,8 @@ but also at every point in time when the speed is updated.</p>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="module-seaduck.OceData">
+</section>
+<section id="module-seaduck.OceData">
 <span id="seaduck-ocedata-module"></span><h2>seaduck.OceData module<a class="headerlink" href="#module-seaduck.OceData" title="Permalink to this headline">#</a></h2>
 <p>Ocean dataset.</p>
 <p>Class that enables variable aliasing, topology extraction, and 4-D translation
@@ -495,16 +496,16 @@ that used by the dataset (value).</p></li>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="module-seaduck.runtime_conf">
+</section>
+<section id="module-seaduck.runtime_conf">
 <span id="seaduck-runtime-conf-module"></span><h2>seaduck.runtime_conf module<a class="headerlink" href="#module-seaduck.runtime_conf" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.runtime_conf.compileable">
 <span class="sig-prename descclassname"><span class="pre">seaduck.runtime_conf.</span></span><span class="sig-name descname"><span class="pre">compileable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.runtime_conf.compileable" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.eulerian">
+</section>
+<section id="module-seaduck.eulerian">
 <span id="seaduck-eulerian-module"></span><h2>seaduck.eulerian module<a class="headerlink" href="#module-seaduck.eulerian" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.eulerian.position">
@@ -737,8 +738,8 @@ The selection is similar to that of selecting from a 1D numpy array.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.get_masks">
+</section>
+<section id="module-seaduck.get_masks">
 <span id="seaduck-get-masks-module"></span><h2>seaduck.get_masks module<a class="headerlink" href="#module-seaduck.get_masks" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.get_masks.get_masked">
@@ -897,8 +898,8 @@ if b is the case, we need to unmask the wdata.</p>
 </ul>
 </dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.kernel_weight">
+</section>
+<section id="module-seaduck.kernel_weight">
 <span id="seaduck-kernel-weight-module"></span><h2>seaduck.kernel_weight module<a class="headerlink" href="#module-seaduck.kernel_weight" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW">
@@ -1059,7 +1060,7 @@ and can register to the dictionary when new ones are created.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.get_weight_cascade">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_weight_cascade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rx,</span> <span class="pre">ry,</span> <span class="pre">pk,</span> <span class="pre">kernel_large=array([[</span> <span class="pre">0,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-2,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">2,</span>&#160; <span class="pre">0]]),</span> <span class="pre">russian_doll=[[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7],</span> <span class="pre">[0]],</span> <span class="pre">funcs=[CPUDispatcher(&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;),</span> <span class="pre">CPUDispatcher(&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;),</span> <span class="pre">CPUDispatcher(&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;),</span> <span class="pre">CPUDispatcher(&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_y_maxorder_func&gt;)]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_weight_cascade" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_weight_cascade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rx,</span> <span class="pre">ry,</span> <span class="pre">pk,</span> <span class="pre">kernel_large=array([[</span> <span class="pre">0,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-2,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">2,</span>&#160; <span class="pre">0]]),</span> <span class="pre">russian_doll=[[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7],</span> <span class="pre">[0]],</span> <span class="pre">funcs=[&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_y_maxorder_func&gt;]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_weight_cascade" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -1208,8 +1209,8 @@ where n is the number of element in the kernel.</p>
 </ul>
 </dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.lagrangian">
+</section>
+<section id="module-seaduck.lagrangian">
 <span id="seaduck-lagrangian-module"></span><h2>seaduck.lagrangian module<a class="headerlink" href="#module-seaduck.lagrangian" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.lagrangian.particle">
@@ -1592,8 +1593,8 @@ The first event is either:
 </ul>
 </dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.smart_read">
+</section>
+<section id="module-seaduck.smart_read">
 <span id="seaduck-smart-read-module"></span><h2>seaduck.smart_read module<a class="headerlink" href="#module-seaduck.smart_read" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.smart_read.smart_read">
@@ -1623,8 +1624,8 @@ The first event is either:
 </ul>
 </dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.topology">
+</section>
+<section id="module-seaduck.topology">
 <span id="seaduck-topology-module"></span><h2>seaduck.topology module<a class="headerlink" href="#module-seaduck.topology" title="Permalink to this headline">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.topology.topology">
@@ -1878,8 +1879,8 @@ See topology.mutual direction for more detail.</p>
 See topology.ind_tend for more detail.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-seaduck.utils">
+</section>
+<section id="module-seaduck.utils">
 <span id="seaduck-utils-module"></span><h2>seaduck.utils module<a class="headerlink" href="#module-seaduck.utils" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.NoneIn">
@@ -2249,8 +2250,8 @@ If None, use geopy default</p>
 coords to the four corner points.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
