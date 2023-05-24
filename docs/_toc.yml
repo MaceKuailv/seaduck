@@ -26,4 +26,8 @@ parts:
   - file: sciserver_notebooks/IGP
 - caption: Contributing
   chapters:
+  - file: use_git
+  - file: prep_env
+  - file: contr_cod
   - file: contr_doc
+  - file: tidyNpr
