@@ -67,7 +67,7 @@ jobs:
         environment-file: ci/combined-environment-ci.yml
         environment-name: DEVELOP
         cache-environment: true
-        extra-specs: >-
+        create-args: >-
           python=${{ matrix.python-version }}
           ${{ matrix.optional-dependencies }}
     - name: Install package
@@ -94,7 +94,7 @@ jobs:
         environment-file: ci/combined-environment-ci.yml
         environment-name: DEVELOP
         cache-environment: true
-        extra-specs: >-
+        create-args: >-
           python=3.11
     - name: Install package
       run: |
@@ -120,7 +120,7 @@ jobs:
         environment-file: ci/combined-environment-ci.yml
         environment-name: DEVELOP
         cache-environment: true
-        extra-specs: >-
+        create-args: >-
           python=3.11
     - name: Install package
       run: |
