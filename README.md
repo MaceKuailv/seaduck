@@ -9,6 +9,10 @@ A python package that interpolates data from ocean dataset from both Eulerian an
 
 ```
 
+## Documentation
+Checkout this half-way-through documentation:
+https://macekuailv.github.io/seaduck/
+
 ## Workflow for developers/contributors
 
 For best experience create a new conda environment (e.g. seaduck):
