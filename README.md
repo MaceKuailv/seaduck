@@ -10,6 +10,7 @@ A python package that interpolates data from ocean dataset from both Eulerian an
 ```
 
 ## Documentation
+
 Checkout this half-way-through documentation:
 https://macekuailv.github.io/seaduck/
 
