@@ -20,7 +20,7 @@ except ImportError:  # pragma: no cover
     # Local copy or not installed with setuptools
     __version__ = "999"
 
-from seaduck.eulerian import position
+from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
 from seaduck.lagrangian import particle
 from seaduck.ocedata import OceData
@@ -30,7 +30,7 @@ from seaduck.topology import Topology
 
 __all__ = [
     "__version__",
-    "position",
+    "Position",
     "KnW",
     "particle",
     "OceData",

@@ -4,7 +4,7 @@ import warnings
 
 import numpy as np
 
-from seaduck.eulerian import position
+from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
 from seaduck.runtime_conf import compileable
 from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, rel2latlon, to_180
@@ -152,16 +152,16 @@ dvknw_s = KnW(
 )
 
 
-class particle(position):
+class particle(Position):
     """Lagrangian particle object.
 
-    The Lagrangian particle object. Simply a eulerian position object
+    The Lagrangian particle object. Simply a eulerian Position object
     that know how to move itself.
 
     **Parameters:**
 
     + kwarg: dict
-        The keyword argument that feed into position.from_latlon method
+        The keyword argument that feed into Position.from_latlon method
     + uname, vname, wname: str
         The variable names for the velocity/mass-transport components.
         If transport is true, pass in names of the volume/mass transport
@@ -363,7 +363,7 @@ class particle(position):
 
         Read the velocity and velocity derivatives in all three dimensions
         using the interpolate method with the default kernel.
-        Read eulerian.position.interpolate for more detail.
+        Read eulerian.Position.interpolate for more detail.
 
         **Parameters:**
 
@@ -885,9 +885,9 @@ class particle(position):
     def deepcopy(self):
         """Return a clone of the object.
 
-        The object is a position object, and thus cannot move any more.
+        The object is a Position object, and thus cannot move any more.
         """
-        p = position()
+        p = Position()
         p.ocedata = self.ocedata
         p.N = self.N
         keys = self.__dict__.keys()
