@@ -153,10 +153,10 @@ def spherical2cartesian(lat, lon, R=6371.0):
 
 
 @compileable
-def to_180(x):
+def to_180(x, peri=360):
     """Convert any longitude scale to [-180,180)."""
-    x = x % 360
-    return x + (-1) * (x // 180) * 360
+    x = x % peri
+    return x + (-1) * (x // (peri / 2)) * peri
 
 
 def local_to_latlon(u, v, cs, sn):
@@ -271,6 +271,40 @@ def find_ind_periodic(array, value, peri):
     return idx, array[idx]
 
 
+@compileable
+def find_ind(array, value, peri=None, ascending=1, above=True):
+    """Find the index of the nearest value to the given value.
+
+    **Parameters:**
+
+    + array: numpy.ndarray
+        1D numpy array to search index from
+    + value: number
+        The value to find nearest neighbor with
+    + peri: number
+        The periodicity of the array.
+        For example, 360 for longitude.
+    + ascending: int
+        Whether the array is in ascending order.
+        1 for ascending order, -1 for descending order.
+    + above: boolean
+        If True, return the index of the largest item in
+        array smaller than value.
+        Otherwise, return the closest value.
+    """
+    array = np.asarray(array)
+    if peri is None:
+        idx = np.argmin(np.abs(array - value))
+    else:
+        idx = np.argmin(np.abs((array - value) % peri))
+    if above and array[idx] > value and peri is None:
+        idx -= ascending * 1
+    if idx < 0:
+        raise ValueError("Value out of bound.")
+    idx = int(idx)
+    return idx, array[idx]
+
+
 deg2m = 6271e3 * np.pi / 180
 
 
@@ -348,7 +382,7 @@ def find_rel_periodic(value, ts, peri):
 def find_rel_z(depth, some_z, some_dz, dz_above_z=True):
     """Find the rel-coords of the vertical coords.
 
-    **Paramters:**
+    **Parameters:**
 
     + depth: numpy.ndarray
         1D array for the depth of interest in meters.
@@ -396,7 +430,7 @@ def find_rel_z(depth, some_z, some_dz, dz_above_z=True):
 def find_rel_time(time, ts):
     """Find the rel-coords of the temporal coords.
 
-    **Paramters:**
+    **Parameters:**
 
     + time: numpy.ndarray
         1D array for the time since 1970-01-01 in seconds.
@@ -430,6 +464,74 @@ def find_rel_time(time, ts):
         dts[i] = Delta_t
         bts[i] = bt
     return its, rts, dts, bts
+
+
+@compileable
+def find_rel(
+    value, array, darray=None, ascending=1, above=True, peri=None, dx_right=True
+):
+    """Find the rel-coords of the 1D coords.
+
+    **Parameters:**
+
+    + value: numpy.ndarray
+        1D array for the value to find rel-coords.
+    + array: numpy.ndarray
+        The array of potential reference levels.
+    + darray: numpy.ndarray, optional
+        The distances between reference levels.
+    + peri: number
+        The periodicity of the array.
+        For example, 360 for longitude.
+    + ascending: int
+        Whether the array is in ascending order.
+        1 for ascending order, -1 for descending order.
+    + above: boolean
+        If True, return the index of the largest item in
+        array smaller than value.
+        Otherwise, return the closest value.
+    + dx_right: boolean
+        If True, darray[i] = abs(array[i+1] - array[i])
+
+    **Returns:**
+
+    + ix: numpy.ndarray
+        Indexes of the reference level
+    + rx: numpy.ndarray
+        Non-dimensional distance to the reference level
+    + dx: numpy.ndarray
+        distance between the reference t level and the next one.
+    + bx: numpy.ndarray
+        Value of the reference level
+    """
+    if darray is None:
+        darray = abs(np.diff(array))
+        darray = np.append(darray, darray[-1])
+        dx_right = True
+    ixs = np.zeros_like(value)
+    rxs = np.ones_like(value) * 0.0
+    dxs = np.ones_like(value) * 0.0
+    bxs = np.ones_like(value) * 0.0
+
+    dx_offset = int(not dx_right) + int(ascending > 0) - 1
+    for i, x in enumerate(value):
+        ix, bx = find_ind(x, array, ascending=ascending, above=above, peri=peri)
+        if peri is None:
+            dx = x - bx
+        else:
+            dx = to_180(x - bx, peri=peri)
+
+        if not above:
+            if dx < 0:
+                idx = ix - ascending
+        else:
+            idx = ix + dx_offset
+
+        ixs[i] = ix
+        rxs[i] = dx / darray[idx]
+        dxs[i] = darray[idx]
+        bxs[i] = bx
+    return ixs, rxs, dxs, bxs
 
 
 @compileable
