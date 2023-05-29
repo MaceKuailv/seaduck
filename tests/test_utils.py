@@ -7,8 +7,8 @@ import xarray as xr
 import seaduck as sd
 
 
-def test_rel_lon():
-    assert sd.utils.rel_lon(-5, 125) == 230
+def test_chg_ref_lon():
+    assert sd.utils.chg_ref_lon(-5, 125) == 230
 
 
 @pytest.mark.parametrize("item,length", [([1, 2, 3], 3), (0, 1)])
