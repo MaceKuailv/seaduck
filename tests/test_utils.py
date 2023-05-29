@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 import pytest
 import xarray as xr
@@ -47,15 +45,6 @@ def test_local_to_latlon():
     sn = np.sqrt(1 - cs**2)
     uu, vv = sd.utils.local_to_latlon(u, v, cs, sn)
     assert np.isclose(np.hypot(uu, vv), np.hypot(u, v))
-
-
-@pytest.mark.parametrize("lst", [[1, 2, 3], np.arange(3)])
-@pytest.mark.parametrize("select", [1, 3])
-def test_combination(lst, select):
-    the_ls = sd.utils.get_combination(lst, select)
-    assert len(the_ls) == math.factorial(len(lst)) / (math.factorial(select)) / (
-        math.factorial(len(lst) - select)
-    )
 
 
 def test_none_in():
