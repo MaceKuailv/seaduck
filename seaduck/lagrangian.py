@@ -34,7 +34,7 @@ def increment(t, u, du):
 def stationary(t, u, du, x0):
     """Find the final position after time t.
 
-    For a one dimensional particle with speed u and speed derivative du
+    For a one dimensional Particle with speed u and speed derivative du
     starting at x0, find the final position after time t.
     "Stationary" means that we are assuming there is no time dependency.
 
@@ -59,7 +59,7 @@ def stationary(t, u, du, x0):
 def stationary_time(u, du, x0):
     """Find the amount of time to leave the cell.
 
-    Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
+    Find the amount of time it needs for a Particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
     **Parameters:**
@@ -100,10 +100,10 @@ def time2wall(xs, us, dus):
 def which_early(tf, ts):
     """Find out which event happens first.
 
-    We are trying to integrate the particle to time tf.
+    We are trying to integrate the Particle to time tf.
     The first event is either:
     1. tf is reached before reaching a wall
-    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0.
+    2. ts[i] is reached, and a Particle hit a wall. ts[i]*tf>0.
 
     **Parameters:**
 
@@ -152,7 +152,7 @@ dvknw_s = KnW(
 )
 
 
-class particle(Position):
+class Particle(Position):
     """Lagrangian particle object.
 
     The Lagrangian particle object. Simply a eulerian Position object
@@ -178,9 +178,9 @@ class particle(Position):
         If transport is true, pass in names of the volume/mass transport
         across cell wall in m^3/3
         else,  just pass velocity that is in m/s
-    + callback: function that take particle as input
-        A callback function that takes particle as input. Return boolean
-        array that determines which particle should still be going.
+    + callback: function that take Particle as input
+        A callback function that takes Particle as input. Return boolean
+        array that determines which Particle should still be going.
         Users can also define customized functions here.
     + max_iteration: int
         The number of analytical steps allowed for the to_next_stop

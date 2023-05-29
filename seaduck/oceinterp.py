@@ -4,7 +4,7 @@ import numpy as np
 
 from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
-from seaduck.lagrangian import particle, uknw, vknw
+from seaduck.lagrangian import Particle, uknw, vknw
 from seaduck.ocedata import OceData
 
 lagrange_token = "__particle."
@@ -47,7 +47,7 @@ def OceInterp(
     + lagrangian: bool
         Specifies whether the interpolation is done in the Eulerian or Lagrangian scheme.
     + lagrange_kwarg: dict
-        Keyword arguments passed into the OceInterp.lagrangian.particle object.
+        Keyword arguments passed into the OceInterp.lagrangian.Particle object.
     + update_stops: None, 'default', or iterable of float
         Specifies the time to update the prefetch velocity.
     + return_in_between: bool
@@ -94,7 +94,7 @@ def OceInterp(
         for i, var in enumerate(varList):
             if lagrange_token in var:
                 raise AttributeError(
-                    "__particle variables is only available for Lagrangian particles"
+                    "__particle variables is only available for Lagrangian Particles"
                 )
         R = pt.interpolate(varList, kernelList)
         return R
@@ -104,11 +104,11 @@ def OceInterp(
             assert len(t) > 1
         except AssertionError:
             raise ValueError(
-                "There needs to be at least two time steps to run the lagrangian particle"
+                "There needs to be at least two time steps to run the lagrangian Particle"
             )
         t_start = t[0]
         t_nec = t[1:]
-        pt = particle(
+        pt = Particle(
             x=x, y=y, z=z, t=np.ones_like(x) * t_start, data=od, **lagrange_kwarg
         )
         stops, raw = pt.to_list_of_time(
