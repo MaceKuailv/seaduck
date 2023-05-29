@@ -1,10 +1,10 @@
 import copy
 import logging
+from itertools import combinations
 
 import numpy as np
 
 from seaduck.runtime_conf import compileable
-from seaduck.utils import get_combination
 
 # default kernel for interpolation.
 default_kernel = np.array(
@@ -138,20 +138,20 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     y_poly = []
     if ktype == "interp":
         for ax in xs:
-            x_poly.append(get_combination([i for i in xs if i != ax], len(xs) - 1))
+            x_poly.append(list(combinations([i for i in xs if i != ax], len(xs) - 1)))
         for ay in ys:
-            y_poly.append(get_combination([i for i in ys if i != ay], len(ys) - 1))
+            y_poly.append(list(combinations([i for i in ys if i != ay], len(ys) - 1)))
     if ktype == "x":
         for ax in xs:
             x_poly.append(
-                get_combination([i for i in xs if i != ax], len(xs) - 1 - order)
+                list(combinations([i for i in xs if i != ax], len(xs) - 1 - order))
             )
         y_poly = [[[]]]
     if ktype == "y":
         x_poly = [[[]]]
         for ay in ys:
             y_poly.append(
-                get_combination([i for i in ys if i != ay], len(ys) - 1 - order)
+                list(combinations([i for i in ys if i != ay], len(ys) - 1 - order))
             )
     x_poly = np.array(x_poly).astype(float)
     y_poly = np.array(y_poly).astype(float)
@@ -360,9 +360,13 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     x_poly = []
     y_poly = []
     for ax in xs:
-        x_poly.append(get_combination([i for i in xs if i != ax], len(xs) - 1 - xorder))
+        x_poly.append(
+            list(combinations([i for i in xs if i != ax], len(xs) - 1 - xorder))
+        )
     for ay in ys:
-        y_poly.append(get_combination([i for i in ys if i != ay], len(ys) - 1 - yorder))
+        y_poly.append(
+            list(combinations([i for i in ys if i != ay], len(ys) - 1 - yorder))
+        )
     x_poly = np.array(x_poly).astype(float)
     y_poly = np.array(y_poly).astype(float)
 

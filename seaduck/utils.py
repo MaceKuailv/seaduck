@@ -179,27 +179,6 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
     return lon, lat, dep
 
 
-def get_combination(lst, select):
-    """Get the combinations of the list.
-
-    Iteratively find all the combination that
-    has (select) amount of elements
-    and every element belongs to lst
-    This is almost the same as the one in itertools.
-    """
-    if select == 1:
-        return [[num] for num in lst]
-    else:
-        the_lst = []
-        for i, num in enumerate(lst):
-            sub_lst = get_combination(lst[i + 1 :], select - 1)
-            for com in sub_lst:
-                com.append(num)
-            #             print(sub_lst)
-            the_lst += sub_lst
-        return the_lst
-
-
 def create_tree(x, y, R=6371.0, leafsize=16):
     """Create a cKD tree object.
 

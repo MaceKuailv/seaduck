@@ -381,8 +381,6 @@ class Topology:
             Whether we are moving from C grid, U grid, V grid, or G grid.
         + kwarg:dict
             Keyword argument that currently only apply for the llc case.
-            Use gridoffset keyword when you are dealing with different grid-indexing,
-            -1 for MITgcm (default), 1 for NEMO.
         """
         if -1 in ind:
             # meaning invalid point
