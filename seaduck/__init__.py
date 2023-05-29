@@ -26,7 +26,7 @@ from seaduck.lagrangian import particle
 from seaduck.ocedata import OceData
 from seaduck.oceinterp import OceInterp
 from seaduck.runtime_conf import rcParam
-from seaduck.topology import topology
+from seaduck.topology import Topology
 
 __all__ = [
     "__version__",
@@ -36,5 +36,5 @@ __all__ = [
     "OceData",
     "OceInterp",
     "rcParam",
-    "topology",
+    "Topology",
 ]

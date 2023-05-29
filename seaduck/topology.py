@@ -6,7 +6,7 @@ import numpy as np
 from seaduck.runtime_conf import compileable
 
 # If you have encountered a NotImplementedError and come to this file,
-# I suggest you read the ***class topology*** near the bottom of this file.
+# I suggest you read the ***class Topology*** near the bottom of this file.
 
 tends = [0, 1, 2, 3]  # up,down,left,right #list(llc_face_connect.columns)
 
@@ -36,7 +36,7 @@ def llc_mutual_direction(face, nface, transitive=False):
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
-    See topology.mutual direction for more detail.
+    See Topology.mutual direction for more detail.
     """
     edge_n = np.where(llc_face_connect[face] == nface)
     nedge_n = np.where(llc_face_connect[nface] == face)
@@ -82,7 +82,7 @@ def llc_get_the_other_edge(face, edge):
     """See what is adjacent to the face by this edge.
 
     The compileable version of get_the_other_edge for llc grid.
-    See topology.get_the_other_edge for more detail.
+    See Topology.get_the_other_edge for more detail.
     """
     face_connect = llc_face_connect
     nface = face_connect[face, edge]
@@ -99,7 +99,7 @@ def box_ind_tend(ind, tend, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for regional (box) grid.
-    See topology.ind_tend for more detail.
+    See Topology.ind_tend for more detail.
     """
     iy, ix = ind
     if tend == 0:
@@ -123,7 +123,7 @@ def x_per_ind_tend(ind, tend, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for zonally periodic (x-per) grid.
-    See topology.ind_tend for more detail.
+    See Topology.ind_tend for more detail.
     """
     iy, ix = ind
     if tend == 0:
@@ -148,7 +148,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for llc grid.
-    See topology.ind_tend for more detail.
+    See Topology.ind_tend for more detail.
     """
     #     iymax = 89
     #     ixmax = 89
@@ -213,7 +213,7 @@ def llc_get_uv_mask_from_face(faces):
     """Get the masking of UV points.
 
     The compileable version of get_uv_mask_from_face for llc grid.
-    See topology.get_uv_mask_from_face for more detail.
+    See Topology.get_uv_mask_from_face for more detail.
     """
     # we are considering a row from the fatten_face
     # faces is essentially which face each node of the kernel is on.
@@ -242,7 +242,7 @@ def llc_get_uv_mask_from_face(faces):
         return UfromUvel, UfromVvel, VfromUvel, VfromVvel
 
 
-class topology:
+class Topology:
     """Topology object.
 
     A light weight object that remembers the structure of the grid,
@@ -272,7 +272,7 @@ class topology:
                 h_shape = (int(od["lat"].shape[0]), int(od["lon"].shape[0]))
             except KeyError:
                 raise KeyError(
-                    "Either XC or lat/lon is needed to create the topology object"
+                    "Either XC or lat/lon is needed to create the Topology object"
                 )
         self.h_shape = h_shape
         try:

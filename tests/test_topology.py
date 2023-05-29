@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from seaduck.topology import llc_get_uv_mask_from_face, llc_mutual_direction, topology
+from seaduck.topology import Topology, llc_get_uv_mask_from_face, llc_mutual_direction
 
 
 @pytest.mark.parametrize("face", [1, 2, 4, 5, 6, 7, 8, 10, 11])
@@ -31,7 +31,7 @@ def test_get_the_neighbor_face(tp, face, edge):
 )
 @pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 def test_not_applicable(ds, typ, func, args, error):
-    tpp = topology(ds, typ)
+    tpp = Topology(ds, typ)
     with pytest.raises(error):
         getattr(tpp, func)(*args)
 
@@ -110,13 +110,13 @@ def test_4_matrix(tp, fface, cis):
 def test_unable_to_cereate(ds):
     temp = ds.drop_vars("XC")
     with pytest.raises(KeyError):
-        topology(temp)
+        Topology(temp)
 
 
 @pytest.mark.parametrize("ds", ["aviso"], indirect=True)
 def test_create_without_time(ds):
     temp = ds.drop_vars("time")
-    topology(temp)
+    Topology(temp)
 
 
 @pytest.mark.parametrize(
@@ -227,7 +227,7 @@ def test_wall_between_itself(tp):
 #     faces = np.array([0, 0])
 #     iys = np.array([45, 46])
 #     ixs = np.array([45, 46])
-#     tp = topology(ecco)
+#     tp = Topology(ecco)
 #     nface, niy, nix = kw.fatten_ind_h(faces, iys, ixs, tp)
 #     assert nface.dtype == "int"
 #     assert nface.shape == (2, 9)
@@ -238,7 +238,7 @@ def test_wall_between_itself(tp):
 #     faces = None
 #     iys = np.array([5, 46])
 #     ixs = np.array([5, 6])
-#     tp = topology(od)
+#     tp = Topology(od)
 #     nface, niy, nix = kw.fatten_ind_h(faces, iys, ixs, tp)
 #     assert nface is None
 #     assert nix.dtype == "int"
@@ -250,7 +250,7 @@ def test_wall_between_itself(tp):
 #     faces = np.array([0, 0])
 #     iys = np.array([45, 46])
 #     ixs = np.array([45, 46])
-#     tp = topology(ecco)
+#     tp = Topology(ecco)
 #     niz, nface, niy, nix = kw.fatten_ind_3d(izs, faces, iys, ixs, tp)
 #     assert niz.dtype == "int"
 #     assert niz.shape == (2, 18)
@@ -262,7 +262,7 @@ def test_wall_between_itself(tp):
 #     faces = None
 #     iys = np.array([5, 46])
 #     ixs = np.array([5, 46])
-#     tp = topology(od)
+#     tp = Topology(od)
 #     niz, nface, niy, nix = kw.fatten_ind_3d(izs, faces, iys, ixs, tp)
 #     assert niz.dtype == "int"
 #     assert niz.shape == (2, 18)

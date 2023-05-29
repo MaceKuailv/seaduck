@@ -8,7 +8,7 @@ except ImportError:  # pragma: no cover
     pass
 import xarray as xr
 
-from seaduck.topology import topology
+from seaduck.topology import Topology
 from seaduck.utils import (
     _general_len,
     create_tree,
@@ -49,7 +49,7 @@ class OceData:
     **Parameters**
 
     + data: xarray.Dataset
-        The dataset to extract grid information, create cKD tree, and topology object on.
+        The dataset to extract grid information, create cKD tree, and Topology object on.
     + alias: dict, None, or 'auto'
         1. dict: Map the variable used by this package (key) to
            that used by the dataset (value).
@@ -59,7 +59,7 @@ class OceData:
 
     def __init__(self, data, alias=None, memory_limit=1e7):
         self._ds = data
-        self.tp = topology(data)
+        self.tp = Topology(data)
         if alias is None:
             self.alias = no_alias
         elif alias == "auto":
