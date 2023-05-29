@@ -493,7 +493,7 @@ class Topology:
 
         **Parameters:**
 
-        + inds: tuple or numpy.array
+        + inds: tuple of numpy.array or numpy.array
             Each element of the tuple is iterable of one dimension of the indexes.
         + tend: iterable
             Which direction should each index take.
