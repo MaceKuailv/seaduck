@@ -7,8 +7,6 @@ import xarray as xr
 
 from seaduck.smart_read import smart_read
 
-# from seaduck.topology import topology
-
 
 def mask_u_node(maskC, tp):
     """Mask out U-points.
@@ -24,8 +22,8 @@ def mask_u_node(maskC, tp):
     + maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: topology object
-        The topology object for the dataset.
+    + tp: Topology object
+        The Topology object for the dataset.
 
     **Returns:**
 
@@ -58,8 +56,8 @@ def mask_v_node(maskC, tp):
     + maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: topology object
-        The topology object for the dataset.
+    + tp: Topology object
+        The Topology object for the dataset.
 
     **Returns:**
 
@@ -93,8 +91,8 @@ def mask_w_node(maskC, tp=None):
     + maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: topology object
-        The topology object for the dataset.
+    + tp: Topology object
+        The Topology object for the dataset.
 
     **Returns:**
 
@@ -118,15 +116,14 @@ def get_masks(od, tp):
 
     + od: OceData object
         The dataset to compute masks on.
-    + tp: topology object
-        The topology of the datset
+    + tp: Topology object
+        The Topology of the datset
 
     **Returns:**
 
     + maskC,maskU,maskV,maskW: numpy.ndarray
         masks at center points, U-walls, V-walls, W-walls respectively.
     """
-    # tp = topology(od)
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")

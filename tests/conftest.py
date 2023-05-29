@@ -16,4 +16,4 @@ def od(request):
 
 @pytest.fixture(scope="session")
 def tp(request):
-    return sd.topology(utils.get_dataset(request.param))
+    return sd.Topology(utils.get_dataset(request.param))

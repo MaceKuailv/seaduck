@@ -277,8 +277,8 @@ class position:
         + knw: KnW object
             The kernel used to find neighboring points.
         + ind_moves_kward: dict
-            Key word argument to put into ind_moves method of the topology object.
-            Read topology.ind_moves for more detail.
+            Key word argument to put into ind_moves method of the Topology object.
+            Read Topology.ind_moves for more detail.
         """
         #         self.ind_h_dict
         kernel = knw.kernel
@@ -425,8 +425,8 @@ class position:
         + required: str, iterable of str
             Which dims is needed in the process
         + ind_moves_kward: dict
-            Key word argument to put into ind_moves method of the topology object.
-            Read topology.ind_moves for more detail.
+            Key word argument to put into ind_moves method of the Topology object.
+            Read Topology.ind_moves for more detail.
         """
         if required != "all" and isinstance(required, str):
             required = tuple([required])
