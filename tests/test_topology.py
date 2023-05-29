@@ -122,8 +122,7 @@ def test_create_without_time(ds):
 @pytest.mark.parametrize(
     "func,args,kwargs,error",
     [
-        ("ind_tend", ((1, 45, 45), 0), {"cuvg": "G"}, NotImplementedError),
-        ("ind_tend", ((1, 45, 45), 0), {"cuvg": "other"}, ValueError),
+        ("ind_tend", ((1, 45, 45), 0), {"cuvwg": "other"}, ValueError),
         ("ind_moves", ((1, 45, 45), ["left", "left"]), {}, ValueError),
     ],
 )
@@ -150,7 +149,7 @@ def test_ind_moves_with1illegal(tp):
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_tend_v(tp, ind, tend, ans):
-    res = tp.ind_tend(ind, tend, cuvg="V")
+    res = tp.ind_tend(ind, tend, cuvwg="V")
     assert res == ans
 
 
@@ -165,7 +164,7 @@ def test_ind_tend_v(tp, ind, tend, ans):
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_tend_u(tp, ind, tend, ans):
-    res = tp.ind_tend(ind, tend, cuvg="U")
+    res = tp.ind_tend(ind, tend, cuvwg="U")
     assert res == ans
 
 
