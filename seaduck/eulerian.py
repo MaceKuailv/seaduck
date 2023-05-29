@@ -527,7 +527,7 @@ class Position:
         else:
             return prefetched[ind]
 
-    def _get_masked(self, knw, gridtype="C", **kwarg):  # pragma: no cover
+    def _get_masked(self, knw, cuvwg="C", **kwarg):  # pragma: no cover
         ind = self.fatten(knw, fourD=True, **kwarg)
         if self.it is not None:
             ind = ind[1:]
@@ -536,10 +536,10 @@ class Position:
                 """dimension mismatch.
                             Please check if the Position objects have all the dimensions needed"""
             )
-        return get_masked(self.ocedata, ind, gridtype=gridtype)
+        return get_masked(self.ocedata, ind, cuvwg=cuvwg)
 
-    def _find_pk4d(self, knw, gridtype="C"):  # pragma: no cover
-        masked = self._get_masked(knw, gridtype=gridtype)
+    def _find_pk4d(self, knw, cuvwg="C"):  # pragma: no cover
+        masked = self._get_masked(knw, cuvwg=cuvwg)
         pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
         return pk4d
 
@@ -935,7 +935,7 @@ class Position:
                         cuvw = "C"
                 else:
                     cuvw = "C"
-                masked = get_masked(self.ocedata, ind_for_mask, gridtype=cuvw)
+                masked = get_masked(self.ocedata, ind_for_mask, cuvwg=cuvw)
                 mask_lookup[hs] = masked
             elif isinstance(varName, tuple):
                 to_unzip = transform_lookup[hsind]
@@ -943,8 +943,8 @@ class Position:
                 if to_unzip is None:
                     uind_for_mask = _ind_for_mask(uind, dims[0])
                     vind_for_mask = _ind_for_mask(vind, dims[1])
-                    umask = get_masked(self.ocedata, uind_for_mask, gridtype="U")
-                    vmask = get_masked(self.ocedata, vind_for_mask, gridtype="V")
+                    umask = get_masked(self.ocedata, uind_for_mask, cuvwg="U")
+                    vmask = get_masked(self.ocedata, vind_for_mask, cuvwg="V")
                 else:
                     (
                         _,
@@ -955,16 +955,16 @@ class Position:
                     vmask = np.full(vind[0].shape, np.nan)
 
                     umask[bool_ufromu] = get_masked(
-                        self.ocedata, _ind_for_mask(indufromu, dims[0]), gridtype="U"
+                        self.ocedata, _ind_for_mask(indufromu, dims[0]), cuvwg="U"
                     )
                     umask[bool_ufromv] = get_masked(
-                        self.ocedata, _ind_for_mask(indufromv, dims[1]), gridtype="V"
+                        self.ocedata, _ind_for_mask(indufromv, dims[1]), cuvwg="V"
                     )
                     vmask[bool_vfromu] = get_masked(
-                        self.ocedata, _ind_for_mask(indvfromu, dims[0]), gridtype="U"
+                        self.ocedata, _ind_for_mask(indvfromu, dims[0]), cuvwg="U"
                     )
                     vmask[bool_vfromv] = get_masked(
-                        self.ocedata, _ind_for_mask(indvfromv, dims[1]), gridtype="V"
+                        self.ocedata, _ind_for_mask(indvfromv, dims[1]), cuvwg="V"
                     )
                 mask_lookup[hs] = (umask, vmask)
         return mask_lookup
