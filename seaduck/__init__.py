@@ -22,7 +22,7 @@ except ImportError:  # pragma: no cover
 
 from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
-from seaduck.lagrangian import particle
+from seaduck.lagrangian import Particle
 from seaduck.ocedata import OceData
 from seaduck.oceinterp import OceInterp
 from seaduck.runtime_conf import rcParam
@@ -32,7 +32,7 @@ __all__ = [
     "__version__",
     "Position",
     "KnW",
-    "particle",
+    "Particle",
     "OceData",
     "OceInterp",
     "rcParam",

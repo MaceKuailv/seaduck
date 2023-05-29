@@ -739,7 +739,7 @@ def convert_time(time):
 
 
 def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):
-    """Create 4D coords for initializing position/particle."""
+    """Create 4D coords for initializing Position/Particle."""
     east, west, Nlon = lon
     south, north, Nlat = lat
     shallow, deep, Ndep = dep

@@ -26,11 +26,11 @@ def prefetched():
     return np.array(od["SALT"][slice(1, 2)])
 
 
-# use float number to make particle
+# use float number to make Particle
 @pytest.fixture
 def ep():
     od = sd.OceData(utils.get_dataset("ecco"))
-    return sd.particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=od)
+    return sd.Particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=od)
 
 
 @pytest.mark.parametrize("od", ["aviso"], indirect=True)
@@ -143,7 +143,7 @@ def test_init_valueerror(od, data, x, knw):
     if isinstance(data, str):
         data = eval(data)
     with pytest.raises(ValueError):
-        the_p = sd.particle(
+        the_p = sd.Particle(
             x=x,
             y=np.ones(2) * 10.4586420059204,
             z=np.ones(2) * (-9.0),
