@@ -14,8 +14,8 @@ skew = 3
 sqrtN = int(np.sqrt(N))
 
 # Change the horizontal range here.
-x = np.linspace(-180, 180, sqrtN * skew)
-y = np.linspace(-50, -70, sqrtN // skew)
+x = np.append(np.linspace(-180, 180, sqrtN * skew), -37.5)
+y = np.append(np.linspace(-50, -70, sqrtN // skew), -56.73891)
 
 x, y = np.meshgrid(x, y)
 x = x.ravel()
