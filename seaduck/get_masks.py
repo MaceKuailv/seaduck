@@ -165,7 +165,7 @@ def get_masks(od, tp):
     return maskC, maskU, maskV, maskW
 
 
-def get_masked(od, ind, gridtype="C"):
+def get_masked(od, ind, cuvwg="C"):
     """Return whether points are masked.
 
     Return whether the indexes of intersts are masked or not.
@@ -176,20 +176,22 @@ def get_masked(od, ind, gridtype="C"):
         Dataset to find mask values from.
     + ind: tuple of numpy.ndarray
         Indexes of grid points.
-    + gridtype: str
+    + cuvwg: str
         Whether the indexes is for points at center points or on the walls.
         Options are: ['C','U','V','Wvel'].
     """
-    if gridtype not in ["C", "U", "V", "Wvel"]:
-        raise NotImplementedError("gridtype for mask not supported")
+    if cuvwg not in ["C", "U", "V", "Wvel"]:
+        raise NotImplementedError(
+            "cuvwg(the kind of grid point) for mask not supported"
+        )
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
         return np.ones_like(ind[0])
-    elif gridtype == "C":
+    elif cuvwg == "C":
         return smart_read(od._ds.maskC, ind)
 
-    name = "mask" + gridtype
+    name = "mask" + cuvwg
     tp = od.tp
     maskC = np.array(od._ds["maskC"])
     func_dic = {"U": mask_u_node, "V": mask_v_node, "Wvel": mask_w_node}
@@ -199,8 +201,8 @@ def get_masked(od, ind, gridtype="C"):
         "Wvel": lambda x: x if x != "Z" else "Zl",
     }
     if name not in keys:
-        small_mask = func_dic[gridtype](maskC, tp)
-        dims = tuple(map(rename_dic[gridtype], od._ds.maskC.dims))
+        small_mask = func_dic[cuvwg](maskC, tp)
+        dims = tuple(map(rename_dic[cuvwg], od._ds.maskC.dims))
         sizes = tuple([len(od._ds[dim]) for dim in dims])
         mask = np.zeros(sizes)
         # indexing sensitive
