@@ -2,7 +2,7 @@ import warnings
 
 import numpy as np
 
-from seaduck.eulerian import position
+from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
 from seaduck.lagrangian import particle, uknw, vknw
 from seaduck.ocedata import OceData
@@ -89,7 +89,7 @@ def OceInterp(
             else:
                 raise ValueError("varList need to be made up of string or tuples")
     if not lagrangian:
-        pt = position()
+        pt = Position()
         pt.from_latlon(x=x, y=y, z=z, t=t, data=od)
         for i, var in enumerate(varList):
             if lagrange_token in var:

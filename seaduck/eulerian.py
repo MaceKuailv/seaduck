@@ -103,8 +103,8 @@ def _subtract_i_min(ind, i_min):
     return tuple(temp_ind)
 
 
-class position:
-    """The position object that performs the interpolation.
+class Position:
+    """The Position object that performs the interpolation.
 
     Create a empty one by default.
     To actually do interpolation, use from_latlon method to tell the ducks where they are.
@@ -116,14 +116,14 @@ class position:
 
         Use the methods from the ocedata to transform
         from lat-lon-dep-time coords to rel-coords
-        store the output in the position object.
+        store the output in the Position object.
 
         **Parameters:**
 
         + x,y,z,t: numpy.ndarray
             1D array of the lat-lon-dep-time coords
         + data: OceData object
-            The field where the positions are defined on.
+            The field where the Positions are defined on.
         """
         if data is None:
             try:
@@ -232,7 +232,7 @@ class position:
         return self
 
     def subset(self, which):
-        """Create a subset of the position object.
+        """Create a subset of the Position object.
 
         **Parameters:**
 
@@ -243,10 +243,10 @@ class position:
 
         **Returns:**
 
-        + the_subset: position object
-            The selected positions.
+        + the_subset: Position object
+            The selected Positions.
         """
-        p = position()
+        p = Position()
         keys = self.__dict__.keys()
         for i in keys:
             item = self.__dict__[i]
@@ -520,7 +520,7 @@ class position:
         if len(ind) != len(self.ocedata._ds[varName].dims):
             raise Exception(
                 """dimension mismatch.
-                            Please check if the position objects have all the dimensions needed"""
+                            Please check if the Position objects have all the dimensions needed"""
             )
         if prefetched is None:
             return sread(self.ocedata[varName], ind)
@@ -534,7 +534,7 @@ class position:
         if len(ind) != len(self.ocedata._ds["maskC"].dims):
             raise Exception(
                 """dimension mismatch.
-                            Please check if the position objects have all the dimensions needed"""
+                            Please check if the Position objects have all the dimensions needed"""
             )
         return get_masked(self.ocedata, ind, gridtype=gridtype)
 
