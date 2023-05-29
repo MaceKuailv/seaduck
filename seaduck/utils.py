@@ -296,7 +296,7 @@ def find_ind(array, value, peri=None, ascending=1, above=True):
     if peri is None:
         idx = np.argmin(np.abs(array - value))
     else:
-        idx = np.argmin(np.abs((array - value) % peri))
+        idx = np.argmin(np.abs(to_180((array - value), peri=peri)))
     if above and array[idx] > value and peri is None:
         idx -= ascending * 1
     if idx < 0:
@@ -515,17 +515,15 @@ def find_rel(
 
     dx_offset = int(not dx_right) + int(ascending > 0) - 1
     for i, x in enumerate(value):
-        ix, bx = find_ind(x, array, ascending=ascending, above=above, peri=peri)
+        ix, bx = find_ind(array, x, ascending=ascending, above=above, peri=peri)
         if peri is None:
             dx = x - bx
         else:
             dx = to_180(x - bx, peri=peri)
 
         if not above:
-            if dx < 0:
-                idx = ix - ascending
-        else:
-            idx = ix + dx_offset
+            dx_offset = int(not dx_right) + int(ascending * dx > 0) - 1
+        idx = ix + dx_offset
 
         ixs[i] = ix
         rxs[i] = dx / darray[idx]

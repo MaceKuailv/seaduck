@@ -86,3 +86,51 @@ def test_easy_cube():
         print_total_number=True,
     )
     assert len(x) == Nlon * Nlat * Ndep
+
+
+ascend = np.array([1, 11, 111, 1111])
+dscend = -ascend
+darray = np.array([1, 10, 100, 1000])
+
+
+@pytest.mark.parametrize(
+    "value,array,ascending,above,peri,ans",
+    [
+        (10, ascend, 1, True, None, 0),
+        (10, ascend, 1, False, None, 1),
+        (0, ascend, 1, False, None, 0),
+        (-2, dscend, -1, True, None, 1),
+        (-2, dscend, -1, False, None, 0),
+        (0, ascend, 1, False, 110.5, 2),
+        (0, ascend, 1, False, 1111.5, 3),
+    ],
+)
+def test_find_ind(value, array, ascending, above, peri, ans):
+    ix, bx = sd.utils.find_ind(
+        array, value, peri=peri, ascending=ascending, above=above
+    )
+    assert ix == ans
+
+
+@pytest.mark.parametrize(
+    "value,array,darray,ascending,above,peri, dx_right,ans",
+    [
+        (10, ascend, darray, 1, True, None, False, 0.9),
+        (10, ascend, 10 * darray, 1, True, None, True, 0.9),
+        (10, ascend, None, 1, True, None, True, 0.9),
+        (10, ascend, darray, 1, False, None, False, -0.1),
+        (0, ascend, darray, 1, False, None, False, -1),
+        (-2, dscend, darray, -1, True, None, False, 0.9),
+        (-2, dscend, darray, -1, False, None, False, -0.1),
+        (-2, dscend, 10 * darray, -1, False, None, True, -0.1),
+        (0, dscend, darray, -1, True, None, False, 1),
+        (0, ascend, darray, 1, False, 110.5, False, -0.5 / 100),
+        (0, ascend, 10 * darray, 1, True, 1111.5, True, 0.5 / 10000),
+    ],
+)
+def test_find_rel(value, array, darray, ascending, above, peri, dx_right, ans):
+    value = np.array([value])
+    ixs, rxs, dxs, bxs = sd.utils.find_rel(
+        value, array, darray, ascending, above, peri, dx_right
+    )
+    assert rxs[0] == ans
