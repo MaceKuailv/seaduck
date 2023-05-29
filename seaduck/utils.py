@@ -18,14 +18,14 @@ except ImportError:
 @functools.cache
 def pooch_prepare():
     """Prepare for loading datasets using pooch."""
-    POOCH = pooch.create(
+    pooch_testdata = pooch.create(
         path=pooch.os_cache("seaduck"),
         base_url="doi:10.5281/zenodo.7949168",
         registry=None,
     )
-    POOCH.load_registry_from_doi()  # Automatically populate the registry
-    POOCH_FETCH_KWARGS = {"progressbar": True}
-    return POOCH, POOCH_FETCH_KWARGS
+    pooch_testdata.load_registry_from_doi()  # Automatically populate the registry
+    pooch_fetch_kwargs = {"progressbar": True}
+    return pooch_testdata, pooch_fetch_kwargs
 
 
 def process_ecco(ds):
@@ -75,15 +75,15 @@ def get_dataset(name):
     + name: string
         The name of dataset, now support "ecco", "aviso", "curv", "rect"
     """
-    POOCH, POOCH_FETCH_KWARGS = pooch_prepare()
-    fnames = POOCH.fetch(f"{name}.tar.gz", pooch.Untar(), **POOCH_FETCH_KWARGS)
+    pooch_testdata, pooch_fetch_kwargs = pooch_prepare()
+    fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
     ds = xr.open_zarr(os.path.commonpath(fnames))
     if name == "ecco":
         return process_ecco(ds)
     return ds
 
 
-def rel_lon(x, ref_lon):
+def chg_ref_lon(x, ref_lon):
     """Change the definition of 0 longitude.
 
     Return how much east one need to go from ref_lon to x
@@ -120,14 +120,14 @@ def get_key_by_value(d, value):
 
 
 @compileable
-def spherical2cartesian(Y, X, R=6371.0):
+def spherical2cartesian(lat, lon, R=6371.0):
     """Convert spherical coordinates to cartesian.
 
     **Parameters:**
 
-    + Y: np.array
+    + lat: np.array
         Spherical Y coordinate (latitude)
-    + X: np.array
+    + lon: np.array
         Spherical X coordinate (longitude)
     + R: scalar
         Earth radius in km
@@ -143,11 +143,11 @@ def spherical2cartesian(Y, X, R=6371.0):
         Cartesian z coordinate
     """
     # Convert
-    Y_rad = np.deg2rad(Y)
-    X_rad = np.deg2rad(X)
-    x = R * np.cos(Y_rad) * np.cos(X_rad)
-    y = R * np.cos(Y_rad) * np.sin(X_rad)
-    z = R * np.sin(Y_rad)
+    y_rad = np.deg2rad(lat)
+    x_rad = np.deg2rad(lon)
+    x = R * np.cos(y_rad) * np.cos(x_rad)
+    y = R * np.cos(y_rad) * np.sin(x_rad)
+    z = R * np.sin(y_rad)
 
     return x, y, z
 
@@ -200,12 +200,12 @@ def get_combination(lst, select):
         return the_lst
 
 
-def create_tree(X, Y, R=6371, leafsize=16):
+def create_tree(x, y, R=6371.0, leafsize=16):
     """Create a cKD tree object.
 
     **Parameters:**
 
-    + X,Y: np.ndarray
+    + x,y: np.ndarray
         longitude and latitude of the grid location
     + R: float
         The radius in kilometers of the planet.
@@ -213,11 +213,9 @@ def create_tree(X, Y, R=6371, leafsize=16):
         When to switch to brute force search.
     """
     if R:
-        x, y, z = spherical2cartesian(Y=Y, X=X, R=R)
+        x, y, z = spherical2cartesian(lat=y, lon=x, R=R)
     else:
-        x = X
-        y = Y
-        z = xr.zeros_like(Y)
+        z = xr.zeros_like(y)
 
     # Stack
     rid_value = 777777
@@ -297,9 +295,9 @@ def find_ind_periodic(array, value, peri):
 deg2m = 6271e3 * np.pi / 180
 
 
-def find_ind_h(Xs, Ys, tree, h_shape):
+def find_ind_h(lons, lats, tree, h_shape):
     """Use ckd tree to find the horizontal indexes,."""
-    x, y, z = spherical2cartesian(Ys, Xs)
+    x, y, z = spherical2cartesian(lats, lons)
     _, index1d = tree.query(np.array([x, y, z]).T)
     if len(h_shape) == 3:
         faces, iys, ixs = np.unravel_index((index1d), h_shape)
