@@ -594,15 +594,15 @@ def find_rel_h_oceanparcel(
     return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
 
 
-def find_px_py(XG, YG, tp, *ind, gridoffset=-1):
+def find_px_py(XG, YG, tp, *ind, cuvwg="G"):
     """Find the nearest 4 corner points.
 
     This is used in oceanparcel interpolation scheme.
     """
     N = len(ind[0])
-    ind1 = tuple(i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, gridoffset=gridoffset))
-    ind2 = tuple(i for i in tp.ind_tend_vec(ind1, np.zeros(N), gridoffset=gridoffset))
-    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N), gridoffset=gridoffset))
+    ind1 = tuple(i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, cuvwg=cuvwg))
+    ind2 = tuple(i for i in tp.ind_tend_vec(ind1, np.zeros(N), cuvwg=cuvwg))
+    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N), cuvwg=cuvwg))
 
     x0 = XG[ind]
     x1 = XG[ind1]

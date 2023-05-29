@@ -364,7 +364,7 @@ class Topology:
         else:
             raise NotImplementedError
 
-    def ind_tend(self, ind, tend, cuvg="C", **kwarg):
+    def ind_tend(self, ind, tend, cuvwg="C", **kwarg):
         """Move an index in a direction.
 
         ind is a tuple that is face,iy,ix,
@@ -377,7 +377,7 @@ class Topology:
             The index to find the neighbor of
         + tend: int
             Which direction to move from the original index.
-        + cuvg:
+        + cuvwg:
             Whether we are moving from C grid, U grid, V grid, or G grid.
         + kwarg:dict
             Keyword argument that currently only apply for the llc case.
@@ -390,16 +390,16 @@ class Topology:
         #         if tend not in [0,1,2,3]:
         #             raise Exception('Illegal move. Must be 0,1,2,3')
         if self.typ == "LLC":
-            if cuvg == "C":
+            if cuvwg == "C":
                 return llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
-            elif cuvg == "U":
+            elif cuvwg == "U":
                 UorV, R = self._ind_tend_U(ind, tend)
                 return R
-            elif cuvg == "V":
+            elif cuvwg == "V":
                 UorV, R = self._ind_tend_V(ind, tend)
                 return R
-            elif cuvg == "G":
-                raise NotImplementedError("G grid is not yet supported")
+            elif cuvwg == "G":
+                return self._ind_tend_G(ind, tend)
             else:
                 raise ValueError("The type of grid point should be among C,U,V,G")
         elif self.typ == "x_periodic":
@@ -592,7 +592,7 @@ class Topology:
                 return self._find_wall_between(first, alter)
 
     def _ind_tend_V(self, ind, tend):
-        """Move an V-index in a direction.
+        """Move a V-index in a direction.
 
         A subset of ind_tend that deal with special issues
         that comes from staggered grid. Read ind_tend for more info.
@@ -607,6 +607,20 @@ class Topology:
             else:
                 alter = self.ind_moves(ind, [1, tend])
                 return self._find_wall_between(first, alter)
+
+    def _ind_tend_G(self, ind, tend):
+        """Move a G-index(corner point) in a direction.
+
+        If there is a index for the corner point at all,
+        it needs to be connected to the two edges with the same index.
+        Therefore, this will always work, regardless of the grid.
+        """
+        if tend in [0, 1]:
+            _, nind = self._ind_tend_U(ind, tend)
+            return nind
+        elif tend in [2, 3]:
+            _, nind = self._ind_tend_V(ind, tend)
+            return nind
 
     def get_uv_mask_from_face(self, faces):
         """Get the masking of UV points.

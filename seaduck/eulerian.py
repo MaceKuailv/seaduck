@@ -578,9 +578,9 @@ class Position:
         """
         # prefetch_dict = {var:(prefetched,i_min)}
         # main_dict = {var:(var,kernel)}
-        # hash_index = {var:hash(cuvg,kernel_size)}
+        # hash_index = {var:hash(cuvwg,kernel_size)}
         # hash_read  = {var:hash(var,kernel_size)}
-        # hash_weight= {var:hash(kernel,cuvg)}
+        # hash_weight= {var:hash(kernel,cuvwg)}
         output_format = {}
         if isinstance(varName, str) or isinstance(varName, tuple):
             varName = [varName]
@@ -793,10 +793,10 @@ class Position:
             elif isinstance(varName, tuple):
                 uknw, vknw = knw
                 uind = self.fatten(
-                    uknw, required=dims, fourD=True, ind_moves_kwarg={"cuvg": "U"}
+                    uknw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": "U"}
                 )
                 vind = self.fatten(
-                    vknw, required=dims, fourD=True, ind_moves_kwarg={"cuvg": "V"}
+                    vknw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": "V"}
                 )
                 index_lookup[hs] = (uind, vind)
 
