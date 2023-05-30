@@ -1,5 +1,6 @@
 import copy
 import logging
+from functools import cache
 from itertools import combinations
 
 import numpy as np
@@ -595,33 +596,52 @@ def kash(kernel):  # hash kernel
     return hash(tuple(temp_lst))
 
 
-def get_func(kernel, hkernel="interp", h_order=0):
+# def get_func(kernel, hkernel="interp", h_order=0):
+#     """Return functions that compute weights.
+
+#     Similar to the kernel_weight function,
+#     the only difference is that this function can
+#     read existing functions from a global dictionary,
+#     and can register to the dictionary when new ones are created.
+#     """
+#     global weight_func
+#     ker_ind = kash(kernel)
+#     layer_1 = weight_func.get(ker_ind)
+#     if layer_1 is None:
+#         weight_func[ker_ind] = dict()
+#     layer_1 = weight_func[ker_ind]
+
+#     layer_2 = layer_1.get(hkernel)
+#     if layer_2 is None:
+#         layer_1[hkernel] = dict()
+#     layer_2 = layer_1[hkernel]
+
+#     layer_3 = layer_2.get(h_order)
+#     if layer_3 is None:
+#         logging.info("Creating new weight function, the first time is going to be slow")
+#         layer_2[h_order] = kernel_weight(kernel, ktype=hkernel, order=h_order)
+#     layer_3 = layer_2[h_order]
+
+#     return layer_3
+
+
+@cache
+def _get_func_from_hashable(
+    kernel_tuple, kernel_shape, hkernel="interp", h_order=0, **kwargs
+):
+    kernel = np.array(kernel_tuple).reshape(kernel_shape)
+    return kernel_weight(kernel, ktype=hkernel, order=h_order)
+
+
+def get_func(kernel, **kwargs):
     """Return functions that compute weights.
 
     Similar to the kernel_weight function,
     the only difference is that this function can
-    read existing functions from a global dictionary,
-    and can register to the dictionary when new ones are created.
+    read existing functions that is cached.
+    See _get_func_from_hashable
     """
-    global weight_func
-    ker_ind = kash(kernel)
-    layer_1 = weight_func.get(ker_ind)
-    if layer_1 is None:
-        weight_func[ker_ind] = dict()
-    layer_1 = weight_func[ker_ind]
-
-    layer_2 = layer_1.get(hkernel)
-    if layer_2 is None:
-        layer_1[hkernel] = dict()
-    layer_2 = layer_1[hkernel]
-
-    layer_3 = layer_2.get(h_order)
-    if layer_3 is None:
-        logging.info("Creating new weight function, the first time is going to be slow")
-        layer_2[h_order] = kernel_weight(kernel, ktype=hkernel, order=h_order)
-    layer_3 = layer_2[h_order]
-
-    return layer_3
+    return _get_func_from_hashable(tuple(kernel.ravel()), kernel.shape, **kwargs)
 
 
 def auto_doll(kernel, hkernel="interp"):
