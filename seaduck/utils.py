@@ -227,51 +227,6 @@ def NoneIn(lst):
 
 
 @compileable
-def find_ind_z(array, value):
-    """Find the index of the nearest level that is lower."""
-    array = np.asarray(array)
-    idx = np.argmin(np.abs(array - value))
-    if array[idx] > value:
-        # z is special because it does not make
-        # much sense to interpolate beyond the two layers
-        idx += 1
-    idx = int(idx)
-    return idx, array[idx]
-
-
-@compileable
-def find_ind_t(array, value):
-    """Find the index of the latest time that is before the time."""
-    array = np.asarray(array)
-    idx = np.argmin(np.abs(array - value))
-    if array[idx] > value and idx != 0:
-        idx -= 1
-    idx = int(idx)
-    return idx, array[idx]
-
-
-@compileable
-def find_ind_nearest(array, value):
-    """Find the index of the nearest value to the given value."""
-    array = np.asarray(array)
-    idx = np.argmin(np.abs(array - value))
-    idx = int(idx)
-    return idx, array[idx]
-
-
-@compileable
-def find_ind_periodic(array, value, peri):
-    """Find the index of the nearest value to the given value.
-
-    Here the values are assumed to be periodic.
-    """
-    array = np.asarray(array)
-    idx = np.argmin(np.abs((array - value) % peri))
-    idx = int(idx)
-    return idx, array[idx]
-
-
-@compileable
 def find_ind(array, value, peri=None, ascending=1, above=True):
     """Find the index of the nearest value to the given value.
 
@@ -388,6 +343,7 @@ def find_rel(
     return ixs, rxs, dxs, bxs
 
 
+# Here are a few partial functions for find_rel
 @compileable
 def find_rel_nearest(value, ts):
     """Find the rel-coords based on the find_ind_nearest method."""
@@ -454,71 +410,41 @@ def find_rel_time(time, ts):
     return find_rel(time, ts)
 
 
-@compileable
-def _read_h_with_face(some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs):
-    """Read the grid coords when there is a face dimension to it."""
-    n = len(ixs)
+def _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind):
+    """Read the grid coords at given index.
 
-    bx = np.ones_like(ixs) * 0.0
-    by = np.ones_like(ixs) * 0.0
-    for i in range(n):
-        bx[i] = some_x[faces[i], iys[i], ixs[i]]
-        by[i] = some_y[faces[i], iys[i], ixs[i]]
+    **Parameters:
 
-    if CS is not None and SN is not None:
-        cs = np.ones_like(ixs) * 0.0
-        sn = np.ones_like(ixs) * 0.0
-        for i in range(n):
-            cs[i] = CS[faces[i], iys[i], ixs[i]]
-            sn[i] = SN[faces[i], iys[i], ixs[i]]
-    else:
-        cs = None
-        sn = None
-
+    + some_x: numpy.ndarray
+        array of longitude, could be XC or XG
+    + some_y: numpy.ndarray
+        array of latitude, could be YC or YG
+    + some_dx: numpy.ndarray or None
+        array of distances between grid in the longitudinal direction.
+    + some_dy: numpy.ndarray or None
+        array of distances between grid in the latitudinal direction.
+    + CS: numpy.ndarray or None
+        array of the cosine of the angle between grid and meridian.
+    + SN: numpy.ndarray or None
+        array of the sine of the angle between grid and meridian.
+    + ind: tuple
+        indexes to read the grid data from.
+    """
+    bx = some_x[ind]
+    by = some_y[ind]
     if some_dx is not None and some_dy is not None:
-        dx = np.ones_like(ixs) * 0.0
-        dy = np.ones_like(ixs) * 0.0
-        for i in range(n):
-            dx[i] = some_dx[faces[i], iys[i], ixs[i]]
-            dy[i] = some_dy[faces[i], iys[i], ixs[i]]
-    else:
-        dx = None
-        dy = None
-
-    return cs, sn, dx, dy, bx, by
-
-
-@compileable
-def _read_h_without_face(some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs):
-    """Read _read_h_with_face for more info."""
-    # TODO ADD test if those are Nones.
-    n = len(ixs)
-    if some_dx is not None and some_dy is not None:
-        dx = np.ones_like(ixs) * 0.0
-        dy = np.ones_like(ixs) * 0.0
-        for i in range(n):
-            dx[i] = some_dx[iys[i], ixs[i]]
-            dy[i] = some_dy[iys[i], ixs[i]]
+        dx = some_dx[ind]
+        dy = some_dy[ind]
     else:
         dx = None
         dy = None
 
     if CS is not None and SN is not None:
-        cs = np.ones_like(ixs) * 0.0
-        sn = np.ones_like(ixs) * 0.0
-        for i in range(n):
-            cs[i] = CS[iys[i], ixs[i]]
-            sn[i] = SN[iys[i], ixs[i]]
+        cs = CS[ind]
+        sn = SN[ind]
     else:
         cs = None
         sn = None
-
-    bx = np.ones_like(ixs) * 0.0
-    by = np.ones_like(ixs) * 0.0
-    for i in range(n):
-        bx[i] = some_x[iys[i], ixs[i]]
-        by[i] = some_y[iys[i], ixs[i]]
-
     return cs, sn, dx, dy, bx, by
 
 
@@ -532,7 +458,7 @@ def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):
     return rx, ry
 
 
-def find_rel_h_naive(Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree):
+def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     """Find the rel-coords in the horizontal.
 
     very similar to find_rel_time/v
@@ -544,19 +470,16 @@ def find_rel_h_naive(Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     cs,sn is just the cos and sin of the grid orientation.
     It will come in handy when we transfer vectors.
     """
-    if NoneIn([Xs, Ys, some_x, some_y, some_dx, some_dy, CS, SN, tree]):
+    if NoneIn([lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree]):
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
-    faces, iys, ixs = find_ind_h(Xs, Ys, tree, h_shape)
+    faces, iys, ixs = find_ind_h(lon, lat, tree, h_shape)
     if faces is not None:
-        cs, sn, dx, dy, bx, by = _read_h_with_face(
-            some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs
-        )
+        ind = (faces, iys, ixs)
     else:
-        cs, sn, dx, dy, bx, by = _read_h_without_face(
-            some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs
-        )
-    rx, ry = find_rx_ry_naive(Xs, Ys, bx, by, cs, sn, dx, dy)
+        ind = (iys, ixs)
+    cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
+    rx, ry = find_rx_ry_naive(lon, lat, bx, by, cs, sn, dx, dy)
     return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
 
 
@@ -582,20 +505,16 @@ def find_rel_h_oceanparcel(
     h_shape = some_x.shape
     faces, iys, ixs = find_ind_h(x, y, tree, h_shape)
     if faces is not None:
-        cs, sn, dx, dy, bx, by = _read_h_with_face(
-            some_x, some_y, some_dx, some_dy, CS, SN, faces, iys, ixs
-        )
-        px, py = find_px_py(XG, YG, tp, faces, iys, ixs)
+        ind = (faces, iys, ixs)
     else:
-        cs, sn, dx, dy, bx, by = _read_h_without_face(
-            some_x, some_y, some_dx, some_dy, CS, SN, iys, ixs
-        )
-        px, py = find_px_py(XG, YG, tp, iys, ixs)
+        ind = (iys, ixs)
+    cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
+    px, py = find_px_py(XG, YG, tp, ind)
     rx, ry = find_rx_ry_oceanparcel(x, y, px, py)
     return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
 
 
-def find_px_py(XG, YG, tp, *ind, cuvwg="G"):
+def find_px_py(XG, YG, tp, ind, cuvwg="G"):
     """Find the nearest 4 corner points.
 
     This is used in oceanparcel interpolation scheme.
@@ -653,12 +572,8 @@ def find_rx_ry_oceanparcel(x, y, px, py):
 
     order1 = np.abs(aa) < 1e-12
     order2 = np.logical_and(~order1, det2 >= 0)
-    #     nans   = np.logical_and(~order1,det2< 0)
-
-    #     ry[order1] = -(cc/bb)[order1]
     ry = -(cc / bb)  # if it is supposed to be nan, just try linear solve.
     ry[order2] = ((-bb + np.sqrt(det2)) / (2 * aa))[order2]
-    #     ry[nans  ] = np.nan
 
     rot_rectilinear = np.abs(a[1] + a[3] * ry) < 1e-12
     rx[rot_rectilinear] = (

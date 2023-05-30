@@ -483,18 +483,19 @@ class Position:
         Used for oceanparcel style horizontal interpolation.
         """
         if self.face is not None:
-            return find_px_py(
-                self.ocedata.XG,
-                self.ocedata.YG,
-                self.ocedata.tp,
+            ind = (
                 self.face,
                 self.iy,
                 self.ix,
             )
         else:
-            return find_px_py(
-                self.ocedata.XG, self.ocedata.YG, self.ocedata.tp, self.iy, self.ix
-            )
+            ind = (self.iy, self.ix)
+        return find_px_py(
+            self.ocedata.XG,
+            self.ocedata.YG,
+            self.ocedata.tp,
+            ind,
+        )
 
     def get_f_node_weight(self):
         """Find weight for the corner points interpolation."""
