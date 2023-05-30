@@ -360,7 +360,7 @@ def find_rel(
         Value of the reference level
     """
     if darray is None:
-        darray = abs(np.diff(array))
+        darray = np.abs(array[1:] - array[:-1])
         darray = np.append(darray, darray[-1])
         dx_right = True
     ixs = np.zeros_like(value)
