@@ -88,20 +88,19 @@ def test_callback(od):
     curv_p.to_list_of_time(normal_stops=[od.ts[0], od.ts[-1]], update_stops=[])
 
 
-@pytest.mark.parametrize(
-    "statement,error",
-    [
-        ("p.note_taking()", AttributeError),
-        ("p.to_list_of_time(normal_stops = [0.0,1.0])", AttributeError),
-        (
-            "ecco_p.to_list_of_time(normal_stops = [0.0,1.0],update_stops = [])",
-            ValueError,
-        ),
-    ],
-)
-def test_lagrange_error(statement, error, p, ecco_p):
-    with pytest.raises(error):
-        eval(statement)
+def test_note_taking_error(p):
+    with pytest.raises(AttributeError):
+        p.note_taking()
+
+
+def test_no_time_midp_error(p):
+    with pytest.raises(AttributeError):
+        p.to_list_of_time(normal_stops=[0.0, 1.0])
+
+
+def test_time_out_of_bound_error(ecco_p):
+    with pytest.raises(ValueError):
+        ecco_p.to_list_of_time(normal_stops=[0.0, 1.0], update_stops=[])
 
 
 def test_multidim_uvw_array(ecco_p):
