@@ -167,7 +167,7 @@ def local_to_latlon(u, v, cs, sn):
 
 
 @compileable
-def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, dt, bx, by, bzl):
+def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, bx, by, bzl):
     """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
@@ -321,157 +321,12 @@ def find_ind_h(lons, lats, tree, h_shape):
 
 
 @compileable
-def find_rel_nearest(value, ts):
-    """Find the rel-coords based on the find_ind_nearest method."""
-    its = np.zeros_like(value)
-    rts = np.ones_like(value) * 0.0
-    # the way to create zeros with float32 type
-    dts = np.ones_like(value) * 0.0
-    bts = np.ones_like(value) * 0.0
-
-    DT = np.zeros(len(ts) + 1)
-    DT[1:-1] = ts[1:] - ts[:-1]
-    DT[0] = DT[1]
-    DT[-1] = DT[-2]
-    for i in range(len(value)):
-        t = value[i]
-        it, bt = find_ind_nearest(ts, t)
-        delta_t = t - bt
-        if delta_t * DT[it] > 0:
-            Delta_t = DT[it + 1]
-        else:
-            Delta_t = DT[it]
-        rt = delta_t / abs(Delta_t)
-        its[i] = it
-        rts[i] = rt
-        dts[i] = abs(Delta_t)
-        bts[i] = bt
-    return its, rts, dts, bts
-
-
-@compileable
-def find_rel_periodic(value, ts, peri):
-    """Find the rel-coords based on the find_ind_periodic method."""
-    its = np.zeros_like(value)
-    rts = np.ones_like(value) * 0.0
-    # the way to create zeros with float32 type
-    dts = np.ones_like(value) * 0.0
-    bts = np.ones_like(value) * 0.0
-
-    DT = np.zeros(len(ts) + 1)
-    DT[1:-1] = ts[1:] - ts[:-1]
-    DT[0] = DT[1]
-    DT[-1] = DT[-2]
-    for i in range(len(value)):
-        t = value[i]
-        it, bt = find_ind_periodic(ts, t, peri)
-        delta_t = (t - bt) % peri
-        if delta_t * DT[i] > 0:
-            Delta_t = DT[it + 1]
-        else:
-            Delta_t = DT[it]
-        rt = delta_t / abs(Delta_t)
-        its[i] = it
-        rts[i] = rt
-        dts[i] = abs(Delta_t)
-        bts[i] = bt
-    return its, rts, dts, bts
-
-
-@compileable
-def find_rel_z(depth, some_z, some_dz, dz_above_z=True):
-    """Find the rel-coords of the vertical coords.
-
-    **Parameters:**
-
-    + depth: numpy.ndarray
-        1D array for the depth of interest in meters.
-        More negative means deeper.
-    + some_z: numpy.ndarray
-        The depth of reference depth.
-    + some_dz: numpy.ndarray
-        dz_i = abs(z_{i+1}- z_i)
-    + dz_above_z: Boolean
-        Whether the dz as the distance between the depth level and
-        a shallower one(True) or a deeper one(False)
-
-    **Returns:**
-
-    + iz: numpy.ndarray
-        Indexes of the reference z level
-    + rz: numpy.ndarray
-        Non-dimensional distance to the reference z level
-    + dz: numpy.ndarray
-        distance between the reference z level and the next one.
-    """
-    izs = np.zeros_like(depth)
-    rzs = np.ones_like(depth) * 0.0
-    # the way to create zeros with float32 type
-    dzs = np.ones_like(depth) * 0.0
-    bzs = np.ones_like(depth) * 0.0
-    for i, d in enumerate(depth):
-        iz, bz = find_ind_z(some_z, d)
-        izs[i] = iz
-        bzs[i] = bz
-        #         try:
-        delta_z = d - bz
-        #         except IndexError:
-        #             raise IndexError('the point is too deep')
-        if dz_above_z:
-            Delta_z = some_dz[iz]
-        else:
-            Delta_z = some_dz[iz - 1]
-        dzs[i] = Delta_z
-        rzs[i] = delta_z / Delta_z
-    return izs, rzs, dzs, bzs
-
-
-@compileable
-def find_rel_time(time, ts):
-    """Find the rel-coords of the temporal coords.
-
-    **Parameters:**
-
-    + time: numpy.ndarray
-        1D array for the time since 1970-01-01 in seconds.
-    + ts: numpy.ndarray
-        The time of model time steps also in seconds.
-
-    **Returns:**
-
-    + it: numpy.ndarray
-        Indexes of the reference t level
-    + rt: numpy.ndarray
-        Non-dimensional distance to the reference t level
-    + dt: numpy.ndarray
-        distance between the reference t level and the next one.
-    """
-    its = np.zeros(time.shape)
-    rts = np.ones(time.shape) * 0.0
-    dts = np.ones(time.shape) * 0.0
-    bts = np.ones(time.shape) * 0.0
-
-    for i, t in enumerate(time):
-        it, bt = find_ind_t(ts, t)
-        delta_t = t - bt
-        if it < len(ts) - 1:
-            Delta_t = ts[it + 1] - ts[it]
-        else:
-            Delta_t = ts[it] - ts[it - 1]
-        rt = delta_t / Delta_t
-        its[i] = it
-        rts[i] = rt
-        dts[i] = Delta_t
-        bts[i] = bt
-    return its, rts, dts, bts
-
-
-@compileable
 def find_rel(
     value, array, darray=None, ascending=1, above=True, peri=None, dx_right=True
 ):
     """Find the rel-coords of the 1D coords.
 
+    The backend for all find_rel functions
     **Parameters:**
 
     + value: numpy.ndarray
@@ -521,7 +376,8 @@ def find_rel(
         else:
             dx = to_180(x - bx, peri=peri)
 
-        if not above:
+        if not above or peri is not None:
+            # peri not None will effectively overwrite above
             dx_offset = int(not dx_right) + int(ascending * dx > 0) - 1
         idx = ix + dx_offset
 
@@ -530,6 +386,72 @@ def find_rel(
         dxs[i] = darray[idx]
         bxs[i] = bx
     return ixs, rxs, dxs, bxs
+
+
+@compileable
+def find_rel_nearest(value, ts):
+    """Find the rel-coords based on the find_ind_nearest method."""
+    return find_rel(value, ts, above=False)
+
+
+@compileable
+def find_rel_periodic(value, ts, peri):
+    """Find the rel-coords based on the find_ind_periodic method."""
+    return find_rel(value, ts, peri=peri)
+
+
+@compileable
+def find_rel_z(depth, some_z, some_dz=None, dz_above_z=True):
+    """Find the rel-coords of the vertical coords.
+
+    **Parameters:**
+
+    + depth: numpy.ndarray
+        1D array for the depth of interest in meters.
+        More negative means deeper.
+    + some_z: numpy.ndarray
+        The depth of reference depth.
+    + some_dz: numpy.ndarray or None
+        dz_i = abs(z_{i+1}- z_i)
+    + dz_above_z: Boolean
+        Whether the dz as the distance between the depth level and
+        a shallower one(True) or a deeper one(False)
+
+    **Returns:**
+
+    + iz: numpy.ndarray
+        Indexes of the reference z level
+    + rz: numpy.ndarray
+        Non-dimensional distance to the reference z level
+    + dz: numpy.ndarray
+        distance between the reference z level and the next one.
+    """
+    return find_rel(
+        depth, some_z, darray=some_dz, ascending=-1, dx_right=(not dz_above_z)
+    )
+
+
+@compileable
+def find_rel_time(time, ts):
+    """Find the rel-coords of the temporal coords.
+
+    **Parameters:**
+
+    + time: numpy.ndarray
+        1D array for the time since 1970-01-01 in seconds.
+    + ts: numpy.ndarray
+        The time of model time steps also in seconds.
+
+    **Returns:**
+
+    + it: numpy.ndarray
+        Indexes of the reference t level
+    + rt: numpy.ndarray
+        Non-dimensional distance to the reference t level
+    + dt: numpy.ndarray
+        distance between the reference t level and the next one.
+    """
+    return find_rel(time, ts)
 
 
 @compileable
