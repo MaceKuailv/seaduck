@@ -132,16 +132,10 @@ def test_diff_prefetched(ep, prefetched, varname, knw, num_prefetched):
     [
         (None, -37.5, uknw),
         (prefetched, -37.5, uknw),
-        ("od", np.ones((2, 2)), uknw),
-        ("od", np.ones(12), uknw),
-        ("od", np.array([-37.5, -37.4]), wrongZknw),
-        ("od", np.array([-37.5, -37.4]), wrongTknw),
     ],
 )
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_init_valueerror(od, data, x, knw):
-    if isinstance(data, str):
-        data = eval(data)
+def test_wrong_datatype_error(od, data, x, knw):
     with pytest.raises(ValueError):
         the_p = sd.Particle(
             x=x,
@@ -149,6 +143,28 @@ def test_init_valueerror(od, data, x, knw):
             z=np.ones(2) * (-9.0),
             t=np.ones(2) * 698155200.0,
             data=data,
+        )
+        the_p.fatten(knw)
+
+
+@pytest.mark.parametrize(
+    "x,knw",
+    [
+        (np.ones((2, 2)), uknw),
+        (np.ones(12), uknw),
+        (np.array([-37.5, -37.4]), wrongZknw),
+        (np.array([-37.5, -37.4]), wrongTknw),
+    ],
+)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_init_valueerror(od, x, knw):
+    with pytest.raises(ValueError):
+        the_p = sd.Particle(
+            x=x,
+            y=np.ones(2) * 10.4586420059204,
+            z=np.ones(2) * (-9.0),
+            t=np.ones(2) * 698155200.0,
+            data=od,
         )
         the_p.fatten(knw)
 
