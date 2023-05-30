@@ -65,11 +65,11 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
             for j, p in enumerate(k):
                 sf = new_dic[j][p]  # the upperbound of index
                 pr = sf - cksz[keys[j]][p]  # the lower bound of index
-                ind_str.append(f"{pr}:{sf}")
+                ind_str.append(slice(pr, sf))
                 pre.append(pr)
             prs = np.zeros(len(keys)).astype(int)
             prs[: last + 1] = pre
-            npck = eval(f'np.array(da[{",".join(ind_str)}])')
+            npck = np.array(da[tuple(ind_str)])
             subind = tuple([ind[dim][which] - prs[dim] for dim in range(len(ind))])
             result[which] = npck[subind]
         return result.reshape(the_shape)
