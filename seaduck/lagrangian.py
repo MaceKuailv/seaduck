@@ -7,7 +7,7 @@ import numpy as np
 from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
 from seaduck.runtime_conf import compileable
-from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, rel2latlon, to_180
+from seaduck.utils import find_rel, find_rx_ry_oceanparcel, rel2latlon, to_180
 
 deg2m = 6271e3 * np.pi / 180
 
@@ -821,7 +821,6 @@ class Particle(Position):
                 self.dx,
                 self.dy,
                 dzl_lin,
-                self.dt,
                 self.bx,
                 self.by,
                 bzl_lin,
@@ -949,9 +948,12 @@ class Particle(Position):
             warnings.warn("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
         if self.ocedata.readiness["time"]:
-            self.it, self.rt, self.dt, self.bt = self.ocedata.find_rel_t(self.t)
-            self.it, _, _, _ = find_rel_time(self.t, self.ocedata.time_midp)
-            self.it += 1
+            before_first = self.t < self.ocedata.time_midp[0]
+            self.it[before_first] = 0
+            self.it[~before_first], _, _, _ = find_rel(
+                self.t[~before_first], self.ocedata.time_midp
+            )
+            self.it[~before_first] += 1
 
     def to_list_of_time(
         self, normal_stops, update_stops="default", return_in_between=True
