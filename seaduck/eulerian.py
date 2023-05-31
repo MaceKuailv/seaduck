@@ -103,45 +103,6 @@ def _subtract_i_min(ind, i_min):
     return tuple(temp_ind)
 
 
-# class RelSet:
-#     def __init__(self):
-#         self.type_list = []
-#         self.var_list = []
-#         self.main_list = []
-#         self.var_dict = {}
-
-#     def __getattr__(self, attr):
-#         if attr in ["type_list", "var_list", "main_list", "var_dict"]:
-#             return self.__dict__[attr]
-#         elif attr in self.var_list:
-#             for i, rrr in enumerate(self.type_list):
-#                 if attr in self.var_dict[rrr]:
-#                     return getattr(self.main_list[i], attr)
-#         else:
-#             raise AttributeError(f"'RelSet' object has no attribute '{attr}'")
-
-#     def __setattr__(self, attr, value):
-#         if attr in ["type_list", "var_list", "main_list", "var_dict"]:
-#             self.__dict__[attr] = value
-#         elif attr in self.var_list:
-#             for i, rrr in enumerate(self.type_list):
-#                 if attr in self.var_dict[rrr]:
-#                     setattr(self.main_list[i], attr, value)
-#         else:
-#             raise Exception(f"'Setting '{attr}' for 'RelSet' not supported")
-
-#     def update(self, some_rel):
-#         new_type = str(type(some_rel))
-#         if new_type not in self.type_list:
-#             self.type_list.append(new_type)
-#             self.var_list += list(some_rel._fields)
-#             self.main_list.append(some_rel)
-#             self.var_dict[new_type] = some_rel._fields
-#         else:
-#             index = self.type_list.index(new_type)
-#             self.main_list[index] = some_rel
-
-
 class Position:
     """The Position object that performs the interpolation.
 
@@ -218,17 +179,6 @@ class Position:
             self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
             self.lat = None
-            # self.face = None
-            # self.iy = None
-            # self.ix = None
-            # self.rx = None
-            # self.ry = None
-            # self.cs = None
-            # self.sn = None
-            # self.dx = None
-            # self.dy = None
-            # self.bx = None
-            # self.by = None
         if z is not None:
             self.dep = z
             if self.ocedata.readiness["Z"]:
@@ -243,17 +193,6 @@ class Position:
             self.rel.update(VRel._make(None for i in range(4)))
             self.rel.update(VlRel._make(None for i in range(4)))
             self.dep = None
-            # (
-            #     self.iz,
-            #     self.rz,
-            #     self.dz,
-            #     self.bz,
-            #     self.izl,
-            #     self.rzl,
-            #     self.dzl,
-            #     self.bzl,
-            #     self.dep,
-            # ) = (None for i in range(9))
 
         if t is not None:
             self.t = t
