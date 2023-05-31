@@ -22,6 +22,7 @@ latex:
 sphinx:
   extra_extensions:
   - 'sphinx.ext.autodoc'
+  - 'sphinx.ext.napoleon'
   config:
     html_theme: sphinx_book_theme
     autodoc_member_order: groupwise

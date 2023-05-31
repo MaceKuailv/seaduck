@@ -19,15 +19,15 @@ def mask_u_node(maskC, tp):
 
     Parameters
     ----------
-    + maskC: numpy.ndarray
+    maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: Topology object
+    tp: Topology object
         The Topology object for the dataset.
 
     Returns
     -------
-    + maskU: numpy.ndarray
+    maskU: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet U-walls (including interface between wet and dry), 0 for dry ones.
     """
@@ -53,10 +53,10 @@ def mask_v_node(maskC, tp):
 
     Parameters
     ----------
-    + maskC: numpy.ndarray
+    maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: Topology object
+    tp: Topology object
         The Topology object for the dataset.
 
     Returns
@@ -88,10 +88,10 @@ def mask_w_node(maskC, tp=None):
 
     Parameters
     ----------
-    + maskC: numpy.ndarray
+    maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: Topology object
+    tp: Topology object
         The Topology object for the dataset.
 
     Returns
@@ -114,14 +114,14 @@ def get_masks(od, tp):
 
     Parameters
     ----------
-    + od: OceData object
+    od: OceData object
         The dataset to compute masks on.
-    + tp: Topology object
+    tp: Topology object
         The Topology of the datset
 
     Returns
     -------
-    + maskC,maskU,maskV,maskW: numpy.ndarray
+    maskC,maskU,maskV,maskW: numpy.ndarray
         masks at center points, U-walls, V-walls, W-walls respectively.
     """
     keys = od._ds.keys()
@@ -172,11 +172,11 @@ def get_masked(od, ind, cuvwg="C"):
 
     Parameters
     ----------
-    + od: OceData object
+    od: OceData object
         Dataset to find mask values from.
-    + ind: tuple of numpy.ndarray
+    ind: tuple of numpy.ndarray
         Indexes of grid points.
-    + cuvwg: str
+    cuvwg: str
         Whether the indexes is for points at center points or on the walls.
         Options are: ['C','U','V','Wvel'].
     """
