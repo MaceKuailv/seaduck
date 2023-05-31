@@ -5,10 +5,7 @@ import numpy as np
 
 from seaduck.runtime_conf import compileable
 
-# If you have encountered a NotImplementedError and come to this file,
-# I suggest you read the ***class Topology*** near the bottom of this file.
-
-tends = [0, 1, 2, 3]  # up,down,left,right #list(llc_face_connect.columns)
+legal_tends = [0, 1, 2, 3]  # up,down,left,right #list(llc_face_connect.columns)
 
 llc_face_connect = np.array(
     [
@@ -41,7 +38,7 @@ def llc_mutual_direction(face, nface, transitive=False):
     edge_n = np.where(llc_face_connect[face] == nface)
     nedge_n = np.where(llc_face_connect[nface] == face)
     try:
-        found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
+        found = edge_n[0][0] in legal_tends and nedge_n[0][0] in legal_tends
     except Exception:  # It has to be a index error, but numba does not support that
         found = False
     if found:
