@@ -886,14 +886,15 @@ class Particle(Position):
         p = Position()
         p.ocedata = self.ocedata
         p.N = self.N
-        keys = self.__dict__.keys()
+        varsdict = vars(self)
+        keys = varsdict.keys()
         for i in keys:
-            item = self.__dict__[i]
+            item = varsdict[i]
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
-                    p.__dict__[i] = copy.deepcopy(item)
+                    setattr(p, i, copy.deepcopy(item))
             elif isinstance(item, (list, RelCoord)):
-                p.__dict__[i] = copy.deepcopy(item)
+                setattr(p, i, copy.deepcopy(item))
         return p
 
     def to_next_stop(self, t1):

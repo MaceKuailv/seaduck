@@ -222,20 +222,20 @@ class Position:
             The selected Positions.
         """
         p = Position()
-        keys = self.__dict__.keys()
+        vardict = vars(self)
+        keys = vardict.keys()
         for i in keys:
-            item = self.__dict__[i]
+            item = vardict[i]
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
-                    p.__dict__[i] = item[which]
-                    p.N = len(p.__dict__[i])
+                    setattr(p, i, item[which])
+                    p.N = len(getattr(p, i))
                 else:
-                    p.__dict__[i] = item
+                    setattr(p, i, item)
             elif isinstance(item, RelCoord):
-                p.__dict__[i] = item.subset(which)
+                setattr(p, i, item.subset(which))
             else:
-                p.__dict__[i] = item
-        # p.N = max([_general_len(i) for i in p.__dict__.values()])
+                setattr(p, i, item)
         return p
 
     def fatten_h(self, knw, ind_moves_kwarg={}):

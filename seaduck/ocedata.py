@@ -182,11 +182,12 @@ class OceData:
             else:
                 self._ds[key] = item
         else:
-            self.__dict__[key] = item
+            object.__setattr__(self, key, item)
 
     def __getitem__(self, key):
-        if key in self.__dict__.keys():
-            return self.__dict__[key]
+        varsdict = vars(self)
+        if key in varsdict.keys():
+            return object.__getattribute__(self, key)
         else:
             if key in self.alias.keys():
                 return self._ds[self.alias[key]]
