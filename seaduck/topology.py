@@ -250,8 +250,8 @@ class Topology:
     In the movie kill Bill, the bride sat in a car and said "wiggle your big toe".
     After the toe moved, "the hard part is over". You get the idea.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + od: xarray.Dataset, OceData object
         The dataset to record topological info from.
     + typ: None, or str
@@ -324,15 +324,15 @@ class Topology:
         the (nedge) side of the (nface).
         0,1,2,3 stands for up, down, left, right.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + face: int
             The face of interst
         + edge: 0,1,2,3
             which direction of the face we are looking for
 
-        **Returns:**
-
+        Returns
+        -------
         + nface: int
             The face adjacent to face in the edge direction.
         + nedge: 0,1,2,3
@@ -371,8 +371,8 @@ class Topology:
         tendency again is up, down, left, right represented by 0,1,2,3
         return the next cell.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + ind: tuple
             The index to find the neighbor of
         + tend: int
@@ -414,8 +414,8 @@ class Topology:
         ind being the starting index,
         return the index after moving in the directions in the list.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + ind: tuple
             Index of the starting position
         + moves: iterable
@@ -462,8 +462,8 @@ class Topology:
         index can be a tuple of numpy ndarrays.
         no negative index is permitted for sanity reason.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + ind: tuple
             Each element of the tuple is iterable of one dimension of the indexes.
         """
@@ -489,8 +489,8 @@ class Topology:
 
         Vectorized version for ind_tend method.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + inds: tuple of numpy.array or numpy.array
             Each element of the tuple is iterable of one dimension of the indexes.
         + tend: iterable
@@ -630,8 +630,8 @@ class Topology:
         local inconsistency in vector definition near face connections.
         This method corrects that.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + faces: iterable
             1D iterable of faces, the first one is assumed to be the reference.
         """

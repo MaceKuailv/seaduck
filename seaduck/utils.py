@@ -69,11 +69,12 @@ def process_ecco(ds):
 def get_dataset(name):
     """Use pooch to download datasets from cloud.
 
-    This is just for testing purposes.
-    **Parameters:**
+        This is just for testing purposes.
 
-    + name: string
-        The name of dataset, now support "ecco", "aviso", "curv", "rect"
+    Parameters
+    ----------
+        + name: string
+            The name of dataset, now support "ecco", "aviso", "curv", "rect"
     """
     pooch_testdata, pooch_fetch_kwargs = pooch_prepare()
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
@@ -106,8 +107,8 @@ def get_key_by_value(d, value):
 
     the key that correspond to the given value.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + d: dictionaty
         dictionary to lookup key from
     + value: object
@@ -123,8 +124,8 @@ def get_key_by_value(d, value):
 def spherical2cartesian(lat, lon, R=6371.0):
     """Convert spherical coordinates to cartesian.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + lat: np.array
         Spherical Y coordinate (latitude)
     + lon: np.array
@@ -133,8 +134,8 @@ def spherical2cartesian(lat, lon, R=6371.0):
         Earth radius in km
         If None, use geopy default
 
-    **Returns:**
-
+    Returns
+    -------
     + x: np.array
         Cartesian x coordinate
     + y: np.array
@@ -182,8 +183,8 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, bx, by, bzl):
 def create_tree(x, y, R=6371.0, leafsize=16):
     """Create a cKD tree object.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + x,y: np.ndarray
         longitude and latitude of the grid location
     + R: float
@@ -230,8 +231,8 @@ def NoneIn(lst):
 def find_ind(array, value, peri=None, ascending=1, above=True):
     """Find the index of the nearest value to the given value.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + array: numpy.ndarray
         1D numpy array to search index from
     + value: number
@@ -282,8 +283,9 @@ def find_rel(
     """Find the rel-coords of the 1D coords.
 
     The backend for all find_rel functions
-    **Parameters:**
 
+    Parameters
+    ----------
     + value: numpy.ndarray
         1D array for the value to find rel-coords.
     + array: numpy.ndarray
@@ -303,8 +305,8 @@ def find_rel(
     + dx_right: boolean
         If True, darray[i] = abs(array[i+1] - array[i])
 
-    **Returns:**
-
+    Returns
+    -------
     + ix: numpy.ndarray
         Indexes of the reference level
     + rx: numpy.ndarray
@@ -360,8 +362,8 @@ def find_rel_periodic(value, ts, peri):
 def find_rel_z(depth, some_z, some_dz=None, dz_above_z=True):
     """Find the rel-coords of the vertical coords.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + depth: numpy.ndarray
         1D array for the depth of interest in meters.
         More negative means deeper.
@@ -373,8 +375,8 @@ def find_rel_z(depth, some_z, some_dz=None, dz_above_z=True):
         Whether the dz as the distance between the depth level and
         a shallower one(True) or a deeper one(False)
 
-    **Returns:**
-
+    Returns
+    -------
     + iz: numpy.ndarray
         Indexes of the reference z level
     + rz: numpy.ndarray
@@ -391,15 +393,15 @@ def find_rel_z(depth, some_z, some_dz=None, dz_above_z=True):
 def find_rel_time(time, ts):
     """Find the rel-coords of the temporal coords.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + time: numpy.ndarray
         1D array for the time since 1970-01-01 in seconds.
     + ts: numpy.ndarray
         The time of model time steps also in seconds.
 
-    **Returns:**
-
+    Returns
+    -------
     + it: numpy.ndarray
         Indexes of the reference t level
     + rt: numpy.ndarray
@@ -413,8 +415,8 @@ def find_rel_time(time, ts):
 def _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind):
     """Read the grid coords at given index.
 
-    **Parameters:
-
+    Parameters
+    ----------
     + some_x: numpy.ndarray
         array of longitude, could be XC or XG
     + some_y: numpy.ndarray

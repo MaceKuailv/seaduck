@@ -110,8 +110,8 @@ class OceData:
     Class that enables variable aliasing, topology extraction, and 4-D translation
     between latitude-longitude-depth-time grid and relative description.
 
-    **Parameters**
-
+    Parameters
+    ----------
     + data: xarray.Dataset
         The dataset to extract grid information, create cKD tree, and Topology object on.
     + alias: dict, None, or 'auto'
@@ -170,8 +170,8 @@ class OceData:
 
         Function that checks what kind of interpolation is supported.
 
-        **Returns:**
-
+        Returns
+        -------
         + readiness: dict
             'h': The scheme of horizontal interpolation to be used,
                  including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
@@ -337,13 +337,13 @@ class OceData:
 
         Find the horizontal rel-coordinate of the given 4-D position based on readiness['h'].
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + x, y: np.ndarray
             1D array of longitude and latitude.
 
-        **Returns:**
-
+        Returns
+        -------
         + faces, iys, ixs: np.ndarray or None
             Indexes of the nearest horizontal point.
         + rx, ry: np.ndarray

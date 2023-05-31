@@ -20,8 +20,8 @@ from seaduck.utils import (
 def _ind_broadcast(x, ind):
     """Perform a "cartesian product" on two fattened dimensions.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + x: numpy.ndarray
         A new dimension
     + ind: tuple
@@ -136,8 +136,8 @@ class Position:
         from lat-lon-dep-time coords to rel-coords
         store the output in the Position object.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + x,y,z,t: numpy.ndarray
             1D array of the lat-lon-dep-time coords
         + data: OceData object
@@ -209,15 +209,15 @@ class Position:
     def subset(self, which):
         """Create a subset of the Position object.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + which: numpy.ndarray
             Define which points survive the subset operation.
             It be an array of either boolean or int.
             The selection is similar to that of selecting from a 1D numpy array.
 
-        **Returns:**
-
+        Returns
+        -------
         + the_subset: Position object
             The selected Positions.
         """
@@ -249,8 +249,8 @@ class Position:
         each row represen all the node needed for interpolation of a single point.
         "h" represent we are only doing it on the horizontal plane.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + knw: KnW object
             The kernel used to find neighboring points.
         + ind_moves_kward: dict
@@ -307,8 +307,8 @@ class Position:
 
         Find the neighboring center grid points in the vertical direction.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + knw: KnW object
             The kernel used to find neighboring points.
         """
@@ -330,8 +330,8 @@ class Position:
 
         Finding the neighboring staggered grid points in the vertical direction.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + knw: KnW object
             The kernel used to find neighboring points.
         """
@@ -353,8 +353,8 @@ class Position:
 
         Finding the neighboring center grid points in the temporal dimension.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + knw: KnW object
             The kernel used to find neighboring points.
         """
@@ -376,8 +376,8 @@ class Position:
 
         Finding the neighboring center grid points in all 4 dimensions.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + knw: KnW object
             The kernel used to find neighboring points.
         + fourD: Boolean
@@ -513,8 +513,8 @@ class Position:
         Register the input of the interpolation function.
         For the input format, go to interpolation for more details.
 
-        **Returns:**
-
+        Returns
+        -------
         + output_format: dict
             Record information about the original varName input.
             Provide the formatting information for output,
@@ -720,15 +720,15 @@ class Position:
 
         Perform the fatten process for each unique token. Register the result as a dict.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + hash_index: dict
             See _register_interpolation_input
         + main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + index_lookup: dict
             A dictionary to lookup fatten results.
             The keys are the token in hash_index.
@@ -772,8 +772,8 @@ class Position:
         This is to say that sometimes u velocity becomes v velocity for datasets with face topology.
           Register the result as a dict.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + index_lookup: dict
             See _fatten_required_index_and_register
         + hash_index: dict
@@ -781,8 +781,8 @@ class Position:
         + main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + transform_lookup: dict
             A dictionary to lookup transformation results.
             The keys are the token in hash_index.
@@ -844,8 +844,8 @@ class Position:
 
         Perform the masking process and register in a dictionary.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + index_lookup: dict
             See _fatten_required_index_and_register
         + transform_lookup: dict
@@ -857,8 +857,8 @@ class Position:
         + main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + mask_lookup: dict
             A dictionary to lookup masking results.
             The keys are the token in hash_mask.
@@ -943,8 +943,8 @@ class Position:
     ):
         """Read the data and register them as dict.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + index_lookup: dict
             See _fatten_required_index_and_register
         + transform_lookup: dict
@@ -958,8 +958,8 @@ class Position:
         + prefetch_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + read_lookup: dict
             A dictionary to lookup data reading results.
             The keys are the token in hash_read.
@@ -1032,8 +1032,8 @@ class Position:
     ):
         """Compute the weights and register them as dict.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + mask_lookup: dict
             See _mask_value_and_register
         + hash_weight: dict
@@ -1043,8 +1043,8 @@ class Position:
         + main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + weight_lookup: dict
             A dictionary to lookup the weights computed.
             The keys are the token in hash_weight.
@@ -1148,8 +1148,8 @@ class Position:
         _mask_value_and_register,
         _compute_weight_and_registe,.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + varName: list, str, tuple
             The variables to interpolate. Tuples are used for horizontal vectors.
             Put str and list in a list if you have multiple things to interpolate.
@@ -1169,8 +1169,8 @@ class Position:
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
 
-        **Returns:**
-
+        Returns
+        -------
         + R: list, numpy.array, tuple
             The interpolation/derivative output in the same format as varName.
         """

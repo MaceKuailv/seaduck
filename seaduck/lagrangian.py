@@ -20,8 +20,8 @@ def increment(t, u, du):
     For a one dimensional particle with speed u and speed derivative du,
     find how far it will travel in duration t.
 
-    **Parameter:**
-
+    Parameters
+    ----------
     + t: float, numpy.ndarray
         The time duration
     + u: float, numpy.ndarray
@@ -39,8 +39,8 @@ def stationary(t, u, du, x0):
     starting at x0, find the final position after time t.
     "Stationary" means that we are assuming there is no time dependency.
 
-    **Parameter:**
-
+    Parameters
+    ----------
     + t: float, numpy.ndarray
         The time duration
     + u: float, numpy.ndarray
@@ -63,8 +63,8 @@ def stationary_time(u, du, x0):
     Find the amount of time it needs for a Particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + u: numpy.ndarray
         The velocity defined at the starting point.
     + du: numpy.ndarray
@@ -72,8 +72,8 @@ def stationary_time(u, du, x0):
     + x0: numpy.ndarray
         The starting position.
 
-    **Returns:**
-
+    Returns
+    -------
     + tl: numpy.ndarray
         The time it takes to hit -0.5.
     + tr: numpy.ndarray
@@ -106,8 +106,8 @@ def which_early(tf, ts):
     1. tf is reached before reaching a wall
     2. ts[i] is reached, and a Particle hit a wall. ts[i]*tf>0.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + tf: float, numpy.ndarray
         The final time
     + ts: list
@@ -159,8 +159,8 @@ class Particle(Position):
     The Lagrangian particle object. Simply a eulerian Position object
     that know how to move itself.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kwarg: dict
         The keyword argument that feed into Position.from_latlon method
     + uname, vname, wname: str
@@ -340,8 +340,8 @@ class Particle(Position):
         volume of the cell is needed for the integration.
         This method read the volume that is calculated at __init__.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + which: numpy.ndarray
             Boolean or int array that specify the subset of points
             to do the operation.
@@ -362,8 +362,8 @@ class Particle(Position):
         using the interpolate method with the default kernel.
         Read eulerian.Position.interpolate for more detail.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + which: numpy.ndarray
             Boolean or int array that specify the subset of points to
             do the operation.
@@ -533,8 +533,8 @@ class Particle(Position):
         At the same time change the velocity accordingly.
         In the mean time, creating some negiligible error in time.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + tol: float
             The relative tolerance when particles is significantly
             close to the cell.
@@ -753,8 +753,8 @@ class Particle(Position):
         2. ended up on a cell wall before
         (if tf is negative, then "after") tf.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + tf: float, numpy.ndarray
             The longest duration of the simulation for each particle.
         + which: numpy.ndarray
@@ -904,8 +904,8 @@ class Particle(Position):
         If the maximum time is reached,
         we also force all particle's internal clock to be tl.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + tl: float, numpy.ndarray
             The final time relative to 1970-01-01 in seconds.
         """
@@ -957,8 +957,8 @@ class Particle(Position):
     ):
         """Integrate the particles to a list of time.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + normal_stops: iterable
             The time steps that user request a output
         + update_stops: iterable, or 'default'
@@ -971,8 +971,8 @@ class Particle(Position):
             the output.In that case, it that case, set it to be False,
             and the output will all be at normal_stops.
 
-        **Returns:**
-
+        Returns
+        -------
         + stops: list
             The list of stops.
             It is the combination of normal_stops and output_stops by

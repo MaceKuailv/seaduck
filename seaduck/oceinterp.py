@@ -30,8 +30,8 @@ def OceInterp(
     **This is the centerpiece function of the package, through which
     you can access almost all of its functionality.**.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + od: OceInterp.OceData object or xarray.Dataset (limited support for netCDF Dataset)
         The dataset to work on.
     + varList: str or list
