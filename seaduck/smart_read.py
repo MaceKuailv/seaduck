@@ -9,15 +9,15 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
 
     Try to do it fast and smartly.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + da: xarray.DataArray
         DataArray to read from
     + ind: tuple of numpy.ndarray
         The indexes of points of interest, each element does not need to be 1D
 
-    **Returns:**
-
+    Returns
+    -------
     + values: numpy.ndarray
         The values of the points of interest. Has the same shape as the elements in ind.
     """

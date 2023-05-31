@@ -17,16 +17,16 @@ def mask_u_node(maskC, tp):
     b. on the interface, where the cell to the left is wet.
     if b is the case, we need to unmask the udata, because it makes some physical sense.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
     + tp: Topology object
         The Topology object for the dataset.
 
-    **Returns:**
-
+    Returns
+    -------
     + maskU: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet U-walls (including interface between wet and dry), 0 for dry ones.
@@ -51,16 +51,16 @@ def mask_v_node(maskC, tp):
     b. on the interface, where the cell to the downside is wet.
     if b is the case, we need to unmask the vdata.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
     + tp: Topology object
         The Topology object for the dataset.
 
-    **Returns:**
-
+    Returns
+    -------
     + maskV: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
@@ -86,16 +86,16 @@ def mask_w_node(maskC, tp=None):
     b. on the interface, where the cell above is wet.
     if b is the case, we need to unmask the wdata.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
     + tp: Topology object
         The Topology object for the dataset.
 
-    **Returns:**
-
+    Returns
+    -------
     + maskWvel: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
@@ -112,15 +112,15 @@ def get_masks(od, tp):
     A wrapper around mask_u_node, mask_v_node, mask_w_node.
     If there is no maskC in the dataset, just return nothing is masked.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + od: OceData object
         The dataset to compute masks on.
     + tp: Topology object
         The Topology of the datset
 
-    **Returns:**
-
+    Returns
+    -------
     + maskC,maskU,maskV,maskW: numpy.ndarray
         masks at center points, U-walls, V-walls, W-walls respectively.
     """
@@ -170,8 +170,8 @@ def get_masked(od, ind, cuvwg="C"):
 
     Return whether the indexes of intersts are masked or not.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + od: OceData object
         Dataset to find mask values from.
     + ind: tuple of numpy.ndarray

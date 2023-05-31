@@ -28,8 +28,8 @@ default_kernels = [
 def show_kernels(kernels=default_kernels):
     """Plot a small scatter plot of the shape of a list of kernel.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernels: list of numpy.ndarray
         Each of the element is a (n,2) shaped array,
         where n is the number of element in the kernel.
@@ -59,8 +59,8 @@ def _translate_to_tendency(k):
     it will return [0,0] or more explicitly ['up','up']
     [0,0] will produce a empty array.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + k: numpy.ndarray
         A (n,2)-shaped array, where n is the number of
         element in the kernel.
@@ -87,8 +87,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
 
     input needs to be a cross-shaped (that's where x is coming from) Lagrangian kernel.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a cross
@@ -100,8 +100,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     + order: int
         The order of derivatives. Zero for interpolation.
 
-    **Returns:**
-
+    Returns
+    -------
     + func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
@@ -322,8 +322,8 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     input needs to be a rectangle-shaped (that's where x is coming from)
     Lagrangian kernel.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a rectangle
@@ -334,8 +334,8 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
         The order of derivatives in the y direction.
         Zero for interpolation.
 
-    **Returns:**
-
+    Returns
+    -------
     + func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
@@ -441,8 +441,8 @@ def kernel_weight(kernel, ktype="interp", order=0):
     Return the function that calculate the interpolation/derivative weight
     of a  Lagrangian kernel.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It need to either shape like a rectangle or a cross
@@ -454,8 +454,8 @@ def kernel_weight(kernel, ktype="interp", order=0):
     + order: int
         The order of derivatives. Zero for interpolation.
 
-    **Returns:**
-
+    Returns
+    -------
     + func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
@@ -538,8 +538,8 @@ def get_weight_cascade(
     apply the corresponding functions that was figured out in
     find_which_points_for_each_kernel
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + rx,ry: numpy.ndarray
         1D array with length N of non-dimensional relative horizontal
         position to the nearest node
@@ -550,8 +550,8 @@ def get_weight_cascade(
     + funcs: list of compileable functions
         The weight function of each kernel in the inheritance sequence.
 
-    **Returns:**
-
+    Returns
+    -------
     + weight: numpy.ndarray
         The horizontal weight of interpolation/derivative for the points
         with shape (N,M)
@@ -587,8 +587,8 @@ def kash(kernel):  # hash kernel
 
     Return the hash value.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernel: numpy.ndarray
         A horizontal kernel
     """
@@ -643,8 +643,8 @@ class KnW:
     A class that describes anything about the
     interpolation/derivative kernel to be used.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernel: numpy.ndarray
         The largest horizontal kernel to be used
     + inheritance: list
@@ -777,8 +777,8 @@ class KnW:
     ):
         """Return the weight of values given particle rel-coords.
 
-        **Parameters:**
-
+        Parameters
+        ----------
         + rx,ry,rz,rt: numpy.ndarray
             1D array of non-dimensional particle positions
         + pk4d: list
@@ -788,8 +788,8 @@ class KnW:
             the bottom boundary.
             Choose None for vertical flux, 'no flux' for most other cases.
 
-        **Returns:**
-
+        Returns
+        -------
         + weight: numpy.ndarray
             The weight of interpolation/derivative for the points
             with shape (N,M),
