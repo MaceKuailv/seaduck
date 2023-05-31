@@ -21,23 +21,87 @@ from seaduck.utils import (
     find_rel_z,
 )
 
-no_alias = {
-    "XC": "XC",
-    "YC": "YC",
-    "Z": "Z",
-    "Zl": "Zl",
-    "time": "time",
+NO_ALIAS = {
     "dXC": "dxC",
     "dYC": "dyC",
     "dZ": "drC",
-    "XG": "XG",
-    "YG": "YG",
     "dXG": "dxG",
     "dYG": "dyG",
     "dZl": "drF",
-    "CS": "CS",
-    "SN": "SN",
 }
+
+
+class AttributableDict(dict):
+    def __getattr__(self, attr):
+        try:
+            return self[attr]
+        except KeyError:
+            raise AttributeError(f"'AttributableDict' object has no attribute '{attr}'")
+
+    def __setattr__(self, attr, value):
+        self[attr] = value
+
+    def subset(self, which):
+        new = AttributableDict()
+        for var in self.keys():
+            if self[var] is not None:
+                new[var] = self[var][which]
+            else:
+                new[var] = None
+        return new
+
+    @classmethod
+    def create_class(cls, class_name, fields):
+        class NewClass(cls):
+            __slots__ = ()
+            _fields = fields
+
+            def __init__(self, *args, **kwargs):
+                if len(args) > len(fields):
+                    raise TypeError(
+                        f"{class_name} takes {len(fields)} positional arguments but {len(args)} were given"
+                    )
+                for name, value in zip(fields, args):
+                    setattr(self, name, value)
+                for name, value in kwargs.items():
+                    setattr(self, name, value)
+
+            @classmethod
+            def _make(cls, iterable):
+                return cls(*iterable)
+
+            def __repr__(self):
+                field_values = ", ".join(
+                    f"{name}={getattr(self, name)!r}" for name in self._fields
+                )
+                return f"{class_name}({field_values})"
+
+        NewClass.__name__ = class_name
+        return NewClass
+
+
+HRel = AttributableDict.create_class(
+    "HRel", ["face", "iy", "ix", "rx", "ry", "cs", "sn", "dx", "dy", "bx", "by"]
+)
+HRel.__doc__ = "Wrap around the horizontal rel-coords."
+VRel = AttributableDict.create_class("VRel", ["iz", "rz", "dz", "bz"])
+VRel.__doc__ = "Wrap around the vertical centered nearest rel-coords."
+VLinRel = AttributableDict.create_class(
+    "VLRel", ["iz_lin", "rz_lin", "dz_lin", "bz_lin"]
+)
+VLinRel.__doc__ = "Wrap around the vertical centered linear rel-coords."
+VlRel = AttributableDict.create_class("VlRel", ["izl", "rzl", "dzl", "bzl"])
+VlRel.__doc__ = "Wrap around the vertical staggered nearest rel-coords."
+VlLinRel = AttributableDict.create_class(
+    "VlLinRel", ["izl_lin", "rzl_lin", "dzl_lin", "bzl_lin"]
+)
+VlLinRel.__doc__ = "Wrap around the vertical staggered linear rel-coords."
+TRel = AttributableDict.create_class("TRel", ["it", "rt", "dt", "bt"])
+TRel.__doc__ = "Wrap around the temporal nearest rel-coords."
+TLinRel = AttributableDict.create_class(
+    "TLinRel", ["it_lin", "rt_lin", "dt_lin", "bt_lin"]
+)
+TRel.__doc__ = "Wrap around the temporal linear rel-coords."
 
 
 class OceData:
@@ -61,7 +125,7 @@ class OceData:
         self._ds = data
         self.tp = Topology(data)
         if alias is None:
-            self.alias = no_alias
+            self.alias = NO_ALIAS
         elif alias == "auto":
             raise NotImplementedError("auto alias not yet implemented")
         elif isinstance(alias, dict):
@@ -292,7 +356,7 @@ class OceData:
             The longitude and latitude for the nearest grid point.
         """
         if self.readiness["h"] == "oceanparcel":
-            faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = find_rel_h_oceanparcel(
+            h_rel_tuple = find_rel_h_oceanparcel(
                 x,
                 y,
                 self.XC,
@@ -307,106 +371,39 @@ class OceData:
                 self.tp,
             )
         elif self.readiness["h"] == "local_cartesian":
-            faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = find_rel_h_naive(
+            h_rel_tuple = find_rel_h_naive(
                 x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
             )
         elif self.readiness["h"] == "rectilinear":
-            faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = find_rel_h_rectilinear(
-                x, y, self.lon, self.lat
-            )
-        return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
-
-    def find_rel_vl(self, z):
-        """Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme."""
-        iz, rz, dz, bz = find_rel_nearest(z, self.Zl)
-        return iz.astype(int), rz, dz, bz
-
-    def find_rel_vl_lin(self, z):
-        """Find the rel-coord based on vertical staggered grid using the 2-point linear scheme."""
-        iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl, dz_above_z=False)
-        return iz.astype(int), rz, dz, bz
+            h_rel_tuple = find_rel_h_rectilinear(x, y, self.lon, self.lat)
+        return HRel._make(h_rel_tuple)
 
     def find_rel_v(self, z):
         """Find the rel-coord based on vertical center grid using the nearest neighbor scheme."""
-        iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl)
-        return (iz - 1).astype(int), rz - 0.5, dz, bz
+        iz, rz, dz, bz = find_rel_nearest(z, self.Z)
+        return VRel(iz.astype(int), rz, dz, bz)
 
     def find_rel_v_lin(self, z):
         """Find the rel-coord based on vertical center grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Z, self.dZ)
-        return iz.astype(int), rz, dz, bz
+        return VLinRel(iz.astype(int), rz, dz, bz)
+
+    def find_rel_vl(self, z):
+        """Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme."""
+        iz, rz, dz, bz = find_rel_nearest(z, self.Zl)
+        return VlRel(iz.astype(int), rz, dz, bz)
+
+    def find_rel_vl_lin(self, z):
+        """Find the rel-coord based on vertical staggered grid using the 2-point linear scheme."""
+        iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl, dz_above_z=False)
+        return VlLinRel(iz.astype(int), rz, dz, bz)
 
     def find_rel_t(self, t):
         """Find the rel-coord based along the temporal direction using the nearest neighbor scheme."""
         it, rt, dt, bt = find_rel_nearest(t, self.ts)
-        return it.astype(int), rt, dt, bt
+        return TRel(it.astype(int), rt, dt, bt)
 
     def find_rel_t_lin(self, t):
         """Find the rel-coord based along the temporal direction using the 2-point linear scheme."""
         it, rt, dt, bt = find_rel_time(t, self.ts)
-        return it.astype(int), rt, dt, bt
-
-    def _find_rel_3d(self, x, y, z):  # pragma: no cover
-        # for internal test
-        faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = self.find_rel_h(
-            x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
-        )
-        iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl)
-        iz = iz.astype(int)
-        return (
-            iz.astype(int),
-            faces,
-            iys,
-            ixs,
-            rx,
-            ry,
-            rz,
-            cs,
-            sn,
-            dx,
-            dy,
-            dz,
-            bx,
-            by,
-            bz,
-        )
-
-    def _find_rel_4d(self, x, y, z, t):  # pragma: no cover
-        # for internal tests
-        faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by = self.find_rel_h(
-            x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
-        )
-        iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl)
-        iz = iz.astype(int)
-        it, rt, dt, bt = find_rel_time(t, self.ts)
-        it = it.astype(int)
-        return (
-            it.astype(int),
-            iz.astype(int),
-            faces,
-            iys,
-            ixs,
-            rx,
-            ry,
-            rz,
-            rt,
-            cs,
-            sn,
-            dx,
-            dy,
-            dz,
-            dt,
-            bx,
-            by,
-            bz,
-            bt,
-        )
-
-    def _find_rel(self, *arg):  # pragma: no cover
-        # Internal testing
-        if len(arg) == 2:
-            return self.find_rel_2d(*arg)
-        if len(arg) == 3:
-            return self.find_rel_3d(*arg)
-        if len(arg) == 4:
-            return self.find_rel_4d(*arg)
+        return TLinRel(it.astype(int), rt, dt, bt)

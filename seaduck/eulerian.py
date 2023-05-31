@@ -4,7 +4,7 @@ import numpy as np
 
 from seaduck.get_masks import get_masked
 from seaduck.kernel_weight import KnW, _translate_to_tendency, find_pk_4d
-from seaduck.ocedata import OceData
+from seaduck.ocedata import AttributableDict, HRel, OceData, TRel, VlRel, VRel
 
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read as sread
@@ -103,6 +103,45 @@ def _subtract_i_min(ind, i_min):
     return tuple(temp_ind)
 
 
+# class RelSet:
+#     def __init__(self):
+#         self.type_list = []
+#         self.var_list = []
+#         self.main_list = []
+#         self.var_dict = {}
+
+#     def __getattr__(self, attr):
+#         if attr in ["type_list", "var_list", "main_list", "var_dict"]:
+#             return self.__dict__[attr]
+#         elif attr in self.var_list:
+#             for i, rrr in enumerate(self.type_list):
+#                 if attr in self.var_dict[rrr]:
+#                     return getattr(self.main_list[i], attr)
+#         else:
+#             raise AttributeError(f"'RelSet' object has no attribute '{attr}'")
+
+#     def __setattr__(self, attr, value):
+#         if attr in ["type_list", "var_list", "main_list", "var_dict"]:
+#             self.__dict__[attr] = value
+#         elif attr in self.var_list:
+#             for i, rrr in enumerate(self.type_list):
+#                 if attr in self.var_dict[rrr]:
+#                     setattr(self.main_list[i], attr, value)
+#         else:
+#             raise Exception(f"'Setting '{attr}' for 'RelSet' not supported")
+
+#     def update(self, some_rel):
+#         new_type = str(type(some_rel))
+#         if new_type not in self.type_list:
+#             self.type_list.append(new_type)
+#             self.var_list += list(some_rel._fields)
+#             self.main_list.append(some_rel)
+#             self.var_dict[new_type] = some_rel._fields
+#         else:
+#             index = self.type_list.index(new_type)
+#             self.main_list[index] = some_rel
+
+
 class Position:
     """The Position object that performs the interpolation.
 
@@ -110,7 +149,25 @@ class Position:
     To actually do interpolation, use from_latlon method to tell the ducks where they are.
     """
 
-    #     self.ind_h_dict = {}
+    def __init__(self):
+        self.rel = AttributableDict()
+
+    def __getattr__(self, attr):
+        if attr == "rel":
+            object.__getattribute__(self, attr)
+        elif attr in self.rel.keys():
+            return getattr(self.rel, attr)
+        else:
+            object.__getattribute__(self, attr)
+
+    def __setattr__(self, attr, value):
+        if attr == "rel":
+            object.__setattr__(self, attr, value)
+        elif attr in self.rel.keys():
+            setattr(self.rel, attr, value)
+        else:
+            object.__setattr__(self, attr, value)
+
     def from_latlon(self, x=None, y=None, z=None, t=None, data=None):
         """Fill in the coord info using lat-lon-dep-time dims.
 
@@ -156,79 +213,58 @@ class Position:
         if (x is not None) and (y is not None):
             self.lon = x
             self.lat = y
-            (
-                self.face,
-                self.iy,
-                self.ix,
-                self.rx,
-                self.ry,
-                self.cs,
-                self.sn,
-                self.dx,
-                self.dy,
-                self.bx,
-                self.by,
-            ) = self.ocedata.find_rel_h(x, y)
+            self.rel.update(self.ocedata.find_rel_h(x, y))
         else:
+            self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
             self.lat = None
-            self.face = None
-            self.iy = None
-            self.ix = None
-            self.rx = None
-            self.ry = None
-            self.cs = None
-            self.sn = None
-            self.dx = None
-            self.dy = None
-            self.bx = None
-            self.by = None
+            # self.face = None
+            # self.iy = None
+            # self.ix = None
+            # self.rx = None
+            # self.ry = None
+            # self.cs = None
+            # self.sn = None
+            # self.dx = None
+            # self.dy = None
+            # self.bx = None
+            # self.by = None
         if z is not None:
             self.dep = z
             if self.ocedata.readiness["Z"]:
-                (self.iz, self.rz, self.dz, self.bz) = self.ocedata.find_rel_v(z)
+                self.rel.update(self.ocedata.find_rel_v(z))
             else:
-                (
-                    self.iz,
-                    self.rz,
-                    self.dz,
-                    self.bz,
-                ) = (None for i in range(4))
+                self.rel.update(VRel._make(None for i in range(4)))
             if self.ocedata.readiness["Zl"]:
-                (self.izl, self.rzl, self.dzl, self.bzl) = self.ocedata.find_rel_vl(z)
+                self.rel.update(self.ocedata.find_rel_vl(z))
             else:
-                (
-                    self.izl,
-                    self.rzl,
-                    self.dzl,
-                    self.bzl,
-                ) = (None for i in range(4))
+                self.rel.update(VlRel._make(None for i in range(4)))
         else:
-            (
-                self.iz,
-                self.rz,
-                self.dz,
-                self.bz,
-                self.izl,
-                self.rzl,
-                self.dzl,
-                self.bzl,
-                self.dep,
-            ) = (None for i in range(9))
+            self.rel.update(VRel._make(None for i in range(4)))
+            self.rel.update(VlRel._make(None for i in range(4)))
+            self.dep = None
+            # (
+            #     self.iz,
+            #     self.rz,
+            #     self.dz,
+            #     self.bz,
+            #     self.izl,
+            #     self.rzl,
+            #     self.dzl,
+            #     self.bzl,
+            #     self.dep,
+            # ) = (None for i in range(9))
 
         if t is not None:
             self.t = t
             if self.ocedata.readiness["time"]:
-                (self.it, self.rt, self.dt, self.bt) = self.ocedata.find_rel_t(t)
+                self.rel.update(self.ocedata.find_rel_t(t))
             else:
-                (
-                    self.it,
-                    self.rt,
-                    self.dt,
-                    self.bt,
-                ) = (None for i in range(4))
+                self.rel.update(TRel._make(None for i in range(4)))
         else:
-            (self.it, self.rt, self.dt, self.bt, self.t) = (None for i in range(5))
+            self.rel.update(TRel._make(None for i in range(4)))
+            self.t = None
+            # (self.it, self.rt, self.dt, self.bt, self.t) = (None for i in range(5))
         return self
 
     def subset(self, which):
@@ -256,6 +292,8 @@ class Position:
                     p.N = len(p.__dict__[i])
                 else:
                     p.__dict__[i] = item
+            elif isinstance(item, AttributableDict):
+                p.__dict__[i] = item.subset(which)
             else:
                 p.__dict__[i] = item
         # p.N = max([_general_len(i) for i in p.__dict__.values()])
@@ -343,12 +381,7 @@ class Position:
             try:
                 self.iz_lin
             except AttributeError:
-                (
-                    self.iz_lin,
-                    self.rz_lin,
-                    self.dz_bin,
-                    self.bz_lin,
-                ) = self.ocedata.find_rel_v_lin(self.dep)
+                self.rel.update(self.ocedata.find_rel_v_lin(self.dep))
             return np.vstack([self.iz_lin.astype(int), self.iz_lin.astype(int) - 1]).T
         else:
             raise ValueError("vkernel not supported")
@@ -371,12 +404,7 @@ class Position:
             try:
                 self.izl_lin
             except AttributeError:
-                (
-                    self.izl_lin,
-                    self.rzl_lin,
-                    self.dzl_bin,
-                    self.bzl_lin,
-                ) = self.ocedata.find_rel_vl_lin(self.dep)
+                self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
             return np.vstack([self.izl_lin.astype(int), self.izl_lin.astype(int) - 1]).T
         else:
             raise ValueError("vkernel not supported")
@@ -399,12 +427,7 @@ class Position:
             try:
                 self.izl_lin
             except AttributeError:
-                (
-                    self.it_lin,
-                    self.rt_lin,
-                    self.dt_bin,
-                    self.bt_lin,
-                ) = self.ocedata.find_rel_t_lin(self.t)
+                self.rel.update(self.ocedata.find_rel_t_lin(self.t))
             return np.vstack([self.it_lin.astype(int), self.it_lin.astype(int) + 1]).T
         else:
             raise ValueError("tkernel not supported")
