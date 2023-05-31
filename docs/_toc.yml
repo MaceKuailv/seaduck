@@ -18,7 +18,7 @@ parts:
     - file: api_reference/apiref_smartread.rst
     - file: api_reference/apiref_getmasks.rst
     - file: api_reference/apiref_utils.rst
-    - file: all_in_one
+    - file: api_reference/apiref_RelCoord.rst
 - caption: Examples
   chapters:
   - file: Global_ECCO

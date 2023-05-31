@@ -252,9 +252,9 @@ class Topology:
 
     Parameters
     ----------
-    + od: xarray.Dataset, OceData object
+    od: xarray.Dataset, OceData object
         The dataset to record topological info from.
-    + typ: None, or str
+    typ: None, or str
         Type of the grid.
         Currently we support
         'box' for regional dataset,
@@ -326,16 +326,16 @@ class Topology:
 
         Parameters
         ----------
-        + face: int
+        face: int
             The face of interst
-        + edge: 0,1,2,3
+        edge: 0,1,2,3
             which direction of the face we are looking for
 
         Returns
         -------
-        + nface: int
+        nface: int
             The face adjacent to face in the edge direction.
-        + nedge: 0,1,2,3
+        nedge: 0,1,2,3
             The face is connected to nface in which direction.
         """
         if self.typ == "LLC":
@@ -373,13 +373,13 @@ class Topology:
 
         Parameters
         ----------
-        + ind: tuple
+        ind: tuple
             The index to find the neighbor of
-        + tend: int
+        tend: int
             Which direction to move from the original index.
-        + cuvwg:
+        cuvwg: str, default "C"
             Whether we are moving from C grid, U grid, V grid, or G grid.
-        + kwarg:dict
+        kwarg:dict, optional
             Keyword argument that currently only apply for the llc case.
         """
         if -1 in ind:
@@ -416,11 +416,11 @@ class Topology:
 
         Parameters
         ----------
-        + ind: tuple
+        ind: tuple
             Index of the starting position
-        + moves: iterable
+        moves: iterable
             A sequence of steps to "walk" from the original position.
-        + kwarg: dict
+        kwarg: dict, optional
             Keyword arguments that pass into ind_tend.
         """
         if self.check_illegal(ind):
@@ -464,7 +464,7 @@ class Topology:
 
         Parameters
         ----------
-        + ind: tuple
+        ind: tuple
             Each element of the tuple is iterable of one dimension of the indexes.
         """
         if isinstance(ind[0], int):  # for single item
@@ -491,11 +491,11 @@ class Topology:
 
         Parameters
         ----------
-        + inds: tuple of numpy.array or numpy.array
+        inds: tuple of numpy.array or numpy.array
             Each element of the tuple is iterable of one dimension of the indexes.
-        + tend: iterable
+        tend: iterable
             Which direction should each index take.
-        + kwarg: dict
+        kwarg: dict,optional
             Keyword argument that feeds into ind_tend.
         """
         inds = np.array(inds)
@@ -632,7 +632,7 @@ class Topology:
 
         Parameters
         ----------
-        + faces: iterable
+        faces: iterable
             1D iterable of faces, the first one is assumed to be the reference.
         """
         if self.typ == "LLC":

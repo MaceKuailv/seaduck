@@ -73,8 +73,8 @@ def get_dataset(name):
 
     Parameters
     ----------
-        + name: string
-            The name of dataset, now support "ecco", "aviso", "curv", "rect"
+    name: string
+        The name of dataset, now support "ecco", "aviso", "curv", "rect"
     """
     pooch_testdata, pooch_fetch_kwargs = pooch_prepare()
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
@@ -109,9 +109,9 @@ def get_key_by_value(d, value):
 
     Parameters
     ----------
-    + d: dictionaty
+    d: dictionaty
         dictionary to lookup key from
-    + value: object
+    value: object
         A object that has __eq__ method.
     """
     for k, v in d.items():
@@ -126,21 +126,21 @@ def spherical2cartesian(lat, lon, R=6371.0):
 
     Parameters
     ----------
-    + lat: np.array
+    lat: np.array
         Spherical Y coordinate (latitude)
-    + lon: np.array
+    lon: np.array
         Spherical X coordinate (longitude)
-    + R: scalar
+    R: scalar
         Earth radius in km
         If None, use geopy default
 
     Returns
     -------
-    + x: np.array
+    x: np.array
         Cartesian x coordinate
-    + y: np.array
+    y: np.array
         Cartesian y coordinate
-    + z: np.array
+    z: np.array
         Cartesian z coordinate
     """
     # Convert
@@ -185,11 +185,11 @@ def create_tree(x, y, R=6371.0, leafsize=16):
 
     Parameters
     ----------
-    + x,y: np.ndarray
+    x,y: np.ndarray
         longitude and latitude of the grid location
-    + R: float
+    R: float
         The radius in kilometers of the planet.
-    + leafsize: int
+    leafsize: int
         When to switch to brute force search.
     """
     if R:
@@ -233,17 +233,17 @@ def find_ind(array, value, peri=None, ascending=1, above=True):
 
     Parameters
     ----------
-    + array: numpy.ndarray
+    array: numpy.ndarray
         1D numpy array to search index from
-    + value: number
+    value: number
         The value to find nearest neighbor with
-    + peri: number
+    peri: number, optional
         The periodicity of the array.
         For example, 360 for longitude.
-    + ascending: int
+    ascending: int, default 1
         Whether the array is in ascending order.
         1 for ascending order, -1 for descending order.
-    + above: boolean
+    above: boolean, default True
         If True, return the index of the largest item in
         array smaller than value.
         Otherwise, return the closest value.
@@ -286,34 +286,34 @@ def find_rel(
 
     Parameters
     ----------
-    + value: numpy.ndarray
+    value: numpy.ndarray
         1D array for the value to find rel-coords.
-    + array: numpy.ndarray
+    array: numpy.ndarray
         The array of potential reference levels.
-    + darray: numpy.ndarray, optional
+    darray: numpy.ndarray, optional
         The distances between reference levels.
-    + peri: number
+    peri: number, optional
         The periodicity of the array.
         For example, 360 for longitude.
-    + ascending: int
+    ascending: int, default 1
         Whether the array is in ascending order.
         1 for ascending order, -1 for descending order.
-    + above: boolean
+    above: boolean, default True
         If True, return the index of the largest item in
         array smaller than value.
         Otherwise, return the closest value.
-    + dx_right: boolean
+    dx_right: boolean, default True
         If True, darray[i] = abs(array[i+1] - array[i])
 
     Returns
     -------
-    + ix: numpy.ndarray
+    ix: numpy.ndarray
         Indexes of the reference level
-    + rx: numpy.ndarray
+    rx: numpy.ndarray
         Non-dimensional distance to the reference level
-    + dx: numpy.ndarray
+    dx: numpy.ndarray
         distance between the reference t level and the next one.
-    + bx: numpy.ndarray
+    bx: numpy.ndarray
         Value of the reference level
     """
     if darray is None:
@@ -364,24 +364,24 @@ def find_rel_z(depth, some_z, some_dz=None, dz_above_z=True):
 
     Parameters
     ----------
-    + depth: numpy.ndarray
+    depth: numpy.ndarray
         1D array for the depth of interest in meters.
         More negative means deeper.
-    + some_z: numpy.ndarray
+    some_z: numpy.ndarray
         The depth of reference depth.
-    + some_dz: numpy.ndarray or None
+    some_dz: numpy.ndarray or None
         dz_i = abs(z_{i+1}- z_i)
-    + dz_above_z: Boolean
+    dz_above_z: Boolean
         Whether the dz as the distance between the depth level and
         a shallower one(True) or a deeper one(False)
 
     Returns
     -------
-    + iz: numpy.ndarray
+    iz: numpy.ndarray
         Indexes of the reference z level
-    + rz: numpy.ndarray
+    rz: numpy.ndarray
         Non-dimensional distance to the reference z level
-    + dz: numpy.ndarray
+    dz: numpy.ndarray
         distance between the reference z level and the next one.
     """
     return find_rel(
@@ -395,18 +395,18 @@ def find_rel_time(time, ts):
 
     Parameters
     ----------
-    + time: numpy.ndarray
+    time: numpy.ndarray
         1D array for the time since 1970-01-01 in seconds.
-    + ts: numpy.ndarray
+    ts: numpy.ndarray
         The time of model time steps also in seconds.
 
     Returns
     -------
-    + it: numpy.ndarray
+    it: numpy.ndarray
         Indexes of the reference t level
-    + rt: numpy.ndarray
+    rt: numpy.ndarray
         Non-dimensional distance to the reference t level
-    + dt: numpy.ndarray
+    dt: numpy.ndarray
         distance between the reference t level and the next one.
     """
     return find_rel(time, ts)
@@ -417,19 +417,19 @@ def _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind):
 
     Parameters
     ----------
-    + some_x: numpy.ndarray
+    some_x: numpy.ndarray
         array of longitude, could be XC or XG
-    + some_y: numpy.ndarray
+    some_y: numpy.ndarray
         array of latitude, could be YC or YG
-    + some_dx: numpy.ndarray or None
+    some_dx: numpy.ndarray or None
         array of distances between grid in the longitudinal direction.
-    + some_dy: numpy.ndarray or None
+    some_dy: numpy.ndarray or None
         array of distances between grid in the latitudinal direction.
-    + CS: numpy.ndarray or None
+    CS: numpy.ndarray or None
         array of the cosine of the angle between grid and meridian.
-    + SN: numpy.ndarray or None
+    SN: numpy.ndarray or None
         array of the sine of the angle between grid and meridian.
-    + ind: tuple
+    ind: tuple
         indexes to read the grid data from.
     """
     bx = some_x[ind]

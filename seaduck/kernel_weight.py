@@ -30,7 +30,7 @@ def show_kernels(kernels=default_kernels):
 
     Parameters
     ----------
-    + kernels: list of numpy.ndarray
+    kernels: list of numpy.ndarray
         Each of the element is a (n,2) shaped array,
         where n is the number of element in the kernel.
     """
@@ -61,7 +61,7 @@ def _translate_to_tendency(k):
 
     Parameters
     ----------
-    + k: numpy.ndarray
+    k: numpy.ndarray
         A (n,2)-shaped array, where n is the number of
         element in the kernel.
     """
@@ -89,20 +89,20 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
 
     Parameters
     ----------
-    + kernel: np.ndarray
+    kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a cross
-    + ktype: str
+    ktype: str
         "interp" (default): Use both x y direction for interpolation,
         implies that order = 0
         "x": Use only x direction for interpolation/derivative
         "y": Use only y direction for interpolation/derivative
-    + order: int
+    order: int
         The order of derivatives. Zero for interpolation.
 
     Returns
     -------
-    + func(rx,ry): compilable function
+    func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
     """
@@ -324,19 +324,19 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
 
     Parameters
     ----------
-    + kernel: np.ndarray
+    kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a rectangle
-    + xorder: int
+    xorder: int
         The order of derivatives in the x direction.
         Zero for interpolation.
-    + yorder: int
+    yorder: int
         The order of derivatives in the y direction.
         Zero for interpolation.
 
     Returns
     -------
-    + func(rx,ry): compilable function
+    func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
     """
@@ -443,20 +443,20 @@ def kernel_weight(kernel, ktype="interp", order=0):
 
     Parameters
     ----------
-    + kernel: np.ndarray
+    kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It need to either shape like a rectangle or a cross
-    + ktype: str
+    ktype: str
         "interp" (default): Use both x y direction for interpolation,
         implies that order = 0
         "dx": Use only x direction for interpolation/derivative
         "dy": Use only y direction for interpolation/derivative
-    + order: int
+    order: int
         The order of derivatives. Zero for interpolation.
 
     Returns
     -------
-    + func(rx,ry): compilable function
+    func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
     """
@@ -540,14 +540,14 @@ def get_weight_cascade(
 
     Parameters
     ----------
-    + rx,ry: numpy.ndarray
+    rx,ry: numpy.ndarray
         1D array with length N of non-dimensional relative horizontal
         position to the nearest node
-    + kernel_large: numpy.ndarray
+    kernel_large: numpy.ndarray
         A numpy kernel of shape (M,2) that contains all the kernels needed.
-    + russian_doll: list of list(s)
+    russian_doll: list of list(s)
         The inheritance sequence when some of the node is masked.
-    + funcs: list of compileable functions
+    funcs: list of compileable functions
         The weight function of each kernel in the inheritance sequence.
 
     Returns
@@ -611,6 +611,10 @@ def get_func(kernel, **kwargs):
     the only difference is that this function can
     read existing functions that is cached.
     See _get_func_from_hashable
+
+    See Also
+    --------
+    kernel_weight: the un-hashed version of this function.
     """
     return _get_func_from_hashable(tuple(kernel.ravel()), kernel.shape, **kwargs)
 
@@ -645,23 +649,23 @@ class KnW:
 
     Parameters
     ----------
-    + kernel: numpy.ndarray
+    kernel: numpy.ndarray
         The largest horizontal kernel to be used
-    + inheritance: list
+    inheritance: list
         The inheritance sequence of the kernels
-    + hkernel: str
+    hkernel: str
         What to do in the horizontal direction
         'interp', 'dx', or 'dy'?
-    + tkernel: str
+    tkernel: str
         What kind of operation to do in the temporal dimension:
         'linear', 'nearest' interpolation, or 'dt'
-    + zkernel: str
+    zkernel: str
         What kind of operation to do in the vertical:
         'linear', 'nearest' interpolation, or 'dz'
-    + h_order: int
+    h_order: int
         How many derivative to take in the horizontal direction.
         Zero for pure interpolation
-    + ignore_mask: bool
+    ignore_mask: bool
         Whether to diregard the masking of the dataset.
         You can select True if there is no
         inheritance, or if performance is a big concern.
@@ -779,18 +783,18 @@ class KnW:
 
         Parameters
         ----------
-        + rx,ry,rz,rt: numpy.ndarray
+        rx,ry,rz,rt: numpy.ndarray
             1D array of non-dimensional particle positions
-        + pk4d: list
+        pk4d: list
             A mapping on which points should use which kernel.
-        + bottom_scheme: str
+        bottom_scheme: str
             Whether to assume there is a ghost point with same value at
             the bottom boundary.
             Choose None for vertical flux, 'no flux' for most other cases.
 
         Returns
         -------
-        + weight: numpy.ndarray
+        weight: numpy.ndarray
             The weight of interpolation/derivative for the points
             with shape (N,M),
             M is the num of node in the largest kernel.

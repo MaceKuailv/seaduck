@@ -6,7 +6,7 @@ import numpy as np
 
 from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
-from seaduck.ocedata import AttributableDict
+from seaduck.ocedata import RelCoord
 from seaduck.runtime_conf import compileable
 from seaduck.utils import find_rel, find_rx_ry_oceanparcel, rel2latlon, to_180
 
@@ -22,11 +22,11 @@ def increment(t, u, du):
 
     Parameters
     ----------
-    + t: float, numpy.ndarray
+    t: float, numpy.ndarray
         The time duration
-    + u: float, numpy.ndarray
+    u: float, numpy.ndarray
         The velocity defined at the starting point.
-    + du: float, numpy.ndarray
+    du: float, numpy.ndarray
         The velocity gradient. Assumed to be constant.
     """
     return u / du * (np.exp(du * t) - 1)
@@ -41,13 +41,13 @@ def stationary(t, u, du, x0):
 
     Parameters
     ----------
-    + t: float, numpy.ndarray
+    t: float, numpy.ndarray
         The time duration
-    + u: float, numpy.ndarray
+    u: float, numpy.ndarray
         The velocity defined at the starting point.
-    + du: float, numpy.ndarray
+    du: float, numpy.ndarray
         The velocity gradient. Assumed to be constant.
-    + x0: float, numpy.ndarray
+    x0: float, numpy.ndarray
         The starting position.
     """
     incr = increment(t, u, du)
@@ -65,18 +65,18 @@ def stationary_time(u, du, x0):
 
     Parameters
     ----------
-    + u: numpy.ndarray
+    u: numpy.ndarray
         The velocity defined at the starting point.
-    + du: numpy.ndarray
+    du: numpy.ndarray
         The velocity gradient. Assumed to be constant.
-    + x0: numpy.ndarray
+    x0: numpy.ndarray
         The starting position.
 
     Returns
     -------
-    + tl: numpy.ndarray
+    tl: numpy.ndarray
         The time it takes to hit -0.5.
-    + tr: numpy.ndarray
+    tr: numpy.ndarray
         The time it takes to hit 0.5
     """
     tl = np.log(1 - du / u * (0.5 + x0)) / du
@@ -108,9 +108,9 @@ def which_early(tf, ts):
 
     Parameters
     ----------
-    + tf: float, numpy.ndarray
+    tf: float, numpy.ndarray
         The final time
-    + ts: list
+    ts: list
         The list of events calculated using time2wall
     """
     ts.append(np.ones(len(ts[0])) * tf)  # float or array both ok
@@ -161,29 +161,29 @@ class Particle(Position):
 
     Parameters
     ----------
-    + kwarg: dict
+    kwarg: dict
         The keyword argument that feed into Position.from_latlon method
-    + uname, vname, wname: str
+    uname, vname, wname: str
         The variable names for the velocity/mass-transport components.
         If transport is true, pass in names of the volume/mass transport
         across cell wall in m^3/3
         else,  just pass something that is in m/s
-    + dont_fly: Boolean
+    dont_fly: Boolean
         Sometimes there is non-zero vertical velocity at sea surface.
         dont_fly = True set that to zero.
         An error may occur depends on the situation if set otherwise.
-    + save_raw: Boolean
+    save_raw: Boolean
         Whether to record the analytical history of all particles in an
         unstructured list.
-    + transport: Boolean
+    transport: Boolean
         If transport is true, pass in names of the volume/mass transport
         across cell wall in m^3/3
         else,  just pass velocity that is in m/s
-    + callback: function that take Particle as input
+    callback: function that take Particle as input
         A callback function that takes Particle as input. Return boolean
         array that determines which Particle should still be going.
         Users can also define customized functions here.
-    + max_iteration: int
+    max_iteration: int
         The number of analytical steps allowed for the to_next_stop
         method.
     """
@@ -342,7 +342,7 @@ class Particle(Position):
 
         Parameters
         ----------
-        + which: numpy.ndarray
+        which: numpy.ndarray, optional
             Boolean or int array that specify the subset of points
             to do the operation.
         """
@@ -364,7 +364,7 @@ class Particle(Position):
 
         Parameters
         ----------
-        + which: numpy.ndarray
+        which: numpy.ndarray
             Boolean or int array that specify the subset of points to
             do the operation.
         """
@@ -535,7 +535,7 @@ class Particle(Position):
 
         Parameters
         ----------
-        + tol: float
+        tol: float
             The relative tolerance when particles is significantly
             close to the cell.
         """
@@ -755,9 +755,9 @@ class Particle(Position):
 
         Parameters
         ----------
-        + tf: float, numpy.ndarray
+        tf: float, numpy.ndarray
             The longest duration of the simulation for each particle.
-        + which: numpy.ndarray
+        which: numpy.ndarray, optional
             Boolean or int array that specify the subset of points to
             do the operation.
         """
@@ -892,7 +892,7 @@ class Particle(Position):
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
                     p.__dict__[i] = copy.deepcopy(item)
-            elif isinstance(item, (list, AttributableDict)):
+            elif isinstance(item, (list, RelCoord)):
                 p.__dict__[i] = copy.deepcopy(item)
         return p
 
@@ -906,7 +906,7 @@ class Particle(Position):
 
         Parameters
         ----------
-        + tl: float, numpy.ndarray
+        tl: float, numpy.ndarray
             The final time relative to 1970-01-01 in seconds.
         """
         tol = 0.5
@@ -959,13 +959,13 @@ class Particle(Position):
 
         Parameters
         ----------
-        + normal_stops: iterable
+        normal_stops: iterable
             The time steps that user request a output
-        + update_stops: iterable, or 'default'
+        update_stops: iterable, or 'default'
             The time steps that uvw array changes in the model.
             If 'default' is set,
             the method is going to figure it out automatically.
-        + return_in_between: Boolean
+        return_in_between: Boolean
             Users can get the values of update_stops free of computational
             cost.We understand that user may sometimes don't want those in
             the output.In that case, it that case, set it to be False,
@@ -973,12 +973,12 @@ class Particle(Position):
 
         Returns
         -------
-        + stops: list
+        stops: list
             The list of stops.
             It is the combination of normal_stops and output_stops by
             default. f return_in_between is set to be False,
             this is then the same as normal stops.
-        + R: list
+        R: list
             A list deep copy of particle that inherited
             the interpolate method
             as well as velocity and coords info.

@@ -11,10 +11,15 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
 
     Parameters
     ----------
-    + da: xarray.DataArray
+    da: xarray.DataArray
         DataArray to read from
-    + ind: tuple of numpy.ndarray
+    ind: tuple of numpy.ndarray
         The indexes of points of interest, each element does not need to be 1D
+    memory_chunk: int, default 3
+        If the number of chunks needed is smaller than this, read all of them at once.
+    xarray_more_efficient: int, default 100
+        When the number of chunks is larger than this, and the data points are few,
+        it may make sense to directly use xarray's vectorized read.
 
     Returns
     -------

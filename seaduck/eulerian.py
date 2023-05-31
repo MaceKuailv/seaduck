@@ -4,7 +4,7 @@ import numpy as np
 
 from seaduck.get_masks import get_masked
 from seaduck.kernel_weight import KnW, _translate_to_tendency, find_pk_4d
-from seaduck.ocedata import AttributableDict, HRel, OceData, TRel, VlRel, VRel
+from seaduck.ocedata import HRel, OceData, RelCoord, TRel, VlRel, VRel
 
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read as sread
@@ -22,9 +22,9 @@ def _ind_broadcast(x, ind):
 
     Parameters
     ----------
-    + x: numpy.ndarray
+    x: numpy.ndarray
         A new dimension
-    + ind: tuple
+    ind: tuple
         Existing indexes
     """
     n = x.shape[0]
@@ -111,7 +111,7 @@ class Position:
     """
 
     def __init__(self):
-        self.rel = AttributableDict()
+        self.rel = RelCoord()
 
     def __getattr__(self, attr):
         if attr == "rel":
@@ -138,9 +138,9 @@ class Position:
 
         Parameters
         ----------
-        + x,y,z,t: numpy.ndarray
+        x,y,z,t: numpy.ndarray or None, default None
             1D array of the lat-lon-dep-time coords
-        + data: OceData object
+        data: OceData object
             The field where the Positions are defined on.
         """
         if data is None:
@@ -211,14 +211,14 @@ class Position:
 
         Parameters
         ----------
-        + which: numpy.ndarray
+        which: numpy.ndarray, optional
             Define which points survive the subset operation.
             It be an array of either boolean or int.
             The selection is similar to that of selecting from a 1D numpy array.
 
         Returns
         -------
-        + the_subset: Position object
+        the_subset: Position object
             The selected Positions.
         """
         p = Position()
@@ -231,7 +231,7 @@ class Position:
                     p.N = len(p.__dict__[i])
                 else:
                     p.__dict__[i] = item
-            elif isinstance(item, AttributableDict):
+            elif isinstance(item, RelCoord):
                 p.__dict__[i] = item.subset(which)
             else:
                 p.__dict__[i] = item
@@ -251,9 +251,9 @@ class Position:
 
         Parameters
         ----------
-        + knw: KnW object
+        knw: KnW object
             The kernel used to find neighboring points.
-        + ind_moves_kward: dict
+        ind_moves_kward: dict, optional
             Key word argument to put into ind_moves method of the Topology object.
             Read Topology.ind_moves for more detail.
         """
@@ -309,7 +309,7 @@ class Position:
 
         Parameters
         ----------
-        + knw: KnW object
+        knw: KnW object
             The kernel used to find neighboring points.
         """
         if self.iz is None:
@@ -332,7 +332,7 @@ class Position:
 
         Parameters
         ----------
-        + knw: KnW object
+        knw: KnW object
             The kernel used to find neighboring points.
         """
         if self.izl is None:
@@ -355,7 +355,7 @@ class Position:
 
         Parameters
         ----------
-        + knw: KnW object
+        knw: KnW object
             The kernel used to find neighboring points.
         """
         if self.it is None:
@@ -378,15 +378,15 @@ class Position:
 
         Parameters
         ----------
-        + knw: KnW object
+        knw: KnW object
             The kernel used to find neighboring points.
-        + fourD: Boolean
+        fourD: Boolean, default False
             When we are doing nearest neighbor interpolation on some of the dimensions,
             with fourD = True, this will create dimensions with length 1, and will squeeze
             the dimension if fourD = False
-        + required: str, iterable of str
+        required: str, iterable of str, default "all"
             Which dims is needed in the process
-        + ind_moves_kward: dict
+        ind_moves_kward: dict, optional
             Key word argument to put into ind_moves method of the Topology object.
             Read Topology.ind_moves for more detail.
         """
@@ -515,27 +515,27 @@ class Position:
 
         Returns
         -------
-        + output_format: dict
+        output_format: dict
             Record information about the original varName input.
             Provide the formatting information for output,
             such that it matches the input in a direct fashion.
-        + main_keys: list
+        main_keys: list
             A list that defines each interpolation to be performed.
             The combination of variable name and kernel uniquely define such an operation.
-        + prefetch_dict: dict
+        prefetch_dict: dict
             Lookup the prefetched the data and its index prefix using main_key
-        + main_dict: dict
+        main_dict: dict
             Lookup the raw information using main_key
-        + hash_index: dict
+        hash_index: dict
             Lookup the token that uniquely define its indexing operation using main_key.
             Different main_key could share the same token.
-        + hash_mask: dict
+        hash_mask: dict
             Lookup the token that uniquely define its masking operation using main_key.
             Different main_key could share the same token.
-        + hash_read: dict
+        hash_read: dict
             Lookup the token that uniquely define its reading of the data using main_key.
             Different main_key could share the same token.
-        + hash_weight: dict
+        hash_weight: dict
             Lookup the token that uniquely define its computation of the weight using main_key.
             Different main_key could share the same token.
         """
@@ -722,9 +722,9 @@ class Position:
 
         Parameters
         ----------
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
         Returns
@@ -774,11 +774,11 @@ class Position:
 
         Parameters
         ----------
-        + index_lookup: dict
+        index_lookup: dict
             See _fatten_required_index_and_register
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
         Returns
@@ -846,15 +846,15 @@ class Position:
 
         Parameters
         ----------
-        + index_lookup: dict
+        index_lookup: dict
             See _fatten_required_index_and_register
-        + transform_lookup: dict
+        transform_lookup: dict
             See _transform_vector_and_lookup
-        + hash_mask: dict
+        hash_mask: dict
             See _register_interpolation_input
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
         Returns
@@ -945,17 +945,17 @@ class Position:
 
         Parameters
         ----------
-        + index_lookup: dict
+        index_lookup: dict
             See _fatten_required_index_and_register
-        + transform_lookup: dict
+        transform_lookup: dict
             See _transform_vector_and_lookup
-        + hash_read: dict
+        hash_read: dict
             See _register_interpolation_input
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
-        + prefetch_dict: dict
+        prefetch_dict: dict
             See _register_interpolation_input
 
         Returns
@@ -1034,13 +1034,13 @@ class Position:
 
         Parameters
         ----------
-        + mask_lookup: dict
+        mask_lookup: dict
             See _mask_value_and_register
-        + hash_weight: dict
+        hash_weight: dict
             See _register_interpolation_input
-        + hash_mask: dict
+        hash_mask: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
         Returns
@@ -1150,28 +1150,28 @@ class Position:
 
         Parameters
         ----------
-        + varName: list, str, tuple
+        varName: list, str, tuple
             The variables to interpolate. Tuples are used for horizontal vectors.
             Put str and list in a list if you have multiple things to interpolate.
             This input also defines the format of the output.
-        + knw: KnW object, tuple, list, dict
+        knw: KnW object, tuple, list, dict
             The kernel object used for the operation.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
-        + vec_transform: Boolean
+        vec_transform: Boolean
             Whether to project the vector field to the local zonal/meridional direction.
-        + prefetched: numpy.ndarray, tuple, list, dict, None
+        prefetched: numpy.ndarray, tuple, list, dict, None, default None
             The prefetched array for the data, this will effectively overwrite varName.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
-        + i_min: tuple, list, dict, None
+        i_min: tuple, list, dict, None, default None
             The prefix of the prefetched array.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
 
         Returns
         -------
-        + R: list, numpy.array, tuple
+        R: list, numpy.array, tuple
             The interpolation/derivative output in the same format as varName.
         """
         R = []

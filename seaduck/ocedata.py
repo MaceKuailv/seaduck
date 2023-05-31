@@ -31,18 +31,39 @@ NO_ALIAS = {
 }
 
 
-class AttributableDict(dict):
+class RelCoord(dict):
+    """
+    NamedTuple that also has update method.
+
+    This class is used to store the relative coordinates.
+    Attributes starts with "i" are indexes of the nearest grid point.
+    Attributes starts with "b" are value (time/dep/lat/lon) of the nearest grid point.
+    Attributes starts with "d" are distance between the nearest grid point and its
+    neighboring point in meters or seconds.
+    Attributes starts with "r" are the distance from the point of interest to the nearest
+    non-dimensionalized by the "d" variable.
+    "cs", "sn" are the cosine and sine of the grid orientation relative to meridian.
+    "face" is the face/tile the point is on, if the dataset has such a dimension.
+
+    All of those attributes should be None or 1D numpy array.
+
+    Methods
+    -------
+    update(other)
+        Inheritated from dictionary.
+    """
+
     def __getattr__(self, attr):
         try:
             return self[attr]
         except KeyError:
-            raise AttributeError(f"'AttributableDict' object has no attribute '{attr}'")
+            raise AttributeError(f"'RelCoord' object has no attribute '{attr}'")
 
     def __setattr__(self, attr, value):
         self[attr] = value
 
     def subset(self, which):
-        new = AttributableDict()
+        new = RelCoord()
         for var in self.keys():
             if self[var] is not None:
                 new[var] = self[var][which]
@@ -52,6 +73,8 @@ class AttributableDict(dict):
 
     @classmethod
     def create_class(cls, class_name, fields):
+        """Create a subclass with predetermined keys."""
+
         class NewClass(cls):
             __slots__ = ()
             _fields = fields
@@ -68,6 +91,7 @@ class AttributableDict(dict):
 
             @classmethod
             def _make(cls, iterable):
+                """Make a instance of this class similar to that of collections.namedtuple."""
                 return cls(*iterable)
 
             def __repr__(self):
@@ -80,28 +104,32 @@ class AttributableDict(dict):
         return NewClass
 
 
-HRel = AttributableDict.create_class(
+HRel = RelCoord.create_class(
     "HRel", ["face", "iy", "ix", "rx", "ry", "cs", "sn", "dx", "dy", "bx", "by"]
 )
-HRel.__doc__ = "Wrap around the horizontal rel-coords."
-VRel = AttributableDict.create_class("VRel", ["iz", "rz", "dz", "bz"])
-VRel.__doc__ = "Wrap around the vertical centered nearest rel-coords."
-VLinRel = AttributableDict.create_class(
-    "VLRel", ["iz_lin", "rz_lin", "dz_lin", "bz_lin"]
+HRel.__doc__ = "Wrap around the horizontal rel-coords. See also RelCoord."
+VRel = RelCoord.create_class("VRel", ["iz", "rz", "dz", "bz"])
+VRel.__doc__ = (
+    "Wrap around the vertical centered nearest rel-coords. See also RelCoord."
 )
-VLinRel.__doc__ = "Wrap around the vertical centered linear rel-coords."
-VlRel = AttributableDict.create_class("VlRel", ["izl", "rzl", "dzl", "bzl"])
-VlRel.__doc__ = "Wrap around the vertical staggered nearest rel-coords."
-VlLinRel = AttributableDict.create_class(
+VLinRel = RelCoord.create_class("VLRel", ["iz_lin", "rz_lin", "dz_lin", "bz_lin"])
+VLinRel.__doc__ = (
+    "Wrap around the vertical centered linear rel-coords. See also RelCoord."
+)
+VlRel = RelCoord.create_class("VlRel", ["izl", "rzl", "dzl", "bzl"])
+VlRel.__doc__ = (
+    "Wrap around the vertical staggered nearest rel-coords. See also RelCoord."
+)
+VlLinRel = RelCoord.create_class(
     "VlLinRel", ["izl_lin", "rzl_lin", "dzl_lin", "bzl_lin"]
 )
-VlLinRel.__doc__ = "Wrap around the vertical staggered linear rel-coords."
-TRel = AttributableDict.create_class("TRel", ["it", "rt", "dt", "bt"])
-TRel.__doc__ = "Wrap around the temporal nearest rel-coords."
-TLinRel = AttributableDict.create_class(
-    "TLinRel", ["it_lin", "rt_lin", "dt_lin", "bt_lin"]
+VlLinRel.__doc__ = (
+    "Wrap around the vertical staggered linear rel-coords. See also RelCoord."
 )
-TRel.__doc__ = "Wrap around the temporal linear rel-coords."
+TRel = RelCoord.create_class("TRel", ["it", "rt", "dt", "bt"])
+TRel.__doc__ = "Wrap around the temporal nearest rel-coords."
+TLinRel = RelCoord.create_class("TLinRel", ["it_lin", "rt_lin", "dt_lin", "bt_lin"])
+TRel.__doc__ = "Wrap around the temporal linear rel-coords. See also RelCoord."
 
 
 class OceData:
@@ -112,9 +140,9 @@ class OceData:
 
     Parameters
     ----------
-    + data: xarray.Dataset
+    data: xarray.Dataset
         The dataset to extract grid information, create cKD tree, and Topology object on.
-    + alias: dict, None, or 'auto'
+    alias: dict, None, or 'auto'
         1. dict: Map the variable used by this package (key) to
            that used by the dataset (value).
         2. None (default): Do not apply alias.
@@ -172,7 +200,7 @@ class OceData:
 
         Returns
         -------
-        + readiness: dict
+        readiness: dict
             'h': The scheme of horizontal interpolation to be used,
                  including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
             'Z': Whether the dataset has a vertical dimension at the center points.
@@ -339,21 +367,13 @@ class OceData:
 
         Parameters
         ----------
-        + x, y: np.ndarray
+        x, y: np.ndarray
             1D array of longitude and latitude.
 
         Returns
         -------
-        + faces, iys, ixs: np.ndarray or None
-            Indexes of the nearest horizontal point.
-        + rx, ry: np.ndarray
-            Non-dimensional distance to the nearest point.
-        + cs, sn: np.ndarray or None
-            The cosine and sine of the grid orientation compared to local meridian.
-        + dx, dy:
-            The size of the horizontal cell used for the Non-dimensionalization.
-        + bx, by:
-            The longitude and latitude for the nearest grid point.
+        hrel: seaduck.ocedata.HRel object
+            A dictionary that defines the horizontal rel-coords
         """
         if self.readiness["h"] == "oceanparcel":
             h_rel_tuple = find_rel_h_oceanparcel(
