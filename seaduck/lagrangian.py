@@ -6,6 +6,7 @@ import numpy as np
 
 from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
+from seaduck.ocedata import AttributableDict
 from seaduck.runtime_conf import compileable
 from seaduck.utils import find_rel, find_rx_ry_oceanparcel, rel2latlon, to_180
 
@@ -199,14 +200,10 @@ class Particle(Position):
         max_iteration=200,
         **kwarg,
     ):
+        Position.__init__(self)
         self.from_latlon(**kwarg)
         if self.ocedata.readiness["Zl"]:
-            (
-                self.izl_lin,
-                self.rzl_lin,
-                self.dzl_lin,
-                self.bzl_lin,
-            ) = self.ocedata.find_rel_vl_lin(self.dep)
+            self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
         else:
             (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
                 None for i in range(4)
@@ -666,7 +663,7 @@ class Particle(Position):
             self.izl_lin = self.izl_lin.astype(int)
 
         if self.ocedata.readiness["Z"]:
-            self.iz, self.rz, self.dz, self.bz = self.ocedata.find_rel_v(self.dep)
+            self.rel.update(self.ocedata.find_rel_v(self.dep))
         if self.ocedata.readiness["h"] == "local_cartesian":
             # todo: split the oceanparcel case
             if self.face is not None:
@@ -895,7 +892,7 @@ class Particle(Position):
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
                     p.__dict__[i] = copy.deepcopy(item)
-            elif isinstance(item, list):
+            elif isinstance(item, (list, AttributableDict)):
                 p.__dict__[i] = copy.deepcopy(item)
         return p
 

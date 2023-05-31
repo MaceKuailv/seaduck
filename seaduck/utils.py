@@ -448,6 +448,32 @@ def _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind):
     return cs, sn, dx, dy, bx, by
 
 
+def find_px_py(XG, YG, tp, ind, cuvwg="G"):
+    """Find the nearest 4 corner points.
+
+    This is used in oceanparcel interpolation scheme.
+    """
+    N = len(ind[0])
+    ind1 = tuple(i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, cuvwg=cuvwg))
+    ind2 = tuple(i for i in tp.ind_tend_vec(ind1, np.zeros(N), cuvwg=cuvwg))
+    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N), cuvwg=cuvwg))
+
+    x0 = XG[ind]
+    x1 = XG[ind1]
+    x2 = XG[ind2]
+    x3 = XG[ind3]
+
+    y0 = YG[ind]
+    y1 = YG[ind1]
+    y2 = YG[ind2]
+    y3 = YG[ind3]
+
+    px = np.vstack([x0, x1, x2, x3]).astype("float64")
+    py = np.vstack([y0, y1, y2, y3]).astype("float64")
+
+    return px, py
+
+
 @compileable
 def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):
     """Find the non-dimensional coords using the local cartesian scheme."""
@@ -456,6 +482,52 @@ def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):
     rx = (dlon * np.cos(by * np.pi / 180) * cs + dlat * sn) * deg2m / dx
     ry = (dlat * cs - dlon * sn * np.cos(by * np.pi / 180)) * deg2m / dy
     return rx, ry
+
+
+@compileable
+def find_rx_ry_oceanparcel(x, y, px, py):
+    """Find the non-dimensional horizontal distance.
+
+    This is done using the oceanparcel scheme.
+    """
+    rx = np.ones_like(x) * 0.0
+    ry = np.ones_like(y) * 0.0
+    x0 = px[0]
+
+    x = to_180(x - x0)
+    px = to_180(px - x0)
+
+    invA = np.array(
+        [
+            [1.0, 0.0, 0.0, 0.0],
+            [-1.0, 1.0, 0.0, 0.0],
+            [-1.0, 0.0, 0.0, 1.0],
+            [1.0, -1.0, 1.0, -1.0],
+        ]
+    )
+    a = np.dot(invA, px)
+    b = np.dot(invA, py)
+
+    aa = a[3] * b[2] - a[2] * b[3]
+    bb = a[3] * b[0] - a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + x * b[3] - y * a[3]
+    cc = a[1] * b[0] - a[0] * b[1] + x * b[1] - y * a[1]
+
+    det2 = bb * bb - 4 * aa * cc
+
+    order1 = np.abs(aa) < 1e-12
+    order2 = np.logical_and(~order1, det2 >= 0)
+    ry = -(cc / bb)  # if it is supposed to be nan, just try linear solve.
+    ry[order2] = ((-bb + np.sqrt(det2)) / (2 * aa))[order2]
+
+    rot_rectilinear = np.abs(a[1] + a[3] * ry) < 1e-12
+    rx[rot_rectilinear] = (
+        (y - py[0]) / (py[1] - py[0]) + (y - py[3]) / (py[2] - py[3])
+    )[rot_rectilinear] * 0.5
+    rx[~rot_rectilinear] = ((x - a[0] - a[2] * ry) / (a[1] + a[3] * ry))[
+        ~rot_rectilinear
+    ]
+
+    return rx - 1 / 2, ry - 1 / 2
 
 
 def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
@@ -512,78 +584,6 @@ def find_rel_h_oceanparcel(
     px, py = find_px_py(XG, YG, tp, ind)
     rx, ry = find_rx_ry_oceanparcel(x, y, px, py)
     return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
-
-
-def find_px_py(XG, YG, tp, ind, cuvwg="G"):
-    """Find the nearest 4 corner points.
-
-    This is used in oceanparcel interpolation scheme.
-    """
-    N = len(ind[0])
-    ind1 = tuple(i for i in tp.ind_tend_vec(ind, np.ones(N) * 3, cuvwg=cuvwg))
-    ind2 = tuple(i for i in tp.ind_tend_vec(ind1, np.zeros(N), cuvwg=cuvwg))
-    ind3 = tuple(i for i in tp.ind_tend_vec(ind, np.zeros(N), cuvwg=cuvwg))
-
-    x0 = XG[ind]
-    x1 = XG[ind1]
-    x2 = XG[ind2]
-    x3 = XG[ind3]
-
-    y0 = YG[ind]
-    y1 = YG[ind1]
-    y2 = YG[ind2]
-    y3 = YG[ind3]
-
-    px = np.vstack([x0, x1, x2, x3]).astype("float64")
-    py = np.vstack([y0, y1, y2, y3]).astype("float64")
-
-    return px, py
-
-
-@compileable
-def find_rx_ry_oceanparcel(x, y, px, py):
-    """Find the non-dimensional horizontal distance.
-
-    This is done using the oceanparcel scheme.
-    """
-    rx = np.ones_like(x) * 0.0
-    ry = np.ones_like(y) * 0.0
-    x0 = px[0]
-
-    x = to_180(x - x0)
-    px = to_180(px - x0)
-
-    invA = np.array(
-        [
-            [1.0, 0.0, 0.0, 0.0],
-            [-1.0, 1.0, 0.0, 0.0],
-            [-1.0, 0.0, 0.0, 1.0],
-            [1.0, -1.0, 1.0, -1.0],
-        ]
-    )
-    a = np.dot(invA, px)
-    b = np.dot(invA, py)
-
-    aa = a[3] * b[2] - a[2] * b[3]
-    bb = a[3] * b[0] - a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + x * b[3] - y * a[3]
-    cc = a[1] * b[0] - a[0] * b[1] + x * b[1] - y * a[1]
-
-    det2 = bb * bb - 4 * aa * cc
-
-    order1 = np.abs(aa) < 1e-12
-    order2 = np.logical_and(~order1, det2 >= 0)
-    ry = -(cc / bb)  # if it is supposed to be nan, just try linear solve.
-    ry[order2] = ((-bb + np.sqrt(det2)) / (2 * aa))[order2]
-
-    rot_rectilinear = np.abs(a[1] + a[3] * ry) < 1e-12
-    rx[rot_rectilinear] = (
-        (y - py[0]) / (py[1] - py[0]) + (y - py[3]) / (py[2] - py[3])
-    )[rot_rectilinear] * 0.5
-    rx[~rot_rectilinear] = ((x - a[0] - a[2] * ry) / (a[1] + a[3] * ry))[
-        ~rot_rectilinear
-    ]
-
-    return rx - 1 / 2, ry - 1 / 2
 
 
 def weight_f_node(rx, ry):
