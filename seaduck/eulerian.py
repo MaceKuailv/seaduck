@@ -34,21 +34,21 @@ def _ind_broadcast(x, ind):
     ysp = ind[0].shape
     final_shape = [n] + list(ysp[1:]) + list(xsp[1:])
 
-    R = [np.zeros(final_shape, int) for i in range(len(ind) + 1)]
+    to_return = [np.zeros(final_shape, int) for i in range(len(ind) + 1)]
 
     dims = len(final_shape)
     ydim = len(ysp) - 1
     trsp = list(range(1, 1 + ydim)) + [0] + list(range(1 + ydim, dims))
     inv = np.argsort(trsp)
-    R[0] = R[0].transpose(trsp)
-    R[0][:] = x
-    R[0] = R[0].transpose(inv)
+    to_return[0] = to_return[0].transpose(trsp)
+    to_return[0][:] = x
+    to_return[0] = to_return[0].transpose(inv)
 
     for i in range(1, len(ind) + 1):
-        R[i] = R[i].T
-        R[i][:] = ind[i - 1].T
-        R[i] = R[i].T
-    return R
+        to_return[i] = to_return[i].T
+        to_return[i][:] = ind[i - 1].T
+        to_return[i] = to_return[i].T
+    return to_return
 
 
 def _partial_flatten(ind):
@@ -59,10 +59,10 @@ def _partial_flatten(ind):
         # num_neighbor = 1
         # for i in range(1,len(shape)):
         #     num_neighbor*=shape[i]
-        R = []
+        to_return = []
         for i in range(len(ind)):
-            R.append(ind[i].reshape(shape[0], -1))
-        return tuple(R)
+            to_return.append(ind[i].reshape(shape[0], -1))
+        return tuple(to_return)
     elif isinstance(ind, np.ndarray):
         shape = ind.shape
         num_neighbor = 1
@@ -409,39 +409,43 @@ class Position:
         ):
             ffc, fiy, fix = self.fatten_h(knw, ind_moves_kwarg=ind_moves_kwarg)
             if ffc is not None:
-                R = (ffc, fiy, fix)
+                to_return = (ffc, fiy, fix)
                 keys = ["face", "Y", "X"]
             else:
-                R = (fiy, fix)
+                to_return = (fiy, fix)
                 keys = ["Y", "X"]
         else:
-            R = tuple([np.zeros(self.N)])
+            to_return = tuple([np.zeros(self.N)])
             keys = ["place_holder"]
 
         if _in_required("Z", required):
             fiz = self.fatten_v(knw)
             if fiz is not None:
-                R = _ind_broadcast(fiz, R)
+                to_return = _ind_broadcast(fiz, to_return)
                 keys.insert(0, "Z")
         elif _in_required("Zl", required):
             fizl = self.fatten_vl(knw)
             if fizl is not None:
-                R = _ind_broadcast(fizl, R)
+                to_return = _ind_broadcast(fizl, to_return)
                 keys.insert(0, "Zl")
         elif fourD:
-            R = [np.expand_dims(R[i], axis=-1) for i in range(len(R))]
+            to_return = [
+                np.expand_dims(to_return[i], axis=-1) for i in range(len(to_return))
+            ]
 
         if _in_required("time", required):
             fit = self.fatten_t(knw)
             if fit is not None:
-                R = _ind_broadcast(fit, R)
+                to_return = _ind_broadcast(fit, to_return)
                 keys.insert(0, "time")
         elif fourD:
-            R = [np.expand_dims(R[i], axis=-1) for i in range(len(R))]
-        R = dict(zip(keys, R))
+            to_return = [
+                np.expand_dims(to_return[i], axis=-1) for i in range(len(to_return))
+            ]
+        to_return = dict(zip(keys, to_return))
         if required == "all":
             required = [i for i in keys if i != "place_holder"]
-        return tuple(R[i] for i in required)
+        return tuple(to_return[i] for i in required)
 
     def get_px_py(self):
         """Get the nearest 4 corner points of the given point.
@@ -1166,10 +1170,10 @@ class Position:
 
         Returns
         -------
-        R: list, numpy.array, tuple
+        to_return: list, numpy.array, tuple
             The interpolation/derivative output in the same format as varName.
         """
-        R = []
+        to_return = []
         (
             output_format,
             main_keys,
@@ -1208,7 +1212,7 @@ class Position:
                 weight = weight_lookup[hash_weight[key]]
                 needed = _partial_flatten(needed)
                 weight = _partial_flatten(weight)
-                R.append(np.einsum("nj,nj->n", needed, weight))
+                to_return.append(np.einsum("nj,nj->n", needed, weight))
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
@@ -1219,17 +1223,17 @@ class Position:
                 v = np.einsum("nijk,nijk->n", n_v, vweight)
                 if vec_transform:
                     u, v = local_to_latlon(u, v, self.cs, self.sn)
-                R.append((u, v))
+                to_return.append((u, v))
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
             else:
                 raise ValueError(f"unexpected varName: {varName}")
 
-        final_dict = dict(zip(output_format["final_varName"], R))
+        final_dict = dict(zip(output_format["final_varName"], to_return))
         ori_list = output_format["ori_list"]
         output = []
-        # print(ori_list,R,final_dict.keys())
+        # print(ori_list,to_return,final_dict.keys())
         for key in ori_list:
             var, knw = key
 

@@ -96,8 +96,8 @@ def OceInterp(
                 raise AttributeError(
                     "__particle variables is only available for Lagrangian Particles"
                 )
-        R = pt.interpolate(varList, kernelList)
-        return R
+        to_return = pt.interpolate(varList, kernelList)
+        return to_return
 
     else:
         try:
@@ -114,24 +114,24 @@ def OceInterp(
         stops, raw = pt.to_list_of_time(
             t_nec, update_stops=update_stops, return_in_between=return_in_between
         )
-        R = []
+        to_return = []
         for i, var in enumerate(varList):
             if var == lagrange_token + "raw":
-                R.append(raw)
+                to_return.append(raw)
             elif lagrange_token in var:
                 sublist = []
                 for snap in raw:
                     sublist.append(getattr(snap, var[len(lagrange_token) :]))
-                R.append(sublist)
+                to_return.append(sublist)
             else:
                 sublist = []
                 for snap in raw:
                     sublist.append(snap.interpolate(var, kernelList[i]))
-                R.append(sublist)
+                to_return.append(sublist)
 
         if return_pt_time:
-            return stops, R
+            return stops, to_return
         else:
             if return_in_between:
                 warnings.warn("Some of the returns is not on the times you specified.")
-            return R
+            return to_return
