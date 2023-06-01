@@ -170,7 +170,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -345,16 +346,19 @@ document.write(`
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
  
@@ -362,11 +366,11 @@ document.write(`
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.analytical_step">analytical_step() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.analytical_step">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.analytical_step">analytical_step() (seaduck.lagrangian.Particle method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.auto_doll">auto_doll() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.auto_doll">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.auto_doll">auto_doll() (in module seaduck.kernel_weight)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -374,7 +378,7 @@ document.write(`
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.box_ind_tend">box_ind_tend() (in module seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.box_ind_tend">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.box_ind_tend">box_ind_tend() (in module seaduck.topology)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -382,15 +386,19 @@ document.write(`
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.topology.check_illegal">check_illegal() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.check_illegal">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.check_illegal">check_illegal() (seaduck.topology.Topology method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.runtime_conf.compileable">compileable() (in module seaduck.runtime_conf)</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.check_readiness">check_readiness() (seaduck.ocedata.OceData method)</a>
+</li>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.chg_ref_lon">chg_ref_lon() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.convert_time">convert_time() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.convert_time">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.convert_time">convert_time() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.create_tree">create_tree() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.create_tree">[1]</a>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.RelCoord.create_class">create_class() (seaduck.ocedata.RelCoord class method)</a>
+</li>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.create_tree">create_tree() (in module seaduck.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -398,7 +406,7 @@ document.write(`
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.deepcopy">deepcopy() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.deepcopy">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.deepcopy">deepcopy() (seaduck.lagrangian.Particle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -406,11 +414,11 @@ document.write(`
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.easy_3d_cube">easy_3d_cube() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.easy_3d_cube">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.easy_3d_cube">easy_3d_cube() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.empty_lists">empty_lists() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.empty_lists">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.empty_lists">empty_lists() (seaduck.lagrangian.Particle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -418,59 +426,69 @@ document.write(`
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.fatten">fatten() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.fatten">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.fatten">fatten() (seaduck.eulerian.Position method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.fatten_h">fatten_h() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.fatten_h">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.fatten_h">fatten_h() (seaduck.eulerian.Position method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.fatten_t">fatten_t() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.fatten_t">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.fatten_t">fatten_t() (seaduck.eulerian.Position method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.fatten_v">fatten_v() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.fatten_v">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.fatten_v">fatten_v() (seaduck.eulerian.Position method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.fatten_vl">fatten_vl() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.fatten_vl">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.fatten_vl">fatten_vl() (seaduck.eulerian.Position method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.fillna">fillna() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.fillna">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.fillna">fillna() (seaduck.lagrangian.Particle method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_cs_sn">find_cs_sn() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_cs_sn">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_cs_sn">find_cs_sn() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_ind_h">find_ind_h() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_ind_h">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_ind">find_ind() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_ind_nearest">find_ind_nearest() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_ind_nearest">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_ind_h">find_ind_h() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_ind_periodic">find_ind_periodic() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_ind_periodic">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.find_pk_4d">find_pk_4d() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_ind_t">find_ind_t() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_ind_t">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_px_py">find_px_py() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_ind_z">find_ind_z() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_ind_z">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel">find_rel() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.find_pk_4d">find_pk_4d() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.find_pk_4d">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_h">find_rel_h() (seaduck.ocedata.OceData method)</a>
+</li>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_h_naive">find_rel_h_naive() (in module seaduck.utils)</a>
+</li>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_h_oceanparcel">find_rel_h_oceanparcel() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.find_px_py">find_px_py() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_px_py">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_h_rectilinear">find_rel_h_rectilinear() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_h_naive">find_rel_h_naive() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_h_naive">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_nearest">find_rel_nearest() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_h_oceanparcel">find_rel_h_oceanparcel() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_h_oceanparcel">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_periodic">find_rel_periodic() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_h_rectilinear">find_rel_h_rectilinear() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_h_rectilinear">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_t">find_rel_t() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_nearest">find_rel_nearest() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_nearest">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_t_lin">find_rel_t_lin() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_periodic">find_rel_periodic() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_periodic">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_time">find_rel_time() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_time">find_rel_time() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_time">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_v">find_rel_v() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rel_z">find_rel_z() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_z">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_v_lin">find_rel_v_lin() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rx_ry_naive">find_rx_ry_naive() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rx_ry_naive">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_vl">find_rel_vl() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.find_rx_ry_oceanparcel">find_rx_ry_oceanparcel() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.find_rx_ry_oceanparcel">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.find_rel_vl_lin">find_rel_vl_lin() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.find_which_points_for_each_kernel">find_which_points_for_each_kernel() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.find_which_points_for_each_kernel">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rel_z">find_rel_z() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.topology.four_matrix_for_uv">four_matrix_for_uv() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.four_matrix_for_uv">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rx_ry_naive">find_rx_ry_naive() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.from_latlon">from_latlon() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.from_latlon">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.find_rx_ry_oceanparcel">find_rx_ry_oceanparcel() (in module seaduck.utils)</a>
+</li>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.find_which_points_for_each_kernel">find_which_points_for_each_kernel() (in module seaduck.kernel_weight)</a>
+</li>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.four_matrix_for_uv">four_matrix_for_uv() (seaduck.topology.Topology method)</a>
+</li>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.from_latlon">from_latlon() (seaduck.eulerian.Position method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -478,35 +496,47 @@ document.write(`
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.get_combination">get_combination() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.get_combination">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.get_dataset">get_dataset() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.get_dataset">get_dataset() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.get_dataset">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.get_f_node_weight">get_f_node_weight() (seaduck.eulerian.Position method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.get_f_node_weight">get_f_node_weight() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.get_f_node_weight">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.get_func">get_func() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.get_func">get_func() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.get_func">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.get_key_by_value">get_key_by_value() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.get_key_by_value">get_key_by_value() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.get_key_by_value">[1]</a>
+      <li><a href="api_reference/apiref_getmasks.html#seaduck.get_masks.get_masked">get_masked() (in module seaduck.get_masks)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.get_masks.get_masked">get_masked() (in module seaduck.get_masks)</a>, <a href="api_reference/apiref_getmasks.html#seaduck.get_masks.get_masked">[1]</a>
+      <li><a href="api_reference/apiref_getmasks.html#seaduck.get_masks.get_masks">get_masks() (in module seaduck.get_masks)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.get_masks.get_masks">get_masks() (in module seaduck.get_masks)</a>, <a href="api_reference/apiref_getmasks.html#seaduck.get_masks.get_masks">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.get_px_py">get_px_py() (seaduck.eulerian.Position method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.get_px_py">get_px_py() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.get_px_py">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.get_the_other_edge">get_the_other_edge() (seaduck.topology.Topology method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.topology.get_the_other_edge">get_the_other_edge() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.get_the_other_edge">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.get_u_du">get_u_du() (seaduck.lagrangian.Particle method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.get_u_du">get_u_du() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.get_u_du">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.get_uv_mask_from_face">get_uv_mask_from_face() (seaduck.topology.Topology method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.topology.get_uv_mask_from_face">get_uv_mask_from_face() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.get_uv_mask_from_face">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.get_vol">get_vol() (seaduck.lagrangian.Particle method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.get_vol">get_vol() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.get_vol">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.get_weight">get_weight() (seaduck.kernel_weight.KnW method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.KnW.get_weight">get_weight() (seaduck.kernel_weight.KnW method)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.get_weight">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.get_weight_cascade">get_weight_cascade() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.get_weight_cascade">get_weight_cascade() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.get_weight_cascade">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.grid2array">grid2array() (seaduck.ocedata.OceData method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.hgrid2array">hgrid2array() (seaduck.ocedata.OceData method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.HRel">HRel (class in seaduck.ocedata)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -514,17 +544,17 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.increment">increment() (in module seaduck.lagrangian)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.increment">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.increment">increment() (in module seaduck.lagrangian)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.topology.ind_moves">ind_moves() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.ind_moves">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.ind_moves">ind_moves() (seaduck.topology.Topology method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.topology.ind_tend">ind_tend() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.ind_tend">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.ind_tend">ind_tend() (seaduck.topology.Topology method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.topology.ind_tend_vec">ind_tend_vec() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.ind_tend_vec">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.ind_tend_vec">ind_tend_vec() (seaduck.topology.Topology method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.interpolate">interpolate() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.interpolate">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.interpolate">interpolate() (seaduck.eulerian.Position method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -532,17 +562,17 @@ document.write(`
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.kash">kash() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kash">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kash">kash() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.kernel_weight">kernel_weight() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kernel_weight">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kernel_weight">kernel_weight() (in module seaduck.kernel_weight)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.kernel_weight_s">kernel_weight_s() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kernel_weight_s">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kernel_weight_s">kernel_weight_s() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.kernel_weight_x">kernel_weight_x() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kernel_weight_x">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.kernel_weight_x">kernel_weight_x() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.KnW">KnW (class in seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW">KnW (class in seaduck.kernel_weight)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -550,17 +580,17 @@ document.write(`
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.llc_get_the_other_edge">llc_get_the_other_edge() (in module seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.llc_get_the_other_edge">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.llc_get_the_other_edge">llc_get_the_other_edge() (in module seaduck.topology)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.llc_get_uv_mask_from_face">llc_get_uv_mask_from_face() (in module seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.llc_get_uv_mask_from_face">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.llc_get_uv_mask_from_face">llc_get_uv_mask_from_face() (in module seaduck.topology)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.llc_ind_tend">llc_ind_tend() (in module seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.llc_ind_tend">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.llc_ind_tend">llc_ind_tend() (in module seaduck.topology)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.llc_mutual_direction">llc_mutual_direction() (in module seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.llc_mutual_direction">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.llc_mutual_direction">llc_mutual_direction() (in module seaduck.topology)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.local_to_latlon">local_to_latlon() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.local_to_latlon">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.local_to_latlon">local_to_latlon() (in module seaduck.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -568,42 +598,38 @@ document.write(`
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.get_masks.mask_u_node">mask_u_node() (in module seaduck.get_masks)</a>, <a href="api_reference/apiref_getmasks.html#seaduck.get_masks.mask_u_node">[1]</a>
+      <li><a href="api_reference/apiref_getmasks.html#seaduck.get_masks.mask_u_node">mask_u_node() (in module seaduck.get_masks)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.get_masks.mask_v_node">mask_v_node() (in module seaduck.get_masks)</a>, <a href="api_reference/apiref_getmasks.html#seaduck.get_masks.mask_v_node">[1]</a>
+      <li><a href="api_reference/apiref_getmasks.html#seaduck.get_masks.mask_v_node">mask_v_node() (in module seaduck.get_masks)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.get_masks.mask_w_node">mask_w_node() (in module seaduck.get_masks)</a>, <a href="api_reference/apiref_getmasks.html#seaduck.get_masks.mask_w_node">[1]</a>
+      <li><a href="api_reference/apiref_getmasks.html#seaduck.get_masks.mask_w_node">mask_w_node() (in module seaduck.get_masks)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.missing_cs_sn">missing_cs_sn() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.missing_cs_sn">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.missing_cs_sn">missing_cs_sn() (in module seaduck.utils)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.eulerian">seaduck.eulerian</a>, <a href="api_reference/apiref_eulerian.html#module-seaduck.eulerian">[1]</a>
+        <li><a href="api_reference/apiref_eulerian.html#module-seaduck.eulerian">seaduck.eulerian</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.get_masks">seaduck.get_masks</a>, <a href="api_reference/apiref_getmasks.html#module-seaduck.get_masks">[1]</a>
+        <li><a href="api_reference/apiref_getmasks.html#module-seaduck.get_masks">seaduck.get_masks</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.kernel_weight">seaduck.kernel_weight</a>, <a href="api_reference/apiref_kernelNweight.html#module-seaduck.kernel_weight">[1]</a>
+        <li><a href="api_reference/apiref_kernelNweight.html#module-seaduck.kernel_weight">seaduck.kernel_weight</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.lagrangian">seaduck.lagrangian</a>, <a href="api_reference/apiref_lagrangian.html#module-seaduck.lagrangian">[1]</a>
+        <li><a href="api_reference/apiref_lagrangian.html#module-seaduck.lagrangian">seaduck.lagrangian</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.OceData">seaduck.OceData</a>, <a href="api_reference/apiref_OceData.html#module-seaduck.OceData">[1]</a>
+        <li><a href="api_reference/apiref_OceInterp.html#module-seaduck.oceinterp">seaduck.oceinterp</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.OceInterp">seaduck.OceInterp</a>, <a href="api_reference/apiref_OceInterp.html#module-seaduck.OceInterp">[1]</a>
+        <li><a href="api_reference/apiref_smartread.html#module-seaduck.smart_read">seaduck.smart_read</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.runtime_conf">seaduck.runtime_conf</a>
+        <li><a href="api_reference/apiref_topology.html#module-seaduck.topology">seaduck.topology</a>
 </li>
-        <li><a href="all_in_one.html#module-seaduck.smart_read">seaduck.smart_read</a>, <a href="api_reference/apiref_smartread.html#module-seaduck.smart_read">[1]</a>
-</li>
-        <li><a href="all_in_one.html#module-seaduck.topology">seaduck.topology</a>, <a href="api_reference/apiref_topology.html#module-seaduck.topology">[1]</a>
-</li>
-        <li><a href="all_in_one.html#module-seaduck.utils">seaduck.utils</a>, <a href="api_reference/apiref_utils.html#module-seaduck.utils">[1]</a>
+        <li><a href="api_reference/apiref_utils.html#module-seaduck.utils">seaduck.utils</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.topology.mutual_direction">mutual_direction() (seaduck.topology.topology method)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology.mutual_direction">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology.mutual_direction">mutual_direction() (seaduck.topology.Topology method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -611,11 +637,23 @@ document.write(`
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.NoneIn">NoneIn() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.NoneIn">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.NoneIn">NoneIn() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.note_taking">note_taking() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.note_taking">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.note_taking">note_taking() (seaduck.lagrangian.Particle method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData">OceData (class in seaduck.ocedata)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/apiref_OceInterp.html#seaduck.oceinterp.OceInterp">OceInterp() (in module seaduck.oceinterp)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -623,15 +661,15 @@ document.write(`
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle">particle (class in seaduck.lagrangian)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle">Particle (class in seaduck.lagrangian)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.pooch_prepare">pooch_prepare() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.pooch_prepare">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.pooch_prepare">pooch_prepare() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.eulerian.position">position (class in seaduck.eulerian)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position">[1]</a>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position">Position (class in seaduck.eulerian)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.process_ecco">process_ecco() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.process_ecco">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.process_ecco">process_ecco() (in module seaduck.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -639,11 +677,11 @@ document.write(`
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.rel2latlon">rel2latlon() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.rel2latlon">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.rel2latlon">rel2latlon() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.rel_lon">rel_lon() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.rel_lon">[1]</a>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.RelCoord">RelCoord (class in seaduck.ocedata)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -651,115 +689,113 @@ document.write(`
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.KnW.same_hsize">same_hsize() (seaduck.kernel_weight.KnW method)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.same_hsize">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.same_hsize">same_hsize() (seaduck.kernel_weight.KnW method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.KnW.same_size">same_size() (seaduck.kernel_weight.KnW method)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.same_size">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.same_size">same_size() (seaduck.kernel_weight.KnW method)</a>
 </li>
       <li>
     seaduck.eulerian
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.eulerian">module</a>, <a href="api_reference/apiref_eulerian.html#module-seaduck.eulerian">[1]</a>
+        <li><a href="api_reference/apiref_eulerian.html#module-seaduck.eulerian">module</a>
 </li>
       </ul></li>
       <li>
     seaduck.get_masks
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.get_masks">module</a>, <a href="api_reference/apiref_getmasks.html#module-seaduck.get_masks">[1]</a>
+        <li><a href="api_reference/apiref_getmasks.html#module-seaduck.get_masks">module</a>
 </li>
       </ul></li>
       <li>
     seaduck.kernel_weight
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.kernel_weight">module</a>, <a href="api_reference/apiref_kernelNweight.html#module-seaduck.kernel_weight">[1]</a>
+        <li><a href="api_reference/apiref_kernelNweight.html#module-seaduck.kernel_weight">module</a>
 </li>
       </ul></li>
       <li>
     seaduck.lagrangian
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.lagrangian">module</a>, <a href="api_reference/apiref_lagrangian.html#module-seaduck.lagrangian">[1]</a>
+        <li><a href="api_reference/apiref_lagrangian.html#module-seaduck.lagrangian">module</a>
 </li>
       </ul></li>
       <li>
-    seaduck.OceData
+    seaduck.oceinterp
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.OceData">module</a>, <a href="api_reference/apiref_OceData.html#module-seaduck.OceData">[1]</a>
-</li>
-      </ul></li>
-      <li>
-    seaduck.OceInterp
-
-      <ul>
-        <li><a href="all_in_one.html#module-seaduck.OceInterp">module</a>, <a href="api_reference/apiref_OceInterp.html#module-seaduck.OceInterp">[1]</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    seaduck.runtime_conf
-
-      <ul>
-        <li><a href="all_in_one.html#module-seaduck.runtime_conf">module</a>
+        <li><a href="api_reference/apiref_OceInterp.html#module-seaduck.oceinterp">module</a>
 </li>
       </ul></li>
       <li>
     seaduck.smart_read
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.smart_read">module</a>, <a href="api_reference/apiref_smartread.html#module-seaduck.smart_read">[1]</a>
+        <li><a href="api_reference/apiref_smartread.html#module-seaduck.smart_read">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     seaduck.topology
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.topology">module</a>, <a href="api_reference/apiref_topology.html#module-seaduck.topology">[1]</a>
+        <li><a href="api_reference/apiref_topology.html#module-seaduck.topology">module</a>
 </li>
       </ul></li>
       <li>
     seaduck.utils
 
       <ul>
-        <li><a href="all_in_one.html#module-seaduck.utils">module</a>, <a href="api_reference/apiref_utils.html#module-seaduck.utils">[1]</a>
+        <li><a href="api_reference/apiref_utils.html#module-seaduck.utils">module</a>
 </li>
       </ul></li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.show_kernels">show_kernels() (in module seaduck.kernel_weight)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.show_kernels">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.show_alias">show_alias() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.kernel_weight.KnW.size_hash">size_hash() (seaduck.kernel_weight.KnW method)</a>, <a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.size_hash">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.show_kernels">show_kernels() (in module seaduck.kernel_weight)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.smart_read.smart_read">smart_read() (in module seaduck.smart_read)</a>, <a href="api_reference/apiref_smartread.html#seaduck.smart_read.smart_read">[1]</a>
+      <li><a href="api_reference/apiref_kernelNweight.html#seaduck.kernel_weight.KnW.size_hash">size_hash() (seaduck.kernel_weight.KnW method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.spherical2cartesian">spherical2cartesian() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.spherical2cartesian">[1]</a>
+      <li><a href="api_reference/apiref_smartread.html#seaduck.smart_read.smart_read">smart_read() (in module seaduck.smart_read)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.stationary">stationary() (in module seaduck.lagrangian)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.stationary">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.spherical2cartesian">spherical2cartesian() (in module seaduck.utils)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.stationary_time">stationary_time() (in module seaduck.lagrangian)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.stationary_time">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.stationary">stationary() (in module seaduck.lagrangian)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.eulerian.position.subset">subset() (seaduck.eulerian.position method)</a>, <a href="api_reference/apiref_eulerian.html#seaduck.eulerian.position.subset">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.stationary_time">stationary_time() (in module seaduck.lagrangian)</a>
 </li>
+      <li><a href="api_reference/apiref_eulerian.html#seaduck.eulerian.Position.subset">subset() (seaduck.eulerian.Position method)</a>
+
+      <ul>
+        <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.RelCoord.subset">(seaduck.ocedata.RelCoord method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.time2wall">time2wall() (in module seaduck.lagrangian)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.time2wall">[1]</a>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.tgrid2array">tgrid2array() (seaduck.ocedata.OceData method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.utils.to_180">to_180() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.to_180">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.time2wall">time2wall() (in module seaduck.lagrangian)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.to_list_of_time">to_list_of_time() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.to_list_of_time">[1]</a>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.TLinRel">TLinRel (class in seaduck.ocedata)</a>
+</li>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.to_180">to_180() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.to_next_stop">to_next_stop() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.to_next_stop">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.to_list_of_time">to_list_of_time() (seaduck.lagrangian.Particle method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.topology.topology">topology (class in seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.topology">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.to_next_stop">to_next_stop() (seaduck.lagrangian.Particle method)</a>
 </li>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.trim">trim() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.trim">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.Topology">Topology (class in seaduck.topology)</a>
+</li>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.TRel">TRel (class in seaduck.ocedata)</a>
+</li>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.trim">trim() (seaduck.lagrangian.Particle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -767,11 +803,33 @@ document.write(`
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.update_after_cell_change">update_after_cell_change() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.update_after_cell_change">[1]</a>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.RelCoord.update">update() (seaduck.ocedata.RelCoord method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.particle.update_uvw_array">update_uvw_array() (seaduck.lagrangian.particle method)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.particle.update_uvw_array">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.update_after_cell_change">update_after_cell_change() (seaduck.lagrangian.Particle method)</a>
+</li>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.Particle.update_uvw_array">update_uvw_array() (seaduck.lagrangian.Particle method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.vgrid2array">vgrid2array() (seaduck.ocedata.OceData method)</a>
+</li>
+      <li><a href="api_reference/apiref_OceData.html#seaduck.ocedata.OceData.vlgrid2array">vlgrid2array() (seaduck.ocedata.OceData method)</a>
+</li>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.VLinRel">VLinRel (in module seaduck.ocedata)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.VlLinRel">VlLinRel (class in seaduck.ocedata)</a>
+</li>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.VlRel">VlRel (class in seaduck.ocedata)</a>
+</li>
+      <li><a href="api_reference/apiref_RelCoord.html#seaduck.ocedata.VRel">VRel (class in seaduck.ocedata)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -779,11 +837,11 @@ document.write(`
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.utils.weight_f_node">weight_f_node() (in module seaduck.utils)</a>, <a href="api_reference/apiref_utils.html#seaduck.utils.weight_f_node">[1]</a>
+      <li><a href="api_reference/apiref_utils.html#seaduck.utils.weight_f_node">weight_f_node() (in module seaduck.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.lagrangian.which_early">which_early() (in module seaduck.lagrangian)</a>, <a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.which_early">[1]</a>
+      <li><a href="api_reference/apiref_lagrangian.html#seaduck.lagrangian.which_early">which_early() (in module seaduck.lagrangian)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -791,7 +849,7 @@ document.write(`
 <h2 id="X">X</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="all_in_one.html#seaduck.topology.x_per_ind_tend">x_per_ind_tend() (in module seaduck.topology)</a>, <a href="api_reference/apiref_topology.html#seaduck.topology.x_per_ind_tend">[1]</a>
+      <li><a href="api_reference/apiref_topology.html#seaduck.topology.x_per_ind_tend">x_per_ind_tend() (in module seaduck.topology)</a>
 </li>
   </ul></td>
 </tr></table>

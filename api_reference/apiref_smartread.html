@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -392,27 +393,23 @@ document.write(`
 <span class="sig-prename descclassname"><span class="pre">seaduck.smart_read.</span></span><span class="sig-name descname"><span class="pre">smart_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">da</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_chunk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xarray_more_efficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.smart_read.smart_read" title="Permalink to this definition">#</a></dt>
 <dd><p>Read from a xarray.DataArray given tuple indexes.</p>
 <p>Try to do it fast and smartly.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>da: xarray.DataArray</dt><dd><p>DataArray to read from</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ind: tuple of numpy.ndarray</dt><dd><p>The indexes of points of interest, each element does not need to be 1D</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>da</strong> (<em>xarray.DataArray</em>) – DataArray to read from</p></li>
+<li><p><strong>ind</strong> (<em>tuple of numpy.ndarray</em>) – The indexes of points of interest, each element does not need to be 1D</p></li>
+<li><p><strong>memory_chunk</strong> (<em>int</em><em>, </em><em>default 3</em>) – If the number of chunks needed is smaller than this, read all of them at once.</p></li>
+<li><p><strong>xarray_more_efficient</strong> (<em>int</em><em>, </em><em>default 100</em>) – When the number of chunks is larger than this, and the data points are few,
+it may make sense to directly use xarray’s vectorized read.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>values: numpy.ndarray</dt><dd><p>The values of the points of interest. Has the same shape as the elements in ind.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>+ values</strong> – The values of the points of interest. Has the same shape as the elements in ind.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 </section>

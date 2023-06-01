@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -388,64 +389,47 @@ document.write(`
   <section id="module-seaduck.lagrangian">
 <span id="seaduck-lagrangian"></span><h1>seaduck.lagrangian<a class="headerlink" href="#module-seaduck.lagrangian" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'WVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dont_fly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="apiref_eulerian.html#seaduck.eulerian.position" title="seaduck.eulerian.position"><code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code></a></p>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">Particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'WVELMASS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dont_fly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="apiref_eulerian.html#seaduck.eulerian.Position" title="seaduck.eulerian.Position"><code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.eulerian.Position</span></code></a></p>
 <p>Lagrangian particle object.</p>
-<p>The Lagrangian particle object. Simply a eulerian position object
+<p>The Lagrangian particle object. Simply a eulerian Position object
 that know how to move itself.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kwarg: dict</dt><dd><p>The keyword argument that feed into position.from_latlon method</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>uname, vname, wname: str</dt><dd><p>The variable names for the velocity/mass-transport components.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kwarg</strong> (<em>dict</em>) – The keyword argument that feed into Position.from_latlon method</p></li>
+<li><p><strong>uname</strong> (<em>str</em>) – The variable names for the velocity/mass-transport components.
 If transport is true, pass in names of the volume/mass transport
 across cell wall in m^3/3
-else,  just pass something that is in m/s</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>dont_fly: Boolean</dt><dd><p>Sometimes there is non-zero vertical velocity at sea surface.
-dont_fly = True set that to zero.
-An error may occur depends on the situation if set otherwise.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>save_raw: Boolean</dt><dd><p>Whether to record the analytical history of all particles in an
-unstructured list.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>transport: Boolean</dt><dd><p>If transport is true, pass in names of the volume/mass transport
+else,  just pass something that is in m/s</p></li>
+<li><p><strong>vname</strong> (<em>str</em>) – The variable names for the velocity/mass-transport components.
+If transport is true, pass in names of the volume/mass transport
 across cell wall in m^3/3
-else,  just pass velocity that is in m/s</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>callback: function that take particle as input</dt><dd><p>A callback function that takes particle as input. Return boolean
-array that determines which particle should still be going.
-Users can also define customized functions here.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>max_iteration: int</dt><dd><p>The number of analytical steps allowed for the to_next_stop
-method.</p>
-</dd>
-</dl>
-</li>
+else,  just pass something that is in m/s</p></li>
+<li><p><strong>wname</strong> (<em>str</em>) – The variable names for the velocity/mass-transport components.
+If transport is true, pass in names of the volume/mass transport
+across cell wall in m^3/3
+else,  just pass something that is in m/s</p></li>
+<li><p><strong>dont_fly</strong> (<em>Boolean</em>) – Sometimes there is non-zero vertical velocity at sea surface.
+dont_fly = True set that to zero.
+An error may occur depends on the situation if set otherwise.</p></li>
+<li><p><strong>save_raw</strong> (<em>Boolean</em>) – Whether to record the analytical history of all particles in an
+unstructured list.</p></li>
+<li><p><strong>transport</strong> (<em>Boolean</em>) – If transport is true, pass in names of the volume/mass transport
+across cell wall in m^3/3
+else,  just pass velocity that is in m/s</p></li>
+<li><p><strong>callback</strong> (<em>function that take Particle as input</em>) – A callback function that takes Particle as input. Return boolean
+array that determines which Particle should still be going.
+Users can also define customized functions here.</p></li>
+<li><p><strong>max_iteration</strong> (<em>int</em>) – The number of analytical steps allowed for the to_next_stop
+method.</p></li>
 </ul>
+</dd>
+</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.analytical_step">
-<span class="sig-name descname"><span class="pre">analytical_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.analytical_step" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.analytical_step">
+<span class="sig-name descname"><span class="pre">analytical_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.analytical_step" title="Permalink to this definition">#</a></dt>
 <dd><p>Integrate the particle with velocity.</p>
 <p>The core method.
 A set of particles trying to integrate for time tf
@@ -454,32 +438,27 @@ at the end of the call, every particle are either:
 1. ended up somewhere within the cell after time tf.
 2. ended up on a cell wall before
 (if tf is negative, then “after”) tf.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>tf: float, numpy.ndarray</dt><dd><p>The longest duration of the simulation for each particle.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to
-do the operation.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tf</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The longest duration of the simulation for each particle.</p></li>
+<li><p><strong>which</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Boolean or int array that specify the subset of points to
+do the operation.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.deepcopy">
-<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.deepcopy" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.deepcopy" title="Permalink to this definition">#</a></dt>
 <dd><p>Return a clone of the object.</p>
-<p>The object is a position object, and thus cannot move any more.</p>
+<p>The object is a Position object, and thus cannot move any more.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.empty_lists">
-<span class="sig-name descname"><span class="pre">empty_lists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.empty_lists" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.empty_lists">
+<span class="sig-name descname"><span class="pre">empty_lists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.empty_lists" title="Permalink to this definition">#</a></dt>
 <dd><p>Empty the lists.</p>
 <p>Some times the raw-data list get too long,
 It would be necessary to dump the data,
@@ -488,51 +467,45 @@ This method does the latter.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.fillna">
-<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.fillna" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.fillna">
+<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.fillna" title="Permalink to this definition">#</a></dt>
 <dd><p>Fill the np.nan values to nan.</p>
 <p>This is just to let those in rock stay in rock.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.get_u_du">
-<span class="sig-name descname"><span class="pre">get_u_du</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.get_u_du" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.get_u_du">
+<span class="sig-name descname"><span class="pre">get_u_du</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.get_u_du" title="Permalink to this definition">#</a></dt>
 <dd><p>Read the velocity at particle position.</p>
 <p>Read the velocity and velocity derivatives in all three dimensions
 using the interpolate method with the default kernel.
-Read eulerian.position.interpolate for more detail.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points to
+Read eulerian.Position.interpolate for more detail.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>which</strong> (<em>numpy.ndarray</em>) – Boolean or int array that specify the subset of points to
 do the operation.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.get_vol">
-<span class="sig-name descname"><span class="pre">get_vol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.get_vol" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.get_vol">
+<span class="sig-name descname"><span class="pre">get_vol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.get_vol" title="Permalink to this definition">#</a></dt>
 <dd><p>Read in the volume of the cell.</p>
 <p>For particles that has transport = True,
 volume of the cell is needed for the integration.
 This method read the volume that is calculated at __init__.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Boolean or int array that specify the subset of points
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>which</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Boolean or int array that specify the subset of points
 to do the operation.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.note_taking">
-<span class="sig-name descname"><span class="pre">note_taking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.note_taking" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.note_taking">
+<span class="sig-name descname"><span class="pre">note_taking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.note_taking" title="Permalink to this definition">#</a></dt>
 <dd><p>Record raw data into list of lists.</p>
 <p>This method is only called in save_raw = True particles.
 This method will note done the raw info of the particle
@@ -542,90 +515,69 @@ trajectories to arbitrary position.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.to_list_of_time">
-<span class="sig-name descname"><span class="pre">to_list_of_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_stops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.to_list_of_time" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.to_list_of_time">
+<span class="sig-name descname"><span class="pre">to_list_of_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_stops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.to_list_of_time" title="Permalink to this definition">#</a></dt>
 <dd><p>Integrate the particles to a list of time.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>normal_stops: iterable</dt><dd><p>The time steps that user request a output</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>update_stops: iterable, or ‘default’</dt><dd><p>The time steps that uvw array changes in the model.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal_stops</strong> (<em>iterable</em>) – The time steps that user request a output</p></li>
+<li><p><strong>update_stops</strong> (<em>iterable</em><em>, or </em><em>'default'</em>) – The time steps that uvw array changes in the model.
 If ‘default’ is set,
-the method is going to figure it out automatically.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>return_in_between: Boolean</dt><dd><p>Users can get the values of update_stops free of computational
+the method is going to figure it out automatically.</p></li>
+<li><p><strong>return_in_between</strong> (<em>Boolean</em>) – Users can get the values of update_stops free of computational
 cost.We understand that user may sometimes don’t want those in
 the output.In that case, it that case, set it to be False,
-and the output will all be at normal_stops.</p>
-</dd>
-</dl>
-</li>
+and the output will all be at normal_stops.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>stops: list</dt><dd><p>The list of stops.
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>stops</strong> (<em>list</em>) – The list of stops.
 It is the combination of normal_stops and output_stops by
 default. f return_in_between is set to be False,
-this is then the same as normal stops.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>R: list</dt><dd><p>A list deep copy of particle that inherited
+this is then the same as normal stops.</p></li>
+<li><p><strong>to_return</strong> (<em>list</em>) – A list deep copy of particle that inherited
 the interpolate method
-as well as velocity and coords info.</p>
+as well as velocity and coords info.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.to_next_stop">
-<span class="sig-name descname"><span class="pre">to_next_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.to_next_stop" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.to_next_stop">
+<span class="sig-name descname"><span class="pre">to_next_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.to_next_stop" title="Permalink to this definition">#</a></dt>
 <dd><p>Integrate all particles towards time tl.</p>
 <p>This is done by repeatedly calling analytical step.
 Or at least try to do so before maximum_iteration is reached.
 If the maximum time is reached,
 we also force all particle’s internal clock to be tl.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>tl: float, numpy.ndarray</dt><dd><p>The final time relative to 1970-01-01 in seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tl</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The final time relative to 1970-01-01 in seconds.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.trim">
-<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.trim" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.trim">
+<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.trim" title="Permalink to this definition">#</a></dt>
 <dd><p>Move the particles from outside the cell into the cell.</p>
 <p>At the same time change the velocity accordingly.
 In the mean time, creating some negiligible error in time.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>tol: float</dt><dd><p>The relative tolerance when particles is significantly
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tol</strong> (<em>float</em>) – The relative tolerance when particles is significantly
 close to the cell.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.update_after_cell_change">
-<span class="sig-name descname"><span class="pre">update_after_cell_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.update_after_cell_change" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.update_after_cell_change">
+<span class="sig-name descname"><span class="pre">update_after_cell_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.update_after_cell_change" title="Permalink to this definition">#</a></dt>
 <dd><p>Update properties after particles cross wall.</p>
 <p>A wall event is triggered when particle reached the wall.
 This method handle the coords translation as a particle cross
@@ -633,8 +585,8 @@ a wall.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.lagrangian.particle.update_uvw_array">
-<span class="sig-name descname"><span class="pre">update_uvw_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.particle.update_uvw_array" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.lagrangian.Particle.update_uvw_array">
+<span class="sig-name descname"><span class="pre">update_uvw_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.update_uvw_array" title="Permalink to this definition">#</a></dt>
 <dd><p>Update the prefetched velocity arrays.</p>
 <p>The way to do it is slightly different for dataset with time
 dimensions and those without.</p>
@@ -648,95 +600,58 @@ dimensions and those without.</p>
 <dd><p>Find how far it will travel in duration t.</p>
 <p>For a one dimensional particle with speed u and speed derivative du,
 find how far it will travel in duration t.</p>
-<p><strong>Parameter:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>t: float, numpy.ndarray</dt><dd><p>The time duration</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>u: float, numpy.ndarray</dt><dd><p>The velocity defined at the starting point.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>du: float, numpy.ndarray</dt><dd><p>The velocity gradient. Assumed to be constant.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The time duration</p></li>
+<li><p><strong>u</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The velocity defined at the starting point.</p></li>
+<li><p><strong>du</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The velocity gradient. Assumed to be constant.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.lagrangian.stationary">
 <span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">stationary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.stationary" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the final position after time t.</p>
-<p>For a one dimensional particle with speed u and speed derivative du
+<p>For a one dimensional Particle with speed u and speed derivative du
 starting at x0, find the final position after time t.
 “Stationary” means that we are assuming there is no time dependency.</p>
-<p><strong>Parameter:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>t: float, numpy.ndarray</dt><dd><p>The time duration</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>u: float, numpy.ndarray</dt><dd><p>The velocity defined at the starting point.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>du: float, numpy.ndarray</dt><dd><p>The velocity gradient. Assumed to be constant.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>x0: float, numpy.ndarray</dt><dd><p>The starting position.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The time duration</p></li>
+<li><p><strong>u</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The velocity defined at the starting point.</p></li>
+<li><p><strong>du</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The velocity gradient. Assumed to be constant.</p></li>
+<li><p><strong>x0</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The starting position.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.lagrangian.stationary_time">
 <span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">stationary_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.stationary_time" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the amount of time to leave the cell.</p>
-<p>Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
+<p>Find the amount of time it needs for a Particle to hit x = -0.5 and 0.5.
 The time could be negative.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>u: numpy.ndarray</dt><dd><p>The velocity defined at the starting point.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>du: numpy.ndarray</dt><dd><p>The velocity gradient. Assumed to be constant.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>x0: numpy.ndarray</dt><dd><p>The starting position.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>numpy.ndarray</em>) – The velocity defined at the starting point.</p></li>
+<li><p><strong>du</strong> (<em>numpy.ndarray</em>) – The velocity gradient. Assumed to be constant.</p></li>
+<li><p><strong>x0</strong> (<em>numpy.ndarray</em>) – The starting position.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>tl: numpy.ndarray</dt><dd><p>The time it takes to hit -0.5.</p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tr: numpy.ndarray</dt><dd><p>The time it takes to hit 0.5</p>
-</dd>
-</dl>
-</li>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>tl</strong> (<em>numpy.ndarray</em>) – The time it takes to hit -0.5.</p></li>
+<li><p><strong>tr</strong> (<em>numpy.ndarray</em>) – The time it takes to hit 0.5</p></li>
 </ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -749,23 +664,18 @@ The time could be negative.</p>
 <dt class="sig sig-object py" id="seaduck.lagrangian.which_early">
 <span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">which_early</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.which_early" title="Permalink to this definition">#</a></dt>
 <dd><p>Find out which event happens first.</p>
-<p>We are trying to integrate the particle to time tf.
+<p>We are trying to integrate the Particle to time tf.
 The first event is either:
 1. tf is reached before reaching a wall
-2. ts[i] is reached, and a particle hit a wall. ts[i]*tf&gt;0.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>tf: float, numpy.ndarray</dt><dd><p>The final time</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ts: list</dt><dd><p>The list of events calculated using time2wall</p>
-</dd>
-</dl>
-</li>
+2. ts[i] is reached, and a Particle hit a wall. ts[i]*tf&gt;0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tf</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The final time</p></li>
+<li><p><strong>ts</strong> (<em>list</em>) – The list of events calculated using time2wall</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

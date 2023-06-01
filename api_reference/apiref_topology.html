@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -388,94 +389,75 @@ document.write(`
   <section id="module-seaduck.topology">
 <span id="seaduck-topology"></span><h1>seaduck.topology<a class="headerlink" href="#module-seaduck.topology" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="seaduck.topology.topology">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">Topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Topology object.</p>
 <p>A light weight object that remembers the structure of the grid,
 what is connected, what is not. The core method is simply move the index to a direction.
 In the movie kill Bill, the bride sat in a car and said “wiggle your big toe”.
 After the toe moved, “the hard part is over”. You get the idea.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>od: xarray.Dataset, OceData object</dt><dd><p>The dataset to record topological info from.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>typ: None, or str</dt><dd><p>Type of the grid.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od</strong> (<em>xarray.Dataset</em><em>, </em><em>OceData object</em>) – The dataset to record topological info from.</p></li>
+<li><p><strong>typ</strong> (<em>None</em><em>, or </em><em>str</em>) – Type of the grid.
 Currently we support
 ‘box’ for regional dataset,
 ‘x-periodic’ for zonally periodic ones,
 ‘llc’ for lat-lon-cap dataset.
 We recommend that users put None here,
-so that the type is figured out automatically.</p>
+so that the type is figured out automatically.</p></li>
+</ul>
 </dd>
 </dl>
-</li>
-</ul>
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.check_illegal">
-<span class="sig-name descname"><span class="pre">check_illegal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.check_illegal" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.check_illegal">
+<span class="sig-name descname"><span class="pre">check_illegal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.check_illegal" title="Permalink to this definition">#</a></dt>
 <dd><p>Check if the index is legal.</p>
 <p>A vectorized check to see whether the index is legal,
 index can be a tuple of numpy ndarrays.
 no negative index is permitted for sanity reason.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>ind: tuple</dt><dd><p>Each element of the tuple is iterable of one dimension of the indexes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ind</strong> (<em>tuple</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.four_matrix_for_uv">
-<span class="sig-name descname"><span class="pre">four_matrix_for_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fface</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.four_matrix_for_uv" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.four_matrix_for_uv">
+<span class="sig-name descname"><span class="pre">four_matrix_for_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fface</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.four_matrix_for_uv" title="Permalink to this definition">#</a></dt>
 <dd><p>Expand get_uv_mask_from_face to 2D array of faces.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.get_the_other_edge">
-<span class="sig-name descname"><span class="pre">get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.get_the_other_edge" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.get_the_other_edge">
+<span class="sig-name descname"><span class="pre">get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_the_other_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>See what is adjacent to the face by this edge.</p>
 <p>The (edge) side of the (face) is connected to
 the (nedge) side of the (nface).
 0,1,2,3 stands for up, down, left, right.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>face: int</dt><dd><p>The face of interst</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>edge: 0,1,2,3</dt><dd><p>which direction of the face we are looking for</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>face</strong> (<em>int</em>) – The face of interst</p></li>
+<li><p><strong>edge</strong> (<em>0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3</em>) – which direction of the face we are looking for</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>nface: int</dt><dd><p>The face adjacent to face in the edge direction.</p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>nedge: 0,1,2,3</dt><dd><p>The face is connected to nface in which direction.</p>
-</dd>
-</dl>
-</li>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>nface</strong> (<em>int</em>) – The face adjacent to face in the edge direction.</p></li>
+<li><p><strong>nedge</strong> (<em>0,1,2,3</em>) – The face is connected to nface in which direction.</p></li>
 </ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.get_uv_mask_from_face">
-<span class="sig-name descname"><span class="pre">get_uv_mask_from_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.get_uv_mask_from_face" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.get_uv_mask_from_face">
+<span class="sig-name descname"><span class="pre">get_uv_mask_from_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_uv_mask_from_face" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the masking of UV points.</p>
 <p>The background is as following:
 For a dataset with face connection,
@@ -483,105 +465,69 @@ when one is finding the neighboring cells for vector interpolation,
 the fact that faces can be rotated against each other can create
 local inconsistency in vector definition near face connections.
 This method corrects that.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>faces: iterable</dt><dd><p>1D iterable of faces, the first one is assumed to be the reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>faces</strong> (<em>iterable</em>) – 1D iterable of faces, the first one is assumed to be the reference.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.ind_moves">
-<span class="sig-name descname"><span class="pre">ind_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moves</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.ind_moves" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.ind_moves">
+<span class="sig-name descname"><span class="pre">ind_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moves</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_moves" title="Permalink to this definition">#</a></dt>
 <dd><p>Move an index in a serie of directions.</p>
 <p>moves being a list of directions (0,1,2,3),
 ind being the starting index,
 return the index after moving in the directions in the list.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>ind: tuple</dt><dd><p>Index of the starting position</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>moves: iterable</dt><dd><p>A sequence of steps to “walk” from the original position.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>kwarg: dict</dt><dd><p>Keyword arguments that pass into ind_tend.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ind</strong> (<em>tuple</em>) – Index of the starting position</p></li>
+<li><p><strong>moves</strong> (<em>iterable</em>) – A sequence of steps to “walk” from the original position.</p></li>
+<li><p><strong>kwarg</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments that pass into ind_tend.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.ind_tend">
-<span class="sig-name descname"><span class="pre">ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.ind_tend" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.ind_tend">
+<span class="sig-name descname"><span class="pre">ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend" title="Permalink to this definition">#</a></dt>
 <dd><p>Move an index in a direction.</p>
 <p>ind is a tuple that is face,iy,ix,
 tendency again is up, down, left, right represented by 0,1,2,3
 return the next cell.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>ind: tuple</dt><dd><p>The index to find the neighbor of</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tend: int</dt><dd><p>Which direction to move from the original index.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>cuvg:</dt><dd><p>Whether we are moving from C grid, U grid, V grid, or G grid.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>kwarg:dict</dt><dd><p>Keyword argument that currently only apply for the llc case.
-Use gridoffset keyword when you are dealing with different grid-indexing,
--1 for MITgcm (default), 1 for NEMO.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ind</strong> (<em>tuple</em>) – The index to find the neighbor of</p></li>
+<li><p><strong>tend</strong> (<em>int</em>) – Which direction to move from the original index.</p></li>
+<li><p><strong>cuvwg</strong> (<em>str</em><em>, </em><em>default &quot;C&quot;</em>) – Whether we are moving from C grid, U grid, V grid, or G grid.</p></li>
+<li><p><strong>kwarg</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword argument that currently only apply for the llc case.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.ind_tend_vec">
-<span class="sig-name descname"><span class="pre">ind_tend_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.ind_tend_vec" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.ind_tend_vec">
+<span class="sig-name descname"><span class="pre">ind_tend_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend_vec" title="Permalink to this definition">#</a></dt>
 <dd><p>Move many indices in a list of directions.</p>
 <p>Vectorized version for ind_tend method.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>inds: tuple or numpy.array</dt><dd><p>Each element of the tuple is iterable of one dimension of the indexes.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tend: iterable</dt><dd><p>Which direction should each index take.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>kwarg: dict</dt><dd><p>Keyword argument that feeds into ind_tend.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inds</strong> (<em>tuple of numpy.array</em><em> or </em><em>numpy.array</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p></li>
+<li><p><strong>tend</strong> (<em>iterable</em>) – Which direction should each index take.</p></li>
+<li><p><strong>kwarg</strong> (<em>dict</em><em>,</em><em>optional</em>) – Keyword argument that feeds into ind_tend.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.topology.topology.mutual_direction">
-<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nface</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.topology.mutual_direction" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.topology.Topology.mutual_direction">
+<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nface</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.mutual_direction" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the relative orientation of two faces.</p>
 <p>0,1,2,3 stands for up, down, left, right
 given 2 faces, the returns are
@@ -596,7 +542,7 @@ given 2 faces, the returns are
 <span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">box_ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ixmax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.box_ind_tend" title="Permalink to this definition">#</a></dt>
 <dd><p>Move an index in a direction.</p>
 <p>The compileable version of ind_tend for regional (box) grid.
-See topology.ind_tend for more detail.</p>
+See Topology.ind_tend for more detail.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -604,7 +550,7 @@ See topology.ind_tend for more detail.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">llc_get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.llc_get_the_other_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>See what is adjacent to the face by this edge.</p>
 <p>The compileable version of get_the_other_edge for llc grid.
-See topology.get_the_other_edge for more detail.</p>
+See Topology.get_the_other_edge for more detail.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -612,7 +558,7 @@ See topology.get_the_other_edge for more detail.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">llc_get_uv_mask_from_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.llc_get_uv_mask_from_face" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the masking of UV points.</p>
 <p>The compileable version of get_uv_mask_from_face for llc grid.
-See topology.get_uv_mask_from_face for more detail.</p>
+See Topology.get_uv_mask_from_face for more detail.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -620,7 +566,7 @@ See topology.get_uv_mask_from_face for more detail.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">llc_ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tendency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ixmax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.llc_ind_tend" title="Permalink to this definition">#</a></dt>
 <dd><p>Move an index in a direction.</p>
 <p>The compileable version of ind_tend for llc grid.
-See topology.ind_tend for more detail.</p>
+See Topology.ind_tend for more detail.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -628,7 +574,7 @@ See topology.ind_tend for more detail.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">llc_mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.llc_mutual_direction" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the relative orientation of two faces.</p>
 <p>The compileable version of mutual direction for llc grid.
-See topology.mutual direction for more detail.</p>
+See Topology.mutual direction for more detail.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -636,7 +582,7 @@ See topology.mutual direction for more detail.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">x_per_ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ixmax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.x_per_ind_tend" title="Permalink to this definition">#</a></dt>
 <dd><p>Move an index in a direction.</p>
 <p>The compileable version of ind_tend for zonally periodic (x-per) grid.
-See topology.ind_tend for more detail.</p>
+See Topology.ind_tend for more detail.</p>
 </dd></dl>
 
 </section>

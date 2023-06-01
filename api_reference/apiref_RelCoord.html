@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>seaduck.OceData &#8212; My sample book</title>
+    <title>seaduck.ocedata.RelCoord and subclasses &#8212; My sample book</title>
   
   
   
@@ -60,11 +60,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_OceData';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_RelCoord';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seaduck.topology" href="apiref_topology.html" />
-    <link rel="prev" title="API Reference" href="../reference.html" />
+    <link rel="next" title="Lagrangian and Eulerian demonstration on ECCO" href="../Global_ECCO.html" />
+    <link rel="prev" title="seaduck.utils" href="apiref_utils.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -164,7 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../reference.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceData.html">seaduck.OceData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_topology.html">seaduck.topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_eulerian.html">seaduck.eulerian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_lagrangian.html">seaduck.lagrangian</a></li>
@@ -173,7 +173,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.ocedata.RelCoord and subclasses</a></li>
 
 </ul>
 </li>
@@ -262,7 +262,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2Fapi_reference/apiref_OceData.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2Fapi_reference/apiref_RelCoord.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -292,7 +292,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/api_reference/apiref_OceData.rst" target="_blank"
+      <li><a href="../_sources/api_reference/apiref_RelCoord.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -361,7 +361,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -372,11 +374,21 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>seaduck.OceData</h1>
+    <h1>seaduck.ocedata.RelCoord and subclasses</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">seaduck.ocedata.RelCoord and subclasses</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#subclasses">Subclasses</a></li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -386,150 +398,86 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="seaduck-ocedata">
-<h1>seaduck.OceData<a class="headerlink" href="#seaduck-ocedata" title="Permalink to this headline">#</a></h1>
+  <section id="seaduck-ocedata-relcoord-and-subclasses">
+<h1>seaduck.ocedata.RelCoord and subclasses<a class="headerlink" href="#seaduck-ocedata-relcoord-and-subclasses" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">OceData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Ocean dataset.</p>
-<p>Class that enables variable aliasing, topology extraction, and 4-D translation
-between latitude-longitude-depth-time grid and relative description.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>xarray.Dataset</em>) – The dataset to extract grid information, create cKD tree, and Topology object on.</p></li>
-<li><p><strong>alias</strong> (<em>dict</em><em>, </em><em>None</em><em>, or </em><em>'auto'</em>) – <ol class="arabic simple">
-<li><p>dict: Map the variable used by this package (key) to
-that used by the dataset (value).</p></li>
-<li><p>None (default): Do not apply alias.</p></li>
-<li><p>’auto’ (Not implemented): Automatically generate a list for the alias.</p></li>
-</ol>
-</p></li>
-</ul>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="seaduck.ocedata.RelCoord">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">RelCoord</span></span><a class="headerlink" href="#seaduck.ocedata.RelCoord" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>NamedTuple that also has update method.</p>
+<p>This class is used to store the relative coordinates.
+Attributes starts with “i” are indexes of the nearest grid point.
+Attributes starts with “b” are value (time/dep/lat/lon) of the nearest grid point.
+Attributes starts with “d” are distance between the nearest grid point and its
+neighboring point in meters or seconds.
+Attributes starts with “r” are the distance from the point of interest to the nearest
+non-dimensionalized by the “d” variable.
+“cs”, “sn” are the cosine and sine of the grid orientation relative to meridian.
+“face” is the face/tile the point is on, if the dataset has such a dimension.</p>
+<p>All of those attributes should be None or 1D numpy array.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.check_readiness">
-<span class="sig-name descname"><span class="pre">check_readiness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.check_readiness" title="Permalink to this definition">#</a></dt>
-<dd><p>Return readiness.</p>
-<p>Function that checks what kind of interpolation is supported.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>readiness</strong> –</p>
-<dl class="simple">
-<dt>‘h’: The scheme of horizontal interpolation to be used,</dt><dd><p>including ‘oceanparcel’, ‘local_cartesian’, and ‘rectilinear’.</p>
-</dd>
-</dl>
-<p>’Z’: Whether the dataset has a vertical dimension at the center points.
-‘Zl’: Whether the dataset has a vertical dimension at staggered points</p>
-<blockquote>
-<div><p>(vertical velocity).</p>
-</div></blockquote>
-<p>’time’: Whether the dataset has a temporal dimension.</p>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="seaduck.ocedata.RelCoord.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.RelCoord.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Inheritated from dictionary.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_h">
-<span class="sig-name descname"><span class="pre">find_rel_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_h" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the horizontal rel-coordinate.</p>
-<p>Find the horizontal rel-coordinate of the given 4-D position based on readiness[‘h’].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>np.ndarray</em>) – 1D array of longitude and latitude.</p></li>
-<li><p><strong>y</strong> (<em>np.ndarray</em>) – 1D array of longitude and latitude.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>hrel</strong> – A dictionary that defines the horizontal rel-coords</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>seaduck.ocedata.HRel object</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="seaduck.ocedata.RelCoord.create_class">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.RelCoord.create_class" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a subclass with predetermined keys.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_t">
-<span class="sig-name descname"><span class="pre">find_rel_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_t" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on the temporal direction using the nearest neighbor scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_t_lin">
-<span class="sig-name descname"><span class="pre">find_rel_t_lin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_t_lin" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on the temporal direction using the 2-point linear scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_v">
-<span class="sig-name descname"><span class="pre">find_rel_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_v" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical center grid using the nearest neighbor scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_v_lin">
-<span class="sig-name descname"><span class="pre">find_rel_v_lin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_v_lin" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical center grid using the 2-point linear scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_vl">
-<span class="sig-name descname"><span class="pre">find_rel_vl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_vl" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_vl_lin">
-<span class="sig-name descname"><span class="pre">find_rel_vl_lin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_vl_lin" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical staggered grid using the 2-point linear scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.grid2array">
-<span class="sig-name descname"><span class="pre">grid2array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.grid2array" title="Permalink to this definition">#</a></dt>
-<dd><p>Assemble all the extraction methods.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.hgrid2array">
-<span class="sig-name descname"><span class="pre">hgrid2array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.hgrid2array" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract the horizontal grid data into numpy arrays.</p>
-<p>This is done based on the readiness[‘h’] of the OceData object.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.show_alias">
-<span class="sig-name descname"><span class="pre">show_alias</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.show_alias" title="Permalink to this definition">#</a></dt>
-<dd><p>Print out the alias in a nice pd.DataFrame format.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.tgrid2array">
-<span class="sig-name descname"><span class="pre">tgrid2array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.tgrid2array" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract the temporal grid data into numpy arrays.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.vgrid2array">
-<span class="sig-name descname"><span class="pre">vgrid2array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.vgrid2array" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract the vertical center point grid data into numpy arrays.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.vlgrid2array">
-<span class="sig-name descname"><span class="pre">vlgrid2array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.vlgrid2array" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract the vertical staggered point grid data into numpy arrays.</p>
+<dt class="sig sig-object py" id="seaduck.ocedata.RelCoord.subset">
+<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.RelCoord.subset" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a subset of all the non-None items.</p>
 </dd></dl>
 
 </dd></dl>
+
+</section>
+<section id="subclasses">
+<h1>Subclasses<a class="headerlink" href="#subclasses" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.ocedata.HRel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">HRel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.HRel" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrap around the horizontal rel-coords. See also RelCoord.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.ocedata.VRel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">VRel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.VRel" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrap around the vertical centered nearest rel-coords. See also RelCoord.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seaduck.ocedata.VLinRel">
+<span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">VLinRel</span></span><a class="headerlink" href="#seaduck.ocedata.VLinRel" title="Permalink to this definition">#</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">seaduck.ocedata.RelCoord.create_class.&lt;locals&gt;.NewClass</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.ocedata.VlRel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">VlRel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.VlRel" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrap around the vertical staggered nearest rel-coords. See also RelCoord.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.ocedata.VlLinRel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">VlLinRel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.VlLinRel" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrap around the vertical staggered linear rel-coords. See also RelCoord.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.ocedata.TRel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">TRel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.TRel" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrap around the temporal linear rel-coords. See also RelCoord.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.ocedata.TLinRel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.ocedata.</span></span><span class="sig-name descname"><span class="pre">TLinRel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.TLinRel" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 </section>
 
@@ -565,20 +513,20 @@ that used by the dataset (value).</p></li>
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../reference.html"
+       href="apiref_utils.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">API Reference</p>
+        <p class="prev-next-title">seaduck.utils</p>
       </div>
     </a>
     <a class="right-next"
-       href="apiref_topology.html"
+       href="../Global_ECCO.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">seaduck.topology</p>
+        <p class="prev-next-title">Lagrangian and Eulerian demonstration on ECCO</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -591,6 +539,22 @@ that used by the dataset (value).</p></li>
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">seaduck.ocedata.RelCoord and subclasses</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#subclasses">Subclasses</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
               
             
           </div>

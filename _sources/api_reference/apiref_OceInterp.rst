@@ -1,7 +1,7 @@
 seaduck.OceInterp
 --------------------------
 
-.. automodule:: seaduck.OceInterp
+.. automodule:: seaduck.oceinterp
    :members:
    :undoc-members:
    :show-inheritance:

@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -394,84 +395,51 @@ document.write(`
 <p>Kernel object.</p>
 <p>A class that describes anything about the
 interpolation/derivative kernel to be used.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kernel: numpy.ndarray</dt><dd><p>The largest horizontal kernel to be used</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>inheritance: list</dt><dd><p>The inheritance sequence of the kernels</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>hkernel: str</dt><dd><p>What to do in the horizontal direction
-‘interp’, ‘dx’, or ‘dy’?</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tkernel: str</dt><dd><p>What kind of operation to do in the temporal dimension:
-‘linear’, ‘nearest’ interpolation, or ‘dt’</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>zkernel: str</dt><dd><p>What kind of operation to do in the vertical:
-‘linear’, ‘nearest’ interpolation, or ‘dz’</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>h_order: int</dt><dd><p>How many derivative to take in the horizontal direction.
-Zero for pure interpolation</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ignore_mask: bool</dt><dd><p>Whether to diregard the masking of the dataset.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<em>numpy.ndarray</em>) – The largest horizontal kernel to be used</p></li>
+<li><p><strong>inheritance</strong> (<em>list</em>) – The inheritance sequence of the kernels</p></li>
+<li><p><strong>hkernel</strong> (<em>str</em>) – What to do in the horizontal direction
+‘interp’, ‘dx’, or ‘dy’?</p></li>
+<li><p><strong>tkernel</strong> (<em>str</em>) – What kind of operation to do in the temporal dimension:
+‘linear’, ‘nearest’ interpolation, or ‘dt’</p></li>
+<li><p><strong>zkernel</strong> (<em>str</em>) – What kind of operation to do in the vertical:
+‘linear’, ‘nearest’ interpolation, or ‘dz’</p></li>
+<li><p><strong>h_order</strong> (<em>int</em>) – How many derivative to take in the horizontal direction.
+Zero for pure interpolation</p></li>
+<li><p><strong>ignore_mask</strong> (<em>bool</em>) – Whether to diregard the masking of the dataset.
 You can select True if there is no
-inheritance, or if performance is a big concern.</p>
+inheritance, or if performance is a big concern.</p></li>
+</ul>
 </dd>
 </dl>
-</li>
-</ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW.get_weight">
 <span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk4d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no</span> <span class="pre">flux'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.get_weight" title="Permalink to this definition">#</a></dt>
 <dd><p>Return the weight of values given particle rel-coords.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>rx,ry,rz,rt: numpy.ndarray</dt><dd><p>1D array of non-dimensional particle positions</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>pk4d: list</dt><dd><p>A mapping on which points should use which kernel.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>bottom_scheme: str</dt><dd><p>Whether to assume there is a ghost point with same value at
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rx</strong> (<em>numpy.ndarray</em>) – 1D array of non-dimensional particle positions</p></li>
+<li><p><strong>ry</strong> (<em>numpy.ndarray</em>) – 1D array of non-dimensional particle positions</p></li>
+<li><p><strong>rz</strong> (<em>numpy.ndarray</em>) – 1D array of non-dimensional particle positions</p></li>
+<li><p><strong>rt</strong> (<em>numpy.ndarray</em>) – 1D array of non-dimensional particle positions</p></li>
+<li><p><strong>pk4d</strong> (<em>list</em>) – A mapping on which points should use which kernel.</p></li>
+<li><p><strong>bottom_scheme</strong> (<em>str</em>) – Whether to assume there is a ghost point with same value at
 the bottom boundary.
-Choose None for vertical flux, ‘no flux’ for most other cases.</p>
-</dd>
-</dl>
-</li>
+Choose None for vertical flux, ‘no flux’ for most other cases.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>weight: numpy.ndarray</dt><dd><p>The weight of interpolation/derivative for the points
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>weight</strong> – The weight of interpolation/derivative for the points
 with shape (N,M),
 M is the num of node in the largest kernel.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -536,32 +504,59 @@ return</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.get_func">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_func" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_func" title="Permalink to this definition">#</a></dt>
 <dd><p>Return functions that compute weights.</p>
 <p>Similar to the kernel_weight function,
 the only difference is that this function can
-read existing functions from a global dictionary,
-and can register to the dictionary when new ones are created.</p>
+read existing functions that is cached.
+See _get_func_from_hashable</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#seaduck.kernel_weight.kernel_weight" title="seaduck.kernel_weight.kernel_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kernel_weight</span></code></a></dt><dd><p>the un-hashed version of this function.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.get_weight_cascade">
 <span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_weight_cascade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rx,</span> <span class="pre">ry,</span> <span class="pre">pk,</span> <span class="pre">kernel_large=array([[</span> <span class="pre">0,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-2,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">2,</span>&#160; <span class="pre">0]]),</span> <span class="pre">russian_doll=[[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7],</span> <span class="pre">[0]],</span> <span class="pre">funcs=[&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_y_maxorder_func&gt;]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_weight_cascade" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compute the weight.</p>
+<p>apply the corresponding functions that was figured out in
+find_which_points_for_each_kernel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rx</strong> (<em>numpy.ndarray</em>) – 1D array with length N of non-dimensional relative horizontal
+position to the nearest node</p></li>
+<li><p><strong>ry</strong> (<em>numpy.ndarray</em>) – 1D array with length N of non-dimensional relative horizontal
+position to the nearest node</p></li>
+<li><p><strong>kernel_large</strong> (<em>numpy.ndarray</em>) – A numpy kernel of shape (M,2) that contains all the kernels needed.</p></li>
+<li><p><strong>russian_doll</strong> (<em>list of list</em><em>(</em><em>s</em><em>)</em>) – The inheritance sequence when some of the node is masked.</p></li>
+<li><p><strong>funcs</strong> (<em>list of compileable functions</em>) – The weight function of each kernel in the inheritance sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>+ weight</strong> – The horizontal weight of interpolation/derivative for the points
+with shape (N,M)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.kash">
 <span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kash" title="Permalink to this definition">#</a></dt>
 <dd><p>Hash a horizontal kernel.</p>
 <p>Return the hash value.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kernel: numpy.ndarray</dt><dd><p>A horizontal kernel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kernel</strong> (<em>+</em>) – A horizontal kernel</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -571,37 +566,26 @@ and can register to the dictionary when new ones are created.</p>
 <p>A wrapper around kernel_weight_x and kernel_weight_s.
 Return the function that calculate the interpolation/derivative weight
 of a  Lagrangian kernel.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kernel: np.ndarray</dt><dd><p>2D array with shape (n,2), where n is the number of nodes.
-It need to either shape like a rectangle or a cross</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ktype: str</dt><dd><p>“interp” (default): Use both x y direction for interpolation,
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 2D array with shape (n,2), where n is the number of nodes.
+It need to either shape like a rectangle or a cross</p></li>
+<li><p><strong>ktype</strong> (<em>str</em>) – “interp” (default): Use both x y direction for interpolation,
 implies that order = 0
 “dx”: Use only x direction for interpolation/derivative
-“dy”: Use only y direction for interpolation/derivative</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>order: int</dt><dd><p>The order of derivatives. Zero for interpolation.</p>
-</dd>
-</dl>
-</li>
+“dy”: Use only y direction for interpolation/derivative</p></li>
+<li><p><strong>order</strong> (<em>int</em>) – The order of derivatives. Zero for interpolation.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>func(rx,ry)</strong> – function to calculate the hotizontal interpolation/derivative
 weight</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>compilable function</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -610,36 +594,25 @@ weight</p>
 <dd><p>Return the function that calculate the interpolation/derivative weight.</p>
 <p>input needs to be a rectangle-shaped (that’s where x is coming from)
 Lagrangian kernel.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kernel: np.ndarray</dt><dd><p>2D array with shape (n,2), where n is the number of nodes.
-It has to be shaped like a rectangle</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>xorder: int</dt><dd><p>The order of derivatives in the x direction.
-Zero for interpolation.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>yorder: int</dt><dd><p>The order of derivatives in the y direction.
-Zero for interpolation.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 2D array with shape (n,2), where n is the number of nodes.
+It has to be shaped like a rectangle</p></li>
+<li><p><strong>xorder</strong> (<em>int</em>) – The order of derivatives in the x direction.
+Zero for interpolation.</p></li>
+<li><p><strong>yorder</strong> (<em>int</em>) – The order of derivatives in the y direction.
+Zero for interpolation.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>func(rx,ry)</strong> – function to calculate the hotizontal interpolation/derivative
 weight</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>compilable function</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -647,52 +620,50 @@ weight</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ktype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight_x" title="Permalink to this definition">#</a></dt>
 <dd><p>Return the function that calculate the interpolation/derivative weight.</p>
 <p>input needs to be a cross-shaped (that’s where x is coming from) Lagrangian kernel.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kernel: np.ndarray</dt><dd><p>2D array with shape (n,2), where n is the number of nodes.
-It has to be shaped like a cross</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ktype: str</dt><dd><p>“interp” (default): Use both x y direction for interpolation,
+<p>If you don’t want to know what is going on under the hood.
+it’s totally fine.</p>
+<p>all of the following is a bit hard to understand.
+The k th (k&gt;=0) derivative of the lagrangian polynomial is
+$$
+w_j= frac{Sigma_{ineq j} Pi_{i&lt;m-1-k} (x-x_i)}{Pi_{ineq j} (x_j - x_i)}
+$$
+for example: if the points are [-1,0,1] for point 0
+k = 0: w = (x-1)(x+1)/(0-1)(0+1)
+k = 1: w = [(x+1)+(x-1)]/(0-1)(0+1)</p>
+<p>for a cross shape kernel:
+f(rx,ry) = f_x(rx) + f_y(ry) - f(0,0)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 2D array with shape (n,2), where n is the number of nodes.
+It has to be shaped like a cross</p></li>
+<li><p><strong>ktype</strong> (<em>str</em>) – “interp” (default): Use both x y direction for interpolation,
 implies that order = 0
 “x”: Use only x direction for interpolation/derivative
-“y”: Use only y direction for interpolation/derivative</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>order: int</dt><dd><p>The order of derivatives. Zero for interpolation.</p>
-</dd>
-</dl>
-</li>
+“y”: Use only y direction for interpolation/derivative</p></li>
+<li><p><strong>order</strong> (<em>int</em>) – The order of derivatives. Zero for interpolation.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>func(rx,ry): compilable function</dt><dd><p>function to calculate the hotizontal interpolation/derivative
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>func(rx,ry)</strong> – function to calculate the hotizontal interpolation/derivative
 weight</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>compilable function</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.show_kernels">
 <span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">show_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">2],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[-</span> <span class="pre">2,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0]])]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.show_kernels" title="Permalink to this definition">#</a></dt>
 <dd><p>Plot a small scatter plot of the shape of a list of kernel.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>kernels: list of numpy.ndarray</dt><dd><p>Each of the element is a (n,2) shaped array,
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kernels</strong> (<em>list of numpy.ndarray</em>) – Each of the element is a (n,2) shaped array,
 where n is the number of element in the kernel.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 </section>

@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -389,28 +390,19 @@ document.write(`
 <span id="seaduck-get-masks"></span><h1>seaduck.get_masks<a class="headerlink" href="#module-seaduck.get_masks" title="Permalink to this headline">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.get_masks.get_masked">
-<span class="sig-prename descclassname"><span class="pre">seaduck.get_masks.</span></span><span class="sig-name descname"><span class="pre">get_masked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.get_masks.get_masked" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.get_masks.</span></span><span class="sig-name descname"><span class="pre">get_masked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.get_masks.get_masked" title="Permalink to this definition">#</a></dt>
 <dd><p>Return whether points are masked.</p>
 <p>Return whether the indexes of intersts are masked or not.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>od: OceData object</dt><dd><p>Dataset to find mask values from.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ind: tuple of numpy.ndarray</dt><dd><p>Indexes of grid points.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>gridtype: str</dt><dd><p>Whether the indexes is for points at center points or on the walls.
-Options are: [‘C’,’U’,’V’,’Wvel’].</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od</strong> (<em>OceData object</em>) – Dataset to find mask values from.</p></li>
+<li><p><strong>ind</strong> (<em>tuple of numpy.ndarray</em>) – Indexes of grid points.</p></li>
+<li><p><strong>cuvwg</strong> (<em>str</em>) – Whether the indexes is for points at center points or on the walls.
+Options are: [‘C’,’U’,’V’,’Wvel’].</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -419,27 +411,20 @@ Options are: [‘C’,’U’,’V’,’Wvel’].</p>
 <dd><p>Mask all staggered valocity points.</p>
 <p>A wrapper around mask_u_node, mask_v_node, mask_w_node.
 If there is no maskC in the dataset, just return nothing is masked.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>od: OceData object</dt><dd><p>The dataset to compute masks on.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tp: topology object</dt><dd><p>The topology of the datset</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od</strong> (<em>OceData object</em>) – The dataset to compute masks on.</p></li>
+<li><p><strong>tp</strong> (<em>Topology object</em>) – The Topology of the datset</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskC,maskU,maskV,maskW: numpy.ndarray</dt><dd><p>masks at center points, U-walls, V-walls, W-walls respectively.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>maskC,maskU,maskV,maskW</strong> – masks at center points, U-walls, V-walls, W-walls respectively.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -451,29 +436,22 @@ When the C grid is dry, U are either:
 a. dry;
 b. on the interface, where the cell to the left is wet.
 if b is the case, we need to unmask the udata, because it makes some physical sense.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskC: numpy.ndarray</dt><dd><p>numpy array with the same shape as the model spacial coordinates.
-1 for wet cells (center points), 0 for dry ones.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tp: topology object</dt><dd><p>The topology object for the dataset.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maskC</strong> (<em>numpy.ndarray</em>) – numpy array with the same shape as the model spacial coordinates.
+1 for wet cells (center points), 0 for dry ones.</p></li>
+<li><p><strong>tp</strong> (<em>Topology object</em>) – The Topology object for the dataset.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskU: numpy.ndarray</dt><dd><p>numpy array with the same shape as the model spacial coordinates.
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>maskU</strong> – numpy array with the same shape as the model spacial coordinates.
 1 for wet U-walls (including interface between wet and dry), 0 for dry ones.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -485,29 +463,22 @@ When the C grid is dry, V are either:
 a. dry;
 b. on the interface, where the cell to the downside is wet.
 if b is the case, we need to unmask the vdata.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskC: numpy.ndarray</dt><dd><p>numpy array with the same shape as the model spacial coordinates.
-1 for wet cells (center points), 0 for dry ones.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tp: topology object</dt><dd><p>The topology object for the dataset.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maskC</strong> (<em>numpy.ndarray</em>) – numpy array with the same shape as the model spacial coordinates.
+1 for wet cells (center points), 0 for dry ones.</p></li>
+<li><p><strong>tp</strong> (<em>Topology object</em>) – The Topology object for the dataset.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskV: numpy.ndarray</dt><dd><p>numpy array with the same shape as the model spacial coordinates.
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>+ maskV</strong> – numpy array with the same shape as the model spacial coordinates.
 1 for wet W-walls (including interface between wet and dry), 0 for dry ones.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -519,29 +490,22 @@ When the C grid is dry, W are either:
 a. dry;
 b. on the interface, where the cell above is wet.
 if b is the case, we need to unmask the wdata.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskC: numpy.ndarray</dt><dd><p>numpy array with the same shape as the model spacial coordinates.
-1 for wet cells (center points), 0 for dry ones.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>tp: topology object</dt><dd><p>The topology object for the dataset.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maskC</strong> (<em>numpy.ndarray</em>) – numpy array with the same shape as the model spacial coordinates.
+1 for wet cells (center points), 0 for dry ones.</p></li>
+<li><p><strong>tp</strong> (<em>Topology object</em>) – The Topology object for the dataset.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>maskWvel: numpy.ndarray</dt><dd><p>numpy array with the same shape as the model spacial coordinates.
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>+ maskWvel</strong> – numpy array with the same shape as the model spacial coordinates.
 1 for wet W-walls (including interface between wet and dry), 0 for dry ones.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 </section>
