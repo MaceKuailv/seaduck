@@ -56,8 +56,10 @@ class RelCoord(dict):
     def __getattr__(self, attr):
         try:
             return self[attr]
-        except KeyError:
-            raise AttributeError(f"'RelCoord' object has no attribute '{attr}'")
+        except KeyError as exc:
+            raise AttributeError(
+                f"'RelCoord' object has no attribute '{attr}'"
+            ) from exc
 
     def __setattr__(self, attr, value):
         self[attr] = value
@@ -82,7 +84,8 @@ class RelCoord(dict):
             def __init__(self, *args, **kwargs):
                 if len(args) > len(fields):
                     raise TypeError(
-                        f"{class_name} takes {len(fields)} positional arguments but {len(args)} were given"
+                        f"{class_name} takes {len(fields)} positional arguments"
+                        f" but {len(args)} were given"
                     )
                 for name, value in zip(fields, args):
                     setattr(self, name, value)
@@ -213,13 +216,13 @@ class OceData:
         varnames = list(self._ds.data_vars) + list(self._ds.coords)
         readiness = {}
         missing = []
-        if all([i in varnames for i in ["XC", "YC", "XG", "YG"]]):
+        if all(i in varnames for i in ["XC", "YC", "XG", "YG"]):
             readiness["h"] = "oceanparcel"
             # could be a curvilinear grid that can use oceanparcel style
-        elif all([i in varnames for i in ["XC", "YC", "dxG", "dyG", "CS", "SN"]]):
+        elif all(i in varnames for i in ["XC", "YC", "dxG", "dyG", "CS", "SN"]):
             readiness["h"] = "local_cartesian"
             # could be a curvilinear grid that can use local cartesian style
-        elif all([i in varnames for i in ["lon", "lat"]]):
+        elif all(i in varnames for i in ["lon", "lat"]):
             ratio = 6371e3 * np.pi / 180
             self.dlon = np.gradient(self["lon"]) * ratio
             self.dlat = np.gradient(self["lat"]) * ratio
@@ -251,8 +254,8 @@ class OceData:
             return _pd.DataFrame.from_dict(
                 self.alias, orient="index", columns=["original name"]
             )
-        except NameError:
-            raise NameError("pandas is needed to perform this function.")
+        except NameError as exc:
+            raise NameError("pandas is needed to perform this function.") from exc
 
     def _add_missing_cs_sn(self):
         try:
@@ -288,7 +291,7 @@ class OceData:
                 try:
                     self[var] = np.array(self[var]).astype("float32")
                 except KeyError:
-                    logging.info(f"no {var} in dataset, skip")
+                    logging.info("no %s in dataset, skip", var)
                     self[var] = None
             try:
                 self.dX = np.array(self["dXG"]).astype("float32")
@@ -313,7 +316,7 @@ class OceData:
                     try:
                         self[var] = np.array(self[var]).astype("float32")
                     except KeyError:
-                        logging.info(f"no {var} in dataset, skip")
+                        logging.info("no %s in dataset, skip", var)
                         self[var] = None
             if self.too_large:  # pragma: no cover
                 logging.info("numpy arrays of grid loaded into memory")
@@ -420,11 +423,11 @@ class OceData:
         return VlLinRel(iz.astype(int), rz, dz, bz)
 
     def find_rel_t(self, t):
-        """Find the rel-coord based along the temporal direction using the nearest neighbor scheme."""
+        """Find the rel-coord based on the temporal direction using the nearest neighbor scheme."""
         it, rt, dt, bt = find_rel_nearest(t, self.ts)
         return TRel(it.astype(int), rt, dt, bt)
 
     def find_rel_t_lin(self, t):
-        """Find the rel-coord based along the temporal direction using the 2-point linear scheme."""
+        """Find the rel-coord based on the temporal direction using the 2-point linear scheme."""
         it, rt, dt, bt = find_rel_time(t, self.ts)
         return TLinRel(it.astype(int), rt, dt, bt)

@@ -203,11 +203,11 @@ def get_masked(od, ind, cuvwg="C"):
     if name not in keys:
         small_mask = func_dic[cuvwg](maskC, tp)
         dims = tuple(map(rename_dic[cuvwg], od._ds.maskC.dims))
-        sizes = tuple([len(od._ds[dim]) for dim in dims])
+        sizes = tuple(len(od._ds[dim]) for dim in dims)
         mask = np.zeros(sizes)
         # indexing sensitive
         old_size = small_mask.shape
-        slices = tuple([slice(0, i) for i in old_size])
+        slices = tuple(slice(0, i) for i in old_size)
         mask[slices] = small_mask
         od._ds[name] = xr.DataArray(mask, dims=dims)
         return mask[ind]

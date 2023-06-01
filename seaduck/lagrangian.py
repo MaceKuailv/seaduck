@@ -248,7 +248,7 @@ class Particle(Position):
         self.dont_fly = dont_fly
         if dont_fly:
             if wname is not None:
-                self.ocedata[wname].loc[dict(Zl=0)] = 0
+                self.ocedata[wname].loc[{"Zl": 0}] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
 
@@ -295,11 +295,11 @@ class Particle(Position):
         wname = self.wname
         if "time" not in self.ocedata[uname].dims:
             try:
-                self.uarray
-                self.varray
+                assert isinstance(self.uarray, np.ndarray)
+                assert isinstance(self.varray, np.ndarray)
                 if self.wname is not None:
-                    self.warray
-            except AttributeError:
+                    assert isinstance(self.warray, np.ndarray)
+            except (AttributeError, AssertionError):
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
                 if self.wname is not None:
@@ -460,8 +460,8 @@ class Particle(Position):
         where = np.where(which)[0]
         try:
             self.ttlist
-        except AttributeError:
-            raise AttributeError("This is not a particle_rawlist object")
+        except AttributeError as exc:
+            raise AttributeError("This is not a particle_rawlist object") from exc
         for i in where:
             if self.face is not None:
                 self.fclist[i].append(self.face[i])
@@ -546,16 +546,16 @@ class Particle(Position):
             ymax = np.nanmax(self.ry)
             ymin = np.nanmin(self.ry)
 
-            logging.debug(f"converting {xmax} to 0.5")
-            logging.debug(f"converting {xmin} to -0.5")
-            logging.debug(f"converting {ymax} to 0.5")
-            logging.debug(f"converting {ymin} to -0.5")
+            logging.debug("converting %s to 0.5", xmax)
+            logging.debug("converting %s to -0.5", xmin)
+            logging.debug("converting %s to 0.5", ymax)
+            logging.debug("converting %s to -0.5", ymin)
 
             if self.rzl_lin is not None:
                 zmax = np.nanmax(self.rzl_lin)
                 zmin = np.nanmin(self.rzl_lin)
-                logging.debug(f"converting {zmax} to 1")
-                logging.debug(f"converting {zmin} to 0")
+                logging.debug("converting %s to 1", zmax)
+                logging.debug("converting %s to 0", zmin)
 
         # if xmax>=0.5-tol:
         where = self.rx >= 0.5 - tol
@@ -665,7 +665,6 @@ class Particle(Position):
         if self.ocedata.readiness["Z"]:
             self.rel.update(self.ocedata.find_rel_v(self.dep))
         if self.ocedata.readiness["h"] == "local_cartesian":
-            # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
                     self.ocedata.XC[self.face, self.iy, self.ix],
@@ -694,7 +693,6 @@ class Particle(Position):
                     self.ocedata.dY[self.iy, self.ix],
                 )
         elif self.ocedata.readiness["h"] == "oceanparcel":
-            # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
                     self.ocedata.XC[self.face, self.iy, self.ix],
@@ -771,8 +769,8 @@ class Particle(Position):
         if self.rzl_lin is not None:
             xs = [self.rx[which], self.ry[which], self.rzl_lin[which] - 1 / 2]
         else:
-            x_ = self.rx[which]
-            xs = [x_, self.ry[which], np.zeros_like(x_)]
+            x_temp = self.rx[which]
+            xs = [x_temp, self.ry[which], np.zeros_like(x_temp)]
         us = [self.u[which], self.v[which], self.w[which]]
         dus = [self.du[which], self.dv[which], self.dw[which]]
 
@@ -1003,14 +1001,14 @@ class Particle(Position):
                         t_min < self.ocedata.time_midp, self.ocedata.time_midp < t_max
                     )
                 ]
-            except AttributeError:
+            except AttributeError as exc:
                 raise AttributeError(
                     "time_midp is required for "
                     "update_stops = default,"
                     " but it is not in the dataset, "
                     "either create it or "
                     "specify the update stops."
-                )
+                ) from exc
         temp = list(zip(normal_stops, np.zeros_like(normal_stops))) + list(
             zip(update_stops, np.ones_like(update_stops))
         )
