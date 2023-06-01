@@ -12,13 +12,13 @@ from seaduck.topology import Topology
 from seaduck.utils import (
     _general_len,
     create_tree,
-    find_cs_sn,
     find_rel_h_naive,
     find_rel_h_oceanparcel,
     find_rel_h_rectilinear,
     find_rel_nearest,
     find_rel_time,
     find_rel_z,
+    missing_cs_sn,
 )
 
 NO_ALIAS = {
@@ -65,6 +65,7 @@ class RelCoord(dict):
         self[attr] = value
 
     def subset(self, which):
+        """Create a subset of all the non-None items."""
         new = RelCoord()
         for var in self.keys():
             if self[var] is not None:
@@ -261,15 +262,7 @@ class OceData:
         try:
             assert (self["SN"] is not None) and (self["CS"] is not None)
         except (AttributeError, AssertionError):
-            xc = np.deg2rad(np.array(self["XC"]))
-            yc = np.deg2rad(np.array(self["YC"]))
-            cs = np.zeros_like(xc)
-            sn = np.zeros_like(xc)
-            cs[0], sn[0] = find_cs_sn(yc[0], xc[0], yc[1], xc[1])
-            cs[-1], sn[-1] = find_cs_sn(yc[-2], xc[-2], yc[-1], xc[-1])
-            cs[1:-1], sn[1:-1] = find_cs_sn(yc[:-2], xc[:-2], yc[2:], xc[2:])
-            # it makes no sense to turn it into DataArray again when you already have in memory
-            # and you know where this data is defined.
+            cs, sn = missing_cs_sn(self)
             self["CS"] = cs
             self["SN"] = sn
 

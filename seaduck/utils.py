@@ -626,7 +626,7 @@ def find_cs_sn(thetaA, phiA, thetaB, phiB):
     return CS, SN
 
 
-def missing_cs_sn(ds):
+def missing_cs_sn(ds, return_xr=False):
     """Fill in the CS,SN of a dataset."""
     xc = np.deg2rad(np.array(ds.XC))
     yc = np.deg2rad(np.array(ds.YC))
@@ -635,11 +635,16 @@ def missing_cs_sn(ds):
     cs[0], sn[0] = find_cs_sn(yc[0], xc[0], yc[1], xc[1])
     cs[-1], sn[-1] = find_cs_sn(yc[-2], xc[-2], yc[-1], xc[-1])
     cs[1:-1], sn[1:-1] = find_cs_sn(yc[:-2], xc[:-2], yc[2:], xc[2:])
-    ds["CS"] = ds["XC"]
-    ds["CS"].values = cs
+    if return_xr:
+        ds["CS"] = ds["XC"]
+        ds["CS"].values = cs
 
-    ds["SN"] = ds["XC"]
-    ds["SN"].values = sn
+        ds["SN"] = ds["XC"]
+        ds["SN"].values = sn
+
+        return ds
+    else:
+        return cs, sn
 
 
 def convert_time(time):

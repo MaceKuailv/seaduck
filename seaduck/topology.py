@@ -338,7 +338,7 @@ class Topology:
         if self.typ == "LLC":
             return llc_get_the_other_edge(face, edge)
         elif self.typ in ["x_periodic", "box"]:
-            raise Exception(
+            raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
             )
         else:
@@ -355,7 +355,7 @@ class Topology:
         if self.typ == "LLC":
             return llc_mutual_direction(face, nface, **kwarg)
         elif self.typ in ["x_periodic", "box"]:
-            raise Exception(
+            raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
             )
         else:
@@ -382,27 +382,24 @@ class Topology:
         if -1 in ind:
             # meaning invalid point
             return tuple(-1 for i in ind)
-        #         if tend not in [0,1,2,3]:
-        #             raise Exception('Illegal move. Must be 0,1,2,3')
         if self.typ == "LLC":
             if cuvwg == "C":
-                return llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+                R = llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
             elif cuvwg == "U":
                 _, R = self._ind_tend_U(ind, tend)
-                return R
             elif cuvwg == "V":
                 _, R = self._ind_tend_V(ind, tend)
-                return R
             elif cuvwg == "G":
-                return self._ind_tend_G(ind, tend)
+                R = self._ind_tend_G(ind, tend)
             else:
                 raise ValueError("The type of grid point should be among C,U,V,G")
         elif self.typ == "x_periodic":
-            return x_per_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            R = x_per_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         elif self.typ == "box":
-            return box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            R = box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
             raise NotImplementedError
+        return R
 
     def ind_moves(self, ind, moves, **kwarg):
         """Move an index in a serie of directions.
@@ -466,7 +463,7 @@ class Topology:
             result = False
             for i, z in enumerate(ind):
                 max_pos = self.h_shape[i]
-                if not (0 <= z <= max_pos - 1):
+                if not 0 <= z <= max_pos - 1:
                     result = True
             return result
         else:  # for numpy ndarray
@@ -614,6 +611,8 @@ class Topology:
         elif tend in [2, 3]:
             _, nind = self._ind_tend_V(ind, tend)
             return nind
+        else:
+            raise ValueError(f"tend {tend} not supported")
 
     def get_uv_mask_from_face(self, faces):
         """Get the masking of UV points.
@@ -633,7 +632,7 @@ class Topology:
         if self.typ == "LLC":
             return llc_get_uv_mask_from_face(faces)
         elif self.typ in ["x_periodic", "box"]:
-            raise Exception(
+            raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
             )
         else:

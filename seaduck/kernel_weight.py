@@ -295,7 +295,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         elif order == max_order:
             return the_x_maxorder_func
         else:
-            raise Exception("Kernel is too small for this derivative")
+            raise ValueError("Kernel is too small for this derivative")
     if ktype == "y":
         max_order = len(ys) - 1
         if order < max_order:
@@ -303,7 +303,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         elif order == max_order:
             return the_y_maxorder_func
         else:
-            raise Exception("Kernel is too small for this derivative")
+            raise ValueError("Kernel is too small for this derivative")
 
 
 # we can define the default interpolation functions here,
@@ -344,14 +344,14 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     elif xorder == len(xs) - 1:
         xmaxorder = True
     else:
-        raise Exception("Kernel is too small for this derivative")
+        raise ValueError("Kernel is too small for this derivative")
 
     if yorder < len(ys) - 1:
         pass
     elif yorder == len(ys) - 1:
         ymaxorder = True
     else:
-        raise Exception("Kernel is too small for this derivative")
+        raise ValueError("Kernel is too small for this derivative")
 
     x_poly = []
     y_poly = []
@@ -469,6 +469,10 @@ def kernel_weight(kernel, ktype="interp", order=0):
             return kernel_weight_s(kernel, xorder=order, yorder=0)
         elif ktype == "dy":
             return kernel_weight_s(kernel, xorder=0, yorder=order)
+        else:
+            raise ValueError(f"ktype = {ktype} not supported")
+    else:
+        raise NotImplementedError("The shape of the kernel is neither cross or square")
 
 
 default_interp_funcs = [kernel_weight_x(a_kernel) for a_kernel in default_kernels]
@@ -587,8 +591,7 @@ def kash(kernel):  # hash kernel
     + kernel: numpy.ndarray
         A horizontal kernel
     """
-    temp_lst = [(i, j) for (i, j) in kernel]
-    return hash(tuple(temp_lst))
+    return hash(tuple((i, j) for (i, j) in kernel))
 
 
 @cache
@@ -617,7 +620,7 @@ def get_func(kernel, **kwargs):
 def auto_doll(kernel, hkernel="interp"):
     """Find a natural inheritance pattern given one horizontal kernel."""
     if hkernel == "interp":
-        doll = [[i for i in range(len(kernel))]]
+        doll = [list(range(len(kernel)))]
     elif hkernel == "dx":
         doll = [[i for i in range(len(kernel)) if kernel[i][1] == 0]]
     elif hkernel == "dy":
@@ -689,7 +692,7 @@ class KnW:
         if inheritance == "auto":
             inheritance = auto_doll(kernel, hkernel=hkernel)
         elif inheritance is None:  # does not apply cascade
-            inheritance = [[i for i in range(len(kernel))]]
+            inheritance = [list(range(len(kernel)))]
         elif isinstance(inheritance, list):
             pass
         else:

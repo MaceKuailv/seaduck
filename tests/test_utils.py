@@ -54,7 +54,7 @@ def test_none_in():
 
 @pytest.mark.parametrize("ds", ["curv"], indirect=True)
 def test_cs_sn(ds):
-    sd.utils.missing_cs_sn(ds)
+    sd.utils.missing_cs_sn(ds, return_xr=True)
     assert isinstance(ds["CS"], xr.DataArray)
 
 

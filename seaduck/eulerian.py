@@ -69,6 +69,8 @@ def _partial_flatten(ind):
         for i in range(1, len(shape)):
             num_neighbor *= shape[i]
         return ind.reshape(shape[0], num_neighbor)
+    else:
+        raise NotImplementedError("ind type not supported")
 
 
 def _in_required(name, required):
@@ -549,7 +551,7 @@ class Position:
         # hash_read  = {var:hash(var,kernel_size)}
         # hash_weight= {var:hash(kernel,cuvwg)}
         output_format = {}
-        if isinstance(varName, str) or isinstance(varName, tuple):
+        if isinstance(varName, (str, tuple)):
             varName = [varName]
             output_format["single"] = True
         elif isinstance(varName, list):
@@ -576,7 +578,7 @@ class Position:
             temp = []
             for var in varName:
                 a_knw = knw.get(var)
-                if (a_knw is None) or not (isinstance(a_knw, (tuple, KnW))):
+                if a_knw is None or not isinstance(a_knw, (tuple, KnW)):
                     raise ValueError(
                         f"Variable {var} does not have a proper corresponding kernel"
                     )
@@ -677,11 +679,6 @@ class Position:
                         "thus, it has to have 2 elements"
                     )
                 uknw, vknw = kkk
-                # if not uknw.same_size(vknw):
-                #     raise Exception('u,v kernel needs to have same size'
-                #                     'to navigate the complex grid orientation.'
-                #                     'use a kernel that include both of the uv kernels'
-                #                    )
                 kernel_size_hash.append(uknw.size_hash())
                 kernel_hash.append(hash((uknw, vknw)))
                 mask_ignore.append(uknw.ignore_mask or vknw.ignore_mask)
@@ -1014,12 +1011,6 @@ class Position:
                 temp_n_u[bool_ufromv] = ufromv  # 1#
                 temp_n_v[bool_vfromu] = vfromu  # 0#
                 temp_n_v[bool_vfromv] = vfromv  # 1#
-                # dont_break = np.isclose(temp_n_v,2).any()
-                # if not dont_break:
-                #     print(bool_vfromu)
-                #     raise Exception('what is going on')
-                # else:
-                #     print('somehow it passed')
 
                 n_u = np.einsum("nijk,ni->nijk", temp_n_u, UfromUvel) + np.einsum(
                     "nijk,ni->nijk", temp_n_u, UfromVvel

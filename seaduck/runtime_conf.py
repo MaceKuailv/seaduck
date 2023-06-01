@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover
 
 
 def compileable(func):  # pragma: no cover
+    """Decorate function to compile them using numba when available."""
     if rcParam["compilable"]:
         return njit(func)
     else:

@@ -868,7 +868,7 @@ class Particle(Position):
         #             print(tend[wrong_ind])
         #             print(t_directed[:,wrong_ind])
         #             print('stuck!')
-        #             raise Exception('ahhhhh!')
+        #             raise ValueError('ahhhhh!')
         if self.face is not None:
             self.face[which], self.iy[which], self.ix[which] = (tface, tiy, tix)
         else:
