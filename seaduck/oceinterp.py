@@ -82,7 +82,7 @@ def OceInterp(
             if isinstance(i, str):
                 kernelList.append(the_kernel)
             elif isinstance(i, tuple):
-                if kernel_kwarg != dict():
+                if kernel_kwarg != {}:
                     kernelList.append((the_kernel, the_kernel))
                 else:
                     kernelList.append((uknw, vknw))
@@ -102,10 +102,10 @@ def OceInterp(
     else:
         try:
             assert len(t) > 1
-        except AssertionError:
+        except AssertionError as exc:
             raise ValueError(
                 "There needs to be at least two time steps to run the lagrangian Particle"
-            )
+            ) from exc
         t_start = t[0]
         t_nec = t[1:]
         pt = Particle(

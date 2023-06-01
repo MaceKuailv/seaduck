@@ -267,10 +267,10 @@ class Topology:
         except KeyError:
             try:
                 h_shape = (int(od["lat"].shape[0]), int(od["lon"].shape[0]))
-            except KeyError:
+            except KeyError as exc:
                 raise KeyError(
                     "Either XC or lat/lon is needed to create the Topology object"
-                )
+                ) from exc
         self.h_shape = h_shape
         try:
             self.itmax = len(od["time"]) - 1
@@ -381,17 +381,17 @@ class Topology:
         """
         if -1 in ind:
             # meaning invalid point
-            return tuple([-1 for i in ind])
+            return tuple(-1 for i in ind)
         #         if tend not in [0,1,2,3]:
         #             raise Exception('Illegal move. Must be 0,1,2,3')
         if self.typ == "LLC":
             if cuvwg == "C":
                 return llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
             elif cuvwg == "U":
-                UorV, R = self._ind_tend_U(ind, tend)
+                _, R = self._ind_tend_U(ind, tend)
                 return R
             elif cuvwg == "V":
-                UorV, R = self._ind_tend_V(ind, tend)
+                _, R = self._ind_tend_V(ind, tend)
                 return R
             elif cuvwg == "G":
                 return self._ind_tend_G(ind, tend)
@@ -421,7 +421,7 @@ class Topology:
             Keyword arguments that pass into ind_tend.
         """
         if self.check_illegal(ind):
-            return tuple([-1 for i in ind])  # the origin is invalid
+            return tuple(-1 for i in ind)  # the origin is invalid
         if not set(moves).issubset({0, 1, 2, 3}):
             raise ValueError("Illegal move. Must be 0,1,2,3")
         if self.typ in ["LLC", "cubed_sphere"]:
@@ -430,12 +430,10 @@ class Topology:
                 move = moves[k]
                 ind = self.ind_tend(ind, move, **kwarg)
                 if ind[0] != face:  # if the face has changed
-                    """
-                    there are times where the the kernel lies between
-                    2 faces that define 'left' differently. That's why
-                    when that happens we need to correct the direction
-                    you want to move the indexes.
-                    """
+                    # there are times where the the kernel lies between
+                    # 2 faces that define 'left' differently. That's why
+                    # when that happens we need to correct the direction
+                    # you want to move the indexes.
                     edge, nedge = self.mutual_direction(face, ind[0], transitive=True)
                     rot = (np.pi - directions[edge] + directions[nedge]) % (np.pi * 2)
                     if np.isclose(rot, 0):
@@ -529,8 +527,8 @@ class Topology:
         if the input is not adjacent, error may not be raised
         This scheme is only valid if there is face in the dimensions.
         """
-        (fc1, iy1, ix1) = ind1
-        (fc2, iy2, ix2) = ind2
+        (fc1, _, _) = ind1
+        (fc2, _, _) = ind2
         Non_normal_connection = ValueError(
             f"The two face connecting the indexes {ind1},{ind2}"
             " are not connected in a normal way"
@@ -538,8 +536,8 @@ class Topology:
         if fc1 == fc2:
             R = tuple(np.ceil((np.array(ind1) + np.array(ind2)) / 2).astype(int))
             other = ind1 if ind2 == R else ind2
-            (fcr, iyr, ixr) = R
-            (fco, iyo, ixo) = other
+            (_, iyr, ixr) = R
+            (_, iyo, ixo) = other
             if ixr > ixo:
                 return "U", R
             elif iyr > iyo:

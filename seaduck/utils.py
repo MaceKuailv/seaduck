@@ -654,6 +654,8 @@ def convert_time(time):
         return dt / one_sec
     elif isinstance(time, np.datetime64):
         return (time - t0) / one_sec
+    else:
+        raise ValueError(f"Unsupported time format {type(time)}")
 
 
 def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):

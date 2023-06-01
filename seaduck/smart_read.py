@@ -27,7 +27,7 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
         The values of the points of interest. Has the same shape as the elements in ind.
     """
     the_shape = ind[0].shape
-    ind = tuple([i.ravel() for i in ind])
+    ind = tuple(i.ravel() for i in ind)
     if len(da.dims) != len(ind):
         raise ValueError("index does not match the number of dimensions")
     if da.chunks is None or da.chunks == {}:
@@ -43,7 +43,7 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
     n = len(ind[0])
     result = np.zeros(n)
 
-    new_dic = dict()
+    new_dic = {}
     # typically what happens is that the first a few indexes are chunked
     # here we figure out what is the last dimension chunked.
     for i in range(len(cksz) - 1, -1, -1):
@@ -75,10 +75,10 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
             prs = np.zeros(len(keys)).astype(int)
             prs[: last + 1] = pre
             npck = np.array(da[tuple(ind_str)])
-            subind = tuple([ind[dim][which] - prs[dim] for dim in range(len(ind))])
+            subind = tuple(ind[dim][which] - prs[dim] for dim in range(len(ind)))
             result[which] = npck[subind]
         return result.reshape(the_shape)
     else:
         # logging.debug('use xarray')
-        xrind = tuple([xr.DataArray(dim, dims=["x"]) for dim in ind])
+        xrind = tuple(xr.DataArray(dim, dims=["x"]) for dim in ind)
         return np.array(da[xrind]).reshape(the_shape)

@@ -36,8 +36,8 @@ def show_kernels(kernels=default_kernels):
     """
     try:
         import matplotlib.pyplot as plt
-    except ImportError:
-        raise ImportError("maptlotlib.pyplot is needed to use this function.")
+    except ImportError as exc:
+        raise ImportError("maptlotlib.pyplot is needed to use this function.") from exc
 
     for i, k in enumerate(kernels):
         x, y = k.T
@@ -83,9 +83,24 @@ def _translate_to_tendency(k):
 
 
 def kernel_weight_x(kernel, ktype="interp", order=0):
-    """Return the function that calculate the interpolation/derivative weight.
+    r"""Return the function that calculate the interpolation/derivative weight.
 
     input needs to be a cross-shaped (that's where x is coming from) Lagrangian kernel.
+
+    If you don't want to know what is going on under the hood.
+    it's totally fine.
+
+    all of the following is a bit hard to understand.
+    The k th (k>=0) derivative of the lagrangian polynomial is
+    $$
+    w_j= \frac{\Sigma_{i\neq j} Pi_{i<m-1-k} (x-x_i)}{\Pi_{i\neq j} (x_j - x_i)}
+    $$
+    for example: if the points are [-1,0,1] for point 0
+    k = 0: w = (x-1)(x+1)/(0-1)(0+1)
+    k = 1: w = [(x+1)+(x-1)]/(0-1)(0+1)
+
+    for a cross shape kernel:
+    f(rx,ry) = f_x(rx) + f_y(ry) - f(0,0)
 
     Parameters
     ----------
@@ -114,26 +129,6 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         ktype = "y"
     elif len(ys) == 1:
         ktype = "x"
-
-    """
-    If you don't want to know what is going on under the hood.
-    it's totally fine.
-
-    all of the following is a bit hard to understand.
-    The k th (k>=0) derivative of the lagrangian polynomial is
-          Sigma_{i\neq j} Pi_{i<m-1-k} (x-x_i)
-    w_j= ----------------------------------------
-          Pi_{i\neq j} (x_j - x_i)
-
-    for example: if the points are [-1,0,1] for point 0
-    k = 0: w = (x-1)(x+1)/(0-1)(0+1)
-    k = 1: w = [(x+1)+(x-1)]/(0-1)(0+1)
-
-    for a cross shape kernel:
-    f(rx,ry) = f_x(rx) + f_y(ry) - f(0,0)
-
-    The following equation is just that.
-    """
 
     x_poly = []
     y_poly = []
@@ -531,9 +526,7 @@ def get_weight_cascade(
     russian_doll=default_inheritance,
     funcs=default_interp_funcs,
 ):
-    weight = np.zeros((len(rx), len(kernel_large)))
-    weight[:, 0] = np.nan
-    """Compute the weight
+    """Compute the weight.
 
     apply the corresponding functions that was figured out in
     find_which_points_for_each_kernel
@@ -557,6 +550,8 @@ def get_weight_cascade(
         with shape (N,M)
 
     """
+    weight = np.zeros((len(rx), len(kernel_large)))
+    weight[:, 0] = np.nan
     for i in range(len(pk)):
         if len(pk[i]) == 0:
             continue

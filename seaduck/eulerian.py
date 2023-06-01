@@ -138,7 +138,7 @@ class Position:
 
         Parameters
         ----------
-        x,y,z,t: numpy.ndarray or None, default None
+        x,y,z,t: numpy.ndarray, float or None, default None
             1D array of the lat-lon-dep-time coords
         data: OceData object
             The field where the Positions are defined on.
@@ -146,8 +146,8 @@ class Position:
         if data is None:
             try:
                 self.ocedata
-            except AttributeError:
-                raise ValueError("data not provided")
+            except AttributeError as exc:
+                raise ValueError("data not provided") from exc
         else:
             if isinstance(data, OceData):
                 self.ocedata = data
@@ -156,7 +156,7 @@ class Position:
         self.tp = self.ocedata.tp
         length = [_general_len(i) for i in [x, y, z, t]]
         self.N = max(length)
-        if any([i != self.N for i in length if i > 1]):
+        if any(i != self.N for i in length if i > 1):
             raise ValueError("Shapes of input coordinates are not compatible")
 
         if isinstance(x, float):
@@ -169,7 +169,9 @@ class Position:
             t = np.array([1.0]) * t
 
         for thing in [x, y, z, t]:
-            if len(x.shape) > 1:
+            if thing is None:
+                continue
+            if len(thing.shape) > 1:
                 raise ValueError("Input need to be 1D numpy arrays")
         if (x is not None) and (y is not None):
             self.lon = x
@@ -282,7 +284,7 @@ class Position:
             illegal = tp.check_illegal((n_iys, n_ixs))
 
         redo = np.array(np.where(illegal)).T
-        for num, loc in enumerate(redo):
+        for loc in redo:
             j, i = loc
             if self.face is not None:
                 ind = (self.face[j], self.iy[j], self.ix[j])
@@ -437,7 +439,7 @@ class Position:
         R = dict(zip(keys, R))
         if required == "all":
             required = [i for i in keys if i != "place_holder"]
-        return tuple([R[i] for i in required])
+        return tuple(R[i] for i in required)
 
     def get_px_py(self):
         """Get the nearest 4 corner points of the given point.
@@ -481,9 +483,10 @@ class Position:
             required = self.ocedata._ds[varName].dims
         ind = self.fatten(knw, required=required, **kwarg)
         if len(ind) != len(self.ocedata._ds[varName].dims):
-            raise Exception(
-                """dimension mismatch.
-                            Please check if the Position objects have all the dimensions needed"""
+            raise IndexError(
+                "Dimension mismatch. "
+                "Please check if the Position objects "
+                "have all the dimensions needed"
             )
         if prefetched is None:
             return sread(self.ocedata[varName], ind)
@@ -495,9 +498,10 @@ class Position:
         if self.it is not None:
             ind = ind[1:]
         if len(ind) != len(self.ocedata._ds["maskC"].dims):
-            raise Exception(
-                """dimension mismatch.
-                            Please check if the Position objects have all the dimensions needed"""
+            raise IndexError(
+                "Dimension mismatch. "
+                "Please check if the Position objects "
+                "have all the dimensions needed"
             )
         return get_masked(self.ocedata, ind, cuvwg=cuvwg)
 
@@ -822,10 +826,10 @@ class Position:
                 bool_vfromu = np.abs(VfromUvel).astype(bool)
                 bool_vfromv = np.abs(VfromVvel).astype(bool)
 
-                indufromu = tuple([idid[bool_ufromu] for idid in uind])
-                indufromv = tuple([idid[bool_ufromv] for idid in uind])
-                indvfromu = tuple([idid[bool_vfromu] for idid in vind])
-                indvfromv = tuple([idid[bool_vfromv] for idid in vind])
+                indufromu = tuple(idid[bool_ufromu] for idid in uind)
+                indufromv = tuple(idid[bool_ufromv] for idid in uind)
+                indvfromu = tuple(idid[bool_vfromu] for idid in vind)
+                indvfromv = tuple(idid[bool_vfromv] for idid in vind)
 
                 transform_lookup[hs] = (
                     (UfromUvel, UfromVvel, VfromUvel, VfromVvel),
