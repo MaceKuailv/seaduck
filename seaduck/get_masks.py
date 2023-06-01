@@ -7,8 +7,6 @@ import xarray as xr
 
 from seaduck.smart_read import smart_read
 
-# from seaduck.topology import topology
-
 
 def mask_u_node(maskC, tp):
     """Mask out U-points.
@@ -19,17 +17,17 @@ def mask_u_node(maskC, tp):
     b. on the interface, where the cell to the left is wet.
     if b is the case, we need to unmask the udata, because it makes some physical sense.
 
-    **Parameters:**
-
-    + maskC: numpy.ndarray
+    Parameters
+    ----------
+    maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: topology object
-        The topology object for the dataset.
+    tp: Topology object
+        The Topology object for the dataset.
 
-    **Returns:**
-
-    + maskU: numpy.ndarray
+    Returns
+    -------
+    maskU: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet U-walls (including interface between wet and dry), 0 for dry ones.
     """
@@ -53,16 +51,16 @@ def mask_v_node(maskC, tp):
     b. on the interface, where the cell to the downside is wet.
     if b is the case, we need to unmask the vdata.
 
-    **Parameters:**
-
-    + maskC: numpy.ndarray
+    Parameters
+    ----------
+    maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: topology object
-        The topology object for the dataset.
+    tp: Topology object
+        The Topology object for the dataset.
 
-    **Returns:**
-
+    Returns
+    -------
     + maskV: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
@@ -88,16 +86,16 @@ def mask_w_node(maskC, tp=None):
     b. on the interface, where the cell above is wet.
     if b is the case, we need to unmask the wdata.
 
-    **Parameters:**
-
-    + maskC: numpy.ndarray
+    Parameters
+    ----------
+    maskC: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet cells (center points), 0 for dry ones.
-    + tp: topology object
-        The topology object for the dataset.
+    tp: Topology object
+        The Topology object for the dataset.
 
-    **Returns:**
-
+    Returns
+    -------
     + maskWvel: numpy.ndarray
         numpy array with the same shape as the model spacial coordinates.
         1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
@@ -114,24 +112,22 @@ def get_masks(od, tp):
     A wrapper around mask_u_node, mask_v_node, mask_w_node.
     If there is no maskC in the dataset, just return nothing is masked.
 
-    **Parameters:**
-
-    + od: OceData object
+    Parameters
+    ----------
+    od: OceData object
         The dataset to compute masks on.
-    + tp: topology object
-        The topology of the datset
+    tp: Topology object
+        The Topology of the datset
 
-    **Returns:**
-
-    + maskC,maskU,maskV,maskW: numpy.ndarray
+    Returns
+    -------
+    maskC,maskU,maskV,maskW: numpy.ndarray
         masks at center points, U-walls, V-walls, W-walls respectively.
     """
-    # tp = topology(od)
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
         logging.warning("no maskC in the dataset, assuming nothing is masked.")
-        # od._ds.C_GRID_VARIABLE.to_masked_array().mask
         maskC = np.ones_like(od._ds.XC + od._ds.Z)
         # it is inappropriate to fill in the dataset,
         # expecially given that there is no performance boost.
@@ -168,31 +164,33 @@ def get_masks(od, tp):
     return maskC, maskU, maskV, maskW
 
 
-def get_masked(od, ind, gridtype="C"):
+def get_masked(od, ind, cuvwg="C"):
     """Return whether points are masked.
 
     Return whether the indexes of intersts are masked or not.
 
-    **Parameters:**
-
-    + od: OceData object
+    Parameters
+    ----------
+    od: OceData object
         Dataset to find mask values from.
-    + ind: tuple of numpy.ndarray
+    ind: tuple of numpy.ndarray
         Indexes of grid points.
-    + gridtype: str
+    cuvwg: str
         Whether the indexes is for points at center points or on the walls.
         Options are: ['C','U','V','Wvel'].
     """
-    if gridtype not in ["C", "U", "V", "Wvel"]:
-        raise NotImplementedError("gridtype for mask not supported")
+    if cuvwg not in ["C", "U", "V", "Wvel"]:
+        raise NotImplementedError(
+            "cuvwg(the kind of grid point) for mask not supported"
+        )
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
         return np.ones_like(ind[0])
-    elif gridtype == "C":
+    elif cuvwg == "C":
         return smart_read(od._ds.maskC, ind)
 
-    name = "mask" + gridtype
+    name = "mask" + cuvwg
     tp = od.tp
     maskC = np.array(od._ds["maskC"])
     func_dic = {"U": mask_u_node, "V": mask_v_node, "Wvel": mask_w_node}
@@ -202,13 +200,13 @@ def get_masked(od, ind, gridtype="C"):
         "Wvel": lambda x: x if x != "Z" else "Zl",
     }
     if name not in keys:
-        small_mask = func_dic[gridtype](maskC, tp)
-        dims = tuple(map(rename_dic[gridtype], od._ds.maskC.dims))
-        sizes = tuple([len(od._ds[dim]) for dim in dims])
+        small_mask = func_dic[cuvwg](maskC, tp)
+        dims = tuple(map(rename_dic[cuvwg], od._ds.maskC.dims))
+        sizes = tuple(len(od._ds[dim]) for dim in dims)
         mask = np.zeros(sizes)
         # indexing sensitive
         old_size = small_mask.shape
-        slices = tuple([slice(0, i) for i in old_size])
+        slices = tuple(slice(0, i) for i in old_size)
         mask[slices] = small_mask
         od._ds[name] = xr.DataArray(mask, dims=dims)
         return mask[ind]

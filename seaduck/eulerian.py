@@ -4,7 +4,7 @@ import numpy as np
 
 from seaduck.get_masks import get_masked
 from seaduck.kernel_weight import KnW, _translate_to_tendency, find_pk_4d
-from seaduck.ocedata import OceData
+from seaduck.ocedata import HRel, OceData, RelCoord, TRel, VlRel, VRel
 
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read as sread
@@ -20,11 +20,11 @@ from seaduck.utils import (
 def _ind_broadcast(x, ind):
     """Perform a "cartesian product" on two fattened dimensions.
 
-    **Parameters:**
-
-    + x: numpy.ndarray
+    Parameters
+    ----------
+    x: numpy.ndarray
         A new dimension
-    + ind: tuple
+    ind: tuple
         Existing indexes
     """
     n = x.shape[0]
@@ -34,21 +34,21 @@ def _ind_broadcast(x, ind):
     ysp = ind[0].shape
     final_shape = [n] + list(ysp[1:]) + list(xsp[1:])
 
-    R = [np.zeros(final_shape, int) for i in range(len(ind) + 1)]
+    to_return = [np.zeros(final_shape, int) for i in range(len(ind) + 1)]
 
     dims = len(final_shape)
     ydim = len(ysp) - 1
     trsp = list(range(1, 1 + ydim)) + [0] + list(range(1 + ydim, dims))
     inv = np.argsort(trsp)
-    R[0] = R[0].transpose(trsp)
-    R[0][:] = x
-    R[0] = R[0].transpose(inv)
+    to_return[0] = to_return[0].transpose(trsp)
+    to_return[0][:] = x
+    to_return[0] = to_return[0].transpose(inv)
 
     for i in range(1, len(ind) + 1):
-        R[i] = R[i].T
-        R[i][:] = ind[i - 1].T
-        R[i] = R[i].T
-    return R
+        to_return[i] = to_return[i].T
+        to_return[i][:] = ind[i - 1].T
+        to_return[i] = to_return[i].T
+    return to_return
 
 
 def _partial_flatten(ind):
@@ -59,16 +59,18 @@ def _partial_flatten(ind):
         # num_neighbor = 1
         # for i in range(1,len(shape)):
         #     num_neighbor*=shape[i]
-        R = []
+        to_return = []
         for i in range(len(ind)):
-            R.append(ind[i].reshape(shape[0], -1))
-        return tuple(R)
+            to_return.append(ind[i].reshape(shape[0], -1))
+        return tuple(to_return)
     elif isinstance(ind, np.ndarray):
         shape = ind.shape
         num_neighbor = 1
         for i in range(1, len(shape)):
             num_neighbor *= shape[i]
         return ind.reshape(shape[0], num_neighbor)
+    else:
+        raise NotImplementedError("ind type not supported")
 
 
 def _in_required(name, required):
@@ -103,33 +105,51 @@ def _subtract_i_min(ind, i_min):
     return tuple(temp_ind)
 
 
-class position:
-    """The position object that performs the interpolation.
+class Position:
+    """The Position object that performs the interpolation.
 
     Create a empty one by default.
     To actually do interpolation, use from_latlon method to tell the ducks where they are.
     """
 
-    #     self.ind_h_dict = {}
+    def __init__(self):
+        self.rel = RelCoord()
+
+    def __getattr__(self, attr):
+        if attr == "rel":
+            object.__getattribute__(self, attr)
+        elif attr in self.rel.keys():
+            return getattr(self.rel, attr)
+        else:
+            object.__getattribute__(self, attr)
+
+    def __setattr__(self, attr, value):
+        if attr == "rel":
+            object.__setattr__(self, attr, value)
+        elif attr in self.rel.keys():
+            setattr(self.rel, attr, value)
+        else:
+            object.__setattr__(self, attr, value)
+
     def from_latlon(self, x=None, y=None, z=None, t=None, data=None):
         """Fill in the coord info using lat-lon-dep-time dims.
 
         Use the methods from the ocedata to transform
         from lat-lon-dep-time coords to rel-coords
-        store the output in the position object.
+        store the output in the Position object.
 
-        **Parameters:**
-
-        + x,y,z,t: numpy.ndarray
+        Parameters
+        ----------
+        x,y,z,t: numpy.ndarray, float or None, default None
             1D array of the lat-lon-dep-time coords
-        + data: OceData object
-            The field where the positions are defined on.
+        data: OceData object
+            The field where the Positions are defined on.
         """
         if data is None:
             try:
                 self.ocedata
-            except AttributeError:
-                raise ValueError("data not provided")
+            except AttributeError as exc:
+                raise ValueError("data not provided") from exc
         else:
             if isinstance(data, OceData):
                 self.ocedata = data
@@ -138,7 +158,7 @@ class position:
         self.tp = self.ocedata.tp
         length = [_general_len(i) for i in [x, y, z, t]]
         self.N = max(length)
-        if any([i != self.N for i in length if i > 1]):
+        if any(i != self.N for i in length if i > 1):
             raise ValueError("Shapes of input coordinates are not compatible")
 
         if isinstance(x, float):
@@ -151,114 +171,75 @@ class position:
             t = np.array([1.0]) * t
 
         for thing in [x, y, z, t]:
-            if len(x.shape) > 1:
+            if thing is None:
+                continue
+            if len(thing.shape) > 1:
                 raise ValueError("Input need to be 1D numpy arrays")
         if (x is not None) and (y is not None):
             self.lon = x
             self.lat = y
-            (
-                self.face,
-                self.iy,
-                self.ix,
-                self.rx,
-                self.ry,
-                self.cs,
-                self.sn,
-                self.dx,
-                self.dy,
-                self.bx,
-                self.by,
-            ) = self.ocedata.find_rel_h(x, y)
+            self.rel.update(self.ocedata.find_rel_h(x, y))
         else:
+            self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
             self.lat = None
-            self.face = None
-            self.iy = None
-            self.ix = None
-            self.rx = None
-            self.ry = None
-            self.cs = None
-            self.sn = None
-            self.dx = None
-            self.dy = None
-            self.bx = None
-            self.by = None
         if z is not None:
             self.dep = z
             if self.ocedata.readiness["Z"]:
-                (self.iz, self.rz, self.dz, self.bz) = self.ocedata.find_rel_v(z)
+                self.rel.update(self.ocedata.find_rel_v(z))
             else:
-                (
-                    self.iz,
-                    self.rz,
-                    self.dz,
-                    self.bz,
-                ) = (None for i in range(4))
+                self.rel.update(VRel._make(None for i in range(4)))
             if self.ocedata.readiness["Zl"]:
-                (self.izl, self.rzl, self.dzl, self.bzl) = self.ocedata.find_rel_vl(z)
+                self.rel.update(self.ocedata.find_rel_vl(z))
             else:
-                (
-                    self.izl,
-                    self.rzl,
-                    self.dzl,
-                    self.bzl,
-                ) = (None for i in range(4))
+                self.rel.update(VlRel._make(None for i in range(4)))
         else:
-            (
-                self.iz,
-                self.rz,
-                self.dz,
-                self.bz,
-                self.izl,
-                self.rzl,
-                self.dzl,
-                self.bzl,
-                self.dep,
-            ) = (None for i in range(9))
+            self.rel.update(VRel._make(None for i in range(4)))
+            self.rel.update(VlRel._make(None for i in range(4)))
+            self.dep = None
 
         if t is not None:
             self.t = t
             if self.ocedata.readiness["time"]:
-                (self.it, self.rt, self.dt, self.bt) = self.ocedata.find_rel_t(t)
+                self.rel.update(self.ocedata.find_rel_t(t))
             else:
-                (
-                    self.it,
-                    self.rt,
-                    self.dt,
-                    self.bt,
-                ) = (None for i in range(4))
+                self.rel.update(TRel._make(None for i in range(4)))
         else:
-            (self.it, self.rt, self.dt, self.bt, self.t) = (None for i in range(5))
+            self.rel.update(TRel._make(None for i in range(4)))
+            self.t = None
+            # (self.it, self.rt, self.dt, self.bt, self.t) = (None for i in range(5))
         return self
 
     def subset(self, which):
-        """Create a subset of the position object.
+        """Create a subset of the Position object.
 
-        **Parameters:**
-
-        + which: numpy.ndarray
+        Parameters
+        ----------
+        which: numpy.ndarray, optional
             Define which points survive the subset operation.
             It be an array of either boolean or int.
             The selection is similar to that of selecting from a 1D numpy array.
 
-        **Returns:**
-
-        + the_subset: position object
-            The selected positions.
+        Returns
+        -------
+        the_subset: Position object
+            The selected Positions.
         """
-        p = position()
-        keys = self.__dict__.keys()
+        p = Position()
+        vardict = vars(self)
+        keys = vardict.keys()
         for i in keys:
-            item = self.__dict__[i]
+            item = vardict[i]
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
-                    p.__dict__[i] = item[which]
-                    p.N = len(p.__dict__[i])
+                    setattr(p, i, item[which])
+                    p.N = len(getattr(p, i))
                 else:
-                    p.__dict__[i] = item
+                    setattr(p, i, item)
+            elif isinstance(item, RelCoord):
+                setattr(p, i, item.subset(which))
             else:
-                p.__dict__[i] = item
-        # p.N = max([_general_len(i) for i in p.__dict__.values()])
+                setattr(p, i, item)
         return p
 
     def fatten_h(self, knw, ind_moves_kwarg={}):
@@ -272,13 +253,13 @@ class position:
         each row represen all the node needed for interpolation of a single point.
         "h" represent we are only doing it on the horizontal plane.
 
-        **Parameters:**
-
-        + knw: KnW object
+        Parameters
+        ----------
+        knw: KnW object
             The kernel used to find neighboring points.
-        + ind_moves_kward: dict
-            Key word argument to put into ind_moves method of the topology object.
-            Read topology.ind_moves for more detail.
+        ind_moves_kward: dict, optional
+            Key word argument to put into ind_moves method of the Topology object.
+            Read Topology.ind_moves for more detail.
         """
         #         self.ind_h_dict
         kernel = knw.kernel
@@ -305,7 +286,7 @@ class position:
             illegal = tp.check_illegal((n_iys, n_ixs))
 
         redo = np.array(np.where(illegal)).T
-        for num, loc in enumerate(redo):
+        for loc in redo:
             j, i = loc
             if self.face is not None:
                 ind = (self.face[j], self.iy[j], self.ix[j])
@@ -330,9 +311,9 @@ class position:
 
         Find the neighboring center grid points in the vertical direction.
 
-        **Parameters:**
-
-        + knw: KnW object
+        Parameters
+        ----------
+        knw: KnW object
             The kernel used to find neighboring points.
         """
         if self.iz is None:
@@ -343,12 +324,7 @@ class position:
             try:
                 self.iz_lin
             except AttributeError:
-                (
-                    self.iz_lin,
-                    self.rz_lin,
-                    self.dz_bin,
-                    self.bz_lin,
-                ) = self.ocedata.find_rel_v_lin(self.dep)
+                self.rel.update(self.ocedata.find_rel_v_lin(self.dep))
             return np.vstack([self.iz_lin.astype(int), self.iz_lin.astype(int) - 1]).T
         else:
             raise ValueError("vkernel not supported")
@@ -358,9 +334,9 @@ class position:
 
         Finding the neighboring staggered grid points in the vertical direction.
 
-        **Parameters:**
-
-        + knw: KnW object
+        Parameters
+        ----------
+        knw: KnW object
             The kernel used to find neighboring points.
         """
         if self.izl is None:
@@ -371,12 +347,7 @@ class position:
             try:
                 self.izl_lin
             except AttributeError:
-                (
-                    self.izl_lin,
-                    self.rzl_lin,
-                    self.dzl_bin,
-                    self.bzl_lin,
-                ) = self.ocedata.find_rel_vl_lin(self.dep)
+                self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
             return np.vstack([self.izl_lin.astype(int), self.izl_lin.astype(int) - 1]).T
         else:
             raise ValueError("vkernel not supported")
@@ -386,9 +357,9 @@ class position:
 
         Finding the neighboring center grid points in the temporal dimension.
 
-        **Parameters:**
-
-        + knw: KnW object
+        Parameters
+        ----------
+        knw: KnW object
             The kernel used to find neighboring points.
         """
         if self.it is None:
@@ -399,12 +370,7 @@ class position:
             try:
                 self.izl_lin
             except AttributeError:
-                (
-                    self.it_lin,
-                    self.rt_lin,
-                    self.dt_bin,
-                    self.bt_lin,
-                ) = self.ocedata.find_rel_t_lin(self.t)
+                self.rel.update(self.ocedata.find_rel_t_lin(self.t))
             return np.vstack([self.it_lin.astype(int), self.it_lin.astype(int) + 1]).T
         else:
             raise ValueError("tkernel not supported")
@@ -414,19 +380,19 @@ class position:
 
         Finding the neighboring center grid points in all 4 dimensions.
 
-        **Parameters:**
-
-        + knw: KnW object
+        Parameters
+        ----------
+        knw: KnW object
             The kernel used to find neighboring points.
-        + fourD: Boolean
+        fourD: Boolean, default False
             When we are doing nearest neighbor interpolation on some of the dimensions,
             with fourD = True, this will create dimensions with length 1, and will squeeze
             the dimension if fourD = False
-        + required: str, iterable of str
+        required: str, iterable of str, default "all"
             Which dims is needed in the process
-        + ind_moves_kward: dict
-            Key word argument to put into ind_moves method of the topology object.
-            Read topology.ind_moves for more detail.
+        ind_moves_kward: dict, optional
+            Key word argument to put into ind_moves method of the Topology object.
+            Read Topology.ind_moves for more detail.
         """
         if required != "all" and isinstance(required, str):
             required = tuple([required])
@@ -443,39 +409,43 @@ class position:
         ):
             ffc, fiy, fix = self.fatten_h(knw, ind_moves_kwarg=ind_moves_kwarg)
             if ffc is not None:
-                R = (ffc, fiy, fix)
+                to_return = (ffc, fiy, fix)
                 keys = ["face", "Y", "X"]
             else:
-                R = (fiy, fix)
+                to_return = (fiy, fix)
                 keys = ["Y", "X"]
         else:
-            R = tuple([np.zeros(self.N)])
+            to_return = tuple([np.zeros(self.N)])
             keys = ["place_holder"]
 
         if _in_required("Z", required):
             fiz = self.fatten_v(knw)
             if fiz is not None:
-                R = _ind_broadcast(fiz, R)
+                to_return = _ind_broadcast(fiz, to_return)
                 keys.insert(0, "Z")
         elif _in_required("Zl", required):
             fizl = self.fatten_vl(knw)
             if fizl is not None:
-                R = _ind_broadcast(fizl, R)
+                to_return = _ind_broadcast(fizl, to_return)
                 keys.insert(0, "Zl")
         elif fourD:
-            R = [np.expand_dims(R[i], axis=-1) for i in range(len(R))]
+            to_return = [
+                np.expand_dims(to_return[i], axis=-1) for i in range(len(to_return))
+            ]
 
         if _in_required("time", required):
             fit = self.fatten_t(knw)
             if fit is not None:
-                R = _ind_broadcast(fit, R)
+                to_return = _ind_broadcast(fit, to_return)
                 keys.insert(0, "time")
         elif fourD:
-            R = [np.expand_dims(R[i], axis=-1) for i in range(len(R))]
-        R = dict(zip(keys, R))
+            to_return = [
+                np.expand_dims(to_return[i], axis=-1) for i in range(len(to_return))
+            ]
+        to_return = dict(zip(keys, to_return))
         if required == "all":
             required = [i for i in keys if i != "place_holder"]
-        return tuple([R[i] for i in required])
+        return tuple(to_return[i] for i in required)
 
     def get_px_py(self):
         """Get the nearest 4 corner points of the given point.
@@ -483,18 +453,19 @@ class position:
         Used for oceanparcel style horizontal interpolation.
         """
         if self.face is not None:
-            return find_px_py(
-                self.ocedata.XG,
-                self.ocedata.YG,
-                self.ocedata.tp,
+            ind = (
                 self.face,
                 self.iy,
                 self.ix,
             )
         else:
-            return find_px_py(
-                self.ocedata.XG, self.ocedata.YG, self.ocedata.tp, self.iy, self.ix
-            )
+            ind = (self.iy, self.ix)
+        return find_px_py(
+            self.ocedata.XG,
+            self.ocedata.YG,
+            self.ocedata.tp,
+            ind,
+        )
 
     def get_f_node_weight(self):
         """Find weight for the corner points interpolation."""
@@ -518,28 +489,30 @@ class position:
             required = self.ocedata._ds[varName].dims
         ind = self.fatten(knw, required=required, **kwarg)
         if len(ind) != len(self.ocedata._ds[varName].dims):
-            raise Exception(
-                """dimension mismatch.
-                            Please check if the position objects have all the dimensions needed"""
+            raise IndexError(
+                "Dimension mismatch. "
+                "Please check if the Position objects "
+                "have all the dimensions needed"
             )
         if prefetched is None:
             return sread(self.ocedata[varName], ind)
         else:
             return prefetched[ind]
 
-    def _get_masked(self, knw, gridtype="C", **kwarg):  # pragma: no cover
+    def _get_masked(self, knw, cuvwg="C", **kwarg):  # pragma: no cover
         ind = self.fatten(knw, fourD=True, **kwarg)
         if self.it is not None:
             ind = ind[1:]
         if len(ind) != len(self.ocedata._ds["maskC"].dims):
-            raise Exception(
-                """dimension mismatch.
-                            Please check if the position objects have all the dimensions needed"""
+            raise IndexError(
+                "Dimension mismatch. "
+                "Please check if the Position objects "
+                "have all the dimensions needed"
             )
-        return get_masked(self.ocedata, ind, gridtype=gridtype)
+        return get_masked(self.ocedata, ind, cuvwg=cuvwg)
 
-    def _find_pk4d(self, knw, gridtype="C"):  # pragma: no cover
-        masked = self._get_masked(knw, gridtype=gridtype)
+    def _find_pk4d(self, knw, cuvwg="C"):  # pragma: no cover
+        masked = self._get_masked(knw, cuvwg=cuvwg)
         pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
         return pk4d
 
@@ -550,39 +523,39 @@ class position:
         Register the input of the interpolation function.
         For the input format, go to interpolation for more details.
 
-        **Returns:**
-
-        + output_format: dict
+        Returns
+        -------
+        output_format: dict
             Record information about the original varName input.
             Provide the formatting information for output,
             such that it matches the input in a direct fashion.
-        + main_keys: list
+        main_keys: list
             A list that defines each interpolation to be performed.
             The combination of variable name and kernel uniquely define such an operation.
-        + prefetch_dict: dict
+        prefetch_dict: dict
             Lookup the prefetched the data and its index prefix using main_key
-        + main_dict: dict
+        main_dict: dict
             Lookup the raw information using main_key
-        + hash_index: dict
+        hash_index: dict
             Lookup the token that uniquely define its indexing operation using main_key.
             Different main_key could share the same token.
-        + hash_mask: dict
+        hash_mask: dict
             Lookup the token that uniquely define its masking operation using main_key.
             Different main_key could share the same token.
-        + hash_read: dict
+        hash_read: dict
             Lookup the token that uniquely define its reading of the data using main_key.
             Different main_key could share the same token.
-        + hash_weight: dict
+        hash_weight: dict
             Lookup the token that uniquely define its computation of the weight using main_key.
             Different main_key could share the same token.
         """
         # prefetch_dict = {var:(prefetched,i_min)}
         # main_dict = {var:(var,kernel)}
-        # hash_index = {var:hash(cuvg,kernel_size)}
+        # hash_index = {var:hash(cuvwg,kernel_size)}
         # hash_read  = {var:hash(var,kernel_size)}
-        # hash_weight= {var:hash(kernel,cuvg)}
+        # hash_weight= {var:hash(kernel,cuvwg)}
         output_format = {}
-        if isinstance(varName, str) or isinstance(varName, tuple):
+        if isinstance(varName, (str, tuple)):
             varName = [varName]
             output_format["single"] = True
         elif isinstance(varName, list):
@@ -609,7 +582,7 @@ class position:
             temp = []
             for var in varName:
                 a_knw = knw.get(var)
-                if (a_knw is None) or not (isinstance(a_knw, (tuple, KnW))):
+                if a_knw is None or not isinstance(a_knw, (tuple, KnW)):
                     raise ValueError(
                         f"Variable {var} does not have a proper corresponding kernel"
                     )
@@ -710,11 +683,6 @@ class position:
                         "thus, it has to have 2 elements"
                     )
                 uknw, vknw = kkk
-                # if not uknw.same_size(vknw):
-                #     raise Exception('u,v kernel needs to have same size'
-                #                     'to navigate the complex grid orientation.'
-                #                     'use a kernel that include both of the uv kernels'
-                #                    )
                 kernel_size_hash.append(uknw.size_hash())
                 kernel_hash.append(hash((uknw, vknw)))
                 mask_ignore.append(uknw.ignore_mask or vknw.ignore_mask)
@@ -757,15 +725,15 @@ class position:
 
         Perform the fatten process for each unique token. Register the result as a dict.
 
-        **Parameters:**
-
-        + hash_index: dict
+        Parameters
+        ----------
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + index_lookup: dict
             A dictionary to lookup fatten results.
             The keys are the token in hash_index.
@@ -793,10 +761,10 @@ class position:
             elif isinstance(varName, tuple):
                 uknw, vknw = knw
                 uind = self.fatten(
-                    uknw, required=dims, fourD=True, ind_moves_kwarg={"cuvg": "U"}
+                    uknw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": "U"}
                 )
                 vind = self.fatten(
-                    vknw, required=dims, fourD=True, ind_moves_kwarg={"cuvg": "V"}
+                    vknw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": "V"}
                 )
                 index_lookup[hs] = (uind, vind)
 
@@ -809,17 +777,17 @@ class position:
         This is to say that sometimes u velocity becomes v velocity for datasets with face topology.
           Register the result as a dict.
 
-        **Parameters:**
-
-        + index_lookup: dict
+        Parameters
+        ----------
+        index_lookup: dict
             See _fatten_required_index_and_register
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + transform_lookup: dict
             A dictionary to lookup transformation results.
             The keys are the token in hash_index.
@@ -859,10 +827,10 @@ class position:
                 bool_vfromu = np.abs(VfromUvel).astype(bool)
                 bool_vfromv = np.abs(VfromVvel).astype(bool)
 
-                indufromu = tuple([idid[bool_ufromu] for idid in uind])
-                indufromv = tuple([idid[bool_ufromv] for idid in uind])
-                indvfromu = tuple([idid[bool_vfromu] for idid in vind])
-                indvfromv = tuple([idid[bool_vfromv] for idid in vind])
+                indufromu = tuple(idid[bool_ufromu] for idid in uind)
+                indufromv = tuple(idid[bool_ufromv] for idid in uind)
+                indvfromu = tuple(idid[bool_vfromu] for idid in vind)
+                indvfromv = tuple(idid[bool_vfromv] for idid in vind)
 
                 transform_lookup[hs] = (
                     (UfromUvel, UfromVvel, VfromUvel, VfromVvel),
@@ -881,21 +849,21 @@ class position:
 
         Perform the masking process and register in a dictionary.
 
-        **Parameters:**
-
-        + index_lookup: dict
+        Parameters
+        ----------
+        index_lookup: dict
             See _fatten_required_index_and_register
-        + transform_lookup: dict
+        transform_lookup: dict
             See _transform_vector_and_lookup
-        + hash_mask: dict
+        hash_mask: dict
             See _register_interpolation_input
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + mask_lookup: dict
             A dictionary to lookup masking results.
             The keys are the token in hash_mask.
@@ -935,7 +903,7 @@ class position:
                         cuvw = "C"
                 else:
                     cuvw = "C"
-                masked = get_masked(self.ocedata, ind_for_mask, gridtype=cuvw)
+                masked = get_masked(self.ocedata, ind_for_mask, cuvwg=cuvw)
                 mask_lookup[hs] = masked
             elif isinstance(varName, tuple):
                 to_unzip = transform_lookup[hsind]
@@ -943,8 +911,8 @@ class position:
                 if to_unzip is None:
                     uind_for_mask = _ind_for_mask(uind, dims[0])
                     vind_for_mask = _ind_for_mask(vind, dims[1])
-                    umask = get_masked(self.ocedata, uind_for_mask, gridtype="U")
-                    vmask = get_masked(self.ocedata, vind_for_mask, gridtype="V")
+                    umask = get_masked(self.ocedata, uind_for_mask, cuvwg="U")
+                    vmask = get_masked(self.ocedata, vind_for_mask, cuvwg="V")
                 else:
                     (
                         _,
@@ -955,16 +923,16 @@ class position:
                     vmask = np.full(vind[0].shape, np.nan)
 
                     umask[bool_ufromu] = get_masked(
-                        self.ocedata, _ind_for_mask(indufromu, dims[0]), gridtype="U"
+                        self.ocedata, _ind_for_mask(indufromu, dims[0]), cuvwg="U"
                     )
                     umask[bool_ufromv] = get_masked(
-                        self.ocedata, _ind_for_mask(indufromv, dims[1]), gridtype="V"
+                        self.ocedata, _ind_for_mask(indufromv, dims[1]), cuvwg="V"
                     )
                     vmask[bool_vfromu] = get_masked(
-                        self.ocedata, _ind_for_mask(indvfromu, dims[0]), gridtype="U"
+                        self.ocedata, _ind_for_mask(indvfromu, dims[0]), cuvwg="U"
                     )
                     vmask[bool_vfromv] = get_masked(
-                        self.ocedata, _ind_for_mask(indvfromv, dims[1]), gridtype="V"
+                        self.ocedata, _ind_for_mask(indvfromv, dims[1]), cuvwg="V"
                     )
                 mask_lookup[hs] = (umask, vmask)
         return mask_lookup
@@ -980,23 +948,23 @@ class position:
     ):
         """Read the data and register them as dict.
 
-        **Parameters:**
-
-        + index_lookup: dict
+        Parameters
+        ----------
+        index_lookup: dict
             See _fatten_required_index_and_register
-        + transform_lookup: dict
+        transform_lookup: dict
             See _transform_vector_and_lookup
-        + hash_read: dict
+        hash_read: dict
             See _register_interpolation_input
-        + hash_index: dict
+        hash_index: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
-        + prefetch_dict: dict
+        prefetch_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + read_lookup: dict
             A dictionary to lookup data reading results.
             The keys are the token in hash_read.
@@ -1047,12 +1015,6 @@ class position:
                 temp_n_u[bool_ufromv] = ufromv  # 1#
                 temp_n_v[bool_vfromu] = vfromu  # 0#
                 temp_n_v[bool_vfromv] = vfromv  # 1#
-                # dont_break = np.isclose(temp_n_v,2).any()
-                # if not dont_break:
-                #     print(bool_vfromu)
-                #     raise Exception('what is going on')
-                # else:
-                #     print('somehow it passed')
 
                 n_u = np.einsum("nijk,ni->nijk", temp_n_u, UfromUvel) + np.einsum(
                     "nijk,ni->nijk", temp_n_u, UfromVvel
@@ -1069,19 +1031,19 @@ class position:
     ):
         """Compute the weights and register them as dict.
 
-        **Parameters:**
-
-        + mask_lookup: dict
+        Parameters
+        ----------
+        mask_lookup: dict
             See _mask_value_and_register
-        + hash_weight: dict
+        hash_weight: dict
             See _register_interpolation_input
-        + hash_mask: dict
+        hash_mask: dict
             See _register_interpolation_input
-        + main_dict: dict
+        main_dict: dict
             See _register_interpolation_input
 
-        **Returns:**
-
+        Returns
+        -------
         + weight_lookup: dict
             A dictionary to lookup the weights computed.
             The keys are the token in hash_weight.
@@ -1185,33 +1147,33 @@ class position:
         _mask_value_and_register,
         _compute_weight_and_registe,.
 
-        **Parameters:**
-
-        + varName: list, str, tuple
+        Parameters
+        ----------
+        varName: list, str, tuple
             The variables to interpolate. Tuples are used for horizontal vectors.
             Put str and list in a list if you have multiple things to interpolate.
             This input also defines the format of the output.
-        + knw: KnW object, tuple, list, dict
+        knw: KnW object, tuple, list, dict
             The kernel object used for the operation.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
-        + vec_transform: Boolean
+        vec_transform: Boolean
             Whether to project the vector field to the local zonal/meridional direction.
-        + prefetched: numpy.ndarray, tuple, list, dict, None
+        prefetched: numpy.ndarray, tuple, list, dict, None, default None
             The prefetched array for the data, this will effectively overwrite varName.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
-        + i_min: tuple, list, dict, None
+        i_min: tuple, list, dict, None, default None
             The prefix of the prefetched array.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
 
-        **Returns:**
-
-        + R: list, numpy.array, tuple
+        Returns
+        -------
+        to_return: list, numpy.array, tuple
             The interpolation/derivative output in the same format as varName.
         """
-        R = []
+        to_return = []
         (
             output_format,
             main_keys,
@@ -1250,7 +1212,7 @@ class position:
                 weight = weight_lookup[hash_weight[key]]
                 needed = _partial_flatten(needed)
                 weight = _partial_flatten(weight)
-                R.append(np.einsum("nj,nj->n", needed, weight))
+                to_return.append(np.einsum("nj,nj->n", needed, weight))
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
@@ -1261,17 +1223,17 @@ class position:
                 v = np.einsum("nijk,nijk->n", n_v, vweight)
                 if vec_transform:
                     u, v = local_to_latlon(u, v, self.cs, self.sn)
-                R.append((u, v))
+                to_return.append((u, v))
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
             else:
                 raise ValueError(f"unexpected varName: {varName}")
 
-        final_dict = dict(zip(output_format["final_varName"], R))
+        final_dict = dict(zip(output_format["final_varName"], to_return))
         ori_list = output_format["ori_list"]
         output = []
-        # print(ori_list,R,final_dict.keys())
+        # print(ori_list,to_return,final_dict.keys())
         for key in ori_list:
             var, knw = key
 

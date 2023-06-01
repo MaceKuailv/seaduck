@@ -4,10 +4,11 @@ import warnings
 
 import numpy as np
 
-from seaduck.eulerian import position
+from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
+from seaduck.ocedata import RelCoord
 from seaduck.runtime_conf import compileable
-from seaduck.utils import find_rel_time, find_rx_ry_oceanparcel, rel2latlon, to_180
+from seaduck.utils import find_rel, find_rx_ry_oceanparcel, rel2latlon, to_180
 
 deg2m = 6271e3 * np.pi / 180
 
@@ -19,13 +20,13 @@ def increment(t, u, du):
     For a one dimensional particle with speed u and speed derivative du,
     find how far it will travel in duration t.
 
-    **Parameter:**
-
-    + t: float, numpy.ndarray
+    Parameters
+    ----------
+    t: float, numpy.ndarray
         The time duration
-    + u: float, numpy.ndarray
+    u: float, numpy.ndarray
         The velocity defined at the starting point.
-    + du: float, numpy.ndarray
+    du: float, numpy.ndarray
         The velocity gradient. Assumed to be constant.
     """
     return u / du * (np.exp(du * t) - 1)
@@ -34,19 +35,19 @@ def increment(t, u, du):
 def stationary(t, u, du, x0):
     """Find the final position after time t.
 
-    For a one dimensional particle with speed u and speed derivative du
+    For a one dimensional Particle with speed u and speed derivative du
     starting at x0, find the final position after time t.
     "Stationary" means that we are assuming there is no time dependency.
 
-    **Parameter:**
-
-    + t: float, numpy.ndarray
+    Parameters
+    ----------
+    t: float, numpy.ndarray
         The time duration
-    + u: float, numpy.ndarray
+    u: float, numpy.ndarray
         The velocity defined at the starting point.
-    + du: float, numpy.ndarray
+    du: float, numpy.ndarray
         The velocity gradient. Assumed to be constant.
-    + x0: float, numpy.ndarray
+    x0: float, numpy.ndarray
         The starting position.
     """
     incr = increment(t, u, du)
@@ -59,23 +60,23 @@ def stationary(t, u, du, x0):
 def stationary_time(u, du, x0):
     """Find the amount of time to leave the cell.
 
-    Find the amount of time it needs for a particle to hit x = -0.5 and 0.5.
+    Find the amount of time it needs for a Particle to hit x = -0.5 and 0.5.
     The time could be negative.
 
-    **Parameters:**
-
-    + u: numpy.ndarray
+    Parameters
+    ----------
+    u: numpy.ndarray
         The velocity defined at the starting point.
-    + du: numpy.ndarray
+    du: numpy.ndarray
         The velocity gradient. Assumed to be constant.
-    + x0: numpy.ndarray
+    x0: numpy.ndarray
         The starting position.
 
-    **Returns:**
-
-    + tl: numpy.ndarray
+    Returns
+    -------
+    tl: numpy.ndarray
         The time it takes to hit -0.5.
-    + tr: numpy.ndarray
+    tr: numpy.ndarray
         The time it takes to hit 0.5
     """
     tl = np.log(1 - du / u * (0.5 + x0)) / du
@@ -100,16 +101,16 @@ def time2wall(xs, us, dus):
 def which_early(tf, ts):
     """Find out which event happens first.
 
-    We are trying to integrate the particle to time tf.
+    We are trying to integrate the Particle to time tf.
     The first event is either:
     1. tf is reached before reaching a wall
-    2. ts[i] is reached, and a particle hit a wall. ts[i]*tf>0.
+    2. ts[i] is reached, and a Particle hit a wall. ts[i]*tf>0.
 
-    **Parameters:**
-
-    + tf: float, numpy.ndarray
+    Parameters
+    ----------
+    tf: float, numpy.ndarray
         The final time
-    + ts: list
+    ts: list
         The list of events calculated using time2wall
     """
     ts.append(np.ones(len(ts[0])) * tf)  # float or array both ok
@@ -152,37 +153,37 @@ dvknw_s = KnW(
 )
 
 
-class particle(position):
+class Particle(Position):
     """Lagrangian particle object.
 
-    The Lagrangian particle object. Simply a eulerian position object
+    The Lagrangian particle object. Simply a eulerian Position object
     that know how to move itself.
 
-    **Parameters:**
-
-    + kwarg: dict
-        The keyword argument that feed into position.from_latlon method
-    + uname, vname, wname: str
+    Parameters
+    ----------
+    kwarg: dict
+        The keyword argument that feed into Position.from_latlon method
+    uname, vname, wname: str
         The variable names for the velocity/mass-transport components.
         If transport is true, pass in names of the volume/mass transport
         across cell wall in m^3/3
         else,  just pass something that is in m/s
-    + dont_fly: Boolean
+    dont_fly: Boolean
         Sometimes there is non-zero vertical velocity at sea surface.
         dont_fly = True set that to zero.
         An error may occur depends on the situation if set otherwise.
-    + save_raw: Boolean
+    save_raw: Boolean
         Whether to record the analytical history of all particles in an
         unstructured list.
-    + transport: Boolean
+    transport: Boolean
         If transport is true, pass in names of the volume/mass transport
         across cell wall in m^3/3
         else,  just pass velocity that is in m/s
-    + callback: function that take particle as input
-        A callback function that takes particle as input. Return boolean
-        array that determines which particle should still be going.
+    callback: function that take Particle as input
+        A callback function that takes Particle as input. Return boolean
+        array that determines which Particle should still be going.
         Users can also define customized functions here.
-    + max_iteration: int
+    max_iteration: int
         The number of analytical steps allowed for the to_next_stop
         method.
     """
@@ -199,14 +200,10 @@ class particle(position):
         max_iteration=200,
         **kwarg,
     ):
+        Position.__init__(self)
         self.from_latlon(**kwarg)
         if self.ocedata.readiness["Zl"]:
-            (
-                self.izl_lin,
-                self.rzl_lin,
-                self.dzl_lin,
-                self.bzl_lin,
-            ) = self.ocedata.find_rel_vl_lin(self.dep)
+            self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
         else:
             (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
                 None for i in range(4)
@@ -251,7 +248,7 @@ class particle(position):
         self.dont_fly = dont_fly
         if dont_fly:
             if wname is not None:
-                self.ocedata[wname].loc[dict(Zl=0)] = 0
+                self.ocedata[wname].loc[{"Zl": 0}] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
 
@@ -298,11 +295,11 @@ class particle(position):
         wname = self.wname
         if "time" not in self.ocedata[uname].dims:
             try:
-                self.uarray
-                self.varray
+                assert isinstance(self.uarray, np.ndarray)
+                assert isinstance(self.varray, np.ndarray)
                 if self.wname is not None:
-                    self.warray
-            except AttributeError:
+                    assert isinstance(self.warray, np.ndarray)
+            except (AttributeError, AssertionError):
                 self.uarray = np.array(self.ocedata[uname])
                 self.varray = np.array(self.ocedata[vname])
                 if self.wname is not None:
@@ -343,9 +340,9 @@ class particle(position):
         volume of the cell is needed for the integration.
         This method read the volume that is calculated at __init__.
 
-        **Parameters:**
-
-        + which: numpy.ndarray
+        Parameters
+        ----------
+        which: numpy.ndarray, optional
             Boolean or int array that specify the subset of points
             to do the operation.
         """
@@ -363,11 +360,11 @@ class particle(position):
 
         Read the velocity and velocity derivatives in all three dimensions
         using the interpolate method with the default kernel.
-        Read eulerian.position.interpolate for more detail.
+        Read eulerian.Position.interpolate for more detail.
 
-        **Parameters:**
-
-        + which: numpy.ndarray
+        Parameters
+        ----------
+        which: numpy.ndarray
             Boolean or int array that specify the subset of points to
             do the operation.
         """
@@ -463,8 +460,8 @@ class particle(position):
         where = np.where(which)[0]
         try:
             self.ttlist
-        except AttributeError:
-            raise AttributeError("This is not a particle_rawlist object")
+        except AttributeError as exc:
+            raise AttributeError("This is not a particle_rawlist object") from exc
         for i in where:
             if self.face is not None:
                 self.fclist[i].append(self.face[i])
@@ -536,9 +533,9 @@ class particle(position):
         At the same time change the velocity accordingly.
         In the mean time, creating some negiligible error in time.
 
-        **Parameters:**
-
-        + tol: float
+        Parameters
+        ----------
+        tol: float
             The relative tolerance when particles is significantly
             close to the cell.
         """
@@ -549,16 +546,16 @@ class particle(position):
             ymax = np.nanmax(self.ry)
             ymin = np.nanmin(self.ry)
 
-            logging.debug(f"converting {xmax} to 0.5")
-            logging.debug(f"converting {xmin} to -0.5")
-            logging.debug(f"converting {ymax} to 0.5")
-            logging.debug(f"converting {ymin} to -0.5")
+            logging.debug("converting %s to 0.5", xmax)
+            logging.debug("converting %s to -0.5", xmin)
+            logging.debug("converting %s to 0.5", ymax)
+            logging.debug("converting %s to -0.5", ymin)
 
             if self.rzl_lin is not None:
                 zmax = np.nanmax(self.rzl_lin)
                 zmin = np.nanmin(self.rzl_lin)
-                logging.debug(f"converting {zmax} to 1")
-                logging.debug(f"converting {zmin} to 0")
+                logging.debug("converting %s to 1", zmax)
+                logging.debug("converting %s to 0", zmin)
 
         # if xmax>=0.5-tol:
         where = self.rx >= 0.5 - tol
@@ -666,9 +663,8 @@ class particle(position):
             self.izl_lin = self.izl_lin.astype(int)
 
         if self.ocedata.readiness["Z"]:
-            self.iz, self.rz, self.dz, self.bz = self.ocedata.find_rel_v(self.dep)
+            self.rel.update(self.ocedata.find_rel_v(self.dep))
         if self.ocedata.readiness["h"] == "local_cartesian":
-            # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
                     self.ocedata.XC[self.face, self.iy, self.ix],
@@ -697,7 +693,6 @@ class particle(position):
                     self.ocedata.dY[self.iy, self.ix],
                 )
         elif self.ocedata.readiness["h"] == "oceanparcel":
-            # todo: split the oceanparcel case
             if self.face is not None:
                 self.bx, self.by = (
                     self.ocedata.XC[self.face, self.iy, self.ix],
@@ -756,11 +751,11 @@ class particle(position):
         2. ended up on a cell wall before
         (if tf is negative, then "after") tf.
 
-        **Parameters:**
-
-        + tf: float, numpy.ndarray
+        Parameters
+        ----------
+        tf: float, numpy.ndarray
             The longest duration of the simulation for each particle.
-        + which: numpy.ndarray
+        which: numpy.ndarray, optional
             Boolean or int array that specify the subset of points to
             do the operation.
         """
@@ -774,8 +769,8 @@ class particle(position):
         if self.rzl_lin is not None:
             xs = [self.rx[which], self.ry[which], self.rzl_lin[which] - 1 / 2]
         else:
-            x_ = self.rx[which]
-            xs = [x_, self.ry[which], np.zeros_like(x_)]
+            x_temp = self.rx[which]
+            xs = [x_temp, self.ry[which], np.zeros_like(x_temp)]
         us = [self.u[which], self.v[which], self.w[which]]
         dus = [self.du[which], self.dv[which], self.dw[which]]
 
@@ -821,7 +816,6 @@ class particle(position):
                 self.dx,
                 self.dy,
                 dzl_lin,
-                self.dt,
                 self.bx,
                 self.by,
                 bzl_lin,
@@ -874,7 +868,7 @@ class particle(position):
         #             print(tend[wrong_ind])
         #             print(t_directed[:,wrong_ind])
         #             print('stuck!')
-        #             raise Exception('ahhhhh!')
+        #             raise ValueError('ahhhhh!')
         if self.face is not None:
             self.face[which], self.iy[which], self.ix[which] = (tface, tiy, tix)
         else:
@@ -885,19 +879,20 @@ class particle(position):
     def deepcopy(self):
         """Return a clone of the object.
 
-        The object is a position object, and thus cannot move any more.
+        The object is a Position object, and thus cannot move any more.
         """
-        p = position()
+        p = Position()
         p.ocedata = self.ocedata
         p.N = self.N
-        keys = self.__dict__.keys()
+        varsdict = vars(self)
+        keys = varsdict.keys()
         for i in keys:
-            item = self.__dict__[i]
+            item = varsdict[i]
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
-                    p.__dict__[i] = copy.deepcopy(item)
-            elif isinstance(item, list):
-                p.__dict__[i] = copy.deepcopy(item)
+                    setattr(p, i, copy.deepcopy(item))
+            elif isinstance(item, (list, RelCoord)):
+                setattr(p, i, copy.deepcopy(item))
         return p
 
     def to_next_stop(self, t1):
@@ -908,9 +903,9 @@ class particle(position):
         If the maximum time is reached,
         we also force all particle's internal clock to be tl.
 
-        **Parameters:**
-
-        + tl: float, numpy.ndarray
+        Parameters
+        ----------
+        tl: float, numpy.ndarray
             The final time relative to 1970-01-01 in seconds.
         """
         tol = 0.5
@@ -949,37 +944,40 @@ class particle(position):
             warnings.warn("maximum iteration count reached")
         self.t = np.ones(self.N) * t1
         if self.ocedata.readiness["time"]:
-            self.it, self.rt, self.dt, self.bt = self.ocedata.find_rel_t(self.t)
-            self.it, _, _, _ = find_rel_time(self.t, self.ocedata.time_midp)
-            self.it += 1
+            before_first = self.t < self.ocedata.time_midp[0]
+            self.it[before_first] = 0
+            self.it[~before_first], _, _, _ = find_rel(
+                self.t[~before_first], self.ocedata.time_midp
+            )
+            self.it[~before_first] += 1
 
     def to_list_of_time(
         self, normal_stops, update_stops="default", return_in_between=True
     ):
         """Integrate the particles to a list of time.
 
-        **Parameters:**
-
-        + normal_stops: iterable
+        Parameters
+        ----------
+        normal_stops: iterable
             The time steps that user request a output
-        + update_stops: iterable, or 'default'
+        update_stops: iterable, or 'default'
             The time steps that uvw array changes in the model.
             If 'default' is set,
             the method is going to figure it out automatically.
-        + return_in_between: Boolean
+        return_in_between: Boolean
             Users can get the values of update_stops free of computational
             cost.We understand that user may sometimes don't want those in
             the output.In that case, it that case, set it to be False,
             and the output will all be at normal_stops.
 
-        **Returns:**
-
-        + stops: list
+        Returns
+        -------
+        stops: list
             The list of stops.
             It is the combination of normal_stops and output_stops by
             default. f return_in_between is set to be False,
             this is then the same as normal stops.
-        + R: list
+        to_return: list
             A list deep copy of particle that inherited
             the interpolate method
             as well as velocity and coords info.
@@ -1003,14 +1001,14 @@ class particle(position):
                         t_min < self.ocedata.time_midp, self.ocedata.time_midp < t_max
                     )
                 ]
-            except AttributeError:
+            except AttributeError as exc:
                 raise AttributeError(
                     "time_midp is required for "
                     "update_stops = default,"
                     " but it is not in the dataset, "
                     "either create it or "
                     "specify the update stops."
-                )
+                ) from exc
         temp = list(zip(normal_stops, np.zeros_like(normal_stops))) + list(
             zip(update_stops, np.ones_like(update_stops))
         )
@@ -1018,7 +1016,7 @@ class particle(position):
         stops, update = list(zip(*temp))
         #         return stops,update
         self.get_u_du()
-        R = []
+        to_return = []
         for i, tl in enumerate(stops):
             logging.info(np.datetime64(round(tl), "s"))
             if self.save_raw:
@@ -1034,9 +1032,9 @@ class particle(position):
                     self.update_uvw_array()
                     self.get_u_du()
                 if return_in_between:
-                    R.append(self.deepcopy())
+                    to_return.append(self.deepcopy())
             else:
-                R.append(self.deepcopy())
+                to_return.append(self.deepcopy())
             if self.save_raw:
                 self.empty_lists()
-        return stops, R
+        return stops, to_return

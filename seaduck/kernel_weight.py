@@ -1,10 +1,11 @@
 import copy
 import logging
+from functools import cache
+from itertools import combinations
 
 import numpy as np
 
 from seaduck.runtime_conf import compileable
-from seaduck.utils import get_combination
 
 # default kernel for interpolation.
 default_kernel = np.array(
@@ -27,16 +28,16 @@ default_kernels = [
 def show_kernels(kernels=default_kernels):
     """Plot a small scatter plot of the shape of a list of kernel.
 
-    **Parameters:**
-
-    + kernels: list of numpy.ndarray
+    Parameters
+    ----------
+    kernels: list of numpy.ndarray
         Each of the element is a (n,2) shaped array,
         where n is the number of element in the kernel.
     """
     try:
         import matplotlib.pyplot as plt
-    except ImportError:
-        raise ImportError("maptlotlib.pyplot is needed to use this function.")
+    except ImportError as exc:
+        raise ImportError("maptlotlib.pyplot is needed to use this function.") from exc
 
     for i, k in enumerate(kernels):
         x, y = k.T
@@ -58,9 +59,9 @@ def _translate_to_tendency(k):
     it will return [0,0] or more explicitly ['up','up']
     [0,0] will produce a empty array.
 
-    **Parameters:**
-
-    + k: numpy.ndarray
+    Parameters
+    ----------
+    k: numpy.ndarray
         A (n,2)-shaped array, where n is the number of
         element in the kernel.
     """
@@ -82,26 +83,41 @@ def _translate_to_tendency(k):
 
 
 def kernel_weight_x(kernel, ktype="interp", order=0):
-    """Return the function that calculate the interpolation/derivative weight.
+    r"""Return the function that calculate the interpolation/derivative weight.
 
     input needs to be a cross-shaped (that's where x is coming from) Lagrangian kernel.
 
-    **Parameters:**
+    If you don't want to know what is going on under the hood.
+    it's totally fine.
 
-    + kernel: np.ndarray
+    all of the following is a bit hard to understand.
+    The k th (k>=0) derivative of the lagrangian polynomial is
+    $$
+    w_j= \frac{\Sigma_{i\neq j} Pi_{i<m-1-k} (x-x_i)}{\Pi_{i\neq j} (x_j - x_i)}
+    $$
+    for example: if the points are [-1,0,1] for point 0
+    k = 0: w = (x-1)(x+1)/(0-1)(0+1)
+    k = 1: w = [(x+1)+(x-1)]/(0-1)(0+1)
+
+    for a cross shape kernel:
+    f(rx,ry) = f_x(rx) + f_y(ry) - f(0,0)
+
+    Parameters
+    ----------
+    kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a cross
-    + ktype: str
+    ktype: str
         "interp" (default): Use both x y direction for interpolation,
         implies that order = 0
         "x": Use only x direction for interpolation/derivative
         "y": Use only y direction for interpolation/derivative
-    + order: int
+    order: int
         The order of derivatives. Zero for interpolation.
 
-    **Returns:**
-
-    + func(rx,ry): compilable function
+    Returns
+    -------
+    func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
     """
@@ -114,44 +130,24 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     elif len(ys) == 1:
         ktype = "x"
 
-    """
-    If you don't want to know what is going on under the hood.
-    it's totally fine.
-
-    all of the following is a bit hard to understand.
-    The k th (k>=0) derivative of the lagrangian polynomial is
-          Sigma_{i\neq j} Pi_{i<m-1-k} (x-x_i)
-    w_j= ----------------------------------------
-          Pi_{i\neq j} (x_j - x_i)
-
-    for example: if the points are [-1,0,1] for point 0
-    k = 0: w = (x-1)(x+1)/(0-1)(0+1)
-    k = 1: w = [(x+1)+(x-1)]/(0-1)(0+1)
-
-    for a cross shape kernel:
-    f(rx,ry) = f_x(rx) + f_y(ry) - f(0,0)
-
-    The following equation is just that.
-    """
-
     x_poly = []
     y_poly = []
     if ktype == "interp":
         for ax in xs:
-            x_poly.append(get_combination([i for i in xs if i != ax], len(xs) - 1))
+            x_poly.append(list(combinations([i for i in xs if i != ax], len(xs) - 1)))
         for ay in ys:
-            y_poly.append(get_combination([i for i in ys if i != ay], len(ys) - 1))
+            y_poly.append(list(combinations([i for i in ys if i != ay], len(ys) - 1)))
     if ktype == "x":
         for ax in xs:
             x_poly.append(
-                get_combination([i for i in xs if i != ax], len(xs) - 1 - order)
+                list(combinations([i for i in xs if i != ax], len(xs) - 1 - order))
             )
         y_poly = [[[]]]
     if ktype == "y":
         x_poly = [[[]]]
         for ay in ys:
             y_poly.append(
-                get_combination([i for i in ys if i != ay], len(ys) - 1 - order)
+                list(combinations([i for i in ys if i != ay], len(ys) - 1 - order))
             )
     x_poly = np.array(x_poly).astype(float)
     y_poly = np.array(y_poly).astype(float)
@@ -299,7 +295,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         elif order == max_order:
             return the_x_maxorder_func
         else:
-            raise Exception("Kernel is too small for this derivative")
+            raise ValueError("Kernel is too small for this derivative")
     if ktype == "y":
         max_order = len(ys) - 1
         if order < max_order:
@@ -307,7 +303,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         elif order == max_order:
             return the_y_maxorder_func
         else:
-            raise Exception("Kernel is too small for this derivative")
+            raise ValueError("Kernel is too small for this derivative")
 
 
 # we can define the default interpolation functions here,
@@ -321,21 +317,21 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     input needs to be a rectangle-shaped (that's where x is coming from)
     Lagrangian kernel.
 
-    **Parameters:**
-
-    + kernel: np.ndarray
+    Parameters
+    ----------
+    kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a rectangle
-    + xorder: int
+    xorder: int
         The order of derivatives in the x direction.
         Zero for interpolation.
-    + yorder: int
+    yorder: int
         The order of derivatives in the y direction.
         Zero for interpolation.
 
-    **Returns:**
-
-    + func(rx,ry): compilable function
+    Returns
+    -------
+    func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
     """
@@ -348,21 +344,25 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     elif xorder == len(xs) - 1:
         xmaxorder = True
     else:
-        raise Exception("Kernel is too small for this derivative")
+        raise ValueError("Kernel is too small for this derivative")
 
     if yorder < len(ys) - 1:
         pass
     elif yorder == len(ys) - 1:
         ymaxorder = True
     else:
-        raise Exception("Kernel is too small for this derivative")
+        raise ValueError("Kernel is too small for this derivative")
 
     x_poly = []
     y_poly = []
     for ax in xs:
-        x_poly.append(get_combination([i for i in xs if i != ax], len(xs) - 1 - xorder))
+        x_poly.append(
+            list(combinations([i for i in xs if i != ax], len(xs) - 1 - xorder))
+        )
     for ay in ys:
-        y_poly.append(get_combination([i for i in ys if i != ay], len(ys) - 1 - yorder))
+        y_poly.append(
+            list(combinations([i for i in ys if i != ay], len(ys) - 1 - yorder))
+        )
     x_poly = np.array(x_poly).astype(float)
     y_poly = np.array(y_poly).astype(float)
 
@@ -436,22 +436,22 @@ def kernel_weight(kernel, ktype="interp", order=0):
     Return the function that calculate the interpolation/derivative weight
     of a  Lagrangian kernel.
 
-    **Parameters:**
-
-    + kernel: np.ndarray
+    Parameters
+    ----------
+    kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It need to either shape like a rectangle or a cross
-    + ktype: str
+    ktype: str
         "interp" (default): Use both x y direction for interpolation,
         implies that order = 0
         "dx": Use only x direction for interpolation/derivative
         "dy": Use only y direction for interpolation/derivative
-    + order: int
+    order: int
         The order of derivatives. Zero for interpolation.
 
-    **Returns:**
-
-    + func(rx,ry): compilable function
+    Returns
+    -------
+    func(rx,ry): compilable function
         function to calculate the hotizontal interpolation/derivative
         weight
     """
@@ -469,6 +469,10 @@ def kernel_weight(kernel, ktype="interp", order=0):
             return kernel_weight_s(kernel, xorder=order, yorder=0)
         elif ktype == "dy":
             return kernel_weight_s(kernel, xorder=0, yorder=order)
+        else:
+            raise ValueError(f"ktype = {ktype} not supported")
+    else:
+        raise NotImplementedError("The shape of the kernel is neither cross or square")
 
 
 default_interp_funcs = [kernel_weight_x(a_kernel) for a_kernel in default_kernels]
@@ -526,32 +530,32 @@ def get_weight_cascade(
     russian_doll=default_inheritance,
     funcs=default_interp_funcs,
 ):
-    weight = np.zeros((len(rx), len(kernel_large)))
-    weight[:, 0] = np.nan
-    """Compute the weight
+    """Compute the weight.
 
     apply the corresponding functions that was figured out in
     find_which_points_for_each_kernel
 
-    **Parameters:**
-
-    + rx,ry: numpy.ndarray
+    Parameters
+    ----------
+    rx,ry: numpy.ndarray
         1D array with length N of non-dimensional relative horizontal
         position to the nearest node
-    + kernel_large: numpy.ndarray
+    kernel_large: numpy.ndarray
         A numpy kernel of shape (M,2) that contains all the kernels needed.
-    + russian_doll: list of list(s)
+    russian_doll: list of list(s)
         The inheritance sequence when some of the node is masked.
-    + funcs: list of compileable functions
+    funcs: list of compileable functions
         The weight function of each kernel in the inheritance sequence.
 
-    **Returns:**
-
+    Returns
+    -------
     + weight: numpy.ndarray
         The horizontal weight of interpolation/derivative for the points
         with shape (N,M)
 
     """
+    weight = np.zeros((len(rx), len(kernel_large)))
+    weight[:, 0] = np.nan
     for i in range(len(pk)):
         if len(pk[i]) == 0:
             continue
@@ -582,48 +586,41 @@ def kash(kernel):  # hash kernel
 
     Return the hash value.
 
-    **Parameters:**
-
+    Parameters
+    ----------
     + kernel: numpy.ndarray
         A horizontal kernel
     """
-    temp_lst = [(i, j) for (i, j) in kernel]
-    return hash(tuple(temp_lst))
+    return hash(tuple((i, j) for (i, j) in kernel))
 
 
-def get_func(kernel, hkernel="interp", h_order=0):
+@cache
+def _get_func_from_hashable(
+    kernel_tuple, kernel_shape, hkernel="interp", h_order=0, **kwargs
+):
+    kernel = np.array(kernel_tuple).reshape(kernel_shape)
+    return kernel_weight(kernel, ktype=hkernel, order=h_order)
+
+
+def get_func(kernel, **kwargs):
     """Return functions that compute weights.
 
     Similar to the kernel_weight function,
     the only difference is that this function can
-    read existing functions from a global dictionary,
-    and can register to the dictionary when new ones are created.
+    read existing functions that is cached.
+    See _get_func_from_hashable
+
+    See Also
+    --------
+    kernel_weight: the un-hashed version of this function.
     """
-    global weight_func
-    ker_ind = kash(kernel)
-    layer_1 = weight_func.get(ker_ind)
-    if layer_1 is None:
-        weight_func[ker_ind] = dict()
-    layer_1 = weight_func[ker_ind]
-
-    layer_2 = layer_1.get(hkernel)
-    if layer_2 is None:
-        layer_1[hkernel] = dict()
-    layer_2 = layer_1[hkernel]
-
-    layer_3 = layer_2.get(h_order)
-    if layer_3 is None:
-        logging.info("Creating new weight function, the first time is going to be slow")
-        layer_2[h_order] = kernel_weight(kernel, ktype=hkernel, order=h_order)
-    layer_3 = layer_2[h_order]
-
-    return layer_3
+    return _get_func_from_hashable(tuple(kernel.ravel()), kernel.shape, **kwargs)
 
 
 def auto_doll(kernel, hkernel="interp"):
     """Find a natural inheritance pattern given one horizontal kernel."""
     if hkernel == "interp":
-        doll = [[i for i in range(len(kernel))]]
+        doll = [list(range(len(kernel)))]
     elif hkernel == "dx":
         doll = [[i for i in range(len(kernel)) if kernel[i][1] == 0]]
     elif hkernel == "dy":
@@ -648,25 +645,25 @@ class KnW:
     A class that describes anything about the
     interpolation/derivative kernel to be used.
 
-    **Parameters:**
-
-    + kernel: numpy.ndarray
+    Parameters
+    ----------
+    kernel: numpy.ndarray
         The largest horizontal kernel to be used
-    + inheritance: list
+    inheritance: list
         The inheritance sequence of the kernels
-    + hkernel: str
+    hkernel: str
         What to do in the horizontal direction
         'interp', 'dx', or 'dy'?
-    + tkernel: str
+    tkernel: str
         What kind of operation to do in the temporal dimension:
         'linear', 'nearest' interpolation, or 'dt'
-    + zkernel: str
+    zkernel: str
         What kind of operation to do in the vertical:
         'linear', 'nearest' interpolation, or 'dz'
-    + h_order: int
+    h_order: int
         How many derivative to take in the horizontal direction.
         Zero for pure interpolation
-    + ignore_mask: bool
+    ignore_mask: bool
         Whether to diregard the masking of the dataset.
         You can select True if there is no
         inheritance, or if performance is a big concern.
@@ -695,7 +692,7 @@ class KnW:
         if inheritance == "auto":
             inheritance = auto_doll(kernel, hkernel=hkernel)
         elif inheritance is None:  # does not apply cascade
-            inheritance = [[i for i in range(len(kernel))]]
+            inheritance = [list(range(len(kernel)))]
         elif isinstance(inheritance, list):
             pass
         else:
@@ -782,20 +779,20 @@ class KnW:
     ):
         """Return the weight of values given particle rel-coords.
 
-        **Parameters:**
-
-        + rx,ry,rz,rt: numpy.ndarray
+        Parameters
+        ----------
+        rx,ry,rz,rt: numpy.ndarray
             1D array of non-dimensional particle positions
-        + pk4d: list
+        pk4d: list
             A mapping on which points should use which kernel.
-        + bottom_scheme: str
+        bottom_scheme: str
             Whether to assume there is a ghost point with same value at
             the bottom boundary.
             Choose None for vertical flux, 'no flux' for most other cases.
 
-        **Returns:**
-
-        + weight: numpy.ndarray
+        Returns
+        -------
+        weight: numpy.ndarray
             The weight of interpolation/derivative for the points
             with shape (N,M),
             M is the num of node in the largest kernel.
