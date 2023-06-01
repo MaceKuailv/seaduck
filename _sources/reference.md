@@ -23,5 +23,3 @@
 [smart_read](api_reference/apiref_smartread.rst)
 [get_masks](api_reference/apiref_getmasks.rst)
 [utils](api_reference/apiref_utils.rst)
-
-### [All in one page](all_in_one)

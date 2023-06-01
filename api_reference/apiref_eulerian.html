@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -388,48 +389,35 @@ document.write(`
   <section id="module-seaduck.eulerian">
 <span id="seaduck-eulerian"></span><h1>seaduck.eulerian<a class="headerlink" href="#module-seaduck.eulerian" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="seaduck.eulerian.position">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.eulerian.</span></span><span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#seaduck.eulerian.position" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.eulerian.</span></span><span class="sig-name descname"><span class="pre">Position</span></span><a class="headerlink" href="#seaduck.eulerian.Position" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>The position object that performs the interpolation.</p>
+<p>The Position object that performs the interpolation.</p>
 <p>Create a empty one by default.
 To actually do interpolation, use from_latlon method to tell the ducks where they are.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.fatten">
-<span class="sig-name descname"><span class="pre">fatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fourD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_moves_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.fatten" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.fatten">
+<span class="sig-name descname"><span class="pre">fatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fourD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_moves_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten" title="Permalink to this definition">#</a></dt>
 <dd><p>Fatten in all the required dimensions.</p>
 <p>Finding the neighboring center grid points in all 4 dimensions.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>knw: KnW object</dt><dd><p>The kernel used to find neighboring points.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>fourD: Boolean</dt><dd><p>When we are doing nearest neighbor interpolation on some of the dimensions,
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knw</strong> (<em>KnW object</em>) – The kernel used to find neighboring points.</p></li>
+<li><p><strong>fourD</strong> (<em>Boolean</em><em>, </em><em>default False</em>) – When we are doing nearest neighbor interpolation on some of the dimensions,
 with fourD = True, this will create dimensions with length 1, and will squeeze
-the dimension if fourD = False</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>required: str, iterable of str</dt><dd><p>Which dims is needed in the process</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ind_moves_kward: dict</dt><dd><p>Key word argument to put into ind_moves method of the topology object.
-Read topology.ind_moves for more detail.</p>
-</dd>
-</dl>
-</li>
+the dimension if fourD = False</p></li>
+<li><p><strong>required</strong> (<em>str</em><em>, </em><em>iterable of str</em><em>, </em><em>default &quot;all&quot;</em>) – Which dims is needed in the process</p></li>
+<li><p><strong>ind_moves_kward</strong> (<em>dict</em><em>, </em><em>optional</em>) – Key word argument to put into ind_moves method of the Topology object.
+Read Topology.ind_moves for more detail.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.fatten_h">
-<span class="sig-name descname"><span class="pre">fatten_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_moves_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.fatten_h" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.fatten_h">
+<span class="sig-name descname"><span class="pre">fatten_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_moves_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten_h" title="Permalink to this definition">#</a></dt>
 <dd><p>Fatten horizontal indices.</p>
 <p>Fatten means to find the neighboring points of the points of interest based on the kernel.
 faces,iys,ixs are 1d arrays of size n.
@@ -438,105 +426,89 @@ This is going to return a n * m array of indexes.
 A very slim vector is now a matrix, and hence the name.
 each row represen all the node needed for interpolation of a single point.
 “h” represent we are only doing it on the horizontal plane.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>knw: KnW object</dt><dd><p>The kernel used to find neighboring points.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ind_moves_kward: dict</dt><dd><p>Key word argument to put into ind_moves method of the topology object.
-Read topology.ind_moves for more detail.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knw</strong> (<em>KnW object</em>) – The kernel used to find neighboring points.</p></li>
+<li><p><strong>ind_moves_kward</strong> (<em>dict</em><em>, </em><em>optional</em>) – Key word argument to put into ind_moves method of the Topology object.
+Read Topology.ind_moves for more detail.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.fatten_t">
-<span class="sig-name descname"><span class="pre">fatten_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.fatten_t" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.fatten_t">
+<span class="sig-name descname"><span class="pre">fatten_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten_t" title="Permalink to this definition">#</a></dt>
 <dd><p>Fatten in the temporal coord.</p>
 <p>Finding the neighboring center grid points in the temporal dimension.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>knw: KnW object</dt><dd><p>The kernel used to find neighboring points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>knw</strong> (<em>KnW object</em>) – The kernel used to find neighboring points.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.fatten_v">
-<span class="sig-name descname"><span class="pre">fatten_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.fatten_v" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.fatten_v">
+<span class="sig-name descname"><span class="pre">fatten_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten_v" title="Permalink to this definition">#</a></dt>
 <dd><p>Fatten in vertical center coord.</p>
 <p>Find the neighboring center grid points in the vertical direction.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>knw: KnW object</dt><dd><p>The kernel used to find neighboring points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>knw</strong> (<em>KnW object</em>) – The kernel used to find neighboring points.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.fatten_vl">
-<span class="sig-name descname"><span class="pre">fatten_vl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.fatten_vl" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.fatten_vl">
+<span class="sig-name descname"><span class="pre">fatten_vl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten_vl" title="Permalink to this definition">#</a></dt>
 <dd><p>Fatten in vertical staggered coord.</p>
 <p>Finding the neighboring staggered grid points in the vertical direction.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>knw: KnW object</dt><dd><p>The kernel used to find neighboring points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>knw</strong> (<em>KnW object</em>) – The kernel used to find neighboring points.</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.from_latlon">
-<span class="sig-name descname"><span class="pre">from_latlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.from_latlon" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.from_latlon">
+<span class="sig-name descname"><span class="pre">from_latlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.from_latlon" title="Permalink to this definition">#</a></dt>
 <dd><p>Fill in the coord info using lat-lon-dep-time dims.</p>
 <p>Use the methods from the ocedata to transform
 from lat-lon-dep-time coords to rel-coords
-store the output in the position object.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>x,y,z,t: numpy.ndarray</dt><dd><p>1D array of the lat-lon-dep-time coords</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>data: OceData object</dt><dd><p>The field where the positions are defined on.</p>
-</dd>
-</dl>
-</li>
+store the output in the Position object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>numpy.ndarray</em><em>, </em><em>float</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – 1D array of the lat-lon-dep-time coords</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em><em>, </em><em>float</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – 1D array of the lat-lon-dep-time coords</p></li>
+<li><p><strong>z</strong> (<em>numpy.ndarray</em><em>, </em><em>float</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – 1D array of the lat-lon-dep-time coords</p></li>
+<li><p><strong>t</strong> (<em>numpy.ndarray</em><em>, </em><em>float</em><em> or </em><em>None</em><em>, </em><em>default None</em>) – 1D array of the lat-lon-dep-time coords</p></li>
+<li><p><strong>data</strong> (<em>OceData object</em>) – The field where the Positions are defined on.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.get_f_node_weight">
-<span class="sig-name descname"><span class="pre">get_f_node_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.get_f_node_weight" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.get_f_node_weight">
+<span class="sig-name descname"><span class="pre">get_f_node_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.get_f_node_weight" title="Permalink to this definition">#</a></dt>
 <dd><p>Find weight for the corner points interpolation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.get_px_py">
-<span class="sig-name descname"><span class="pre">get_px_py</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.get_px_py" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.get_px_py">
+<span class="sig-name descname"><span class="pre">get_px_py</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.get_px_py" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the nearest 4 corner points of the given point.</p>
 <p>Used for oceanparcel style horizontal interpolation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.interpolate">
-<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">varName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec_transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefetched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.interpolate" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.interpolate">
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">varName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec_transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefetched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.interpolate" title="Permalink to this definition">#</a></dt>
 <dd><p>Do interpolation.</p>
 <p>This is the method that does the actual interpolation/derivative.
 It is a combination of the following methods:
@@ -546,74 +518,50 @@ _transform_vector_and_register,
 _read_data_and_register,
 _mask_value_and_register,
 _compute_weight_and_registe,.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>varName: list, str, tuple</dt><dd><p>The variables to interpolate. Tuples are used for horizontal vectors.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>varName</strong> (<em>list</em><em>, </em><em>str</em><em>, </em><em>tuple</em>) – The variables to interpolate. Tuples are used for horizontal vectors.
 Put str and list in a list if you have multiple things to interpolate.
-This input also defines the format of the output.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>knw: KnW object, tuple, list, dict</dt><dd><p>The kernel object used for the operation.
+This input also defines the format of the output.</p></li>
+<li><p><strong>knw</strong> (<em>KnW object</em><em>, </em><em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em>) – The kernel object used for the operation.
 Put them in the same order as varName.
-Some level of automatic broadcasting is also supported.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>vec_transform: Boolean</dt><dd><p>Whether to project the vector field to the local zonal/meridional direction.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>prefetched: numpy.ndarray, tuple, list, dict, None</dt><dd><p>The prefetched array for the data, this will effectively overwrite varName.
+Some level of automatic broadcasting is also supported.</p></li>
+<li><p><strong>vec_transform</strong> (<em>Boolean</em>) – Whether to project the vector field to the local zonal/meridional direction.</p></li>
+<li><p><strong>prefetched</strong> (<em>numpy.ndarray</em><em>, </em><em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em><em>, </em><em>None</em><em>, </em><em>default None</em>) – The prefetched array for the data, this will effectively overwrite varName.
 Put them in the same order as varName.
-Some level of automatic broadcasting is also supported.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>i_min: tuple, list, dict, None</dt><dd><p>The prefix of the prefetched array.
+Some level of automatic broadcasting is also supported.</p></li>
+<li><p><strong>i_min</strong> (<em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em><em>, </em><em>None</em><em>, </em><em>default None</em>) – The prefix of the prefetched array.
 Put them in the same order as varName.
-Some level of automatic broadcasting is also supported.</p>
-</dd>
-</dl>
-</li>
+Some level of automatic broadcasting is also supported.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>R: list, numpy.array, tuple</dt><dd><p>The interpolation/derivative output in the same format as varName.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>to_return</strong> – The interpolation/derivative output in the same format as varName.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list, numpy.array, tuple</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.eulerian.position.subset">
-<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.position.subset" title="Permalink to this definition">#</a></dt>
-<dd><p>Create a subset of the position object.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>which: numpy.ndarray</dt><dd><p>Define which points survive the subset operation.
+<dt class="sig sig-object py" id="seaduck.eulerian.Position.subset">
+<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">which</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.subset" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a subset of the Position object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>which</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Define which points survive the subset operation.
 It be an array of either boolean or int.
 The selection is similar to that of selecting from a 1D numpy array.</p>
 </dd>
-</dl>
-</li>
-</ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>the_subset: position object</dt><dd><p>The selected positions.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>the_subset</strong> – The selected Positions.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Position object</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 </dd></dl>

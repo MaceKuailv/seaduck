@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -385,72 +386,40 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="module-seaduck.OceInterp">
-<span id="seaduck-oceinterp"></span><h1>seaduck.OceInterp<a class="headerlink" href="#module-seaduck.OceInterp" title="Permalink to this headline">#</a></h1>
-<p>Interp for people who just want to take a quick look.</p>
+  <section id="module-seaduck.oceinterp">
+<span id="seaduck-oceinterp"></span><h1>seaduck.OceInterp<a class="headerlink" href="#module-seaduck.oceinterp" title="Permalink to this headline">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.oceinterp.OceInterp">
+<span class="sig-prename descclassname"><span class="pre">seaduck.oceinterp.</span></span><span class="sig-name descname"><span class="pre">OceInterp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernelList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lagrangian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lagrange_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_pt_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.oceinterp.OceInterp" title="Permalink to this definition">#</a></dt>
+<dd><p>Interp for people who just want to take a quick look.</p>
 <p><strong>This is the centerpiece function of the package, through which
 you can access almost all of its functionality.</strong>.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>od: OceInterp.OceData object or xarray.Dataset (limited support for netCDF Dataset)</dt><dd><p>The dataset to work on.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>varList: str or list</dt><dd><p>A list of variable or pair of variables.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>kernelList: OceInterp.KnW or list of OceInterp.KnW objects</dt><dd><p>Indicates which kernel to use for each interpolation.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>x, y, z: numpy.ndarray</dt><dd><p>The location of the particles, where x and y are in degrees,
-and z is in meters (deeper locations are represented by more negative values).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>t: numpy.ndarray</dt><dd><p>In the Eulerian scheme, this represents the time of interpolation.
-In the Lagrangian scheme, it represents the time needed for output.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>lagrangian: bool</dt><dd><p>Specifies whether the interpolation is done in the Eulerian or Lagrangian scheme.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>lagrange_kwarg: dict</dt><dd><p>Keyword arguments passed into the OceInterp.lagrangian.particle object.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>update_stops: None, ‘default’, or iterable of float</dt><dd><p>Specifies the time to update the prefetch velocity.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>return_in_between: bool</dt><dd><p>In Lagrangian mode, this returns the interpolation not only at time t,
-but also at every point in time when the speed is updated.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>return_pt_time: bool</dt><dd><p>Specifies whether to return the time of all the steps.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>kernel_kwarg: dict</dt><dd><p>keyword arguments to pass into seaduck.KnW object.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od</strong> (<em>OceInterp.OceData object</em><em> or </em><em>xarray.Dataset</em><em> (</em><em>limited support for netCDF Dataset</em><em>)</em>) – The dataset to work on.</p></li>
+<li><p><strong>varList</strong> (<em>str</em><em> or </em><em>list</em>) – A list of variable or pair of variables.</p></li>
+<li><p><strong>kernelList</strong> (<em>OceInterp.KnW</em><em> or </em><em>list of OceInterp.KnW objects</em><em>, </em><em>optional</em>) – Indicates which kernel to use for each interpolation.</p></li>
+<li><p><strong>x</strong> (<em>numpy.ndarray</em>) – The location of the particles, where x and y are in degrees,
+and z is in meters (deeper locations are represented by more negative values).</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – The location of the particles, where x and y are in degrees,
+and z is in meters (deeper locations are represented by more negative values).</p></li>
+<li><p><strong>z</strong> (<em>numpy.ndarray</em>) – The location of the particles, where x and y are in degrees,
+and z is in meters (deeper locations are represented by more negative values).</p></li>
+<li><p><strong>t</strong> (<em>numpy.ndarray</em>) – In the Eulerian scheme, this represents the time of interpolation.
+In the Lagrangian scheme, it represents the time needed for output.</p></li>
+<li><p><strong>lagrangian</strong> (<em>bool</em><em>, </em><em>default False</em>) – Specifies whether the interpolation is done in the Eulerian or Lagrangian scheme.</p></li>
+<li><p><strong>lagrange_kwarg</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments passed into the OceInterp.lagrangian.Particle object.</p></li>
+<li><p><strong>update_stops</strong> (<em>None</em><em>, </em><em>'default'</em><em>, or </em><em>iterable of float</em>) – Specifies the time to update the prefetch velocity.</p></li>
+<li><p><strong>return_in_between</strong> (<em>bool</em><em>, </em><em>default True</em>) – In Lagrangian mode, this returns the interpolation not only at time t,
+but also at every point in time when the speed is updated.</p></li>
+<li><p><strong>return_pt_time</strong> (<em>bool</em><em>, </em><em>default True</em>) – Specifies whether to return the time of all the steps.</p></li>
+<li><p><strong>kernel_kwarg</strong> (<em>dict</em><em>, </em><em>optional</em>) – keyword arguments to pass into seaduck.KnW object.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

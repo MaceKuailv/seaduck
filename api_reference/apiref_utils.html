@@ -63,7 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_utils';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="All API References (for exporting)" href="../all_in_one.html" />
+    <link rel="next" title="seaduck.ocedata.RelCoord and subclasses" href="apiref_RelCoord.html" />
     <link rel="prev" title="seaduck.get_masks" href="apiref_getmasks.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -173,7 +173,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../all_in_one.html">All API References (for exporting)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
 </ul>
 </li>
 </ul>
@@ -394,6 +395,15 @@ document.write(`
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.chg_ref_lon">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">chg_ref_lon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_lon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.chg_ref_lon" title="Permalink to this definition">#</a></dt>
+<dd><p>Change the definition of 0 longitude.</p>
+<p>Return how much east one need to go from ref_lon to x
+This function aims to address
+the confusion caused by the discontinuity in longitude.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.convert_time">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">convert_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.convert_time" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert time into seconds after 1970-01-01.</p>
@@ -402,32 +412,24 @@ document.write(`
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.create_tree">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">create_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.create_tree" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">create_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.create_tree" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a cKD tree object.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>X,Y: np.ndarray</dt><dd><p>longitude and latitude of the grid location</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>R: float</dt><dd><p>The radius in kilometers of the planet.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>leafsize: int</dt><dd><p>When to switch to brute force search.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – longitude and latitude of the grid location</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – longitude and latitude of the grid location</p></li>
+<li><p><strong>R</strong> (<em>float</em>) – The radius in kilometers of the planet.</p></li>
+<li><p><strong>leafsize</strong> (<em>int</em>) – When to switch to brute force search.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.easy_3d_cube">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">easy_3d_cube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_total_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.easy_3d_cube" title="Permalink to this definition">#</a></dt>
-<dd><p>Create 4D coords for initializing position/particle.</p>
+<dd><p>Create 4D coords for initializing Position/Particle.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -441,46 +443,75 @@ and the geodesic connecting A and B.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_ind">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ascending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">above</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the index of the nearest value to the given value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>numpy.ndarray</em>) – 1D numpy array to search index from</p></li>
+<li><p><strong>value</strong> (<em>number</em>) – The value to find nearest neighbor with</p></li>
+<li><p><strong>peri</strong> (<em>number</em><em>, </em><em>optional</em>) – The periodicity of the array.
+For example, 360 for longitude.</p></li>
+<li><p><strong>ascending</strong> (<em>int</em><em>, </em><em>default 1</em>) – Whether the array is in ascending order.
+1 for ascending order, -1 for descending order.</p></li>
+<li><p><strong>above</strong> (<em>boolean</em><em>, </em><em>default True</em>) – If True, return the index of the largest item in
+array smaller than value.
+Otherwise, return the closest value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_ind_h">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_h" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_h" title="Permalink to this definition">#</a></dt>
 <dd><p>Use ckd tree to find the horizontal indexes,.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="seaduck.utils.find_ind_nearest">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_nearest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_nearest" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the index of the nearest value to the given value.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="seaduck.utils.find_ind_periodic">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_periodic" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the index of the nearest value to the given value.</p>
-<p>Here the values are assumed to be periodic.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="seaduck.utils.find_ind_t">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_t" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the index of the latest time that is before the time.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="seaduck.utils.find_ind_z">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_ind_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_ind_z" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the index of the nearest level that is lower.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_px_py">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_px_py</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">XG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">YG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridoffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_px_py" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_px_py</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">XG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">YG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_px_py" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the nearest 4 corner points.</p>
 <p>This is used in oceanparcel interpolation scheme.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="seaduck.utils.find_rel">
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">darray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ascending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">above</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the rel-coords of the 1D coords.</p>
+<p>The backend for all find_rel functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>numpy.ndarray</em>) – 1D array for the value to find rel-coords.</p></li>
+<li><p><strong>array</strong> (<em>numpy.ndarray</em>) – The array of potential reference levels.</p></li>
+<li><p><strong>darray</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – The distances between reference levels.</p></li>
+<li><p><strong>peri</strong> (<em>number</em><em>, </em><em>optional</em>) – The periodicity of the array.
+For example, 360 for longitude.</p></li>
+<li><p><strong>ascending</strong> (<em>int</em><em>, </em><em>default 1</em>) – Whether the array is in ascending order.
+1 for ascending order, -1 for descending order.</p></li>
+<li><p><strong>above</strong> (<em>boolean</em><em>, </em><em>default True</em>) – If True, return the index of the largest item in
+array smaller than value.
+Otherwise, return the closest value.</p></li>
+<li><p><strong>dx_right</strong> (<em>boolean</em><em>, </em><em>default True</em>) – If True, darray[i] = abs(array[i+1] - array[i])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>ix</strong> (<em>numpy.ndarray</em>) – Indexes of the reference level</p></li>
+<li><p><strong>rx</strong> (<em>numpy.ndarray</em>) – Non-dimensional distance to the reference level</p></li>
+<li><p><strong>dx</strong> (<em>numpy.ndarray</em>) – distance between the reference t level and the next one.</p></li>
+<li><p><strong>bx</strong> (<em>numpy.ndarray</em>) – Value of the reference level</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_rel_h_naive">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_h_naive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_h_naive" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_h_naive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_h_naive" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the rel-coords in the horizontal.</p>
 <p>very similar to find_rel_time/v
 rx,ry,dx,dy are defined the same way
@@ -519,86 +550,48 @@ It will come in handy when we transfer vectors.</p>
 <dt class="sig sig-object py" id="seaduck.utils.find_rel_time">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_time" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the rel-coords of the temporal coords.</p>
-<p><strong>Paramters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>time: numpy.ndarray</dt><dd><p>1D array for the time since 1970-01-01 in seconds.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>ts: numpy.ndarray</dt><dd><p>The time of model time steps also in seconds.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>numpy.ndarray</em>) – 1D array for the time since 1970-01-01 in seconds.</p></li>
+<li><p><strong>ts</strong> (<em>numpy.ndarray</em>) – The time of model time steps also in seconds.</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>it: numpy.ndarray</dt><dd><p>Indexes of the reference t level</p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>rt: numpy.ndarray</dt><dd><p>Non-dimensional distance to the reference t level</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>dt: numpy.ndarray</dt><dd><p>distance between the reference t level and the next one.</p>
-</dd>
-</dl>
-</li>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>it</strong> (<em>numpy.ndarray</em>) – Indexes of the reference t level</p></li>
+<li><p><strong>rt</strong> (<em>numpy.ndarray</em>) – Non-dimensional distance to the reference t level</p></li>
+<li><p><strong>dt</strong> (<em>numpy.ndarray</em>) – distance between the reference t level and the next one.</p></li>
 </ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.find_rel_z">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dz_above_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_z" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">find_rel_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">some_dz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dz_above_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.find_rel_z" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the rel-coords of the vertical coords.</p>
-<p><strong>Paramters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>depth: numpy.ndarray</dt><dd><p>1D array for the depth of interest in meters.
-More negative means deeper.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>some_z: numpy.ndarray</dt><dd><p>The depth of reference depth.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>some_dz: numpy.ndarray</dt><dd><p>dz_i = abs(z_{i+1}- z_i)</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>dz_above_z: Boolean</dt><dd><p>Whether the dz as the distance between the depth level and
-a shallower one(True) or a deeper one(False)</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depth</strong> (<em>numpy.ndarray</em>) – 1D array for the depth of interest in meters.
+More negative means deeper.</p></li>
+<li><p><strong>some_z</strong> (<em>numpy.ndarray</em>) – The depth of reference depth.</p></li>
+<li><p><strong>some_dz</strong> (<em>numpy.ndarray</em><em> or </em><em>None</em>) – dz_i = abs(z_{i+1}- z_i)</p></li>
+<li><p><strong>dz_above_z</strong> (<em>Boolean</em>) – Whether the dz as the distance between the depth level and
+a shallower one(True) or a deeper one(False)</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>iz: numpy.ndarray</dt><dd><p>Indexes of the reference z level</p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>rz: numpy.ndarray</dt><dd><p>Non-dimensional distance to the reference z level</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>dz: numpy.ndarray</dt><dd><p>distance between the reference z level and the next one.</p>
-</dd>
-</dl>
-</li>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>iz</strong> (<em>numpy.ndarray</em>) – Indexes of the reference z level</p></li>
+<li><p><strong>rz</strong> (<em>numpy.ndarray</em>) – Non-dimensional distance to the reference z level</p></li>
+<li><p><strong>dz</strong> (<em>numpy.ndarray</em>) – distance between the reference z level and the next one.</p></li>
 </ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -615,28 +608,17 @@ a shallower one(True) or a deeper one(False)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="seaduck.utils.get_combination">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">get_combination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.get_combination" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the combinations of the list.</p>
-<p>Iteratively find all the combination that
-has (select) amount of elements
-and every element belongs to lst
-This is almost the same as the one in itertools.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.get_dataset">
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.get_dataset" title="Permalink to this definition">#</a></dt>
 <dd><p>Use pooch to download datasets from cloud.</p>
-<p>This is just for testing purposes.
-<strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>name: string</dt><dd><p>The name of dataset, now support “ecco”, “aviso”, “curv”, “rect”</p>
+<blockquote>
+<div><p>This is just for testing purposes.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>string</em>) – The name of dataset, now support “ecco”, “aviso”, “curv”, “rect”</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -644,19 +626,14 @@ This is almost the same as the one in itertools.</p>
 <span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">get_key_by_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.get_key_by_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Find one of the keys in a dictionary.</p>
 <p>the key that correspond to the given value.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>d: dictionaty</dt><dd><p>dictionary to lookup key from</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>value: object</dt><dd><p>A object that has __eq__ method.</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>dictionaty</em>) – dictionary to lookup key from</p></li>
+<li><p><strong>value</strong> (<em>object</em>) – A object that has __eq__ method.</p></li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -667,7 +644,7 @@ This is almost the same as the one in itertools.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.missing_cs_sn">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">missing_cs_sn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.missing_cs_sn" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">missing_cs_sn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_xr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.missing_cs_sn" title="Permalink to this definition">#</a></dt>
 <dd><p>Fill in the CS,SN of a dataset.</p>
 </dd></dl>
 
@@ -685,65 +662,37 @@ This is almost the same as the one in itertools.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.rel2latlon">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">rel2latlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rzl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dzl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bzl</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.rel2latlon" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">rel2latlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rzl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dzl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bzl</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.rel2latlon" title="Permalink to this definition">#</a></dt>
 <dd><p>Translate the spatial rel-coords into lat-lon-dep coords.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="seaduck.utils.rel_lon">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">rel_lon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_lon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.rel_lon" title="Permalink to this definition">#</a></dt>
-<dd><p>Change the definition of 0 longitude.</p>
-<p>Return how much east one need to go from ref_lon to x
-This function aims to address
-the confusion caused by the discontinuity in longitude.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.spherical2cartesian">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">spherical2cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.spherical2cartesian" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">spherical2cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.spherical2cartesian" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert spherical coordinates to cartesian.</p>
-<p><strong>Parameters:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Y: np.array</dt><dd><p>Spherical Y coordinate (latitude)</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>X: np.array</dt><dd><p>Spherical X coordinate (longitude)</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>R: scalar</dt><dd><p>Earth radius in km
-If None, use geopy default</p>
-</dd>
-</dl>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat</strong> (<em>np.array</em>) – Spherical Y coordinate (latitude)</p></li>
+<li><p><strong>lon</strong> (<em>np.array</em>) – Spherical X coordinate (longitude)</p></li>
+<li><p><strong>R</strong> (<em>scalar</em>) – Earth radius in km
+If None, use geopy default</p></li>
 </ul>
-<p><strong>Returns:</strong></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>x: np.array</dt><dd><p>Cartesian x coordinate</p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>y: np.array</dt><dd><p>Cartesian y coordinate</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>z: np.array</dt><dd><p>Cartesian z coordinate</p>
-</dd>
-</dl>
-</li>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>np.array</em>) – Cartesian x coordinate</p></li>
+<li><p><strong>y</strong> (<em>np.array</em>) – Cartesian y coordinate</p></li>
+<li><p><strong>z</strong> (<em>np.array</em>) – Cartesian z coordinate</p></li>
 </ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.utils.to_180">
-<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">to_180</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.to_180" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.utils.</span></span><span class="sig-name descname"><span class="pre">to_180</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">360</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.utils.to_180" title="Permalink to this definition">#</a></dt>
 <dd><p>Convert any longitude scale to [-180,180).</p>
 </dd></dl>
 
@@ -798,11 +747,11 @@ coords to the four corner points.</p>
       </div>
     </a>
     <a class="right-next"
-       href="../all_in_one.html"
+       href="apiref_RelCoord.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">All API References (for exporting)</p>
+        <p class="prev-next-title">seaduck.ocedata.RelCoord and subclasses</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
