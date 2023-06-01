@@ -977,7 +977,7 @@ class Particle(Position):
             It is the combination of normal_stops and output_stops by
             default. f return_in_between is set to be False,
             this is then the same as normal stops.
-        R: list
+        to_return: list
             A list deep copy of particle that inherited
             the interpolate method
             as well as velocity and coords info.
@@ -1016,7 +1016,7 @@ class Particle(Position):
         stops, update = list(zip(*temp))
         #         return stops,update
         self.get_u_du()
-        R = []
+        to_return = []
         for i, tl in enumerate(stops):
             logging.info(np.datetime64(round(tl), "s"))
             if self.save_raw:
@@ -1032,9 +1032,9 @@ class Particle(Position):
                     self.update_uvw_array()
                     self.get_u_du()
                 if return_in_between:
-                    R.append(self.deepcopy())
+                    to_return.append(self.deepcopy())
             else:
-                R.append(self.deepcopy())
+                to_return.append(self.deepcopy())
             if self.save_raw:
                 self.empty_lists()
-        return stops, R
+        return stops, to_return

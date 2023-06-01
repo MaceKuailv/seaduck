@@ -38,7 +38,7 @@ def llc_mutual_direction(face, nface, transitive=False):
     edge_n = np.where(llc_face_connect[face] == nface)
     nedge_n = np.where(llc_face_connect[nface] == face)
     try:
-        found = edge_n[0][0] in legal_tends and nedge_n[0][0] in legal_tends
+        found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
     except Exception:  # It has to be a index error, but numba does not support that
         found = False
     if found:
@@ -384,22 +384,22 @@ class Topology:
             return tuple(-1 for i in ind)
         if self.typ == "LLC":
             if cuvwg == "C":
-                R = llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+                to_return = llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
             elif cuvwg == "U":
-                _, R = self._ind_tend_U(ind, tend)
+                _, to_return = self._ind_tend_U(ind, tend)
             elif cuvwg == "V":
-                _, R = self._ind_tend_V(ind, tend)
+                _, to_return = self._ind_tend_V(ind, tend)
             elif cuvwg == "G":
-                R = self._ind_tend_G(ind, tend)
+                to_return = self._ind_tend_G(ind, tend)
             else:
                 raise ValueError("The type of grid point should be among C,U,V,G")
         elif self.typ == "x_periodic":
-            R = x_per_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            to_return = x_per_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         elif self.typ == "box":
-            R = box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            to_return = box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
             raise NotImplementedError
-        return R
+        return to_return
 
     def ind_moves(self, ind, moves, **kwarg):
         """Move an index in a serie of directions.
@@ -531,33 +531,35 @@ class Topology:
             " are not connected in a normal way"
         )
         if fc1 == fc2:
-            R = tuple(np.ceil((np.array(ind1) + np.array(ind2)) / 2).astype(int))
-            other = ind1 if ind2 == R else ind2
-            (_, iyr, ixr) = R
+            to_return = tuple(
+                np.ceil((np.array(ind1) + np.array(ind2)) / 2).astype(int)
+            )
+            other = ind1 if ind2 == to_return else ind2
+            (_, iyr, ixr) = to_return
             (_, iyo, ixo) = other
             if ixr > ixo:
-                return "U", R
+                return "U", to_return
             elif iyr > iyo:
-                return "V", R
+                return "V", to_return
             else:
                 raise IndexError("there is no wall between a cell and itself")
                 # This error can be raised when there is three instead of four points in a corner
         else:
             d1to2, d2to1 = self.mutual_direction(fc1, fc2)
             if d1to2 in [0, 3]:
-                R = ind2
+                to_return = ind2
                 if d2to1 == 1:
-                    return "V", R
+                    return "V", to_return
                 elif d2to1 == 2:
-                    return "U", R
+                    return "U", to_return
                 else:
                     raise Non_normal_connection
             elif d2to1 in [0, 3]:
-                R = ind1
+                to_return = ind1
                 if d1to2 == 1:
-                    return "V", R
+                    return "V", to_return
                 elif d1to2 == 2:
-                    return "U", R
+                    return "U", to_return
                 else:
                     raise Non_normal_connection
             else:

@@ -128,7 +128,6 @@ def get_masks(od, tp):
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
         logging.warning("no maskC in the dataset, assuming nothing is masked.")
-        # od._ds.C_GRID_VARIABLE.to_masked_array().mask
         maskC = np.ones_like(od._ds.XC + od._ds.Z)
         # it is inappropriate to fill in the dataset,
         # expecially given that there is no performance boost.
