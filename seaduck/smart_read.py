@@ -9,20 +9,25 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
 
     Try to do it fast and smartly.
 
-    **Parameters:**
-
-    + da: xarray.DataArray
+    Parameters
+    ----------
+    da: xarray.DataArray
         DataArray to read from
-    + ind: tuple of numpy.ndarray
+    ind: tuple of numpy.ndarray
         The indexes of points of interest, each element does not need to be 1D
+    memory_chunk: int, default 3
+        If the number of chunks needed is smaller than this, read all of them at once.
+    xarray_more_efficient: int, default 100
+        When the number of chunks is larger than this, and the data points are few,
+        it may make sense to directly use xarray's vectorized read.
 
-    **Returns:**
-
+    Returns
+    -------
     + values: numpy.ndarray
         The values of the points of interest. Has the same shape as the elements in ind.
     """
     the_shape = ind[0].shape
-    ind = tuple([i.ravel() for i in ind])
+    ind = tuple(i.ravel() for i in ind)
     if len(da.dims) != len(ind):
         raise ValueError("index does not match the number of dimensions")
     if da.chunks is None or da.chunks == {}:
@@ -38,7 +43,7 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
     n = len(ind[0])
     result = np.zeros(n)
 
-    new_dic = dict()
+    new_dic = {}
     # typically what happens is that the first a few indexes are chunked
     # here we figure out what is the last dimension chunked.
     for i in range(len(cksz) - 1, -1, -1):
@@ -65,15 +70,15 @@ def smart_read(da, ind, memory_chunk=3, xarray_more_efficient=100):
             for j, p in enumerate(k):
                 sf = new_dic[j][p]  # the upperbound of index
                 pr = sf - cksz[keys[j]][p]  # the lower bound of index
-                ind_str.append(f"{pr}:{sf}")
+                ind_str.append(slice(pr, sf))
                 pre.append(pr)
             prs = np.zeros(len(keys)).astype(int)
             prs[: last + 1] = pre
-            npck = eval(f'np.array(da[{",".join(ind_str)}])')
-            subind = tuple([ind[dim][which] - prs[dim] for dim in range(len(ind))])
+            npck = np.array(da[tuple(ind_str)])
+            subind = tuple(ind[dim][which] - prs[dim] for dim in range(len(ind)))
             result[which] = npck[subind]
         return result.reshape(the_shape)
     else:
         # logging.debug('use xarray')
-        xrind = tuple([xr.DataArray(dim, dims=["x"]) for dim in ind])
+        xrind = tuple(xr.DataArray(dim, dims=["x"]) for dim in ind)
         return np.array(da[xrind]).reshape(the_shape)

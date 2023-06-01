@@ -1,7 +1,16 @@
 import numpy as np
 import pytest
 
-from seaduck.topology import llc_get_uv_mask_from_face, llc_mutual_direction, topology
+from seaduck.topology import Topology, llc_get_uv_mask_from_face, llc_mutual_direction
+
+try:
+    import numba
+
+    print(numba)
+    # just to avoid the line got deleted by pre-commit
+    HAS_NUMBA = True
+except ImportError:
+    HAS_NUMBA = False
 
 try:
     HAS_NUMBA = True
@@ -36,7 +45,7 @@ def test_get_the_neighbor_face(tp, face, edge):
 )
 @pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 def test_not_applicable(ds, typ, func, args, error):
-    tpp = topology(ds, typ)
+    tpp = Topology(ds, typ)
     with pytest.raises(error):
         getattr(tpp, func)(*args)
 
@@ -115,20 +124,19 @@ def test_4_matrix(tp, fface, cis):
 def test_unable_to_cereate(ds):
     temp = ds.drop_vars("XC")
     with pytest.raises(KeyError):
-        topology(temp)
+        Topology(temp)
 
 
 @pytest.mark.parametrize("ds", ["aviso"], indirect=True)
 def test_create_without_time(ds):
     temp = ds.drop_vars("time")
-    topology(temp)
+    Topology(temp)
 
 
 @pytest.mark.parametrize(
     "func,args,kwargs,error",
     [
-        ("ind_tend", ((1, 45, 45), 0), {"cuvg": "G"}, NotImplementedError),
-        ("ind_tend", ((1, 45, 45), 0), {"cuvg": "other"}, ValueError),
+        ("ind_tend", ((1, 45, 45), 0), {"cuvwg": "other"}, ValueError),
         ("ind_moves", ((1, 45, 45), ["left", "left"]), {}, ValueError),
     ],
 )
@@ -155,7 +163,7 @@ def test_ind_moves_with1illegal(tp):
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_tend_v(tp, ind, tend, ans):
-    res = tp.ind_tend(ind, tend, cuvg="V")
+    res = tp.ind_tend(ind, tend, cuvwg="V")
     assert res == ans
 
 
@@ -170,7 +178,7 @@ def test_ind_tend_v(tp, ind, tend, ans):
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_tend_u(tp, ind, tend, ans):
-    res = tp.ind_tend(ind, tend, cuvg="U")
+    res = tp.ind_tend(ind, tend, cuvwg="U")
     assert res == ans
 
 
@@ -235,7 +243,7 @@ def test_wall_between_itself(tp):
 #     faces = np.array([0, 0])
 #     iys = np.array([45, 46])
 #     ixs = np.array([45, 46])
-#     tp = topology(ecco)
+#     tp = Topology(ecco)
 #     nface, niy, nix = kw.fatten_ind_h(faces, iys, ixs, tp)
 #     assert nface.dtype == "int"
 #     assert nface.shape == (2, 9)
@@ -246,7 +254,7 @@ def test_wall_between_itself(tp):
 #     faces = None
 #     iys = np.array([5, 46])
 #     ixs = np.array([5, 6])
-#     tp = topology(od)
+#     tp = Topology(od)
 #     nface, niy, nix = kw.fatten_ind_h(faces, iys, ixs, tp)
 #     assert nface is None
 #     assert nix.dtype == "int"
@@ -258,7 +266,7 @@ def test_wall_between_itself(tp):
 #     faces = np.array([0, 0])
 #     iys = np.array([45, 46])
 #     ixs = np.array([45, 46])
-#     tp = topology(ecco)
+#     tp = Topology(ecco)
 #     niz, nface, niy, nix = kw.fatten_ind_3d(izs, faces, iys, ixs, tp)
 #     assert niz.dtype == "int"
 #     assert niz.shape == (2, 18)
@@ -270,7 +278,7 @@ def test_wall_between_itself(tp):
 #     faces = None
 #     iys = np.array([5, 46])
 #     ixs = np.array([5, 46])
-#     tp = topology(od)
+#     tp = Topology(od)
 #     niz, nface, niy, nix = kw.fatten_ind_3d(izs, faces, iys, ixs, tp)
 #     assert niz.dtype == "int"
 #     assert niz.shape == (2, 18)

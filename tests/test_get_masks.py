@@ -3,15 +3,15 @@ import pytest
 
 import seaduck as sd
 import seaduck.get_masks as gm
-import seaduck.topology as topology
 from seaduck import utils
+from seaduck.topology import Topology
 
 
 # TODO: have a dataset that actually has maskC and is also not ECCO in the test datasets
 @pytest.fixture
 def masks():
     ds = utils.get_dataset("ecco")
-    return gm.get_masks(sd.OceData(ds), topology(ds))
+    return gm.get_masks(sd.OceData(ds), Topology(ds))
 
 
 def test_maskC_contains_others(masks):

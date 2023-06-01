@@ -14,8 +14,8 @@ skew = 3
 sqrtN = int(np.sqrt(N))
 
 # Change the horizontal range here.
-x = np.linspace(-180, 180, sqrtN * skew)
-y = np.linspace(-50, -70, sqrtN // skew)
+x = np.append(np.linspace(-180, 180, sqrtN * skew), -37.5)
+y = np.append(np.linspace(-50, -70, sqrtN // skew), -56.73891)
 
 x, y = np.meshgrid(x, y)
 x = x.ravel()
@@ -35,7 +35,7 @@ tf = (np.datetime64("1992-03-03") - np.datetime64("1970-01-01")) / np.timedelta6
 @pytest.fixture
 def p():
     od = sd.OceData(utils.get_dataset("aviso"))
-    return sd.particle(
+    return sd.Particle(
         x=x,
         y=y,
         z=z,
@@ -52,7 +52,7 @@ def p():
 @pytest.fixture
 def ecco_p():
     od = sd.OceData(utils.get_dataset("ecco"))
-    return sd.particle(x=x, y=y, z=zz, t=t, data=od, transport=True)
+    return sd.Particle(x=x, y=y, z=zz, t=t, data=od, transport=True)
 
 
 normal_stops = np.linspace(t[0], tf, 5)
@@ -74,7 +74,7 @@ def test_analytical_step(p):
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
 def test_callback(od):
-    curv_p = sd.particle(
+    curv_p = sd.Particle(
         y=np.array([70.5]),
         x=np.array([-14.0]),
         z=np.array([-10.0]),
@@ -88,20 +88,19 @@ def test_callback(od):
     curv_p.to_list_of_time(normal_stops=[od.ts[0], od.ts[-1]], update_stops=[])
 
 
-@pytest.mark.parametrize(
-    "statement,error",
-    [
-        ("p.note_taking()", AttributeError),
-        ("p.to_list_of_time(normal_stops = [0.0,1.0])", AttributeError),
-        (
-            "ecco_p.to_list_of_time(normal_stops = [0.0,1.0],update_stops = [])",
-            ValueError,
-        ),
-    ],
-)
-def test_lagrange_error(statement, error, p, ecco_p):
-    with pytest.raises(error):
-        eval(statement)
+def test_note_taking_error(p):
+    with pytest.raises(AttributeError):
+        p.note_taking()
+
+
+def test_no_time_midp_error(p):
+    with pytest.raises(AttributeError):
+        p.to_list_of_time(normal_stops=[0.0, 1.0])
+
+
+def test_time_out_of_bound_error(ecco_p):
+    with pytest.raises(ValueError):
+        ecco_p.to_list_of_time(normal_stops=[0.0, 1.0], update_stops=[])
 
 
 def test_multidim_uvw_array(ecco_p):
@@ -135,7 +134,7 @@ def test_update_after_cell_change(ecco_p, od):
 def test_update_after_cell_change_no_face(od):
     od._add_missing_cs_sn()
     od.readiness["h"] = "local_cartesian"
-    curv_p = sd.particle(
+    curv_p = sd.Particle(
         y=np.array([70.5]),
         x=np.array([-14.0]),
         z=np.array([-10.0]),
@@ -151,7 +150,7 @@ def test_update_after_cell_change_no_face(od):
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
 def test_get_vol(od):
-    curv_p = sd.particle(
+    curv_p = sd.Particle(
         y=np.array([70.5]),
         x=np.array([-14.0]),
         z=np.array([-10.0]),

@@ -2,9 +2,9 @@ import warnings
 
 import numpy as np
 
-from seaduck.eulerian import position
+from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
-from seaduck.lagrangian import particle, uknw, vknw
+from seaduck.lagrangian import Particle, uknw, vknw
 from seaduck.ocedata import OceData
 
 lagrange_token = "__particle."
@@ -30,32 +30,32 @@ def OceInterp(
     **This is the centerpiece function of the package, through which
     you can access almost all of its functionality.**.
 
-    **Parameters:**
-
-    + od: OceInterp.OceData object or xarray.Dataset (limited support for netCDF Dataset)
+    Parameters
+    ----------
+    od: OceInterp.OceData object or xarray.Dataset (limited support for netCDF Dataset)
         The dataset to work on.
-    + varList: str or list
+    varList: str or list
         A list of variable or pair of variables.
-    + kernelList: OceInterp.KnW or list of OceInterp.KnW objects
+    kernelList: OceInterp.KnW or list of OceInterp.KnW objects, optional
         Indicates which kernel to use for each interpolation.
-    + x, y, z: numpy.ndarray
+    x, y, z: numpy.ndarray
         The location of the particles, where x and y are in degrees,
         and z is in meters (deeper locations are represented by more negative values).
-    + t: numpy.ndarray
+    t: numpy.ndarray
         In the Eulerian scheme, this represents the time of interpolation.
         In the Lagrangian scheme, it represents the time needed for output.
-    + lagrangian: bool
+    lagrangian: bool, default False
         Specifies whether the interpolation is done in the Eulerian or Lagrangian scheme.
-    + lagrange_kwarg: dict
-        Keyword arguments passed into the OceInterp.lagrangian.particle object.
-    + update_stops: None, 'default', or iterable of float
+    lagrange_kwarg: dict, optional
+        Keyword arguments passed into the OceInterp.lagrangian.Particle object.
+    update_stops: None, 'default', or iterable of float
         Specifies the time to update the prefetch velocity.
-    + return_in_between: bool
+    return_in_between: bool, default True
         In Lagrangian mode, this returns the interpolation not only at time t,
         but also at every point in time when the speed is updated.
-    + return_pt_time: bool
+    return_pt_time: bool, default True
         Specifies whether to return the time of all the steps.
-    + kernel_kwarg: dict
+    kernel_kwarg: dict, optional
         keyword arguments to pass into seaduck.KnW object.
     """
     if not isinstance(od, OceData):
@@ -82,56 +82,56 @@ def OceInterp(
             if isinstance(i, str):
                 kernelList.append(the_kernel)
             elif isinstance(i, tuple):
-                if kernel_kwarg != dict():
+                if kernel_kwarg != {}:
                     kernelList.append((the_kernel, the_kernel))
                 else:
                     kernelList.append((uknw, vknw))
             else:
                 raise ValueError("varList need to be made up of string or tuples")
     if not lagrangian:
-        pt = position()
+        pt = Position()
         pt.from_latlon(x=x, y=y, z=z, t=t, data=od)
         for i, var in enumerate(varList):
             if lagrange_token in var:
                 raise AttributeError(
-                    "__particle variables is only available for Lagrangian particles"
+                    "__particle variables is only available for Lagrangian Particles"
                 )
-        R = pt.interpolate(varList, kernelList)
-        return R
+        to_return = pt.interpolate(varList, kernelList)
+        return to_return
 
     else:
         try:
             assert len(t) > 1
-        except AssertionError:
+        except AssertionError as exc:
             raise ValueError(
-                "There needs to be at least two time steps to run the lagrangian particle"
-            )
+                "There needs to be at least two time steps to run the lagrangian Particle"
+            ) from exc
         t_start = t[0]
         t_nec = t[1:]
-        pt = particle(
+        pt = Particle(
             x=x, y=y, z=z, t=np.ones_like(x) * t_start, data=od, **lagrange_kwarg
         )
         stops, raw = pt.to_list_of_time(
             t_nec, update_stops=update_stops, return_in_between=return_in_between
         )
-        R = []
+        to_return = []
         for i, var in enumerate(varList):
             if var == lagrange_token + "raw":
-                R.append(raw)
+                to_return.append(raw)
             elif lagrange_token in var:
                 sublist = []
                 for snap in raw:
-                    sublist.append(snap.__dict__[var[len(lagrange_token) :]])
-                R.append(sublist)
+                    sublist.append(getattr(snap, var[len(lagrange_token) :]))
+                to_return.append(sublist)
             else:
                 sublist = []
                 for snap in raw:
                     sublist.append(snap.interpolate(var, kernelList[i]))
-                R.append(sublist)
+                to_return.append(sublist)
 
         if return_pt_time:
-            return stops, R
+            return stops, to_return
         else:
             if return_in_between:
                 warnings.warn("Some of the returns is not on the times you specified.")
-            return R
+            return to_return
