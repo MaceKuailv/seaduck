@@ -168,3 +168,10 @@ def test_maxiteration(ecco_p):
     ecco_p.max_iteration = 1
     delattr(ecco_p, "px")
     ecco_p.to_next_stop(tf)
+
+
+def test_abandon_ducks(ecco_p):
+    N = len(ecco_p.izl_lin)
+    ecco_p.izl_lin = (np.ones(N) * 50).astype(int)
+    new_p = sd.get_masks.abandon_stuck(ecco_p)
+    assert len(new_p.izl_lin) < N
