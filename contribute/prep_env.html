@@ -398,25 +398,31 @@ document.write(`
 </div>
 <p>If you use the second option, you will need to set up your github ssh key following this <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">tutorial</a>.</p>
 <p>The above will probably go into the use_git.md file.</p>
-<p>Now that you have the repository, come inside by</p>
+<p>Now that you have the repository, come inside and make your self comfortable. Run</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>seaduck
 </pre></div>
 </div>
-<p>The package does not depend on a lot of the packages. If you have a conda environment that already have xarray installed, it is highly unlikely to have an environmental conflict. If you want to create a new conda environment anyway, run</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you are running with sciserver’s Oceanography image or your own environment that already have the basic packages installed, you pretty much just need to run the following to get all the dependencies:
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">update</span> <span class="pre">--file</span> <span class="pre">ci/environment-ci.yml</span></code></p>
+</div>
+<p>If you want to create a new conda environment, run</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>bubblebath
 conda<span class="w"> </span>activate<span class="w"> </span>bubblebath
 </pre></div>
 </div>
-<p>Install the basic dependencies. if you are running it from sciserver’s Oceanography image, this is already satisfied, you can skip this step. Otherwise,</p>
+<p>I recommend installing the basic dependencies and the extra dependencies for tests at the same time. First, we create a file that combines the two <code class="docutils literal notranslate"><span class="pre">yml</span></code> file by running</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>conda-merge
+conda-merge<span class="w"> </span>environment.yml<span class="w"> </span>ci/environment-ci.yml<span class="w"> </span>&gt;<span class="w"> </span>PleaseIgnore_env.yml
+</pre></div>
+</div>
+<p>Now, let’s install them</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">update</span> <span class="o">--</span><span class="n">file</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
 </pre></div>
 </div>
-<p>There is some extra dependencies for testing, run</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">update</span> <span class="o">--</span><span class="n">file</span> <span class="n">ci</span><span class="o">/</span><span class="n">environment</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">yml</span>
-</pre></div>
-</div>
-<p>If you are running with sciserver’s Oceanography image, you still need to run the above step, unless you don’t want to.</p>
-<p>You might be asking: “Hey! Is there a step that is absolutely not optional?” Yes, you need to install the package.</p>
+<p>Working with environment could be a headache sometimes. If some of the packages is unable to install on your machine, don’t sweat over it. Skip them for now, it is totally possible that some packages is not necessary for your purposes.
+You might be asking: “Hey! Is there a step that is absolutely not optional?” Yes, you need to install our package if you want to work on it.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
