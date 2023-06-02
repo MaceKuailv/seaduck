@@ -5,6 +5,7 @@ import warnings
 import numpy as np
 import xarray as xr
 
+from seaduck.ocedata import RelCoord
 from seaduck.smart_read import smart_read
 
 
@@ -212,3 +213,32 @@ def get_masked(od, ind, cuvwg="C"):
         return mask[ind]
     else:
         return smart_read(od._ds[name], ind)
+
+
+def which_not_stuck(p):
+    """Investigate which points are in land mask."""
+    if p.face is not None:
+        ind = (p.izl_lin - 1, p.face, p.iy, p.ix)
+    else:
+        ind = (p.izl_lin - 1, p.iy, p.ix)
+    return get_masked(p.ocedata, ind).astype(bool)
+
+
+def abandon_stuck(p):
+    """Abandon those stucked in mud."""
+    which = which_not_stuck(p)
+    vardict = vars(p)
+    keys = vardict.keys()
+    for i in keys:
+        item = vardict[i]
+        if isinstance(item, np.ndarray):
+            if len(item.shape) == 1:
+                setattr(p, i, item[which])
+                p.N = len(getattr(p, i))
+            else:
+                setattr(p, i, item)
+        elif isinstance(item, RelCoord):
+            setattr(p, i, item.subset(which))
+        else:
+            setattr(p, i, item)
+    return p
