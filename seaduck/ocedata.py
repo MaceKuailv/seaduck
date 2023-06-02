@@ -3,7 +3,7 @@ import logging
 import numpy as np
 
 try:  # pragma: no cover
-    import pandas as _pd
+    import pandas as pd
 except ImportError:  # pragma: no cover
     pass
 import xarray as xr
@@ -251,12 +251,9 @@ class OceData:
 
     def show_alias(self):
         """Print out the alias in a nice pd.DataFrame format."""
-        try:
-            return _pd.DataFrame.from_dict(
-                self.alias, orient="index", columns=["original name"]
-            )
-        except NameError as exc:
-            raise NameError("pandas is needed to perform this function.") from exc
+        return pd.DataFrame.from_dict(
+            self.alias, orient="index", columns=["original name"]
+        )
 
     def _add_missing_cs_sn(self):
         try:
