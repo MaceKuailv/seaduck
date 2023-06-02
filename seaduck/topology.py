@@ -37,10 +37,10 @@ def llc_mutual_direction(face, nface, transitive=False):
     """
     edge_n = np.where(llc_face_connect[face] == nface)
     nedge_n = np.where(llc_face_connect[nface] == face)
-    try:
-        found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
-    except Exception:  # It has to be a index error, but numba does not support that
+    if len(edge_n[0]) == 0:
         found = False
+    else:
+        found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
     if found:
         return edge_n[0][0], nedge_n[0][0]
     elif transitive:
