@@ -346,6 +346,7 @@ tags
 
 # User Defined
 test*.ipynb
+PleaseIgnore*
 *.npy
 *.jpg
 .vscode/

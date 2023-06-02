@@ -12,11 +12,6 @@ try:
 except ImportError:
     HAS_NUMBA = False
 
-try:
-    HAS_NUMBA = True
-except ImportError:
-    HAS_NUMBA = False
-
 
 @pytest.mark.parametrize("face", [1, 2, 4, 5, 6, 7, 8, 10, 11])
 @pytest.mark.parametrize("edge", [0, 1, 2, 3])
