@@ -239,9 +239,14 @@ class Particle(Position):
             try:
                 self.ocedata["vol"]
             except KeyError:
-                self.ocedata["vol"] = np.array(
-                    self.ocedata._ds["drF"] * self.ocedata._ds["rA"]
-                )
+                if self.ocedata.readiness["Zl"]:
+                    self.ocedata["vol"] = np.array(
+                        self.ocedata._ds["drF"] * self.ocedata._ds["rA"]
+                    )
+                else:
+                    self.ocedata["vol"] = np.array(
+                        self.ocedata._ds["rA"]
+                    )
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
@@ -349,11 +354,14 @@ class Particle(Position):
         if which is None:
             which = np.ones(self.N).astype(bool)
         sub = self.subset(which)
+        ind = []
+        if self.ocedata.readiness['Zl']:
+            ind.append(sub.izl_lin - 1)
         if self.face is not None:
-            Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.face, sub.iy, sub.ix]
-        else:
-            Vol = self.ocedata["vol"][sub.izl_lin - 1, sub.iy, sub.ix]
-        self.Vol[which] = Vol
+            ind.append(sub.face)
+        ind += [sub.iy, sub.ix]
+        ind = tuple(ind)
+        self.Vol[which] = self.ocedata["vol"][ind]
 
     def get_u_du(self, which=None):
         """Read the velocity at particle position.
