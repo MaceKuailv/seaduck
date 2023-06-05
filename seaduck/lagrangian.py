@@ -244,9 +244,7 @@ class Particle(Position):
                         self.ocedata._ds["drF"] * self.ocedata._ds["rA"]
                     )
                 else:
-                    self.ocedata["vol"] = np.array(
-                        self.ocedata._ds["rA"]
-                    )
+                    self.ocedata["vol"] = np.array(self.ocedata._ds["rA"])
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
@@ -355,7 +353,7 @@ class Particle(Position):
             which = np.ones(self.N).astype(bool)
         sub = self.subset(which)
         ind = []
-        if self.ocedata.readiness['Zl']:
+        if self.ocedata.readiness["Zl"]:
             ind.append(sub.izl_lin - 1)
         if self.face is not None:
             ind.append(sub.face)
