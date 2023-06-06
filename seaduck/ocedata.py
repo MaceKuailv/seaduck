@@ -321,12 +321,23 @@ class OceData:
     def vgrid2array(self):
         """Extract the vertical center point grid data into numpy arrays."""
         self.Z = np.array(self["Z"]).astype("float32")
-        self.dZ = np.array(self["dZ"]).astype("float32")
+        try:
+            self.dZ = np.array(self["dZ"]).astype("float32")
+        except KeyError:
+            self.dZ = np.diff(self.Z)
+            self.dZ = np.append(self.dZ,self.dZ[-1])
 
     def vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
         self.Zl = np.array(self["Zl"]).astype("float32")
-        self.dZl = np.array(self["dZl"]).astype("float32")
+        try:
+            self.dZl = np.array(self["dZl"]).astype("float32")
+        except KeyError:
+            if "Zp1" in self._ds.variables:
+                self.dZl = np.diff(np.array(self["Zp1"]))
+            else:
+                self.dZl = np.diff(self.Zl)
+                self.dZl = np.append(self.dZl,self.dZl[-1])
 
         # special treatment for dZl
         # self.dZl = np.roll(self.dZl,1)
