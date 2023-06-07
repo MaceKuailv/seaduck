@@ -57,6 +57,7 @@ You might be asking: "Hey! Is there a step that is absolutely not optional?" Yes
 ```shell
 pip install -e .
 ```
+
 ## Install Jupyter kernel
 
 First activate the environment you want to run notebooks on
@@ -65,10 +66,11 @@ First activate the environment you want to run notebooks on
 conda activate bubblebath
 ```
 
-Install `ipykernel` and activate it. 
+Install `ipykernel` and activate it.
 
 ```shell
 conda install -c anaconda ipykernel
 python -m ipykernel install --user --name=bubblebath
 ```
-If you are using a web page, you may need to refresh the web page. 
+
+If you are using a web page, you may need to refresh the web page.
