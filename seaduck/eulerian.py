@@ -757,12 +757,12 @@ class Position:
             dims = tuple(dims)
             if isinstance(varName, str):
                 if "Xp1" in old_dims and "Yp1" in old_dims:
-                    cuvwg = 'G'
+                    cuvwg = "G"
                 else:
-                    cuvwg = 'C'
+                    cuvwg = "C"
                 ind = self.fatten(
                     knw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": cuvwg}
-                                 )
+                )
                 index_lookup[hs] = ind
             elif isinstance(varName, tuple):
                 uknw, vknw = knw

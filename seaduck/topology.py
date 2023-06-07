@@ -451,7 +451,7 @@ class Topology:
                 ind = self.ind_tend(ind, move)
         return ind
 
-    def check_illegal(self, ind, cuvwg = 'C'):
+    def check_illegal(self, ind, cuvwg="C"):
         """Check if the index is legal.
 
         A vectorized check to see whether the index is legal,
@@ -463,13 +463,13 @@ class Topology:
         ind: tuple
             Each element of the tuple is iterable of one dimension of the indexes.
         cuvwg: 'C' or 'G'
-            Whether use the center grid or the corner grid. 
+            Whether use the center grid or the corner grid.
         """
-        if cuvwg == 'C':
+        if cuvwg == "C":
             the_shape = self.h_shape
         else:
             the_shape = self.g_shape
-        
+
         if isinstance(ind[0], int):  # for single item
             result = False
             for i, z in enumerate(ind):
@@ -511,8 +511,8 @@ class Topology:
         }
         naive_move = np.array([move_dic[i] for i in tend]).T.astype(int)
         inds[-2:] += naive_move
-        cuvwg = kwarg.get('cuvwg',"C")
-        illegal = self.check_illegal(inds,cuvwg = cuvwg)
+        cuvwg = kwarg.get("cuvwg", "C")
+        illegal = self.check_illegal(inds, cuvwg=cuvwg)
         redo = np.array(np.where(illegal)).T
         particle_on_edge = False
         for num, loc in enumerate(redo):
