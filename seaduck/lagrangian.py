@@ -10,7 +10,7 @@ from seaduck.ocedata import RelCoord
 from seaduck.runtime_conf import compileable
 from seaduck.utils import find_rel, find_rx_ry_oceanparcel, rel2latlon, to_180
 
-deg2m = 6271e3 * np.pi / 180
+DEG2M = 6271e3 * np.pi / 180
 
 
 @compileable
@@ -29,7 +29,10 @@ def increment(t, u, du):
     du: float, numpy.ndarray
         The velocity gradient. Assumed to be constant.
     """
-    return u / du * (np.exp(du * t) - 1)
+    incr = u / du * (np.exp(du * t) - 1)
+    no_gradient = np.abs(du)<1e-12
+    incr[no_gradient] = (u * t)[no_gradient]
+    return incr
 
 
 def stationary(t, u, du, x0):
@@ -51,8 +54,6 @@ def stationary(t, u, du, x0):
         The starting position.
     """
     incr = increment(t, u, du)
-    nans = np.isnan(incr)
-    incr[nans] = (u * t)[nans]
     return incr + x0
 
 
@@ -81,10 +82,9 @@ def stationary_time(u, du, x0):
     """
     tl = np.log(1 - du / u * (0.5 + x0)) / du
     tr = np.log(1 + du / u * (0.5 - x0)) / du
-    no_gradient = du == 0
-    if no_gradient.any():
-        tl[no_gradient] = (-x0[no_gradient] - 0.5) / u[no_gradient]
-        tr[no_gradient] = (0.5 - x0[no_gradient]) / u[no_gradient]
+    no_gradient = np.abs(du)<1e-12
+    tl[no_gradient] = (-x0[no_gradient] - 0.5) / u[no_gradient]
+    tr[no_gradient] = (0.5 - x0[no_gradient]) / u[no_gradient]
     return tl, tr
 
 
@@ -237,14 +237,14 @@ class Particle(Position):
         self.transport = transport
         if self.transport:
             try:
-                self.ocedata["vol"]
+                self.ocedata["Vol"]
             except KeyError:
                 if self.ocedata.readiness["Zl"]:
-                    self.ocedata["vol"] = np.array(
+                    self.ocedata["Vol"] = np.array(
                         self.ocedata._ds["drF"] * self.ocedata._ds["rA"]
                     )
                 else:
-                    self.ocedata["vol"] = np.array(self.ocedata._ds["rA"])
+                    self.ocedata["Vol"] = np.array(self.ocedata._ds["rA"])
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
@@ -259,11 +259,13 @@ class Particle(Position):
             pass
         else:
             self.update_uvw_array()
-        (self.u, self.v, self.w, self.du, self.dv, self.dw, self.Vol) = (
+        (self.u, self.v, self.w, self.du, self.dv, self.dw, self.vol) = (
             np.zeros(self.N).astype(float) for i in range(7)
         )
         if self.transport:
             self.get_vol()
+        
+        self.get_u_du()
         self.fillna()
 
         self.save_raw = save_raw
@@ -359,7 +361,7 @@ class Particle(Position):
             ind.append(sub.face)
         ind += [sub.iy, sub.ix]
         ind = tuple(ind)
-        self.Vol[which] = self.ocedata["vol"][ind]
+        self.vol[which] = self.ocedata["Vol"][ind]
 
     def get_u_du(self, which=None):
         """Read the velocity at particle position.
@@ -426,18 +428,18 @@ class Particle(Position):
             self.dv[which] = dv / self.dy[which]
 
         else:
-            self.u[which] = u / self.Vol[which]
-            self.v[which] = v / self.Vol[which]
-            self.du[which] = du / self.Vol[which]
-            self.dv[which] = dv / self.Vol[which]
+            self.u[which] = u / self.vol[which]
+            self.v[which] = v / self.vol[which]
+            self.du[which] = du / self.vol[which]
+            self.dv[which] = dv / self.vol[which]
 
         if self.wname is not None:
             if not self.transport:
                 self.w[which] = w / self.dzl_lin[which]
                 self.dw[which] = dw / self.dzl_lin[which]
             else:
-                self.w[which] = w / self.Vol[which]
-                self.dw[which] = dw / self.Vol[which]
+                self.w[which] = w / self.vol[which]
+                self.dw[which] = dw / self.vol[which]
         self.fillna()
 
     def fillna(self):
@@ -735,12 +737,12 @@ class Particle(Position):
             dlat = to_180(self.lat - self.by)
             self.rx = (
                 (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
-                * deg2m
+                * DEG2M
                 / self.dx
             )
             self.ry = (
                 (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
-                * deg2m
+                * DEG2M
                 / self.dy
             )
         if self.rzl_lin is not None:
@@ -792,6 +794,15 @@ class Particle(Position):
             new_u.append(us[i] + dus[i] * x_move)
             new_x.append(x_move + xs[i])
 
+#         for rr in new_x:
+#             if np.logical_or(rr>0.6,rr<-0.6).any():
+#                 where = np.where(np.logical_or(rr>0.6,rr<-0.6))[0][0]
+#                 raise ValueError(f'Particle way out of bound.tend = {tend[where]}, the_t = {the_t[where]},'
+#                                  f' rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}'
+#                                  f'start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}'
+#                                  f'start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}'
+#                                  f'start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}'
+#                                 )
         self.rx[which], self.ry[which], temp = new_x
         if self.rzl_lin is not None:
             self.rzl_lin[which] = temp + 1 / 2
@@ -914,7 +925,7 @@ class Particle(Position):
         tl: float, numpy.ndarray
             The final time relative to 1970-01-01 in seconds.
         """
-        tol = 0.5
+        tol = 1e-4
         tf = t1 - self.t
         todo = abs(tf) > tol
         if self.callback is not None:
