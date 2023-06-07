@@ -794,15 +794,16 @@ class Particle(Position):
             new_u.append(us[i] + dus[i] * x_move)
             new_x.append(x_move + xs[i])
 
-#         for rr in new_x:
-#             if np.logical_or(rr>0.6,rr<-0.6).any():
-#                 where = np.where(np.logical_or(rr>0.6,rr<-0.6))[0][0]
-#                 raise ValueError(f'Particle way out of bound.tend = {tend[where]}, the_t = {the_t[where]},'
-#                                  f' rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}'
-#                                  f'start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}'
-#                                  f'start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}'
-#                                  f'start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}'
-#                                 )
+#for rr in new_x:
+#    if np.logical_or(rr>0.6,rr<-0.6).any():
+#        where = np.where(np.logical_or(rr>0.6,rr<-0.6))[0][0]
+#        raise ValueError(f'Particle way out of bound.''
+#  f'tend = {tend[where]}, the_t = {the_t[where]},'
+#  f' rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}'
+#  f'start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}'
+#  f'start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}'
+#  f'start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}'
+#                        )
         self.rx[which], self.ry[which], temp = new_x
         if self.rzl_lin is not None:
             self.rzl_lin[which] = temp + 1 / 2
