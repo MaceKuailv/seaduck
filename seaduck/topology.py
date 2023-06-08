@@ -249,7 +249,7 @@ class Topology:
 
     Parameters
     ----------
-    od: xarray.Dataset, OceData object
+    od: xarray.Dataset
         The dataset to record topological info from.
     typ: None, or str
         Type of the grid.
@@ -272,6 +272,10 @@ class Topology:
                     "Either XC or lat/lon is needed to create the Topology object"
                 ) from exc
         self.h_shape = h_shape
+        if "XG" in od.variables:
+            self.g_shape = od["XG"].shape
+        else:
+            self.g_shape = None
         try:
             self.itmax = len(od["time"]) - 1
         except (KeyError, TypeError):
@@ -447,7 +451,7 @@ class Topology:
                 ind = self.ind_tend(ind, move)
         return ind
 
-    def check_illegal(self, ind):
+    def check_illegal(self, ind, cuvwg="C"):
         """Check if the index is legal.
 
         A vectorized check to see whether the index is legal,
@@ -458,11 +462,18 @@ class Topology:
         ----------
         ind: tuple
             Each element of the tuple is iterable of one dimension of the indexes.
+        cuvwg: 'C' or 'G'
+            Whether use the center grid or the corner grid.
         """
+        if cuvwg == "C":
+            the_shape = self.h_shape
+        else:
+            the_shape = self.g_shape
+
         if isinstance(ind[0], int):  # for single item
             result = False
             for i, z in enumerate(ind):
-                max_pos = self.h_shape[i]
+                max_pos = the_shape[i]
                 if not 0 <= z <= max_pos - 1:
                     result = True
             return result
@@ -470,7 +481,7 @@ class Topology:
             result = np.zeros_like(ind[0])
             result = False  # make it cleaner
             for i, z in enumerate(ind):
-                max_pos = self.h_shape[i]
+                max_pos = the_shape[i]
                 result = np.logical_or(
                     np.logical_or((0 > z), (z > max_pos - 1)), result
                 )
@@ -500,7 +511,8 @@ class Topology:
         }
         naive_move = np.array([move_dic[i] for i in tend]).T.astype(int)
         inds[-2:] += naive_move
-        illegal = self.check_illegal(inds)
+        cuvwg = kwarg.get("cuvwg", "C")
+        illegal = self.check_illegal(inds, cuvwg=cuvwg)
         redo = np.array(np.where(illegal)).T
         particle_on_edge = False
         for num, loc in enumerate(redo):

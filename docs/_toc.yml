@@ -23,6 +23,9 @@ parts:
   chapters:
   - file: Global_ECCO
   - file: AVISO
+  - file: hor_stream
+  - file: ver_stream
+  - file: tilted_stream
   - file: sciserver_notebooks/IGP
 - caption: Contributing
   chapters:

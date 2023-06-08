@@ -34,6 +34,10 @@ conda create --name bubblebath
 conda activate bubblebath
 ```
 
+```{tip}
+If you already have `mamba` installed, you can replace all `conda` in the commands with `mamba`.
+```
+
 I recommend installing the basic dependencies and the extra dependencies for tests at the same time. First, we create a file that combines the two `yml` file by running
 
 ```shell
@@ -53,3 +57,20 @@ You might be asking: "Hey! Is there a step that is absolutely not optional?" Yes
 ```shell
 pip install -e .
 ```
+
+## Install Jupyter kernel
+
+First activate the environment you want to run notebooks on
+
+```shell
+conda activate bubblebath
+```
+
+Install `ipykernel` and activate it.
+
+```shell
+conda install -c anaconda ipykernel
+python -m ipykernel install --user --name=bubblebath
+```
+
+If you are using a web page, you may need to refresh the web page.

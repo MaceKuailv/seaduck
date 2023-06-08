@@ -657,7 +657,7 @@ class KnW:
     tkernel: str
         What kind of operation to do in the temporal dimension:
         'linear', 'nearest' interpolation, or 'dt'
-    zkernel: str
+    vkernel: str
         What kind of operation to do in the vertical:
         'linear', 'nearest' interpolation, or 'dz'
     h_order: int
