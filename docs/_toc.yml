@@ -21,8 +21,11 @@ parts:
     - file: api_reference/apiref_RelCoord.rst
 - caption: Examples
   chapters:
-  - file: Global_ECCO
+  - file: global_ECCO
   - file: AVISO
+  - file: hor_stream
+  - file: ver_stream
+  - file: tilted_stream
   - file: sciserver_notebooks/IGP
 - caption: Contributing
   chapters:
