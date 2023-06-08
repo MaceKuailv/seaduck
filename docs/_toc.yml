@@ -21,7 +21,7 @@ parts:
     - file: api_reference/apiref_RelCoord.rst
 - caption: Examples
   chapters:
-  - file: global_ECCO
+  - file: Global_ECCO
   - file: AVISO
   - file: hor_stream
   - file: ver_stream
