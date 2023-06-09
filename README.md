@@ -5,8 +5,7 @@ A python package that interpolates data from ocean dataset from both Eulerian an
 ## Quick Start
 
 ```python
->>> import seaduck
-
+>>> import seaduck as sd
 ```
 
 ## Documentation
@@ -16,11 +15,11 @@ https://macekuailv.github.io/seaduck/
 
 ## Workflow for developers/contributors
 
-For best experience create a new conda environment (e.g. seaduck):
+For best experience create a new conda environment (e.g. bubblebath):
 
 ```
-conda create -n seaduck
-conda activate seaduck
+conda create -n bubblebath
+conda activate bubblebath
 ```
 
 Before pushing to GitHub, run the following commands:
