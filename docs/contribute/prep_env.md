@@ -48,7 +48,7 @@ conda-merge environment.yml ci/environment-ci.yml > PleaseIgnore_env.yml
 Now, let's install them
 
 ```
-conda env update --file environment.yml
+conda env update --file PleaseIgnore_env.yml
 ```
 
 Working with environment could be a headache sometimes. If some of the packages is unable to install on your machine, don't sweat over it. Skip them for now, it is totally possible that some packages is not necessary for your purposes.
