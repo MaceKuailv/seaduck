@@ -7,7 +7,7 @@ parts:
   - file: notebooks
     sections:
     - file: network_of_object
-  - file: reference
+  - file: api_reference
     sections:
     - file: api_reference/apiref_OceData.rst
     - file: api_reference/apiref_topology.rst
