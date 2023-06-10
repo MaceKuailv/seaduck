@@ -4,8 +4,9 @@ parts:
 - caption: Tutorial
   chapters:
   - file: how_to_install
-  - file: notebooks
+  - file: get_started
     sections:
+    - file: one_min_guide
     - file: network_of_object
   - file: api_reference
     sections:
