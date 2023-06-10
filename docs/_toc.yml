@@ -32,6 +32,7 @@ parts:
     - file: notebook/global_ECCO
     - file: sciserver_notebooks/IGP
     - file: notebook/AVISO
+    - file: notebook/topology_tutorial
 - caption: Contributing
   chapters:
   - file: guide_for_developer
