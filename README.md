@@ -6,6 +6,7 @@ A python package that interpolates data from ocean dataset from both Eulerian an
 
 ```python
 >>> import seaduck as sd
+
 ```
 
 ## Documentation
