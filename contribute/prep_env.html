@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Contributing to codes" href="contr_cod.html" />
-    <link rel="prev" title="Using git" href="use_git.html" />
+    <link rel="prev" title="Using Git and Github" href="use_git.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -158,12 +158,12 @@ const thebe_selector_output = ".output, .cell_output"
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceData.html">seaduck.OceData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_topology.html">seaduck.topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
@@ -180,17 +180,30 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/tilted_stream.html">Tilted solid-body rotation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="use_git.html">Using git</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Prepare the environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contr_doc.html">Contributing to documentaion🦆</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tidyNpr.html">Tidy it up and make Pull Request</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="use_git.html">Using Git and Github</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -361,7 +374,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -377,6 +392,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-jupyter-kernel">Install Jupyter kernel</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -388,16 +411,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="prepare-the-environment">
 <h1>Prepare the environment<a class="headerlink" href="#prepare-the-environment" title="Permalink to this headline">#</a></h1>
-<p>First fork a copy of the package. Let’s get all the files from the repository first.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourGithubNickname/seaduck.git
-</pre></div>
-</div>
-<p>Another option is to use the ssh link, which will make things more flexible</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:YourGithubNickname/seaduck.git
-</pre></div>
-</div>
-<p>If you use the second option, you will need to set up your github ssh key following this <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">tutorial</a>.</p>
-<p>The above will probably go into the use_git.md file.</p>
+<p>First follow <a class="reference internal" href="use_git.html"><span class="doc std std-doc">these instructions</span></a> to get a copy of the package as a local git repository.</p>
 <p>Now that you have the repository, come inside and make your self comfortable. Run</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>seaduck
 </pre></div>
@@ -412,13 +426,17 @@ document.write(`
 conda<span class="w"> </span>activate<span class="w"> </span>bubblebath
 </pre></div>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you already have <code class="docutils literal notranslate"><span class="pre">mamba</span></code> installed, you can replace all <code class="docutils literal notranslate"><span class="pre">conda</span></code> in the commands with <code class="docutils literal notranslate"><span class="pre">mamba</span></code>.</p>
+</div>
 <p>I recommend installing the basic dependencies and the extra dependencies for tests at the same time. First, we create a file that combines the two <code class="docutils literal notranslate"><span class="pre">yml</span></code> file by running</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>conda-merge
 conda-merge<span class="w"> </span>environment.yml<span class="w"> </span>ci/environment-ci.yml<span class="w"> </span>&gt;<span class="w"> </span>PleaseIgnore_env.yml
 </pre></div>
 </div>
 <p>Now, let’s install them</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">update</span> <span class="o">--</span><span class="n">file</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">update</span> <span class="o">--</span><span class="n">file</span> <span class="n">PleaseIgnore_env</span><span class="o">.</span><span class="n">yml</span>
 </pre></div>
 </div>
 <p>Working with environment could be a headache sometimes. If some of the packages is unable to install on your machine, don’t sweat over it. Skip them for now, it is totally possible that some packages is not necessary for your purposes.
@@ -426,6 +444,19 @@ You might be asking: “Hey! Is there a step that is absolutely not optional?”
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
+<section id="install-jupyter-kernel">
+<h2>Install Jupyter kernel<a class="headerlink" href="#install-jupyter-kernel" title="Permalink to this headline">#</a></h2>
+<p>First activate the environment you want to run notebooks on</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>bubblebath
+</pre></div>
+</div>
+<p>Install <code class="docutils literal notranslate"><span class="pre">ipykernel</span></code> and activate it.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>anaconda<span class="w"> </span>ipykernel
+python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="o">=</span>bubblebath
+</pre></div>
+</div>
+<p>If you are using a web page, you may need to refresh the web page.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -465,7 +496,7 @@ You might be asking: “Hey! Is there a step that is absolutely not optional?”
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Using git</p>
+        <p class="prev-next-title">Using Git and Github</p>
       </div>
     </a>
     <a class="right-next"
@@ -486,6 +517,20 @@ You might be asking: “Hey! Is there a step that is absolutely not optional?”
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-jupyter-kernel">Install Jupyter kernel</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
