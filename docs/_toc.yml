@@ -4,10 +4,11 @@ parts:
 - caption: Tutorial
   chapters:
   - file: how_to_install
-  - file: notebooks
+  - file: get_started
     sections:
+    - file: one_min_guide
     - file: network_of_object
-  - file: reference
+  - file: api_reference
     sections:
     - file: api_reference/apiref_OceData.rst
     - file: api_reference/apiref_topology.rst
@@ -21,16 +22,23 @@ parts:
     - file: api_reference/apiref_RelCoord.rst
 - caption: Examples
   chapters:
-  - file: Global_ECCO
-  - file: AVISO
-  - file: hor_stream
-  - file: ver_stream
-  - file: tilted_stream
-  - file: sciserver_notebooks/IGP
+  - file: ideal_test
+    sections:
+    - file: idealize_test/hor_stream
+    - file: idealize_test/ver_stream
+    - file: idealize_test/tilted_stream
+  - file: ocean_example
+    sections:
+    - file: notebook/global_ECCO
+    - file: sciserver_notebooks/IGP
+    - file: notebook/AVISO
+    - file: notebook/topology_tutorial
 - caption: Contributing
   chapters:
-  - file: contribute/use_git
-  - file: contribute/prep_env
-  - file: contribute/contr_cod
-  - file: contribute/contr_doc
-  - file: contribute/tidyNpr
+  - file: guide_for_developer
+    sections:
+    - file: contribute/use_git
+    - file: contribute/prep_env
+    - file: contribute/contr_cod
+    - file: contribute/contr_doc
+    - file: contribute/tidyNpr
