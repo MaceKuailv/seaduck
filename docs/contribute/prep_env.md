@@ -1,20 +1,6 @@
 # Prepare the environment
 
-First fork a copy of the package. Let's get all the files from the repository first.
-
-```shell
-git clone https://github.com/YourGithubNickname/seaduck.git
-```
-
-Another option is to use the ssh link, which will make things more flexible
-
-```shell
-git clone git@github.com:YourGithubNickname/seaduck.git
-```
-
-If you use the second option, you will need to set up your github ssh key following this [tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
-
-The above will probably go into the use_git.md file.
+First follow [these instructions](use_git.md) to get a copy of the package as a local git repository.
 
 Now that you have the repository, come inside and make your self comfortable. Run
 
