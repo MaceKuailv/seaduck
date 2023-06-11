@@ -51,7 +51,7 @@ repos:
     entry: nbqa mdformat
     name: nbqa-mdformat
     alias: nbqa-mdformat
-    args: [--nbqa-md]
+    args: [--nbqa-md, --nbqa-skip-celltags=mdformat-skip]
     additional_dependencies: [mdformat]
 - repo: https://github.com/MarcoGorelli/absolufy-imports
   rev: v0.3.1

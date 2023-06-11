@@ -15,6 +15,7 @@ kernelspec:
 
 ### Wenrui Jiang, Tom Haine Feb '23
 > **Warning**⚠️ : the notebook was last ran on **2023-05-23** with **seaduck 0.1.dev192+g81be7aa.d20230522**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb.
+
 ```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
@@ -81,6 +82,7 @@ plt.plot(x, y, "r")
 plt.colorbar()
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_15_1.png?raw=true)
 
 ### Define a function to control when to continue simulation, or to stop it. The simulation will only continue for particles that return True.
@@ -144,6 +146,7 @@ plt.xlim([-35, -10])
 plt.ylim([65, 72])
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_27_1.png?raw=true)
 
 ```{code-cell} ipython3
