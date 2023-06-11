@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="seaduck.topology" href="apiref_topology.html" />
-    <link rel="prev" title="API Reference" href="../reference.html" />
+    <link rel="prev" title="API Reference" href="../api_reference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -158,12 +158,12 @@ const thebe_selector_output = ".output, .cell_output"
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../reference.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../api_reference.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.OceData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_topology.html">seaduck.topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apiref_eulerian.html">seaduck.eulerian</a></li>
@@ -180,17 +180,30 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/tilted_stream.html">Tilted solid-body rotation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../contribute/use_git.html">Using git</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentaion🦆</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/use_git.html">Using Git and Github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -565,7 +578,7 @@ that used by the dataset (value).</p></li>
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../reference.html"
+       href="../api_reference.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Using git &#8212; My sample book</title>
+    <title>Using Git and Github &#8212; My sample book</title>
   
   
   
@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Prepare the environment" href="prep_env.html" />
-    <link rel="prev" title="Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries." href="../sciserver_notebooks/IGP.html" />
+    <link rel="prev" title="A guide for new contributors" href="../guide_for_developer.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -158,12 +158,12 @@ const thebe_selector_output = ".output, .cell_output"
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceData.html">seaduck.OceData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_topology.html">seaduck.topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
@@ -180,17 +180,30 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/tilted_stream.html">Tilted solid-body rotation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using git</a></li>
-<li class="toctree-l1"><a class="reference internal" href="prep_env.html">Prepare the environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contr_doc.html">Contributing to documentaion🦆</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tidyNpr.html">Tidy it up and make Pull Request</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Using Git and Github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -372,7 +385,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Using git</h1>
+    <h1>Using Git and Github</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,10 +399,40 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="using-git">
-<h1>Using git<a class="headerlink" href="#using-git" title="Permalink to this headline">#</a></h1>
-<p>Use this (<a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/contributing.html#using-git-and-github">https://oceanspy.readthedocs.io/en/latest/contributing.html#using-git-and-github</a>).</p>
-<p>I will get to this soon.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="using-git-and-github">
+<h1>Using Git and Github<a class="headerlink" href="#using-git-and-github" title="Permalink to this headline">#</a></h1>
+<p>It essential for developer to use <a class="reference external" href="https://git-scm.com">Git</a>, especially for open source development. <a class="reference external" href="https://github.com">GitHub</a> is a website based on the idea of git.</p>
+<p><a class="reference external" href="https://github.com">GitHub</a>  not only hosts the source code, but also the documentation, tests, past issues, solutions, and the entire history of changes to the directory. Therefore, you need to have a <a class="reference external" href="https://github.com">GitHub</a>  account.</p>
+<p>Sign into the account, go to <a class="reference external" href="https://github.com/MaceKuailv/seaduck">seaduck</a> and <a class="reference external" href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">fork</a> the directory by clicking around.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you already have a fork, make sure you <a class="reference external" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork">sync</a> them  before cloning it.</p>
+</div>
+<p>Almost ready. Now, let’s get all the files from the repository first.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourGithubNickname/seaduck.git
+</pre></div>
+</div>
+<p>Another option is to use the ssh link, which will make things more flexible</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:YourGithubNickname/seaduck.git
+</pre></div>
+</div>
+<p>If you use the second option, you will need to set up your github ssh key following this <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">tutorial</a>.</p>
+<p>To keep things tidy, it is recommended that you use a new branch of your fork to do the development. You can create that by</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>name_of_your_new_branch
+</pre></div>
+</div>
+<p>You can now make the changes you want to make in the repository. Checkout this <a class="reference internal" href="contr_cod.html"><span class="doc std std-doc">guide on contributing to code</span></a> and this <a class="reference internal" href="contr_doc.html"><span class="doc std std-doc">guide on contributing to documentation</span></a>for our recommended practices. Every once a while, run</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Message describing your edits&quot;</span>
+</pre></div>
+</div>
+<p>This will create a milestone to revert back to. For most developers, running this command also make them feel pretty good.</p>
+<p>When you are done with all your changes, or when you just want to keep collaborators updated on what you have done, run</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>name_of_your_branch
+</pre></div>
+</div>
+<p>If you go to your directory now, you will find out that you can make a <a class="reference external" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request">pull request</a>.</p>
+<p>When a pull request is created or when new changes are pushed to the pull request, some automatic changes will run. If the runs are not successful, github will send you loads of personal emails, which can be annoying. Therefore, I recommend <a class="reference internal" href="tidyNpr.html"><span class="doc std std-doc">tidying up before pull request, following this tutorial</span></a>.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -424,12 +467,12 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../sciserver_notebooks/IGP.html"
+       href="../guide_for_developer.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</p>
+        <p class="prev-next-title">A guide for new contributors</p>
       </div>
     </a>
     <a class="right-next"

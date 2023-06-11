@@ -157,12 +157,12 @@ const thebe_selector_output = ".output, .cell_output"
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">jupytext: formats: md:myst text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.11.5 kernelspec: display_name: Python 3 language: python name: python3</a></li>
-
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api_reference.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceData.html">seaduck.OceData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_topology.html">seaduck.topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
@@ -179,17 +179,30 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../Global_ECCO.html">Lagrangian and Eulerian demonstration on ECCO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../AVISO.html">Lagrangian particle demonstration in a periodic domain.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/tilted_stream.html">Tilted solid-body rotation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="use_git.html">Using git</a></li>
-<li class="toctree-l1"><a class="reference internal" href="prep_env.html">Prepare the environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contr_doc.html">Contributing to documentaion🦆</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tidy it up and make Pull Request</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="use_git.html">Using Git and Github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Tidy it up and make Pull Request</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -387,17 +400,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="tidy-it-up-and-make-pull-request">
 <h1>Tidy it up and make Pull Request<a class="headerlink" href="#tidy-it-up-and-make-pull-request" title="Permalink to this headline">#</a></h1>
-<p>Every time you make some change, run</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;A description of the good stuff you have done&quot;</span>
-</pre></div>
-</div>
 <p>When you are in the <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> directory and feel like you are finished with your changes, just before you submit everything, simply run</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make
 </pre></div>
 </div>
-<p>This will do the style check, run pytest. If you followed the steps in <a class="reference internal" href="prep_env.html"><span class="doc std std-doc">“prepare the environment”</span></a>, everything here should pass. If this is the case, then</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push
+<p>This will do the style check, run pytest. If you followed the steps in <a class="reference internal" href="prep_env.html"><span class="doc std std-doc">“prepare the environment”</span></a>, everything here should pass.</p>
+<p>Make sure before you push everything is committed.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;A description of the good stuff you have done&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```{tip} Sometimes the style check will make changes to the file, make sure you commit after that.
+Alternatively, you could ask `pre-commit` to run every time you commit by running `pre-commit install`.
+```
+</pre></div>
+</div>
+<p>If everything passed and , then</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>name_of_your_branch
 </pre></div>
 </div>
 <p>Now open your forked directory, you should be able to “start a pull request” by clicking around.</p>
