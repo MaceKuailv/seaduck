@@ -1,4 +1,4 @@
-# Contributing to documentaion🦆
+# Contributing to documentation🦆
 
 We are using [Jupyter Book](https://jupyterbook.org/en/stable/intro.html#)📙 to build the documentation. The online documentaion is hosted by [github pages](https://pages.github.com/).
 
@@ -49,7 +49,7 @@ This step will "style" all the files and crucially strip the output of the noteb
 Now, run it again. If this time it still has an error, look at the error message and see what you can do.
 3\. Now, you can [tidy things up and make a pull request](tidyNpr.md)
 
-## Cooler(Sciserver) notebooks
+## Cooler (Sciserver) notebooks
 
 Cool stuff are not always portable. The ocean 🌊 is an example of that.
 Say you have something really cool you want to demonstrate, but the dataset it is based on is to large to distribute or it simply takes too long to run. Wouldn't it be nice if we could have a cloud platform that host a bunch of ocean dataset that is free for everyone to use? It would be even better if the packages I need as an oceanographer is readily installed and I don't have to worry about a thing.
