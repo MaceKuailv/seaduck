@@ -27,13 +27,13 @@ make docs-build
 
 ## Notebooks that could be run any where
 
-As a package that works with oceanographical datasets, almost all the demonstrations requires some supporting data. `seaduck` provides several datasets available to be downloaded everywhere. It can be accessed simply by
+As a package that works with oceanographic datasets, almost all the demonstrations requires some supporting data. `seaduck` provides several datasets available to be downloaded everywhere. It can be accessed simply by
 
 ```python
 ds = seaduck.utils.get_dataset(name)
 ```
 
-Another option is to generate the dataset using mathematical expressions out of thin air. Since this kind of notebook is executed whenever the github action is triggered, it is prefered that these notebooks being very fast to run. For example, do not perform heavy calculations in those notebooks and please do not install packages within them.
+Another option is to generate the dataset using mathematical expressions out of thin air. Since this kind of notebook is executed whenever the github action is triggered, it is preferrable that these notebooks run very fast. For example, do not perform heavy calculations in those notebooks and please do not install packages within them.
 
 The procedure is slightly different from that of [non-executable files](text_file).
 

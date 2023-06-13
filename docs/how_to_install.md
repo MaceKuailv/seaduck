@@ -12,7 +12,7 @@ or, alternatively (not available yet)
 conda install -c conda-forge seaduck
 ```
 
-or, alternatively (for latest code), see [a guide for new contibutors](guide_for_developer.md)
+or, alternatively (for latest code development), see [a guide for new contibutors](guide_for_developer.md).
 
 ## Required dependencies
 
