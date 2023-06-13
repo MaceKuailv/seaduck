@@ -1,10 +1,10 @@
 # Contributing to codes
 
-I assume you already have a local git repository of the package. If you do not have that yet, follow [this instruction](use_git.md).
+I assume you already have a local git repository of the package. If you do not have that yet, follow [these instructions](use_git.md).
 
 You should also have the environment ready, following [this tutorial](prep_env.md).
 
-I can't tell you how to write good python code, because I am not great at all. However, [this](https://peps.python.org/pep-0020/) should be able to.
+I can't tell you how to write good python code, because I am not great at all. However, [this](https://peps.python.org/pep-0020/) should be help.
 
 After making your changes, make sure that you test the code with our existing tests powered by [pytest](https://docs.pytest.org),
 
