@@ -23,7 +23,7 @@ git clone git@github.com:YourGithubNickname/seaduck.git
 
 If you use the second option, you will need to set up your github ssh key following this [tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 
-To keep things tidy, it is recommended that you use a new branch of your fork to do the development. You can create that by
+To keep things tidy, it is recommended that you use a new branch of your fork to do the development. You can create that by running (from the `seaduck` folder):
 
 ```shell
 git checkout -b name_of_your_new_branch
