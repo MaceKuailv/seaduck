@@ -25,7 +25,7 @@ def test_just_read(ind, ds, chunk):
 @pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 def test_read_xarray(ind, ds):
     ds["SALT"] = ds["SALT"].chunk({"time": 1})
-    srd(ds["SALT"], ind, xarray_more_efficient=1)
+    srd(ds["SALT"], ind, dask_more_efficient=1)
 
 
 @pytest.mark.parametrize("ds", ["ecco"], indirect=True)
