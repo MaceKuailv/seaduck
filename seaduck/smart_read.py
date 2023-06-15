@@ -37,6 +37,7 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
 
     found_count = 0
     block_dict = {}
+
     for block_ids in np.ndindex(*data.numblocks):
         shifted_indexes = []
         mask = True
@@ -47,7 +48,10 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
                 break  # empty block
             shifted_indexes.append(shifted)
         else:
-            block_dict[block_ids] = (mask, shifted_indexes)
+            block_dict[block_ids] = (
+                np.argwhere(mask).squeeze(),
+                tuple(indexes[mask] for indexes in shifted_indexes),
+            )
             if len(block_dict) >= dask_more_efficient:
                 return data.vindex[indexes_tuple].compute().reshape(shape)
 
@@ -55,7 +59,7 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
                 break  # all blocks found
 
     values = np.empty(size)
-    for block_ids, (mask, shifted_indexes) in block_dict.items():
+    for block_ids, (values_indexes, block_indexes) in block_dict.items():
         block_values = data.blocks[block_ids].compute()
-        values[mask] = block_values[tuple(indexes[mask] for indexes in shifted_indexes)]
+        values[values_indexes] = block_values[block_indexes]
     return values.reshape(shape)
