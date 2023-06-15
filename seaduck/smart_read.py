@@ -48,7 +48,7 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
                 break  # empty block
         else:
             block_dict[block_ids] = (mask, shifted_indexes)
-            if len(block_dict) > dask_more_efficient:
+            if len(block_dict) >= dask_more_efficient:
                 return data.vindex[indexes_tuple].compute().reshape(shape)
 
             if (found_count := found_count + mask.sum()) == size:
