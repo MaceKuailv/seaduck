@@ -42,10 +42,10 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
         mask = True
         for block_id, indexes, chunks in zip(block_ids, indexes_tuple, data.chunks):
             shifted = indexes - sum(chunks[:block_id])
-            shifted_indexes.append(shifted)
             block_mask = (shifted >= 0) & (shifted < chunks[block_id])
             if not block_mask.any() or not (mask := mask & block_mask).any():
                 break  # empty block
+            shifted_indexes.append(shifted)
         else:
             block_dict[block_ids] = (mask, shifted_indexes)
             if len(block_dict) >= dask_more_efficient:
