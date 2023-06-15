@@ -188,7 +188,9 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="ocean_example.html">Examples using ocean datasets</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sciserver_notebooks/IGP.html">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sciserver_notebooks/IGP.html"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in a East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sciserver_notebooks/Fjord.html">Demonstrate Position object with Fjord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sciserver_notebooks/LLC4320.html">Plot the streamlines on LLC4320</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebook/topology_tutorial.html">Topology tutorial</a></li>
 </ul>
@@ -416,137 +418,6 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;ecco&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">ds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;ecco&quot;</span><span class="p">)</span>
-
-<span class="nn">File ~/work/seaduck/seaduck/seaduck/utils.py:80,</span> in <span class="ni">get_dataset</span><span class="nt">(name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">70</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Use pooch to download datasets from cloud.</span>
-<span class="g g-Whitespace">     </span><span class="mi">71</span><span class="sd"> </span>
-<span class="g g-Whitespace">     </span><span class="mi">72</span><span class="sd">     This is just for testing purposes.</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span><span class="sd">     The name of dataset, now support &quot;ecco&quot;, &quot;aviso&quot;, &quot;curv&quot;, &quot;rect&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="n">pooch_testdata</span><span class="p">,</span> <span class="n">pooch_fetch_kwargs</span> <span class="o">=</span> <span class="n">pooch_prepare</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">80</span> <span class="n">fnames</span> <span class="o">=</span> <span class="n">pooch_testdata</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="p">,</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Untar</span><span class="p">(),</span> <span class="o">**</span><span class="n">pooch_fetch_kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span> <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_zarr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">commonpath</span><span class="p">(</span><span class="n">fnames</span><span class="p">))</span>
-<span class="g g-Whitespace">     </span><span class="mi">82</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;ecco&quot;</span><span class="p">:</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/pooch/core.py:588,</span> in <span class="ni">Pooch.fetch</span><span class="nt">(self, fname, processor, downloader, progressbar)</span>
-<span class="g g-Whitespace">    </span><span class="mi">585</span>     <span class="k">if</span> <span class="n">downloader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">586</span>         <span class="n">downloader</span> <span class="o">=</span> <span class="n">choose_downloader</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="n">progressbar</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">588</span>     <span class="n">stream_download</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">589</span>         <span class="n">url</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">590</span>         <span class="n">full_path</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">591</span>         <span class="n">known_hash</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">592</span>         <span class="n">downloader</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">593</span>         <span class="n">pooch</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">594</span>         <span class="n">retry_if_failed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">retry_if_failed</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">595</span>     <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">597</span> <span class="k">if</span> <span class="n">processor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">598</span>     <span class="k">return</span> <span class="n">processor</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">full_path</span><span class="p">),</span> <span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/pooch/core.py:803,</span> in <span class="ni">stream_download</span><span class="nt">(url, fname, known_hash, downloader, pooch, retry_if_failed)</span>
-<span class="g g-Whitespace">    </span><span class="mi">799</span> <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">800</span>     <span class="c1"># Stream the file to a temporary so that we can safely check its</span>
-<span class="g g-Whitespace">    </span><span class="mi">801</span>     <span class="c1"># hash before overwriting the original.</span>
-<span class="g g-Whitespace">    </span><span class="mi">802</span>     <span class="k">with</span> <span class="n">temporary_file</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">803</span>         <span class="n">downloader</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">pooch</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">804</span>         <span class="n">hash_matches</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">known_hash</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">805</span>         <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/pooch/downloaders.py:611,</span> in <span class="ni">DOIDownloader.__call__</span><span class="nt">(self, url, output_file, pooch)</span>
-<span class="g g-Whitespace">    </span><span class="mi">607</span> <span class="c1"># Instantiate the downloader object</span>
-<span class="g g-Whitespace">    </span><span class="mi">608</span> <span class="n">downloader</span> <span class="o">=</span> <span class="n">HTTPDownloader</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">609</span>     <span class="n">progressbar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>
-<span class="g g-Whitespace">    </span><span class="mi">610</span> <span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">611</span> <span class="n">downloader</span><span class="p">(</span><span class="n">download_url</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">pooch</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/pooch/downloaders.py:226,</span> in <span class="ni">HTTPDownloader.__call__</span><span class="nt">(self, url, output_file, pooch, check_only)</span>
-<span class="g g-Whitespace">    </span><span class="mi">224</span>     <span class="n">progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span>
-<span class="g g-Whitespace">    </span><span class="mi">225</span>     <span class="n">progress</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">total</span>
-<span class="ne">--&gt; </span><span class="mi">226</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">227</span>     <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">228</span>         <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/requests/models.py:816,</span> in <span class="ni">Response.iter_content.&lt;locals&gt;.generate</span><span class="nt">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">814</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">,</span> <span class="s2">&quot;stream&quot;</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">815</span>     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">816</span>         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">,</span> <span class="n">decode_content</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">817</span>     <span class="k">except</span> <span class="n">ProtocolError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">818</span>         <span class="k">raise</span> <span class="n">ChunkedEncodingError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/urllib3/response.py:940,</span> in <span class="ni">HTTPResponse.stream</span><span class="nt">(self, amt, decode_content)</span>
-<span class="g g-Whitespace">    </span><span class="mi">938</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">939</span>     <span class="k">while</span> <span class="ow">not</span> <span class="n">is_fp_closed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decoded_buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">940</span>         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">amt</span><span class="o">=</span><span class="n">amt</span><span class="p">,</span> <span class="n">decode_content</span><span class="o">=</span><span class="n">decode_content</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">942</span>         <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">943</span>             <span class="k">yield</span> <span class="n">data</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/urllib3/response.py:879,</span> in <span class="ni">HTTPResponse.read</span><span class="nt">(self, amt, decode_content, cache_content)</span>
-<span class="g g-Whitespace">    </span><span class="mi">876</span>     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decoded_buffer</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">amt</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">877</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoded_buffer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">879</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">881</span> <span class="n">flush_decoder</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="g g-Whitespace">    </span><span class="mi">882</span> <span class="k">if</span> <span class="n">amt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/urllib3/response.py:814,</span> in <span class="ni">HTTPResponse._raw_read</span><span class="nt">(self, amt)</span>
-<span class="g g-Whitespace">    </span><span class="mi">811</span> <span class="n">fp_closed</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="p">,</span> <span class="s2">&quot;closed&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">813</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_catcher</span><span class="p">():</span>
-<span class="ne">--&gt; </span><span class="mi">814</span>     <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp_read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">fp_closed</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">815</span>     <span class="k">if</span> <span class="n">amt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">amt</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">816</span>         <span class="c1"># Platform-specific: Buggy versions of Python.</span>
-<span class="g g-Whitespace">    </span><span class="mi">817</span>         <span class="c1"># Close the connection when no data is returned</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">822</span>         <span class="c1"># not properly close the connection in all cases. There is</span>
-<span class="g g-Whitespace">    </span><span class="mi">823</span>         <span class="c1"># no harm in redundantly calling close.</span>
-<span class="g g-Whitespace">    </span><span class="mi">824</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/urllib3/response.py:799,</span> in <span class="ni">HTTPResponse._fp_read</span><span class="nt">(self, amt)</span>
-<span class="g g-Whitespace">    </span><span class="mi">796</span>     <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">797</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">798</span>     <span class="c1"># StringIO doesn&#39;t like amt=None</span>
-<span class="ne">--&gt; </span><span class="mi">799</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span> <span class="k">if</span> <span class="n">amt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/http/client.py:466,</span> in <span class="ni">HTTPResponse.read</span><span class="nt">(self, amt)</span>
-<span class="g g-Whitespace">    </span><span class="mi">463</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">amt</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">464</span>     <span class="c1"># clip the read to the &quot;end of response&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">465</span>     <span class="n">amt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
-<span class="ne">--&gt; </span><span class="mi">466</span> <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">467</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">amt</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">468</span>     <span class="c1"># Ideally, we would raise IncompleteRead if the content-length</span>
-<span class="g g-Whitespace">    </span><span class="mi">469</span>     <span class="c1"># wasn&#39;t satisfied, but it might break compatibility.</span>
-<span class="g g-Whitespace">    </span><span class="mi">470</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_close_conn</span><span class="p">()</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/socket.py:706,</span> in <span class="ni">SocketIO.readinto</span><span class="nt">(self, b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">704</span> <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">705</span>     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">706</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">707</span>     <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">708</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/ssl.py:1278,</span> in <span class="ni">SSLSocket.recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1274</span>     <span class="k">if</span> <span class="n">flags</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1275</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1276</span>           <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
-<span class="g g-Whitespace">   </span><span class="mi">1277</span>           <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1278</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1279</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1280</span>     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
-
-<span class="nn">File ~/micromamba/envs/DEVELOP/lib/python3.11/ssl.py:1134,</span> in <span class="ni">SSLSocket.read</span><span class="nt">(self, len, buffer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1132</span> <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1133</span>     <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1134</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1135</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1136</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>

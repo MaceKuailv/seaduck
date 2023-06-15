@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries. &#8212; My sample book</title>
+    <title>Particle in a East Greenland regional simulation &#8212; My sample book</title>
   
   
   
@@ -63,7 +63,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'sciserver_notebooks/IGP';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Use seaduck.Particle with AVISO" href="../notebook/AVISO.html" />
+    <link rel="next" title="Demonstrate Position object with Fjord" href="Fjord.html" />
     <link rel="prev" title="Use seaduck.OceInterp with ECCO" href="../notebook/global_ECCO.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -188,7 +188,9 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in a East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Fjord.html">Demonstrate Position object with Fjord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LLC4320.html">Plot the streamlines on LLC4320</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
 </ul>
@@ -387,7 +389,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.</h1>
+    <h1>Particle in a East Greenland regional simulation</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -397,24 +399,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wenrui-jiang-tom-haine-feb-23">Wenrui Jiang, Tom Haine Feb ‘23</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">The regional MITgcm run is the IGPwinter simulation, available on SciServer. The simulation is opened using the OceanSpy package.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">See: https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter and https://dev-poseidon-ocean.pantheonsite.io/products/datasets/.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artificially-create-an-open-boundary-in-depth">Artificially create an open boundary in depth.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package">Initialize OceInterp package.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf">Initialize the particles: We put the ducks on the East Greenland continental shelf…</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#and-at-the-beginning-of-the-simulation">…and at the beginning of the simulation…</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#and-integrate-forward-in-time-for-one-month">…and integrate forward in time for one month.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-where-the-particles-start-on-the-map">Here is where the particles start on the map:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true">Define a function to control when to continue simulation, or to stop it. The simulation will only continue for particles that return True.</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-function-filters-particles-based-on-their-geographic-position">This function filters particles based on their geographic position.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-simulation">Prepare the simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-where-the-particles-start-on-the-map">Here is where the particles start on the map:</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-particle-object">Create the particle object.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-results">Plot results.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-results">Plot results</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -426,14 +418,18 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries">
-<h1>Lagrangian particle demonstration in a regional MITgcm configuration without faces and with open boundaries.<a class="headerlink" href="#lagrangian-particle-demonstration-in-a-regional-mitgcm-configuration-without-faces-and-with-open-boundaries" title="Permalink to this headline">#</a></h1>
-<section id="wenrui-jiang-tom-haine-feb-23">
-<h2>Wenrui Jiang, Tom Haine Feb ‘23<a class="headerlink" href="#wenrui-jiang-tom-haine-feb-23" title="Permalink to this headline">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="particle-in-a-east-greenland-regional-simulation">
+<h1><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in a East Greenland regional simulation<a class="headerlink" href="#particle-in-a-east-greenland-regional-simulation" title="Permalink to this headline">#</a></h1>
+<p>Author: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <blockquote>
-<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-05-23</strong> with <strong>seaduck 0.1.dev192+g81be7aa.d20230522</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.</p>
+<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-06-15</strong> with <strong>seaduck 0.1.3.dev44+g8d60702</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.</p>
 </div></blockquote>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -443,13 +439,25 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-</section>
-<section id="the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">
-<h2>The regional MITgcm run is the IGPwinter simulation, available on SciServer. The simulation is opened using the OceanSpy package.<a class="headerlink" href="#the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package" title="Permalink to this headline">#</a></h2>
-</section>
-<section id="see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">
-<h2>See: <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter">https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter</a> and <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">https://dev-poseidon-ocean.pantheonsite.io/products/datasets/</a>.<a class="headerlink" href="#see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets" title="Permalink to this headline">#</a></h2>
+<div class="admonition-access-igp admonition">
+<p class="admonition-title">Access IGP</p>
+<p>The regional MITgcm run is the IGPwinter simulationT and is publicly available on SciServer. The simulation output could opened using the OceanSpy package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;ECCO&quot;)._ds</span></code></p>
+<p>or the daily-mean data (‘daily_ecco’).</p>
+<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog('daily_ecco')._ds</span></code></p>
+<p>Click <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">here</a> for a full list of the dataset hosted and <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinterhttps://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter">here</a> to find out more.</p>
+<div class="admonition-access-full-ecco-dataset admonition">
+<p class="admonition-title">Access full ECCO dataset</p>
+<p>The ECCO dataset is publicly available on SciServer. The simulation output could opened using the OceanSpy package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
+<p>Choose between the monthly-mean data (‘ECCO’)</p>
+<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;ECCO&quot;)._ds</span></code></p>
+<p>or the daily-mean data (‘daily_ecco’).</p>
+<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog('daily_ecco')._ds</span></code></p>
+<p>Click <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">here</a> for a full list of the dataset hosted.</p>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;IGPwinter&quot;</span><span class="p">)</span>
@@ -457,9 +465,14 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="artificially-create-an-open-boundary-in-depth">
-<h2>Artificially create an open boundary in depth.<a class="headerlink" href="#artificially-create-an-open-boundary-in-depth" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Opening</span> <span class="n">IGPwinter</span><span class="o">.</span>
+<span class="n">High</span><span class="o">-</span><span class="n">resolution</span> <span class="n">numerical</span> <span class="n">simulation</span> <span class="n">carried</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">parallel</span> <span class="n">to</span> <span class="n">the</span> <span class="n">observational</span>
+<span class="n">component</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Iceland</span> <span class="n">Greenland</span> <span class="n">Seas</span> <span class="n">Project</span> <span class="p">(</span><span class="n">IGP</span><span class="p">)</span><span class="o">.</span>
+<span class="n">Citation</span><span class="p">:</span>
+ <span class="o">*</span> <span class="n">Renfrew</span> <span class="n">et</span> <span class="n">al</span><span class="o">.</span><span class="p">,</span> <span class="mi">2019</span> <span class="o">-</span> <span class="n">BAMS</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>We are going to artificially create an open boundary in depth. This is to demonstrate that there is no weird behavior associated with open vertical boundaries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Z</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">Zl</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
@@ -467,9 +480,10 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="initialize-oceinterp-package">
-<h2>Initialize OceInterp package.<a class="headerlink" href="#initialize-oceinterp-package" title="Permalink to this headline">#</a></h2>
+<section id="prepare-the-simulation">
+<h2>Prepare the simulation<a class="headerlink" href="#prepare-the-simulation" title="Permalink to this headline">#</a></h2>
+<p>Since this notebook works with an open domain, it is going to be a little different a few other notebooks.</p>
+<p>We are interested in looking at the coastal current. First, we need to prepare a <code class="docutils literal notranslate"><span class="pre">seaduck.OceData</span></code> object…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
@@ -477,9 +491,7 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf">
-<h2>Initialize the particles: We put the ducks on the East Greenland continental shelf…<a class="headerlink" href="#initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf" title="Permalink to this headline">#</a></h2>
+<p>…Initialize the particles: We put the ducks on the East Greenland continental shelf…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Nx</span> <span class="o">=</span> <span class="mi">20</span>
@@ -494,65 +506,73 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="and-at-the-beginning-of-the-simulation">
-<h2>…and at the beginning of the simulation…<a class="headerlink" href="#and-at-the-beginning-of-the-simulation" title="Permalink to this headline">#</a></h2>
+<p>…and at the beginning of the simulation…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="s2">&quot;2018-01-02&quot;</span>
-<span class="n">t</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">)</span>
-<span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">sd</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">convert_time</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-</section>
-<section id="and-integrate-forward-in-time-for-one-month">
-<h2>…and integrate forward in time for one month.<a class="headerlink" href="#and-integrate-forward-in-time-for-one-month" title="Permalink to this headline">#</a></h2>
+<p>…and integrate forward in time for one month.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tf</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;2018-02-01&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span>
-    <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span>
-<span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">end_time</span> <span class="o">=</span> <span class="s2">&quot;2018-02-01&quot;</span>
+<span class="n">tf</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">convert_time</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-</section>
 <section id="here-is-where-the-particles-start-on-the-map">
-<h2>Here is where the particles start on the map:<a class="headerlink" href="#here-is-where-the-particles-start-on-the-map" title="Permalink to this headline">#</a></h2>
+<h3>Here is where the particles start on the map:<a class="headerlink" href="#here-is-where-the-particles-start-on-the-map" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;XC&quot;</span><span class="p">],</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;YC&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;Depth&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;XC&quot;</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;YC&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;Depth&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Depth(m)&quot;</span><span class="p">)</span>
+<span class="n">cbar_depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">500</span><span class="p">)])</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cbar_depth</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">cbar_depth</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Longitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Latitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Bathymetry of model domain and particle initial position&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_15_1.png?raw=true" /></p>
-</section>
-<section id="define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true">
-<h2>Define a function to control when to continue simulation, or to stop it. The simulation will only continue for particles that return True.<a class="headerlink" href="#define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true" title="Permalink to this headline">#</a></h2>
-<section id="this-function-filters-particles-based-on-their-geographic-position">
-<h3>This function filters particles based on their geographic position.<a class="headerlink" href="#this-function-filters-particles-based-on-their-geographic-position" title="Permalink to this headline">#</a></h3>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_16_0.png?raw=true" /></p>
+<p><strong>Fig.1</strong> The initial position of the particles released (red line) on a horizontal map of the surrounding regions.</p>
+<p>We are going to follow a cold puff of fresh water near the Greenland shelf. Since we have <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code> installed here at SciServer, let me quickly show you a vertical section of this region. (It really takes no effort at all!)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">od_surv</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">subsample</span><span class="o">.</span><span class="n">survey_stations</span><span class="p">(</span>
+    <span class="n">Xsurv</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">22.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">19.0</span><span class="p">],</span> <span class="n">Ysurv</span><span class="o">=</span><span class="p">[</span><span class="mf">71.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">],</span> <span class="n">delta</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">od_surv</span><span class="o">.</span><span class="n">_ds</span> <span class="o">=</span> <span class="n">od_surv</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">od_surv</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">vertical_section</span><span class="p">(</span><span class="n">varName</span><span class="o">=</span><span class="s2">&quot;Temp&quot;</span><span class="p">,</span> <span class="n">contourName</span><span class="o">=</span><span class="s2">&quot;Sigma0&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">750</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_19_1.png?raw=true" /></p>
+<p><strong>Fig.2</strong> Vertical section at 71N. This vertical section goes a little further east than the particle position to include the shelf break. Colors denotes the potential temperature, while the contours is the potential density anomaly calculated using OceanSpy (with the equation of state the model used).</p>
+<p>Since we are in an open domain (in all three dimensions), given long enough time, some particles will go out of the domain and jeopardise the entire simulation. We can define a callback function to stop that from happening.</p>
+<p>If provided, the function will be called every time particles cross walls. It can be used to manipulate the particles. But here we just use it as a stop/continue criterion.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">continue_criterion</span><span class="p">(</span><span class="n">pt</span><span class="p">):</span>
-    <span class="n">x_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">43</span><span class="p">)</span>
-    <span class="n">y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">&lt;</span> <span class="mf">77.5</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">&gt;</span> <span class="mf">57.5</span><span class="p">)</span>
+    <span class="n">x_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">35</span><span class="p">)</span>
+    <span class="n">y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">&lt;</span> <span class="mi">72</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">&gt;</span> <span class="mi">65</span><span class="p">)</span>
     <span class="n">z_</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dep</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">750</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">),</span> <span class="n">z_</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">
-<h2>Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.<a class="headerlink" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself" title="Permalink to this headline">#</a></h2>
+<p>This time we are going to use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span><span class="p">[</span><span class="s2">&quot;utrans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;U&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;drF&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;dyG&quot;</span><span class="p">]</span>
@@ -562,18 +582,16 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="create-the-particle-object">
-<h2>Create the particle object.<a class="headerlink" href="#create-the-particle-object" title="Permalink to this headline">#</a></h2>
+<p>Finally, create the particle object. And that’s all of the preparation we need.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">particle</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">Particle</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
     <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span>
     <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
     <span class="n">data</span><span class="o">=</span><span class="n">oce</span><span class="p">,</span>
-    <span class="n">continue_criterion</span><span class="o">=</span><span class="n">continue_criterion</span><span class="p">,</span>
+    <span class="n">callback</span><span class="o">=</span><span class="n">continue_criterion</span><span class="p">,</span>
     <span class="n">uname</span><span class="o">=</span><span class="s2">&quot;utrans&quot;</span><span class="p">,</span>
     <span class="n">vname</span><span class="o">=</span><span class="s2">&quot;vtrans&quot;</span><span class="p">,</span>
     <span class="n">wname</span><span class="o">=</span><span class="s2">&quot;wtrans&quot;</span><span class="p">,</span>
@@ -585,8 +603,9 @@ document.write(`
 </div>
 </div>
 </section>
+</section>
 <section id="perform-the-particle-trajectory-simulation">
-<h2>Perform the particle trajectory simulation.<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this headline">#</a></h2>
+<h2>Perform the particle trajectory simulation<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,</span> <span class="n">raw</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">to_list_of_time</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tf</span><span class="p">])</span>
@@ -594,33 +613,47 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">
-<h2>Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.<a class="headerlink" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
+<p>Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
 <span class="n">lats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-</section>
 <section id="plot-results">
-<h2>Plot results.<a class="headerlink" href="#plot-results" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
+<h3>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;XC&quot;</span><span class="p">],</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;YC&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="p">[</span><span class="s2">&quot;Depth&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="s2">&quot;gold&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">35</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">65</span><span class="p">,</span> <span class="mi">72</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Longitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Latitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Particle trajectories overlaid on bathymetry map&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_27_1.png?raw=true" /></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_32_0.png?raw=true" /></p>
+<p><strong>Fig.3</strong> The particle trajectories overlaid on <strong>Fig.1</strong>. The coloring scheme of bathymetry is also the same as <strong>Fig.1</strong></p>
+</section>
 </section>
 </section>
 
@@ -633,16 +666,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "oceanography"
         },
         kernelOptions: {
-            name: "python3",
+            name: "oceanography",
             path: "./sciserver_notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'oceanography'</script>
 
                 </article>
               
@@ -665,11 +698,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="../notebook/AVISO.html"
+       href="Fjord.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</p>
+        <p class="prev-next-title">Demonstrate Position object with Fjord</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -691,24 +724,14 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wenrui-jiang-tom-haine-feb-23">Wenrui Jiang, Tom Haine Feb ‘23</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-regional-mitgcm-run-is-the-igpwinter-simulation-available-on-sciserver-the-simulation-is-opened-using-the-oceanspy-package">The regional MITgcm run is the IGPwinter simulation, available on SciServer. The simulation is opened using the OceanSpy package.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-https-oceanspy-readthedocs-io-en-latest-datasets-html-igpwinter-and-https-dev-poseidon-ocean-pantheonsite-io-products-datasets">See: https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter and https://dev-poseidon-ocean.pantheonsite.io/products/datasets/.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artificially-create-an-open-boundary-in-depth">Artificially create an open boundary in depth.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-oceinterp-package">Initialize OceInterp package.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-the-particles-we-put-the-ducks-on-the-east-greenland-continental-shelf">Initialize the particles: We put the ducks on the East Greenland continental shelf…</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#and-at-the-beginning-of-the-simulation">…and at the beginning of the simulation…</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#and-integrate-forward-in-time-for-one-month">…and integrate forward in time for one month.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-where-the-particles-start-on-the-map">Here is where the particles start on the map:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-a-function-to-control-when-to-continue-simulation-or-to-stop-it-the-simulation-will-only-continue-for-particles-that-return-true">Define a function to control when to continue simulation, or to stop it. The simulation will only continue for particles that return True.</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-function-filters-particles-based-on-their-geographic-position">This function filters particles based on their geographic position.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-simulation">Prepare the simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#here-is-where-the-particles-start-on-the-map">Here is where the particles start on the map:</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-volume-flux-transport-to-advect-the-particles-this-is-usually-better-than-using-the-velocity-field-itself">Use volume flux (transport) to advect the particles. This is usually better than using the velocity field itself.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-particle-object">Create the particle object.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-particle-positions-from-the-seaduck-eulerian-position-objects">Retrieve the particle positions from the <code class="docutils literal notranslate"><span class="pre">seaduck.eulerian.position</span></code> objects.</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-results">Plot results.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-results">Plot results</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
