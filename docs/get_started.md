@@ -16,7 +16,7 @@ If you have questions about any function, you can always go to [API references](
 Running Lagrangian particle on regional dataset
 ^^^
 
-```{image} https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_27_1.png?raw=true
+```{image} https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/IGP_32_0.png?raw=true
 :height: 200
 ```
 
@@ -34,14 +34,17 @@ ECCO dataset for now, but I want to have a 4320 example notebook.
 :::
 
 :::{grid-item-card}
-:link: notebook/AVISO
+:link: sciserver_notebooks/Fjord
 :link-type: doc
 :class-header: bg-light
 
-Sketch the ACC
+Interpolation near a fjord in Eastern Greenland
 ^^^
 
-Could have a prettier example using ETOPO.
+```{image} https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/Fjord_29_0.png?raw=true
+:height: 200
+```
+
 :::
 
 ::::
