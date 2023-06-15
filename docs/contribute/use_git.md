@@ -1,8 +1,8 @@
 # Using Git and Github
 
-It essential for developer to use [Git](https://git-scm.com), especially for open source development. [GitHub](https://github.com) is a website based on the idea of git.
+It's essential for developers to use [Git](https://git-scm.com), especially for open source development. [GitHub](https://github.com) is a website based on the idea of git.
 
-[GitHub](https://github.com)  not only hosts the source code, but also the documentation, tests, past issues, solutions, and the entire history of changes to the directory. Therefore, you need to have a [GitHub](https://github.com)  account.
+[GitHub](https://github.com) not only hosts the source code, but also the documentation, tests, past issues, solutions, and the entire history of changes to the directory. Therefore, you need to have a [GitHub](https://github.com)  account.
 
 Sign into the account, go to [seaduck](https://github.com/MaceKuailv/seaduck) and [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the directory by clicking around.
 
@@ -23,7 +23,7 @@ git clone git@github.com:YourGithubNickname/seaduck.git
 
 If you use the second option, you will need to set up your github ssh key following this [tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 
-To keep things tidy, it is recommended that you use a new branch of your fork to do the development. You can create that by
+To keep things tidy, it is recommended that you use a new branch of your fork to do the development. You can create that by running (from the `seaduck` folder):
 
 ```shell
 git checkout -b name_of_your_new_branch
