@@ -31,6 +31,8 @@ parts:
     sections:
     - file: notebook/global_ECCO
     - file: sciserver_notebooks/IGP
+    - file: sciserver_notebooks/Fjord
+    - file: sciserver_notebooks/LLC4320
     - file: notebook/AVISO
     - file: notebook/topology_tutorial
 - caption: Contributing
