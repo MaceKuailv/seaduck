@@ -202,7 +202,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../contribute/use_git.html">Using Git and Github</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentation🦆</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
 </ul>
 </li>
@@ -402,7 +402,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-dataset">Loading Dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiment-setup">Experiment setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-explore-seaduck-oceinterp">Let’s explore <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolate-these-ecco-fields-at-eulerian-positions">Interpolate these ECCO fields at eulerian positions.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolate-these-ecco-fields-at-eulerian-positions">Interpolate these ECCO fields at Eulerian positions.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#now-compute-lagrangian-trajectories-for-these-particles">Now compute Lagrangian trajectories for these particles.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-interpolated-salinity-field-on-the-final-particle-positions">Plot the interpolated salinity field on the final particle positions.</a></li>
@@ -426,7 +426,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="use-seaduck-oceinterp-with-ecco">
 <h1>Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO<a class="headerlink" href="#use-seaduck-oceinterp-with-ecco" title="Permalink to this headline">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">seaduck</span></code> Lagrangian particle demonstration. This version uses a reduced version of the ECCO MITgcm velocity field data available on SciServer.</p>
+<p><code class="docutils literal notranslate"><span class="pre">seaduck</span></code> Lagrangian particle demonstration. This version uses a reduced version of the ECCO MITgcm velocity field data.</p>
 <p>authors: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -664,7 +664,7 @@ document.write(`
 </div>
 </div>
 <section id="interpolate-these-ecco-fields-at-eulerian-positions">
-<h3>Interpolate these ECCO fields at eulerian positions.<a class="headerlink" href="#interpolate-these-ecco-fields-at-eulerian-positions" title="Permalink to this headline">#</a></h3>
+<h3>Interpolate these ECCO fields at Eulerian positions.<a class="headerlink" href="#interpolate-these-ecco-fields-at-eulerian-positions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="n">eta</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span>
@@ -699,8 +699,8 @@ document.write(`
 </div>
 </details>
 </div>
-<p>The salinity and the sea surface height variable here are not model output but randomly generated noise and there are values on land as well. However, the package respects the masking provided by the model, so even though there is value, nans are returned.</p>
-<p>This is not the case for velocity. The masking for staggered velocity field is not provided by the model, so the actual value (zero) here is returned.</p>
+<p>The salinity and the sea surface height variable here are not model output but randomly generated noise and there are values on land as well. However, the package respects the mask provided by the model, so even though there is value, NaNs are returned.</p>
+<p>This is not the case for velocity. The mask for the staggered velocity field is not provided by the model, so the actual value (zero here) is returned.</p>
 </section>
 <section id="now-compute-lagrangian-trajectories-for-these-particles">
 <h3>Now compute Lagrangian trajectories for these particles.<a class="headerlink" href="#now-compute-lagrangian-trajectories-for-these-particles" title="Permalink to this headline">#</a></h3>
@@ -917,7 +917,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-dataset">Loading Dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiment-setup">Experiment setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-explore-seaduck-oceinterp">Let’s explore <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolate-these-ecco-fields-at-eulerian-positions">Interpolate these ECCO fields at eulerian positions.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolate-these-ecco-fields-at-eulerian-positions">Interpolate these ECCO fields at Eulerian positions.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#now-compute-lagrangian-trajectories-for-these-particles">Now compute Lagrangian trajectories for these particles.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-particle-trajectory-simulation">Perform the particle trajectory simulation.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-the-interpolated-salinity-field-on-the-final-particle-positions">Plot the interpolated salinity field on the final particle positions.</a></li>

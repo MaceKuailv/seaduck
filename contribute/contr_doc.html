@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Contributing to documentaion🦆 &#8212; My sample book</title>
+    <title>Contributing to documentation🦆 &#8212; My sample book</title>
   
   
   
@@ -200,7 +200,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="use_git.html">Using Git and Github</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_env.html">Prepare the environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Contributing to documentation🦆</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tidyNpr.html">Tidy it up and make Pull Request</a></li>
 </ul>
 </li>
@@ -387,7 +387,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Contributing to documentaion🦆</h1>
+    <h1>Contributing to documentation🦆</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -400,7 +400,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-modify">Add/Modify</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text-files">Text files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebooks-that-could-be-run-any-where">Notebooks that could be run any where</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cooler-sciserver-notebooks">Cooler(Sciserver) notebooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cooler-sciserver-notebooks">Cooler (Sciserver) notebooks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploy-documentation">Deploy documentation</a></li>
 </ul>
             </nav>
@@ -413,8 +413,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="contributing-to-documentaion">
-<h1>Contributing to documentaion🦆<a class="headerlink" href="#contributing-to-documentaion" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="contributing-to-documentation">
+<h1>Contributing to documentation🦆<a class="headerlink" href="#contributing-to-documentation" title="Permalink to this headline">#</a></h1>
 <p>We are using <a class="reference external" href="https://jupyterbook.org/en/stable/intro.html#">Jupyter Book</a>📙 to build the documentation. The online documentaion is hosted by <a class="reference external" href="https://pages.github.com/">github pages</a>.</p>
 <section id="add-modify">
 <h2>Add/Modify<a class="headerlink" href="#add-modify" title="Permalink to this headline">#</a></h2>
@@ -440,11 +440,11 @@ document.write(`
 </section>
 <section id="notebooks-that-could-be-run-any-where">
 <h2>Notebooks that could be run any where<a class="headerlink" href="#notebooks-that-could-be-run-any-where" title="Permalink to this headline">#</a></h2>
-<p>As a package that works with oceanographical datasets, almost all the demonstrations requires some supporting data. <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> provides several datasets available to be downloaded everywhere. It can be accessed simply by</p>
+<p>As a package that works with oceanographic datasets, almost all the demonstrations requires some supporting data. <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> provides several datasets available to be downloaded everywhere. It can be accessed simply by</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">seaduck</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Another option is to generate the dataset using mathematical expressions out of thin air. Since this kind of notebook is executed whenever the github action is triggered, it is prefered that these notebooks being very fast to run. For example, do not perform heavy calculations in those notebooks and please do not install packages within them.</p>
+<p>Another option is to generate the dataset using mathematical expressions out of thin air. Since this kind of notebook is executed whenever the github action is triggered, it is preferrable that these notebooks run very fast. For example, do not perform heavy calculations in those notebooks and please do not install packages within them.</p>
 <p>The procedure is slightly different from that of <a class="reference internal" href="#text-file"><span class="std std-ref">non-executable files</span></a>.</p>
 <ol class="arabic simple">
 <li><p>Follow step 1 to 6 in the <a class="reference internal" href="#text-file"><span class="std std-ref">previous</span></a> section.</p></li>
@@ -458,7 +458,7 @@ document.write(`
 3. Now, you can <a class="reference internal" href="tidyNpr.html"><span class="doc std std-doc">tidy things up and make a pull request</span></a></p>
 </section>
 <section id="cooler-sciserver-notebooks">
-<h2>Cooler(Sciserver) notebooks<a class="headerlink" href="#cooler-sciserver-notebooks" title="Permalink to this headline">#</a></h2>
+<h2>Cooler (Sciserver) notebooks<a class="headerlink" href="#cooler-sciserver-notebooks" title="Permalink to this headline">#</a></h2>
 <p>Cool stuff are not always portable. The ocean 🌊 is an example of that.
 Say you have something really cool you want to demonstrate, but the dataset it is based on is to large to distribute or it simply takes too long to run. Wouldn’t it be nice if we could have a cloud platform that host a bunch of ocean dataset that is free for everyone to use? It would be even better if the packages I need as an oceanographer is readily installed and I don’t have to worry about a thing.
 You can use <a class="reference external" href="https://sciserver.org/">Sciserver</a>! (Am I too dramatic?). Sciserver is also the home base of <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/">oceanspy</a>, a package that will make your life so much easier as a oceanographer. After registering on sciserver (you can follow this youtube tutorial here(Tom, if you are reading this, can you send me the link?)), you can simply call this oceanspy function</p>
@@ -585,7 +585,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourG
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-modify">Add/Modify</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#text-files">Text files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebooks-that-could-be-run-any-where">Notebooks that could be run any where</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cooler-sciserver-notebooks">Cooler(Sciserver) notebooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cooler-sciserver-notebooks">Cooler (Sciserver) notebooks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploy-documentation">Deploy documentation</a></li>
 </ul>
   </nav></div>
