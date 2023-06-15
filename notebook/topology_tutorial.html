@@ -60,6 +60,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebook/topology_tutorial';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -200,7 +202,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../contribute/use_git.html">Using Git and Github</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentaion🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentation🦆</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
 </ul>
 </li>
@@ -411,9 +413,9 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="topology-tutorial">
 <h1>Topology tutorial<a class="headerlink" href="#topology-tutorial" title="Permalink to this headline">#</a></h1>
-<p>In the movie “kill Bill”, all the brutal action happens after the main character wake up after the coma and managed to “wiggle your big toe”. In a similar way, all the functionality of <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> depends on the Topology class.</p>
+<p>In the movie “Kill Bill”, all the brutal action happens after the main character wakes up after a coma and manages to “wiggle your big toe”. In a similar way, all the functionality of <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> depends on the <code class="docutils literal notranslate"><span class="pre">Topology</span></code> class.</p>
 <p>As the name suggest, this objects describe how the grids are connected in the horizontal dimensions. This is a simple compact model with high performance. It is also designed with expandability in mind.</p>
-<p>For any grid configuration not yet supported by this package, only one function must be added to the code, and, with no (or at least very little) extra effort, this module and therefore the entire package should work for the new configuration.</p>
+<p>For any grid configuration not yet supported by this package, only one function must be added to the code, and, with no (or at least, very little) extra effort, this module and therefore the entire package should work for the new configuration.</p>
 <p>The magic function is simply: given a center grid point and its index, if you one want to move one grid to the up/down/left/right what would the new index be.</p>
 <p>And that’s it.</p>
 <div class="cell tag_hide-input docutils container">
@@ -599,7 +601,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>Here,0-3 represent up/down/left/right respectively.</p>
+<p>Here, 0-3 represent up/down/left/right respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">face</span> <span class="o">=</span> <span class="mi">10</span>
@@ -628,7 +630,7 @@ document.write(`
 <p>This is all very nice, it is definitely a pain to navigate grids. But how can I apply this to actual applications?</p>
 <section id="calculate-surface-vorticity">
 <h2>Calculate surface vorticity<a class="headerlink" href="#calculate-surface-vorticity" title="Permalink to this headline">#</a></h2>
-<p>This example is going to use <code class="docutils literal notranslate"><span class="pre">Topology</span></code> to compute vorticity on ECCO. As this notebook is written, packages like <code class="docutils literal notranslate"><span class="pre">xgcm</span></code> does not support vorticity calculation on grids with complex topology. I don’t think I need to tell you it is a pain to write it out yourself.</p>
+<p>This example is going to use <code class="docutils literal notranslate"><span class="pre">Topology</span></code> to compute vorticity on ECCO. As this notebook is written, packages like <code class="docutils literal notranslate"><span class="pre">xgcm</span></code> do not support vorticity calculation on grids with complex topology. I don’t think I need to tell you it’s a pain to write it out yourself.</p>
 <p>Without further ado, let’s begin by defining the points of interest. In this example, it is every single corner points on the dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -676,7 +678,7 @@ document.write(`
 </div>
 </details>
 </div>
-<p>Each corner points are connected to 4 staggered velocity points, for MITgcm indexing, the upper and right one has the same index as the corner, so we could just read in that.</p>
+<p>Every corner point is connected to 4 staggered velocity points. For MITgcm indexing, the upper and right one has the same index as the corner, so we could just read in that.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -700,7 +702,7 @@ document.write(`
 </div>
 </div>
 <p>We can use the <code class="docutils literal notranslate"><span class="pre">ind_tend_vec</span></code> function to figure out the other two indexes for the velocity points.</p>
-<p>The next line is going to have a warning, because some of the points we defined on continental Antarctica does not have neighboring points. Since, they are on land, it does not matter as far as we are concerned.</p>
+<p>The next line is going to have a warning, because some of the points we defined on continental Antarctica don’t have neighboring points. Since, they are on land, it does not matter as far as we are concerned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ind_left</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">ind_tend_vec</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">face</span><span class="p">),</span> <span class="n">cuvwg</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">)</span>
@@ -718,7 +720,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>It is actually not as simple as that. Grid are not always parallel to each other. For example, sometimes U becomes V, and V becomes -U.</p>
+<p>It is actually not as simple as that. Grid are not always parallel to each other. For example, sometimes <span class="math notranslate nohighlight">\(U\)</span> becomes <span class="math notranslate nohighlight">\(V\)</span>, and <span class="math notranslate nohighlight">\(V\)</span> becomes <span class="math notranslate nohighlight">\(-U\)</span>.</p>
 <p>Well, the <code class="docutils literal notranslate"><span class="pre">Topology</span></code> object takes care of that as well with little additional effort.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
