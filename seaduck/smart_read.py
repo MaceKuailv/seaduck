@@ -28,6 +28,7 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
         )
 
     shape = indexes_tuple[0].shape
+    size = indexes_tuple[0].size
     indexes_tuple = tuple(indexes.ravel() for indexes in indexes_tuple)
 
     if not da.chunks:
@@ -50,10 +51,10 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
             if len(block_dict) > dask_more_efficient:
                 return data.vindex[indexes_tuple].compute().reshape(shape)
 
-            if (found_count := found_count + mask.sum()) >= indexes_tuple[0].size:
+            if (found_count := found_count + mask.sum()) == size:
                 break  # all blocks found
 
-    values = np.empty(np.prod(shape))
+    values = np.empty(size)
     for block_ids, (mask, shifted_indexes) in block_dict.items():
         block_values = data.blocks[block_ids].compute()
         values[mask] = block_values[tuple(indexes[mask] for indexes in shifted_indexes)]
