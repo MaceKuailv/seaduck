@@ -61,6 +61,15 @@ od = ospy.open_oceandataset.from_catalog('NameOfDataset')
 ds = od._ds
 ```
 
+Note that since you are using an `Oceanography` image, most packages are already downloaded. We still need two dependencies just to convert the notebooks.
+
+```
+pip install -U jupyter-book
+pip install jupytext
+```
+
+And that's it, you don't have to follow the steps of preparing environment.
+
 Now, follow these steps:
 
 1. [Fork and clone](use_git.md) this repo adjacent to the seaduck directory
