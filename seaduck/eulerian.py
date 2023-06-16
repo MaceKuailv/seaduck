@@ -7,7 +7,7 @@ from seaduck.kernel_weight import KnW, _translate_to_tendency, find_pk_4d
 from seaduck.ocedata import HRel, OceData, RelCoord, TRel, VlRel, VRel
 
 # from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
-from seaduck.smart_read import smart_read as sread
+from seaduck.smart_read import smart_read
 from seaduck.utils import (
     _general_len,
     find_px_py,
@@ -495,7 +495,7 @@ class Position:
                 "have all the dimensions needed"
             )
         if prefetched is None:
-            return sread(self.ocedata[varName], ind)
+            return smart_read(self.ocedata[varName], ind)
         else:
             return prefetched[ind]
 
@@ -994,7 +994,7 @@ class Position:
                     temp_ind = _subtract_i_min(ind, i_min)
                     needed = np.nan_to_num(prefetched[temp_ind])
                 else:
-                    needed = np.nan_to_num(sread(self.ocedata[varName], ind))
+                    needed = np.nan_to_num(smart_read(self.ocedata[varName], ind))
                 data_lookup[hs] = needed
             elif isinstance(varName, tuple):
                 uname, vname = varName
@@ -1013,10 +1013,10 @@ class Position:
                     vfromu = np.nan_to_num(upre[_subtract_i_min(indvfromu, i_min)])
                     vfromv = np.nan_to_num(vpre[_subtract_i_min(indvfromv, i_min)])
                 else:
-                    ufromu = np.nan_to_num(sread(self.ocedata[uname], indufromu))
-                    ufromv = np.nan_to_num(sread(self.ocedata[vname], indufromv))
-                    vfromu = np.nan_to_num(sread(self.ocedata[uname], indvfromu))
-                    vfromv = np.nan_to_num(sread(self.ocedata[vname], indvfromv))
+                    ufromu = np.nan_to_num(smart_read(self.ocedata[uname], indufromu))
+                    ufromv = np.nan_to_num(smart_read(self.ocedata[vname], indufromv))
+                    vfromu = np.nan_to_num(smart_read(self.ocedata[uname], indvfromu))
+                    vfromv = np.nan_to_num(smart_read(self.ocedata[vname], indvfromv))
                 temp_n_u[bool_ufromu] = ufromu  # 0#
                 temp_n_u[bool_ufromv] = ufromv  # 1#
                 temp_n_v[bool_vfromu] = vfromu  # 0#
