@@ -1,3 +1,5 @@
+from itertools import accumulate
+
 import numpy as np
 
 
@@ -5,6 +7,14 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
     """Read from a xarray.DataArray given a tuple indexes.
 
     Try to do it fast and smartly.
+    There is a lot of improvement to be made here,
+    but this is how it is currently done.
+
+    The data we read is going to be unstructured but they tend to be
+    rather localized. For example, the lagrangian particles read data
+    from the same time step.
+    This function figures out which chunks stores the data, convert them
+    into numpy arrays, and then read the data from the converted ones.
 
     Parameters
     ----------
@@ -36,9 +46,27 @@ def smart_read(da, indexes_tuple, dask_more_efficient=100):
     data = da.data
 
     found_count = 0
+    reach_first_entry = False
     block_dict = {}
 
+    largest_indexes_of_chunk = []
+    for chunks in data.chunks:
+        largest_indexes_of_chunk.append(list(accumulate(chunks)))
+
+    smallest_indexes_of_dimension = []
+    for indexes in indexes_tuple:
+        smallest_indexes_of_dimension.append(np.min(indexes))
+
     for block_ids in np.ndindex(*data.numblocks):
+        if not reach_first_entry:
+            for block_id, large_index, small_ind in zip(
+                block_ids, largest_indexes_of_chunk, smallest_indexes_of_dimension
+            ):
+                if large_index[block_id] < small_ind:
+                    break
+            else:
+                reach_first_entry = True
+
         shifted_indexes = []
         mask = True
         for block_id, indexes, chunks in zip(block_ids, indexes_tuple, data.chunks):
