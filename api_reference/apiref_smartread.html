@@ -404,22 +404,35 @@ document.write(`
   <section id="module-seaduck.smart_read">
 <span id="seaduck-smart-read"></span><h1>seaduck.smart_read<a class="headerlink" href="#module-seaduck.smart_read" title="Permalink to this headline">#</a></h1>
 <dl class="py function">
+<dt class="sig sig-object py" id="seaduck.smart_read.slice_data_and_shift_indexes">
+<span class="sig-prename descclassname"><span class="pre">seaduck.smart_read.</span></span><span class="sig-name descname"><span class="pre">slice_data_and_shift_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">da</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes_tuple</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.smart_read.slice_data_and_shift_indexes" title="Permalink to this definition">#</a></dt>
+<dd><p>Slice data using min/max indexes, and shift indexes.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="seaduck.smart_read.smart_read">
-<span class="sig-prename descclassname"><span class="pre">seaduck.smart_read.</span></span><span class="sig-name descname"><span class="pre">smart_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">da</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_chunk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xarray_more_efficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.smart_read.smart_read" title="Permalink to this definition">#</a></dt>
-<dd><p>Read from a xarray.DataArray given tuple indexes.</p>
-<p>Try to do it fast and smartly.</p>
+<span class="sig-prename descclassname"><span class="pre">seaduck.smart_read.</span></span><span class="sig-name descname"><span class="pre">smart_read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">da</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes_tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dask_more_efficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.smart_read.smart_read" title="Permalink to this definition">#</a></dt>
+<dd><p>Read from a xarray.DataArray given a tuple indexes.</p>
+<p>Try to do it fast and smartly.
+There is a lot of improvement to be made here,
+but this is how it is currently done.</p>
+<p>The data we read is going to be unstructured but they tend to be
+rather localized. For example, the lagrangian particles read data
+from the same time step.
+This function figures out which chunks stores the data, convert them
+into numpy arrays, and then read the data from the converted ones.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>da</strong> (<em>xarray.DataArray</em>) – DataArray to read from</p></li>
-<li><p><strong>ind</strong> (<em>tuple of numpy.ndarray</em>) – The indexes of points of interest, each element does not need to be 1D</p></li>
-<li><p><strong>memory_chunk</strong> (<em>int</em><em>, </em><em>default 3</em>) – If the number of chunks needed is smaller than this, read all of them at once.</p></li>
-<li><p><strong>xarray_more_efficient</strong> (<em>int</em><em>, </em><em>default 100</em>) – When the number of chunks is larger than this, and the data points are few,
-it may make sense to directly use xarray’s vectorized read.</p></li>
+<li><p><strong>indexes_tuple</strong> (<em>tuple of numpy.ndarray</em>) – The indexes of points of interest, each element does not need to be 1D</p></li>
+<li><p><strong>dask_more_efficient</strong> (<em>int</em><em>, </em><em>default 100</em>) – When the number of chunks is larger than this, and the data points are few,
+it may make sense to directly use dask’s vectorized read.</p></li>
+<li><p><strong>chunks</strong> (<em>int</em><em>, </em><em>str</em><em>, </em><em>default: &quot;auto&quot;</em>) – Chunks for indexes</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>+ values</strong> – The values of the points of interest. Has the same shape as the elements in ind.</p>
+<dd class="field-even"><p><strong>+ values</strong> – The values of the points of interest. Has the same shape as the elements in indexes_tuple.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
