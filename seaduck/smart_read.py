@@ -16,7 +16,7 @@ def slice_data_and_shift_indexes(da, indexes_tuple):
     return da.data[slicers], indexes_tuple
 
 
-def smart_read(da, indexes_tuple, dask_more_efficient=100, chunks="auto"):
+def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
     """Read from a xarray.DataArray given a tuple indexes.
 
     Try to do it fast and smartly.
