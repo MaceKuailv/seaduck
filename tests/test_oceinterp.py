@@ -25,18 +25,16 @@ z = z.ravel()
 
 # Change the times here
 start_time = "1992-01-17"
-t = (
-    np.array([np.datetime64(start_time) for i in x]) - np.datetime64("1970-01-01")
-) / np.timedelta64(1, "s")
+t = sd.utils.convert_time(start_time) * np.ones_like(x)
 
 end_time = "1992-02-15"
 
 t_bnds = np.array(
     [
-        np.datetime64(start_time) - np.datetime64("1970-01-01"),
-        np.datetime64(end_time) - np.datetime64("1970-01-01"),
+        sd.utils.convert_time(start_time),
+        sd.utils.convert_time(end_time),
     ]
-) / np.timedelta64(1, "s")
+)
 
 
 @pytest.mark.parametrize("od,x,y,z,t", [("ecco", x, y, z, t)], indirect=["od"])
@@ -129,3 +127,14 @@ def test_largangian_oceinterp(
 def test_oceinterp_error(od, varList, x, y, z, t, lagrangian, error):
     with pytest.raises(error):
         sd.OceInterp(od, varList, x, y, z, t, lagrangian=lagrangian)
+
+
+@pytest.mark.parametrize("t", ["1992-02-01", np.datetime64("1992-02-01")])
+@pytest.mark.parametrize("to_array", [True, False])
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_flexible_time_format(od, t, to_array):
+    if to_array:
+        t = np.array([t for _ in x])
+    res = sd.OceInterp(od, "ETAN", x, y, z, t)
+    assert ~(np.isnan(res[0]).any())
+    assert isinstance(res[0], np.ndarray)
