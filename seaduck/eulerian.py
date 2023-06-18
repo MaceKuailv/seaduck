@@ -162,13 +162,13 @@ class Position:
             raise ValueError("Shapes of input coordinates are not compatible")
 
         if isinstance(x, float):
-            x = np.array([1.0]) * x
+            x = np.ones(self.N, float) * x
         if isinstance(y, float):
-            y = np.array([1.0]) * y
+            y = np.ones(self.N, float) * y
         if isinstance(z, float):
-            z = np.array([1.0]) * z
+            z = np.ones(self.N, float) * z
         if isinstance(t, float):
-            t = np.array([1.0]) * t
+            t = np.ones(self.N, float) * t
 
         for thing in [x, y, z, t]:
             if thing is None:

@@ -6,6 +6,7 @@ from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
 from seaduck.lagrangian import Particle, uknw, vknw
 from seaduck.ocedata import OceData
+from seaduck.utils import convert_time
 
 lagrange_token = "__particle."
 
@@ -38,10 +39,10 @@ def OceInterp(
         A list of variable or pair of variables.
     kernelList: OceInterp.KnW or list of OceInterp.KnW objects, optional
         Indicates which kernel to use for each interpolation.
-    x, y, z: numpy.ndarray
+    x, y, z: numpy.ndarray, float
         The location of the particles, where x and y are in degrees,
         and z is in meters (deeper locations are represented by more negative values).
-    t: numpy.ndarray
+    t: numpy.ndarray, float, string/numpy.datetime64
         In the Eulerian scheme, this represents the time of interpolation.
         In the Lagrangian scheme, it represents the time needed for output.
     lagrangian: bool, default False
@@ -88,6 +89,11 @@ def OceInterp(
                     kernelList.append((uknw, vknw))
             else:
                 raise ValueError("varList need to be made up of string or tuples")
+    if isinstance(t, np.ndarray):
+        if np.issubdtype(t.dtype, np.datetime64) or np.issubdtype(t.dtype, str):
+            t = np.array([convert_time(some_t) for some_t in t])
+    elif isinstance(t, (np.datetime64, str)):
+        t = convert_time(t)
     if not lagrangian:
         pt = Position()
         pt.from_latlon(x=x, y=y, z=z, t=t, data=od)
