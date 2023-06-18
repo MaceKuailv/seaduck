@@ -24,12 +24,9 @@ z = None
 zz = np.ones_like(x) * (-10.0)
 
 start_time = "1992-02-01"
-t = (
-    np.array([np.datetime64(start_time) for i in x]) - np.datetime64("1970-01-01")
-) / np.timedelta64(1, "s")
-tf = (np.datetime64("1992-03-03") - np.datetime64("1970-01-01")) / np.timedelta64(
-    1, "s"
-)
+t = utils.convert_time(start_time) * np.ones_like(x)
+end_time = "1992-02-03"
+tf = utils.convert_time(end_time)
 
 
 @pytest.fixture
@@ -122,16 +119,16 @@ def test_update_w_array(ecco_p, od):
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_update_after_cell_change(ecco_p, od):
+def test_wall_crossing(ecco_p, od):
     od["SN"] = np.array(od["SN"])
     od["CS"] = np.array(od["CS"])
     ecco_p.ocedata.readiness["h"] = "local_cartesian"
 
-    ecco_p.update_after_cell_change()
+    ecco_p._cross_cell_wall_rel()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
-def test_update_after_cell_change_no_face(od):
+def test_wall_crossing_no_face(od):
     od._add_missing_cs_sn()
     od.readiness["h"] = "local_cartesian"
     curv_p = sd.Particle(
@@ -145,7 +142,7 @@ def test_update_after_cell_change_no_face(od):
         wname="W",
         transport=True,
     )
-    curv_p.update_after_cell_change()
+    curv_p._cross_cell_wall_rel()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)

@@ -535,7 +535,7 @@ class Particle(Position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, tol=1e-6):
+    def trim(self, tol=1e-12):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -654,100 +654,6 @@ class Particle(Position):
 
         self.t[out] += contract_time
 
-    def update_after_cell_change(self):
-        """Update properties after particles cross wall.
-
-        A wall event is triggered when particle reached the wall.
-        This method handle the coords translation as a particle cross
-        a wall.
-        """
-        if self.face is not None:
-            self.face = self.face.astype(int)
-        self.iy = self.iy.astype(int)
-        self.ix = self.ix.astype(int)
-        if self.iz is not None:
-            self.iz = self.iz.astype(int)
-        if self.izl_lin is not None:
-            self.izl_lin = self.izl_lin.astype(int)
-
-        if self.ocedata.readiness["Z"]:
-            self.rel.update(self.ocedata.find_rel_v(self.dep))
-        if self.ocedata.readiness["h"] == "local_cartesian":
-            if self.face is not None:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.face, self.iy, self.ix],
-                    self.ocedata.YC[self.face, self.iy, self.ix],
-                )
-                self.cs, self.sn = (
-                    self.ocedata.CS[self.face, self.iy, self.ix],
-                    self.ocedata.SN[self.face, self.iy, self.ix],
-                )
-                self.dx, self.dy = (
-                    self.ocedata.dX[self.face, self.iy, self.ix],
-                    self.ocedata.dY[self.face, self.iy, self.ix],
-                )
-
-            else:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.iy, self.ix],
-                    self.ocedata.YC[self.iy, self.ix],
-                )
-                self.cs, self.sn = (
-                    self.ocedata.CS[self.iy, self.ix],
-                    self.ocedata.SN[self.iy, self.ix],
-                )
-                self.dx, self.dy = (
-                    self.ocedata.dX[self.iy, self.ix],
-                    self.ocedata.dY[self.iy, self.ix],
-                )
-        elif self.ocedata.readiness["h"] == "oceanparcel":
-            if self.face is not None:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.face, self.iy, self.ix],
-                    self.ocedata.YC[self.face, self.iy, self.ix],
-                )
-
-            else:  # pragema: no cover
-                self.bx, self.by = (
-                    self.ocedata.XC[self.iy, self.ix],
-                    self.ocedata.YC[self.iy, self.ix],
-                )
-
-        elif self.ocedata.readiness["h"] == "rectilinear":
-            self.bx = self.ocedata.lon[self.ix]
-            self.by = self.ocedata.lat[self.iy]
-            self.cs = np.ones_like(self.bx)
-            self.sn = np.zeros_like(self.bx)
-            self.dx = self.ocedata.dlon[self.ix] * np.cos(self.by * np.pi / 180)
-            self.dy = self.ocedata.dlat[self.iy]
-
-        if self.izl_lin is not None:
-            self.bzl_lin = self.ocedata.Zl[self.izl_lin]
-            self.dzl_lin = self.ocedata.dZl[self.izl_lin - 1]
-        if self.dz is not None:
-            self.dz = self.ocedata.dZ[self.iz]
-        try:
-            self.px, self.py = self.get_px_py()
-            self.rx, self.ry = find_rx_ry_oceanparcel(
-                self.lon, self.lat, self.px, self.py
-            )
-        except AttributeError:
-            #         if True:
-            dlon = to_180(self.lon - self.bx)
-            dlat = to_180(self.lat - self.by)
-            self.rx = (
-                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
-                * DEG2M
-                / self.dx
-            )
-            self.ry = (
-                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
-                * DEG2M
-                / self.dy
-            )
-        if self.rzl_lin is not None:
-            self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
-
     def _subset_velocity_position(self, tf, which):
         """See analytical_step."""
         if which is None:
@@ -821,7 +727,52 @@ class Particle(Position):
                 bzl_lin,
             )
 
-    def _cross_cell_wall(self, tend, which):
+    def analytical_step(self, tf, which=None):
+        """Integrate the particle with velocity.
+
+        The core method.
+        A set of particles trying to integrate for time tf
+        (could be negative).
+        at the end of the call, every particle are either:
+        1. ended up somewhere within the cell after time tf.
+        2. ended up on a cell wall before
+        (if tf is negative, then "after") tf.
+
+        Parameters
+        ----------
+        tf: float, numpy.ndarray
+            The longest duration of the simulation for each particle.
+        which: numpy.ndarray, optional
+            Boolean or int array that specify the subset of points to
+            do the operation.
+        """
+        which, tf, t_now, us, dus, xs = self._subset_velocity_position(tf, which)
+
+        ts = time2wall(xs, us, dus)
+
+        tend, the_t = which_early(tf, ts)
+
+        t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
+
+        # Could potentially move this block all the way back
+        self.t[which] += t_now
+        self.rx[which], self.ry[which], temp = new_x
+        if self.rzl_lin is not None:
+            self.rzl_lin[which] = temp + 1 / 2
+
+        self.u[which], self.v[which], self.w[which] = new_u
+
+        self._sync_latlondep_before_cross()
+
+        if self.save_raw:
+            # record the moment just before crossing the wall
+            # or the moment reaching destination.
+            self.note_taking(which)
+        return tend
+
+    def _cross_cell_wall_index(self, tend, which):
+        if which is None:
+            which = np.ones(self.N).astype(bool)
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
@@ -874,48 +825,108 @@ class Particle(Position):
         if self.izl_lin is not None:
             self.izl_lin[which] = tiz
 
-    def analytical_step(self, tf, which=None):
-        """Integrate the particle with velocity.
+    def _cross_cell_wall_read(self):
+        """Update properties after particles cross wall.
 
-        The core method.
-        A set of particles trying to integrate for time tf
-        (could be negative).
-        at the end of the call, every particle are either:
-        1. ended up somewhere within the cell after time tf.
-        2. ended up on a cell wall before
-        (if tf is negative, then "after") tf.
-
-        Parameters
-        ----------
-        tf: float, numpy.ndarray
-            The longest duration of the simulation for each particle.
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points to
-            do the operation.
+        A wall event is triggered when particle reached the wall.
+        This method handle the coords translation as a particle cross
+        a wall.
         """
-        which, tf, t_now, us, dus, xs = self._subset_velocity_position(tf, which)
+        if self.face is not None:
+            self.face = self.face.astype(int)
+        self.iy = self.iy.astype(int)
+        self.ix = self.ix.astype(int)
+        if self.iz is not None:
+            self.iz = self.iz.astype(int)
+        if self.izl_lin is not None:
+            self.izl_lin = self.izl_lin.astype(int)
 
-        ts = time2wall(xs, us, dus)
+        if self.ocedata.readiness["Z"]:
+            self.rel.update(self.ocedata.find_rel_v(self.dep))
+        if self.ocedata.readiness["h"] == "local_cartesian":
+            if self.face is not None:
+                self.bx, self.by = (
+                    self.ocedata.XC[self.face, self.iy, self.ix],
+                    self.ocedata.YC[self.face, self.iy, self.ix],
+                )
+                self.cs, self.sn = (
+                    self.ocedata.CS[self.face, self.iy, self.ix],
+                    self.ocedata.SN[self.face, self.iy, self.ix],
+                )
+                self.dx, self.dy = (
+                    self.ocedata.dX[self.face, self.iy, self.ix],
+                    self.ocedata.dY[self.face, self.iy, self.ix],
+                )
 
-        tend, the_t = which_early(tf, ts)
+            else:
+                self.bx, self.by = (
+                    self.ocedata.XC[self.iy, self.ix],
+                    self.ocedata.YC[self.iy, self.ix],
+                )
+                self.cs, self.sn = (
+                    self.ocedata.CS[self.iy, self.ix],
+                    self.ocedata.SN[self.iy, self.ix],
+                )
+                self.dx, self.dy = (
+                    self.ocedata.dX[self.iy, self.ix],
+                    self.ocedata.dY[self.iy, self.ix],
+                )
+        elif self.ocedata.readiness["h"] == "oceanparcel":
+            if self.face is not None:
+                self.bx, self.by = (
+                    self.ocedata.XC[self.face, self.iy, self.ix],
+                    self.ocedata.YC[self.face, self.iy, self.ix],
+                )
 
-        t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
+            else:  # pragema: no cover
+                self.bx, self.by = (
+                    self.ocedata.XC[self.iy, self.ix],
+                    self.ocedata.YC[self.iy, self.ix],
+                )
 
-        # Could potentially move this block all the way back
-        self.t[which] += t_now
-        self.rx[which], self.ry[which], temp = new_x
+        elif self.ocedata.readiness["h"] == "rectilinear":
+            self.bx = self.ocedata.lon[self.ix]
+            self.by = self.ocedata.lat[self.iy]
+            self.cs = np.ones_like(self.bx)
+            self.sn = np.zeros_like(self.bx)
+            self.dx = self.ocedata.dlon[self.ix] * np.cos(self.by * np.pi / 180)
+            self.dy = self.ocedata.dlat[self.iy]
+
+        if self.izl_lin is not None:
+            self.bzl_lin = self.ocedata.Zl[self.izl_lin]
+            self.dzl_lin = self.ocedata.dZl[self.izl_lin - 1]
+        if self.dz is not None:
+            self.dz = self.ocedata.dZ[self.iz]
+
+    def _cross_cell_wall_rel(self):
+        try:
+            self.px, self.py = self.get_px_py()
+            self.rx, self.ry = find_rx_ry_oceanparcel(
+                self.lon, self.lat, self.px, self.py
+            )
+        except AttributeError:
+            #         if True:
+            dlon = to_180(self.lon - self.bx)
+            dlat = to_180(self.lat - self.by)
+            self.rx = (
+                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
+                * DEG2M
+                / self.dx
+            )
+            self.ry = (
+                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
+                * DEG2M
+                / self.dy
+            )
         if self.rzl_lin is not None:
-            self.rzl_lin[which] = temp + 1 / 2
+            self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
-        self.u[which], self.v[which], self.w[which] = new_u
-
-        self._sync_latlondep_before_cross()
-
-        if self.save_raw:
-            # record the moment just before crossing the wall
-            # or the moment reaching destination.
-            self.note_taking(which)
-        self._cross_cell_wall(tend, which)
+    def cross_cell_wall(self, tend, which=None):
+        if which is None:
+            which = np.ones(self.N).astype(bool)
+        self._cross_cell_wall_index(tend, which)
+        self._cross_cell_wall_read()
+        self._cross_cell_wall_rel()
 
     def deepcopy(self):
         """Return a clone of the object.
@@ -966,8 +977,8 @@ class Particle(Position):
                 trim_tol = 1e-10
             self.trim(tol=trim_tol)
             logging.debug(sum(todo), "left")
-            self.analytical_step(tf, todo)
-            self.update_after_cell_change()
+            tend = self.analytical_step(tf, todo)
+            self.cross_cell_wall(tend, which=todo)
             if self.transport:
                 self.get_vol()
             self.get_u_du(todo)
