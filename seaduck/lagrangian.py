@@ -748,31 +748,15 @@ class Particle(Position):
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
-    def analytical_step(self, tf, which=None):
-        """Integrate the particle with velocity.
-
-        The core method.
-        A set of particles trying to integrate for time tf
-        (could be negative).
-        at the end of the call, every particle are either:
-        1. ended up somewhere within the cell after time tf.
-        2. ended up on a cell wall before
-        (if tf is negative, then "after") tf.
-
-        Parameters
-        ----------
-        tf: float, numpy.ndarray
-            The longest duration of the simulation for each particle.
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points to
-            do the operation.
-        """
+    def _subset_velocity_position(self, tf, which):
+        """See analytical_step."""
         if which is None:
             which = np.ones(self.N).astype(bool)
         if isinstance(tf, float):
             tf = np.array([tf for i in range(self.N)])
 
         tf = tf[which]
+        t_now = self.t[which]
 
         if self.rzl_lin is not None:
             xs = [self.rx[which], self.ry[which], self.rzl_lin[which] - 1 / 2]
@@ -781,12 +765,10 @@ class Particle(Position):
             xs = [x_temp, self.ry[which], np.zeros_like(x_temp)]
         us = [self.u[which], self.v[which], self.w[which]]
         dus = [self.du[which], self.dv[which], self.dw[which]]
+        return which, tf, t_now, us, dus, xs
 
-        ts = time2wall(xs, us, dus)
-
-        tend, the_t = which_early(tf, ts)
-        self.t[which] += the_t
-
+    def _move_within_cell(self, the_t, t_now, us, dus, xs):
+        t_now += the_t
         new_x = []
         new_u = []
         for i in range(3):
@@ -794,33 +776,21 @@ class Particle(Position):
             new_u.append(us[i] + dus[i] * x_move)
             new_x.append(x_move + xs[i])
 
-        # for rr in new_x:
-        #    if np.logical_or(rr>0.6,rr<-0.6).any():
-        #        where = np.where(np.logical_or(rr>0.6,rr<-0.6))[0][0]
-        #        raise ValueError(
-        # f'Particle way out of bound.tend = {tend[where]},'
-        # f' the_t = {the_t[where]},'
-        # f' rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}'
-        # f'start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}'
-        # f'start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}'
-        # f'start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}'
-        #                        )
         for rr in new_x:
             if np.logical_or(rr > 0.6, rr < -0.6).any():
                 where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
                 raise ValueError(
-                    f"Particle way out of bound.tend = {tend[where]},"
+                    f"Particle way out of bound."
+                    # f"tend = {tend[where]},"
                     f" the_t = {the_t[where]},"
                     f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
                     f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
                     f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
                     f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
                 )
-        self.rx[which], self.ry[which], temp = new_x
-        if self.rzl_lin is not None:
-            self.rzl_lin[which] = temp + 1 / 2
+        return t_now, new_x, new_u
 
-        self.u[which], self.v[which], self.w[which] = new_u
+    def _sync_latlondep_before_cross(self):
         try:
             px, py = self.px, self.py
             w = self.get_f_node_weight()
@@ -850,10 +820,8 @@ class Particle(Position):
                 self.by,
                 bzl_lin,
             )
-        if self.save_raw:
-            # record the moment just before crossing the wall
-            # or the moment reaching destination.
-            self.note_taking(which)
+
+    def _cross_cell_wall(self, tend, which):
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
@@ -905,6 +873,49 @@ class Particle(Position):
             self.iy[which], self.ix[which] = tiy, tix
         if self.izl_lin is not None:
             self.izl_lin[which] = tiz
+
+    def analytical_step(self, tf, which=None):
+        """Integrate the particle with velocity.
+
+        The core method.
+        A set of particles trying to integrate for time tf
+        (could be negative).
+        at the end of the call, every particle are either:
+        1. ended up somewhere within the cell after time tf.
+        2. ended up on a cell wall before
+        (if tf is negative, then "after") tf.
+
+        Parameters
+        ----------
+        tf: float, numpy.ndarray
+            The longest duration of the simulation for each particle.
+        which: numpy.ndarray, optional
+            Boolean or int array that specify the subset of points to
+            do the operation.
+        """
+        which, tf, t_now, us, dus, xs = self._subset_velocity_position(tf, which)
+
+        ts = time2wall(xs, us, dus)
+
+        tend, the_t = which_early(tf, ts)
+
+        t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
+
+        # Could potentially move this block all the way back
+        self.t[which] += t_now
+        self.rx[which], self.ry[which], temp = new_x
+        if self.rzl_lin is not None:
+            self.rzl_lin[which] = temp + 1 / 2
+
+        self.u[which], self.v[which], self.w[which] = new_u
+
+        self._sync_latlondep_before_cross()
+
+        if self.save_raw:
+            # record the moment just before crossing the wall
+            # or the moment reaching destination.
+            self.note_taking(which)
+        self._cross_cell_wall(tend, which)
 
     def deepcopy(self):
         """Return a clone of the object.
