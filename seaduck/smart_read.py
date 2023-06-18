@@ -25,7 +25,8 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
 
     The data we read is going to be unstructured but they tend to be
     rather localized. For example, the lagrangian particles read data
-    from the same time step.
+    from the same time step. Currently, using dask/xarray's unstructured
+    read does not really take advantage of the locality.
     This function figures out which chunks stores the data, convert them
     into numpy arrays, and then read the data from the converted ones.
 
@@ -55,7 +56,9 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
     shape = indexes_tuple[0].shape
     size = indexes_tuple[0].size
     if not size:
-        return np.empty(shape)  # TODO: Why shape (0, ...) is allowed and tested?
+        # This is to make the special case of reading nothing
+        # looks normal in other parts of the code.
+        return np.empty(shape)
 
     data, indexes_tuple = slice_data_and_shift_indexes(da, indexes_tuple)
     if isinstance(data, np.ndarray):
