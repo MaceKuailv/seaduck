@@ -684,5 +684,5 @@ def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):
 
     t = np.ones_like(x) * t_in_sec
     if print_total_number:
-        print(f"A total {len(x)} positions defined.")
+        print(f"A total of {len(x)} positions are defined.")
     return x, y, z, t
