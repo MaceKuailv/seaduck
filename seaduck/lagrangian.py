@@ -764,10 +764,6 @@ class Particle(Position):
 
         self._sync_latlondep_before_cross()
 
-        if self.save_raw:
-            # record the moment just before crossing the wall
-            # or the moment reaching destination.
-            self.note_taking(which)
         return tend
 
     def _cross_cell_wall_ind(self, tend, which):
@@ -976,11 +972,19 @@ class Particle(Position):
                 trim_tol = 1e-10
             self.trim(tol=trim_tol)
             logging.debug(sum(todo), "left")
-            tend = self.analytical_step(tf, todo)
+            sub = self.subset(todo)
+            tf_used = tf[todo]
+            tend = sub.analytical_step(tf_used)
+            self.update_from_subset(sub, todo)
+            # TODO: fix save-raw here.
+            if self.save_raw:
+                # record the moment just before crossing the wall
+                # or the moment reaching destination.
+                self.note_taking(todo)
             self.cross_cell_wall(tend, todo)
             if self.transport:
                 self.get_vol()
-            self.get_u_du(todo)
+            self.get_u_du()
             tf = t1 - self.t
             todo = abs(tf) > tol
             if self.callback is not None:

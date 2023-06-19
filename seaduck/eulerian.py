@@ -177,15 +177,15 @@ class Position:
             if len(thing.shape) > 1:
                 raise ValueError("Input need to be 1D numpy arrays")
         if (x is not None) and (y is not None):
-            self.lon = x
-            self.lat = y
+            self.lon = copy.deepcopy(x)
+            self.lat = copy.deepcopy(y)
             self.rel.update(self.ocedata.find_rel_h(x, y))
         else:
             self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
             self.lat = None
         if z is not None:
-            self.dep = z
+            self.dep = copy.deepcopy(z)
             if self.ocedata.readiness["Z"]:
                 self.rel.update(self.ocedata.find_rel_v(z))
             else:
@@ -200,7 +200,7 @@ class Position:
             self.dep = None
 
         if t is not None:
-            self.t = t
+            self.t = copy.deepcopy(t)
             if self.ocedata.readiness["time"]:
                 self.rel.update(self.ocedata.find_rel_t(t))
             else:
