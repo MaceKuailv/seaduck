@@ -1,4 +1,5 @@
 import copy
+import logging
 
 import numpy as np
 
@@ -225,22 +226,45 @@ class Position:
         the_subset: Position object
             The selected Positions.
         """
-        p = Position()
+        p = object.__new__(type(self))
+        p.rel = RelCoord()
         vardict = vars(self)
         keys = vardict.keys()
-        for i in keys:
-            item = vardict[i]
+        for key in keys:
+            item = vardict[key]
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
-                    setattr(p, i, item[which])
-                    p.N = len(getattr(p, i))
+                    setattr(p, key, item[which])
+                    p.N = len(getattr(p, key))
+                elif key in ["px", "py"]:
+                    setattr(p, key, item[:, which])
                 else:
-                    setattr(p, i, item)
+                    setattr(p, key, item)
             elif isinstance(item, RelCoord):
-                setattr(p, i, item.subset(which))
+                setattr(p, key, item.subset(which))
             else:
-                setattr(p, i, item)
+                setattr(p, key, item)
         return p
+
+    def update_from_subset(self, sub, which):
+        vardict = vars(sub)
+        keys = vardict.keys()
+        for key in keys:
+            item = vardict[key]
+            if not hasattr(self, key):
+                logging.warning(
+                    f"A new attribute {key} defined" "after updating from subset"
+                )
+                setattr(self, key, item)
+            if getattr(self, key) is None:
+                continue
+            if isinstance(item, np.ndarray):
+                if len(item.shape) == 1:
+                    getattr(self, key)[which] = item
+            elif isinstance(item, RelCoord):
+                self.rel.update_from_subset(item, which)
+            elif isinstance(item, list):
+                setattr(self, key, item)
 
     def fatten_h(self, knw, ind_moves_kwarg={}):
         """Fatten horizontal indices.

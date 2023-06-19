@@ -122,12 +122,13 @@ def test_update_w_array(ecco_p, od):
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_update_cross_wall(ecco_p, od):
+def test_cross_cell_wall(ecco_p, od):
     od["SN"] = np.array(od["SN"])
     od["CS"] = np.array(od["CS"])
     ecco_p.ocedata.readiness["h"] = "local_cartesian"
 
     ecco_p._cross_cell_wall_read()
+    ecco_p._cross_cell_wall_rel()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
@@ -146,6 +147,7 @@ def test_cross_cell_wall_no_face(od):
         transport=True,
     )
     curv_p._cross_cell_wall_read()
+    curv_p._cross_cell_wall_rel()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)

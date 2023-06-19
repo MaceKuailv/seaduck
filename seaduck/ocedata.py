@@ -74,6 +74,16 @@ class RelCoord(dict):
                 new[var] = None
         return new
 
+    def update_from_subset(self, sub, which):
+        for var in sub.keys():
+            if var in self.keys():
+                if self[var] is not None:
+                    self[var][which] = sub[var]
+            else:
+                raise KeyError(
+                    f"Key {var} is in subset, " "but not in the one to update."
+                )
+
     @classmethod
     def create_class(cls, class_name, fields):
         """Create a subclass with predetermined keys."""
