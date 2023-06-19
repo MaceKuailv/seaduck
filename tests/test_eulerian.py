@@ -10,6 +10,8 @@ uknw = sd.lagrangian.uknw
 vknw = sd.lagrangian.vknw
 wknw = sd.lagrangian.wknw
 
+knw = sd.KnW()
+
 uuknw = copy.deepcopy(uknw)
 vvknw = copy.deepcopy(vknw)
 wwknw = copy.deepcopy(wknw)
@@ -60,7 +62,14 @@ def test_fatten(ep, knw, required):
 
 @pytest.mark.parametrize("varname,knw", [("WVELMASS", uknw), ("UVELMASS", wknw)])
 def test_interp_vertical(ep, varname, knw):
-    ep.interpolate(varname, knw)
+    res = ep.interpolate(varname, knw)[0]
+    assert (res != 0).all()
+
+
+@pytest.mark.parametrize("varname", ["SALT", "ETAN"])
+def test_interp_scalar(ep, varname):
+    res = ep.interpolate(varname, knw)[0]
+    assert ~np.isnan(res).any()
 
 
 def test_interp_with_NoneZ(ep):
