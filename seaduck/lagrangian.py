@@ -727,7 +727,50 @@ class Particle(Position):
                 bzl_lin,
             )
 
-    def _cross_cell_wall(self, tend, which):
+    def analytical_step(self, tf, which=None):
+        """Integrate the particle with velocity.
+
+        The core method.
+        A set of particles trying to integrate for time tf
+        (could be negative).
+        at the end of the call, every particle are either:
+        1. ended up somewhere within the cell after time tf.
+        2. ended up on a cell wall before
+        (if tf is negative, then "after") tf.
+
+        Parameters
+        ----------
+        tf: float, numpy.ndarray
+            The longest duration of the simulation for each particle.
+        which: numpy.ndarray, optional
+            Boolean or int array that specify the subset of points to
+            do the operation.
+        """
+        which, tf, t_now, us, dus, xs = self._subset_velocity_position(tf, which)
+
+        ts = time2wall(xs, us, dus)
+
+        tend, the_t = which_early(tf, ts)
+
+        t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
+
+        # Could potentially move this block all the way back
+        self.t[which] += the_t
+        self.rx[which], self.ry[which], temp = new_x
+        if self.rzl_lin is not None:
+            self.rzl_lin[which] = temp + 1 / 2
+
+        self.u[which], self.v[which], self.w[which] = new_u
+
+        self._sync_latlondep_before_cross()
+
+        if self.save_raw:
+            # record the moment just before crossing the wall
+            # or the moment reaching destination.
+            self.note_taking(which)
+        return tend
+
+    def _cross_cell_wall_ind(self, tend, which):
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
@@ -779,61 +822,6 @@ class Particle(Position):
             self.iy[which], self.ix[which] = tiy, tix
         if self.izl_lin is not None:
             self.izl_lin[which] = tiz
-
-    def analytical_step(self, tf, which=None):
-        """Integrate the particle with velocity.
-
-        The core method.
-        A set of particles trying to integrate for time tf
-        (could be negative).
-        at the end of the call, every particle are either:
-        1. ended up somewhere within the cell after time tf.
-        2. ended up on a cell wall before
-        (if tf is negative, then "after") tf.
-
-        Parameters
-        ----------
-        tf: float, numpy.ndarray
-            The longest duration of the simulation for each particle.
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points to
-            do the operation.
-        """
-        which, tf, t_now, us, dus, xs = self._subset_velocity_position(tf, which)
-
-        ts = time2wall(xs, us, dus)
-
-        tend, the_t = which_early(tf, ts)
-
-        t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
-
-        # Could potentially move this block all the way back
-        self.t[which] += the_t
-        self.rx[which], self.ry[which], temp = new_x
-        if self.rzl_lin is not None:
-            self.rzl_lin[which] = temp + 1 / 2
-
-        self.u[which], self.v[which], self.w[which] = new_u
-
-        self._sync_latlondep_before_cross()
-
-        if self.save_raw:
-            # record the moment just before crossing the wall
-            # or the moment reaching destination.
-            self.note_taking(which)
-        return tend
-
-    def cross_cell_wall(self, tend, which=None):
-        """Update properties after particles cross wall.
-
-        A wall event is triggered when particle reached the wall.
-        This method handle the coords translation as a particle cross
-        a wall.
-        """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        self._cross_cell_wall(tend, which)
-        self._cross_cell_wall_read()
 
     def _cross_cell_wall_read(self):
         # TODO: move the astype somewhere upstream.
@@ -901,6 +889,7 @@ class Particle(Position):
         if self.dz is not None:
             self.dz = self.ocedata.dZ[self.iz]
 
+    def _cross_cell_wall_rel(self):
         if self.ocedata.readiness["Z"]:
             self.rel.update(self.ocedata.find_rel_v(self.dep))
         try:
@@ -924,6 +913,19 @@ class Particle(Position):
             )
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
+
+    def cross_cell_wall(self, tend, which=None):
+        """Update properties after particles cross wall.
+
+        A wall event is triggered when particle reached the wall.
+        This method handle the coords translation as a particle cross
+        a wall.
+        """
+        if which is None:
+            which = np.ones(self.N).astype(bool)
+        self._cross_cell_wall_ind(tend, which)
+        self._cross_cell_wall_read()
+        self._cross_cell_wall_rel()
 
     def deepcopy(self):
         """Return a clone of the object.
