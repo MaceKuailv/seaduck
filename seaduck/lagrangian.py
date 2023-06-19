@@ -833,7 +833,10 @@ class Particle(Position):
         if which is None:
             which = np.ones(self.N).astype(bool)
         self._cross_cell_wall(tend, which)
+        self._cross_cell_wall_read()
 
+    def _cross_cell_wall_read(self):
+        # TODO: move the astype somewhere upstream.
         if self.face is not None:
             self.face = self.face.astype(int)
         self.iy = self.iy.astype(int)
@@ -843,8 +846,6 @@ class Particle(Position):
         if self.izl_lin is not None:
             self.izl_lin = self.izl_lin.astype(int)
 
-        if self.ocedata.readiness["Z"]:
-            self.rel.update(self.ocedata.find_rel_v(self.dep))
         if self.ocedata.readiness["h"] == "local_cartesian":
             if self.face is not None:
                 self.bx, self.by = (
@@ -899,6 +900,9 @@ class Particle(Position):
             self.dzl_lin = self.ocedata.dZl[self.izl_lin - 1]
         if self.dz is not None:
             self.dz = self.ocedata.dZ[self.iz]
+
+        if self.ocedata.readiness["Z"]:
+            self.rel.update(self.ocedata.find_rel_v(self.dep))
         try:
             self.px, self.py = self.get_px_py()
             self.rx, self.ry = find_rx_ry_oceanparcel(
