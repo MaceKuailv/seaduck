@@ -6,7 +6,10 @@ def slice_data_and_shift_indexes(da, indexes_tuple):
     """Slice data using min/max indexes, and shift indexes."""
     slicers = ()
     for indexes, size in zip(indexes_tuple, da.shape):
-        start = indexes.min() or None
+        try:
+            start = indexes[indexes > 0].min()
+        except ValueError:
+            start = None
         stop = stop if (stop := indexes.max() + 1) < size else None
         slicers += (slice(start, stop),)
     indexes_tuple = tuple(
