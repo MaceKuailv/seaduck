@@ -122,16 +122,16 @@ def test_update_w_array(ecco_p, od):
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_update_after_cell_change(ecco_p, od):
+def test_update_cross_wall(ecco_p, od):
     od["SN"] = np.array(od["SN"])
     od["CS"] = np.array(od["CS"])
     ecco_p.ocedata.readiness["h"] = "local_cartesian"
 
-    ecco_p.update_after_cell_change()
+    ecco_p._cross_cell_wall_read()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
-def test_update_after_cell_change_no_face(od):
+def test_cross_cell_wall_no_face(od):
     od._add_missing_cs_sn()
     od.readiness["h"] = "local_cartesian"
     curv_p = sd.Particle(
@@ -145,7 +145,7 @@ def test_update_after_cell_change_no_face(od):
         wname="W",
         transport=True,
     )
-    curv_p.update_after_cell_change()
+    curv_p._cross_cell_wall_read()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
