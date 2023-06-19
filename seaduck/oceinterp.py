@@ -65,7 +65,6 @@ def OceInterp(
     if isinstance(varList, dict):
         kernelList = list(varList.values())
         varList = list(varList.keys())
-        print(f"result will be in the order of {varList}")
     elif isinstance(varList, str):
         varList = [varList]
     elif isinstance(varList, tuple):
