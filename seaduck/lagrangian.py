@@ -902,7 +902,7 @@ class Particle(Position):
         t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
 
         # Could potentially move this block all the way back
-        self.t[which] += t_now
+        self.t[which] += the_t
         self.rx[which], self.ry[which], temp = new_x
         if self.rzl_lin is not None:
             self.rzl_lin[which] = temp + 1 / 2
