@@ -963,19 +963,20 @@ class Particle(Position):
         todo = abs(tf) > tol
         if self.callback is not None:
             todo = np.logical_and(todo, self.callback(self))
+        if sum(todo) == 0:
+            logging.info("Nothing left to simulate")
+            return
         trim_tol = 1e-12
         for i in range(self.max_iteration):
             if i > 50:
                 trim_tol = 1e-3
             elif i > 30:
                 trim_tol = 1e-6
-            elif i > 20:
-                trim_tol = 1e-8
             elif i > 10:
                 trim_tol = 1e-10
-            self.trim(tol=trim_tol)
             logging.debug(sum(todo), "left")
             sub = self.subset(todo)
+            sub.trim(tol=trim_tol)
             tf_used = tf[todo]
             tend = sub.analytical_step(tf_used)
             # TODO: fix save-raw here.
@@ -985,16 +986,10 @@ class Particle(Position):
                 self.note_taking(todo)
             sub.cross_cell_wall(tend)
 
-            self.update_from_subset(sub, todo)
-            # self.px, self.py = self.get_px_py()
-            # sub.px,sub.py = sub.get_px_py()
-            # assert np.allclose(self.px[:,todo],sub.px)
-
-            # self.update_from_subset(sub, todo)
-
             if self.transport:
-                self.get_vol()
-            self.get_u_du()
+                sub.get_vol()
+            sub.get_u_du()
+            self.update_from_subset(sub, todo)
             tf = t1 - self.t
             todo = abs(tf) > tol
             if self.callback is not None:
