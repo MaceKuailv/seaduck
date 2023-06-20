@@ -936,6 +936,7 @@ class Particle(Position):
         if len(index_todo) == 0:
             logging.info("Nothing left to simulate")
             return
+        tf_used = tf[index_todo]
         trim_tol = 1e-12
         for i in range(self.max_iteration):
             if i > 50:
@@ -947,7 +948,6 @@ class Particle(Position):
             logging.debug(len(index_todo), "left")
             sub = self.subset(index_todo)
             sub.trim(tol=trim_tol)
-            tf_used = tf[index_todo]
             tend = sub.analytical_step(tf_used)
             # TODO: fix save-raw here.
             if self.save_raw:
@@ -960,11 +960,12 @@ class Particle(Position):
                 sub.get_vol()
             sub.get_u_du()
             self.update_from_subset(sub, index_todo)
-            tf = t1 - self.t
-            bool_todo = abs(t1 - sub.t) > tol
+            tf_used = t1 - sub.t
+            bool_todo = abs(tf_used) > tol
             if self.callback is not None:
                 bool_todo = np.logical_and(bool_todo, self.callback(sub))
             index_todo = index_todo[bool_todo]
+            tf_used = tf_used[bool_todo]
             if len(index_todo) == 0:
                 break
             if self.save_raw:
