@@ -872,6 +872,7 @@ class Particle(Position):
                     self.ocedata.XC[self.iy, self.ix],
                     self.ocedata.YC[self.iy, self.ix],
                 )
+            self.px, self.py = self.get_px_py()
 
         elif self.ocedata.readiness["h"] == "rectilinear":
             self.bx = self.ocedata.lon[self.ix]
@@ -887,15 +888,13 @@ class Particle(Position):
         if self.dz is not None:
             self.dz = self.ocedata.dZ[self.iz]
 
-    def _cross_cell_wall_vrel(self):
+    def _cross_cell_wall_rel(self):
         if self.ocedata.readiness["Z"]:
             self.rel.update(self.ocedata.find_rel_v(self.dep))
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
-    def _cross_cell_wall_hrel(self):
         if self.ocedata.readiness["h"] == "oceanparcel":
-            self.px, self.py = self.get_px_py()
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
@@ -984,12 +983,14 @@ class Particle(Position):
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
                 self.note_taking(todo)
-            sub._cross_cell_wall_ind(tend)
+            sub.cross_cell_wall(tend)
 
-            sub._cross_cell_wall_read()
-            sub._cross_cell_wall_vrel()
             self.update_from_subset(sub, todo)
-            self._cross_cell_wall_hrel()
+            # self.px, self.py = self.get_px_py()
+            # sub.px,sub.py = sub.get_px_py()
+            # assert np.allclose(self.px[:,todo],sub.px)
+
+            # self.update_from_subset(sub, todo)
 
             if self.transport:
                 self.get_vol()

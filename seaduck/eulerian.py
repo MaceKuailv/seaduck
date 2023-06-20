@@ -261,6 +261,8 @@ class Position:
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
                     getattr(self, key)[which] = item
+                elif key in ["px", "py"]:
+                    getattr(self, key)[:, which] = item
             elif isinstance(item, RelCoord):
                 self.rel.update_from_subset(item, which)
             elif isinstance(item, list):

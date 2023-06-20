@@ -81,6 +81,16 @@ def test_subset_update(p):
     assert np.allclose(p.lon[which], sub.lon)
 
 
+def test_subset_px_py(ecco_p):
+    np.random.seed(1)
+    which = np.random.randint(1, size=ecco_p.N, dtype=bool)
+    ecco_p.ecco_px, ecco_p.py = ecco_p.get_px_py()
+    sub = ecco_p.subset(which)
+    sub.px, sub.py = sub.get_px_py()
+    assert np.allclose(ecco_p.px[:, which], sub.px)
+    assert np.allclose(ecco_p.py[:, which], sub.py)
+
+
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
 def test_callback(od):
     curv_p = sd.Particle(
