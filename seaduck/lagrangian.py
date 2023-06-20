@@ -338,46 +338,29 @@ class Particle(Position):
                     # I think it's fine
                     self.warray[:, 0] = 0.0
 
-    def get_vol(self, which=None):
+    def get_vol(self):
         """Read in the volume of the cell.
 
         For particles that has transport = True,
         volume of the cell is needed for the integration.
         This method read the volume that is calculated at __init__.
-
-        Parameters
-        ----------
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points
-            to do the operation.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        sub = self.subset(which)
         ind = []
         if self.ocedata.readiness["Zl"]:
-            ind.append(sub.izl_lin - 1)
+            ind.append(self.izl_lin - 1)
         if self.face is not None:
-            ind.append(sub.face)
-        ind += [sub.iy, sub.ix]
+            ind.append(self.face)
+        ind += [self.iy, self.ix]
         ind = tuple(ind)
-        self.vol[which] = self.ocedata["Vol"][ind]
+        self.vol = self.ocedata["Vol"][ind]
 
-    def get_u_du(self, which=None):
+    def get_u_du(self):
         """Read the velocity at particle position.
 
         Read the velocity and velocity derivatives in all three dimensions
         using the interpolate method with the default kernel.
         Read eulerian.Position.interpolate for more detail.
-
-        Parameters
-        ----------
-        which: numpy.ndarray
-            Boolean or int array that specify the subset of points to
-            do the operation.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
         if self.too_large:  # pragma: no cover
             prefetched = None
             i_min = None
@@ -404,7 +387,7 @@ class Particle(Position):
         except (TypeError, AttributeError):
             pass
 
-        [w, dw, (u, v), (du, dv)] = self.subset(which).interpolate(
+        [w, dw, (u, v), (du, dv)] = self.interpolate(
             [
                 self.wname,
                 self.wname,
@@ -422,24 +405,24 @@ class Particle(Position):
             dw = np.zeros_like(u)
 
         if not self.transport:
-            self.u[which] = u / self.dx[which]
-            self.v[which] = v / self.dy[which]
-            self.du[which] = du / self.dx[which]
-            self.dv[which] = dv / self.dy[which]
+            self.u = u / self.dx
+            self.v = v / self.dy
+            self.du = du / self.dx
+            self.dv = dv / self.dy
 
         else:
-            self.u[which] = u / self.vol[which]
-            self.v[which] = v / self.vol[which]
-            self.du[which] = du / self.vol[which]
-            self.dv[which] = dv / self.vol[which]
+            self.u = u / self.vol
+            self.v = v / self.vol
+            self.du = du / self.vol
+            self.dv = dv / self.vol
 
         if self.wname is not None:
             if not self.transport:
-                self.w[which] = w / self.dzl_lin[which]
-                self.dw[which] = dw / self.dzl_lin[which]
+                self.w = w / self.dzl_lin
+                self.dw = dw / self.dzl_lin
             else:
-                self.w[which] = w / self.vol[which]
-                self.dw[which] = dw / self.vol[which]
+                self.w = w / self.vol
+                self.dw = dw / self.vol
         self.fillna()
 
     def fillna(self):
@@ -766,30 +749,28 @@ class Particle(Position):
 
         return tend
 
-    def _cross_cell_wall_ind(self, tend, which=None):
-        if which is None:
-            which = np.ones(self.N).astype(bool)
+    def _cross_cell_wall_ind(self, tend):
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
         trans_tend = np.array([translate[i] for i in tend[type1]])
         if self.face is not None:
             tface, tiy, tix, tiz = (
-                self.face[which].astype(int),
-                self.iy[which].astype(int),
-                self.ix[which].astype(int),
-                self.izl_lin[which].astype(int),
+                self.face.astype(int),
+                self.iy.astype(int),
+                self.ix.astype(int),
+                self.izl_lin.astype(int),
             )
             tface[type1], tiy[type1], tix[type1] = self.tp.ind_tend_vec(
                 (tface[type1], tiy[type1], tix[type1]), trans_tend
             )
         else:
             tiy, tix = (
-                self.iy[which].astype(int),
-                self.ix[which].astype(int),
+                self.iy.astype(int),
+                self.ix.astype(int),
             )
             if self.izl_lin is not None:  # pragema: no cover
-                tiz = self.izl_lin[which].astype(int)
+                tiz = self.izl_lin.astype(int)
             else:
                 tiz = (np.ones_like(tiy) * (-1)).astype(int)
             tiy[type1], tix[type1] = self.tp.ind_tend_vec(
@@ -815,11 +796,11 @@ class Particle(Position):
         #             print('stuck!')
         #             raise ValueError('ahhhhh!')
         if self.face is not None:
-            self.face[which], self.iy[which], self.ix[which] = (tface, tiy, tix)
+            self.face, self.iy, self.ix = (tface, tiy, tix)
         else:
-            self.iy[which], self.ix[which] = tiy, tix
+            self.iy, self.ix = tiy, tix
         if self.izl_lin is not None:
-            self.izl_lin[which] = tiz
+            self.izl_lin = tiz
 
     def _cross_cell_wall_read(self):
         # TODO: move the astype somewhere upstream.
@@ -913,16 +894,14 @@ class Particle(Position):
                 / self.dy
             )
 
-    def cross_cell_wall(self, tend, which=None):
+    def cross_cell_wall(self, tend):
         """Update properties after particles cross wall.
 
         A wall event is triggered when particle reached the wall.
         This method handle the coords translation as a particle cross
         a wall.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        self._cross_cell_wall_ind(tend, which)
+        self._cross_cell_wall_ind(tend)
         self._cross_cell_wall_read()
         self._cross_cell_wall_rel()
 
