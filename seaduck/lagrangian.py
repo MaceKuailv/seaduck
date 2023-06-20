@@ -637,27 +637,19 @@ class Particle(Position):
 
         self.t[out] += contract_time
 
-    def _subset_velocity_position(self, tf, which):
+    def _extract_velocity_position(self, tf):
         """See analytical_step."""
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        if isinstance(tf, float):
-            tf = np.array([tf for i in range(self.N)])
-
-        tf = tf[which]
-        t_now = self.t[which]
-
         if self.rzl_lin is not None:
-            xs = [self.rx[which], self.ry[which], self.rzl_lin[which] - 1 / 2]
+            xs = [self.rx, self.ry, self.rzl_lin - 1 / 2]
         else:
-            x_temp = self.rx[which]
-            xs = [x_temp, self.ry[which], np.zeros_like(x_temp)]
-        us = [self.u[which], self.v[which], self.w[which]]
-        dus = [self.du[which], self.dv[which], self.dw[which]]
-        return which, tf, t_now, us, dus, xs
+            x_temp = self.rx
+            xs = [x_temp, self.ry, np.zeros_like(x_temp)]
+        us = [self.u, self.v, self.w]
+        dus = [self.du, self.dv, self.dw]
+        return us, dus, xs
 
-    def _move_within_cell(self, the_t, t_now, us, dus, xs):
-        t_now += the_t
+    def _move_within_cell(self, the_t, us, dus, xs):
+        self.t += the_t
         new_x = []
         new_u = []
         for i in range(3):
@@ -677,7 +669,7 @@ class Particle(Position):
                     f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
                     f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
                 )
-        return t_now, new_x, new_u
+        return new_x, new_u
 
     def _sync_latlondep_before_cross(self):
         try:
@@ -710,7 +702,7 @@ class Particle(Position):
                 bzl_lin,
             )
 
-    def analytical_step(self, tf, which=None):
+    def analytical_step(self, tf):
         """Integrate the particle with velocity.
 
         The core method.
@@ -725,25 +717,23 @@ class Particle(Position):
         ----------
         tf: float, numpy.ndarray
             The longest duration of the simulation for each particle.
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points to
-            do the operation.
         """
-        which, tf, t_now, us, dus, xs = self._subset_velocity_position(tf, which)
+        if isinstance(tf, float):
+            tf = np.array([tf for i in range(self.N)])
+        us, dus, xs = self._extract_velocity_position(tf)
 
         ts = time2wall(xs, us, dus)
 
         tend, the_t = which_early(tf, ts)
 
-        t_now, new_x, new_u = self._move_within_cell(the_t, t_now, us, dus, xs)
+        new_x, new_u = self._move_within_cell(the_t, us, dus, xs)
 
         # Could potentially move this block all the way back
-        self.t[which] += the_t
-        self.rx[which], self.ry[which], temp = new_x
+        self.rx, self.ry, temp = new_x
         if self.rzl_lin is not None:
-            self.rzl_lin[which] = temp + 1 / 2
+            self.rzl_lin = temp + 1 / 2
 
-        self.u[which], self.v[which], self.w[which] = new_u
+        self.u, self.v, self.w = new_u
 
         self._sync_latlondep_before_cross()
 
