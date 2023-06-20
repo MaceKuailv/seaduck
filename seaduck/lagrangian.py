@@ -518,7 +518,7 @@ class Particle(Position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, tol=1e-6):
+    def trim(self, tol=1e-12):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -739,7 +739,7 @@ class Particle(Position):
 
         return tend
 
-    def _cross_cell_wall_ind(self, tend):
+    def _cross_cell_wall_index(self, tend):
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
@@ -891,7 +891,7 @@ class Particle(Position):
         This method handle the coords translation as a particle cross
         a wall.
         """
-        self._cross_cell_wall_ind(tend)
+        self._cross_cell_wall_index(tend)
         self._cross_cell_wall_read()
         self._cross_cell_wall_rel()
 
