@@ -887,15 +887,19 @@ class Particle(Position):
         if self.dz is not None:
             self.dz = self.ocedata.dZ[self.iz]
 
-    def _cross_cell_wall_rel(self):
+    def _cross_cell_wall_vrel(self):
         if self.ocedata.readiness["Z"]:
             self.rel.update(self.ocedata.find_rel_v(self.dep))
-        try:
+        if self.rzl_lin is not None:
+            self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
+
+    def _cross_cell_wall_hrel(self):
+        if self.ocedata.readiness["h"] == "oceanparcel":
             self.px, self.py = self.get_px_py()
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
-        except AttributeError:
+        else:
             #         if True:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
@@ -909,8 +913,6 @@ class Particle(Position):
                 * DEG2M
                 / self.dy
             )
-        if self.rzl_lin is not None:
-            self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
     def cross_cell_wall(self, tend, which=None):
         """Update properties after particles cross wall.
@@ -983,9 +985,11 @@ class Particle(Position):
                 # or the moment reaching destination.
                 self.note_taking(todo)
             sub._cross_cell_wall_ind(tend)
+
+            sub._cross_cell_wall_read()
+            sub._cross_cell_wall_vrel()
             self.update_from_subset(sub, todo)
-            self._cross_cell_wall_read()
-            self._cross_cell_wall_rel()
+            self._cross_cell_wall_hrel()
 
             if self.transport:
                 self.get_vol()
