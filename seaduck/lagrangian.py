@@ -766,7 +766,9 @@ class Particle(Position):
 
         return tend
 
-    def _cross_cell_wall_ind(self, tend, which):
+    def _cross_cell_wall_ind(self, tend, which=None):
+        if which is None:
+            which = np.ones(self.N).astype(bool)
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
@@ -975,13 +977,16 @@ class Particle(Position):
             sub = self.subset(todo)
             tf_used = tf[todo]
             tend = sub.analytical_step(tf_used)
-            self.update_from_subset(sub, todo)
             # TODO: fix save-raw here.
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
                 self.note_taking(todo)
-            self.cross_cell_wall(tend, todo)
+            sub._cross_cell_wall_ind(tend)
+            self.update_from_subset(sub, todo)
+            self._cross_cell_wall_read()
+            self._cross_cell_wall_rel()
+
             if self.transport:
                 self.get_vol()
             self.get_u_du()
