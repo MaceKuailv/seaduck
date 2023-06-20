@@ -924,15 +924,16 @@ class Particle(Position):
 
         Parameters
         ----------
-        tl: float, numpy.ndarray
+        tl: float
             The final time relative to 1970-01-01 in seconds.
         """
         tol = 1e-4
         tf = t1 - self.t
-        todo = abs(tf) > tol
+        bool_todo = abs(tf) > tol
         if self.callback is not None:
-            todo = np.logical_and(todo, self.callback(self))
-        if sum(todo) == 0:
+            bool_todo = np.logical_and(bool_todo, self.callback(self))
+        index_todo = np.where(bool_todo)[0]
+        if len(index_todo) == 0:
             logging.info("Nothing left to simulate")
             return
         trim_tol = 1e-12
@@ -943,31 +944,32 @@ class Particle(Position):
                 trim_tol = 1e-6
             elif i > 10:
                 trim_tol = 1e-10
-            logging.debug(sum(todo), "left")
-            sub = self.subset(todo)
+            logging.debug(len(index_todo), "left")
+            sub = self.subset(index_todo)
             sub.trim(tol=trim_tol)
-            tf_used = tf[todo]
+            tf_used = tf[index_todo]
             tend = sub.analytical_step(tf_used)
             # TODO: fix save-raw here.
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
-                self.note_taking(todo)
+                self.note_taking(index_todo)
             sub.cross_cell_wall(tend)
 
             if self.transport:
                 sub.get_vol()
             sub.get_u_du()
-            self.update_from_subset(sub, todo)
+            self.update_from_subset(sub, index_todo)
             tf = t1 - self.t
-            todo = abs(tf) > tol
+            bool_todo = abs(t1 - sub.t) > tol
             if self.callback is not None:
-                todo = np.logical_and(todo, self.callback(self))
-            if sum(todo) == 0:
+                bool_todo = np.logical_and(bool_todo, self.callback(sub))
+            index_todo = index_todo[bool_todo]
+            if len(index_todo) == 0:
                 break
             if self.save_raw:
                 # record those who cross the wall
-                self.note_taking(todo)
+                self.note_taking(index_todo)
 
         if i == self.max_iteration - 1:  # pragma: no cover
             warnings.warn("maximum iteration count reached")
