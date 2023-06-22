@@ -118,8 +118,8 @@ def which_early(tf, ts):
     t_directed[np.isnan(t_directed)] = np.inf
     t_directed[t_directed <= 0] = np.inf
     tend = t_directed.argmin(axis=0)
-    the_t = np.array([ts[te][i] for i, te in enumerate(tend)])
-    return tend, the_t
+    t_event = np.array([ts[te][i] for i, te in enumerate(tend)])
+    return tend, t_event
 
 
 uvkernel = np.array([[0, 0], [1, 0], [0, 1]])
@@ -637,8 +637,8 @@ class Particle(Position):
 
         self.t[out] += contract_time
 
-    def _extract_velocity_position(self, tf):
-        """See analytical_step."""
+    def _extract_velocity_position(self):
+        """Create list of u, du/dx and x0."""
         if self.rzl_lin is not None:
             xs = [self.rx, self.ry, self.rzl_lin - 1 / 2]
         else:
@@ -648,12 +648,13 @@ class Particle(Position):
         dus = [self.du, self.dv, self.dw]
         return us, dus, xs
 
-    def _move_within_cell(self, the_t, us, dus, xs):
-        self.t += the_t
+    def _move_within_cell(self, t_event, us, dus, xs):
+        """Move all particle for t_event time."""
+        self.t += t_event
         new_x = []
         new_u = []
         for i in range(3):
-            x_move = stationary(the_t, us[i], dus[i], 0)
+            x_move = stationary(t_event, us[i], dus[i], 0)
             new_u.append(us[i] + dus[i] * x_move)
             new_x.append(x_move + xs[i])
 
@@ -663,7 +664,7 @@ class Particle(Position):
                 raise ValueError(
                     f"Particle way out of bound."
                     # f"tend = {tend[where]},"
-                    f" the_t = {the_t[where]},"
+                    f" t_event = {t_event[where]},"
                     f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
                     f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
                     f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
@@ -672,6 +673,7 @@ class Particle(Position):
         return new_x, new_u
 
     def _sync_latlondep_before_cross(self):
+        """Update 3D location at the end of analytical_step."""
         if self.rzl_lin is not None:
             self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         # Otherwise, keep depth the same.
@@ -710,13 +712,13 @@ class Particle(Position):
         """
         if isinstance(tf, float):
             tf = np.array([tf for i in range(self.N)])
-        us, dus, xs = self._extract_velocity_position(tf)
+        us, dus, xs = self._extract_velocity_position()
 
         ts = time2wall(xs, us, dus)
 
-        tend, the_t = which_early(tf, ts)
+        tend, t_event = which_early(tf, ts)
 
-        new_x, new_u = self._move_within_cell(the_t, us, dus, xs)
+        new_x, new_u = self._move_within_cell(t_event, us, dus, xs)
 
         # Could potentially move this block all the way back
         self.rx, self.ry, temp = new_x
@@ -730,6 +732,7 @@ class Particle(Position):
         return tend
 
     def _cross_cell_wall_index(self, tend):
+        """Figure out the new indices as particles cross cell wall."""
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
@@ -783,6 +786,7 @@ class Particle(Position):
             self.izl_lin = tiz
 
     def _cross_cell_wall_read(self):
+        """Update coordinate as a particle crosses cell wall."""
         if self.face is not None:
             horizontal_index = (self.face, self.iy, self.ix)
         else:
@@ -823,6 +827,7 @@ class Particle(Position):
             self.dz = self.ocedata.dZ[self.iz]
 
     def _cross_cell_wall_rel(self):
+        """Figure out the new RelCoord after crossing cell wall."""
         if self.ocedata.readiness["Z"]:
             self.rel.update(self.ocedata.find_rel_v(self.dep))
         if self.rzl_lin is not None:
@@ -850,9 +855,17 @@ class Particle(Position):
     def cross_cell_wall(self, tend):
         """Update properties after particles cross wall.
 
-        A wall event is triggered when particle reached the wall.
-        This method handle the coords translation as a particle cross
-        a wall.
+        This function is called when particle reached the wall.
+        The nearest grid points change as well as the way the package
+        describe the location of particles. This method handles the
+        handover of particles between grid points.
+
+        Parameters
+        ----------
+        tend: numpy.ndarray of [0,1,2,3,4,5,6]
+            Which neighboring cell to move into.
+            0-6 means left, right, down, up, deep, shallow,
+            and stay in the current cell, respectively.
         """
         self._cross_cell_wall_index(tend)
         self._cross_cell_wall_read()
