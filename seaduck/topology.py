@@ -403,7 +403,7 @@ class Topology:
             to_return = box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
             raise NotImplementedError
-        return to_return
+        return tuple(int(i) for i in to_return)
 
     def ind_moves(self, ind, moves, **kwarg):
         """Move an index in a serie of directions.
@@ -449,7 +449,7 @@ class Topology:
         elif self.typ in ["x_periodic", "box"]:
             for move in moves:
                 ind = self.ind_tend(ind, move)
-        return ind
+        return tuple(int(i) for i in ind)
 
     def check_illegal(self, ind, cuvwg="C"):
         """Check if the index is legal.
