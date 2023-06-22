@@ -254,7 +254,7 @@ def find_ind(array, value, peri=None, ascending=1, above=True):
         idx = np.argmin(np.abs(to_180((array - value), peri=peri)))
     if above and array[idx] > value and peri is None:
         idx -= ascending * 1
-    if idx < 0:
+    if idx < 0 or idx >= len(array):
         raise ValueError("Value out of bound.")
     idx = int(idx)
     return idx, array[idx]
