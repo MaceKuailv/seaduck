@@ -104,3 +104,48 @@ def test_accurate_reproduce_rectilinear(od, lat, lon):
     new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
     assert np.allclose(new_lon, lon)
     assert np.allclose(new_lat, lat)
+
+
+@pytest.mark.parametrize("od", ["curv"], indirect=True)
+@pytest.mark.parametrize("style", ["nearest", "linear"])
+@pytest.mark.parametrize("t", [1.85e9, 2e9])
+def test_accurate_reproduce_time(od, style, t):
+    t = np.array([t])
+    if style == "nearest":
+        trel = od.find_rel_t(t)
+        assert isinstance(trel, sd.ocedata.TRel)
+    elif style == "linear":
+        trel = od.find_rel_t_lin(t)
+        assert isinstance(trel, sd.ocedata.TLinRel)
+    it, rt, dt, bt = trel.values()
+    assert np.allclose(bt + dt * rt, t)
+
+
+@pytest.mark.parametrize("od", ["curv"], indirect=True)
+@pytest.mark.parametrize("style", ["nearest", "linear"])
+@pytest.mark.parametrize("z", [0, -5, -35])
+def test_accurate_reproduce_z(od, style, z):
+    z = np.array([z])
+    if style == "nearest":
+        vrel = od.find_rel_v(z)
+        assert isinstance(vrel, sd.ocedata.VRel)
+    elif style == "linear":
+        vrel = od.find_rel_v_lin(z)
+        assert isinstance(vrel, sd.ocedata.VLinRel)
+    iz, rz, dz, bz = vrel.values()
+    assert np.allclose(bz + dz * rz, z)
+
+
+@pytest.mark.parametrize("od", ["curv"], indirect=True)
+@pytest.mark.parametrize("style", ["nearest", "linear"])
+@pytest.mark.parametrize("z", [0, -5, -35])
+def test_accurate_reproduce_z_staggered(od, style, z):
+    z = np.array([z])
+    if style == "nearest":
+        vrel = od.find_rel_vl(z)
+        assert isinstance(vrel, sd.ocedata.VlRel)
+    elif style == "linear":
+        vrel = od.find_rel_vl_lin(z)
+        assert isinstance(vrel, sd.ocedata.VlLinRel)
+    iz, rz, dz, bz = vrel.values()
+    assert np.allclose(bz + dz * rz, z)
