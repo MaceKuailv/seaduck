@@ -793,56 +793,29 @@ class Particle(Position):
             self.izl_lin = tiz
 
     def _cross_cell_wall_read(self):
-        # TODO: move the astype somewhere upstream.
         if self.face is not None:
-            self.face = self.face.astype(int)
-        self.iy = self.iy.astype(int)
-        self.ix = self.ix.astype(int)
-        if self.iz is not None:
-            self.iz = self.iz.astype(int)
-        if self.izl_lin is not None:
-            self.izl_lin = self.izl_lin.astype(int)
+            horizontal_index = (self.face, self.iy, self.ix)
+        else:
+            horizontal_index = (self.iy, self.ix)
 
         if self.ocedata.readiness["h"] == "local_cartesian":
-            if self.face is not None:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.face, self.iy, self.ix],
-                    self.ocedata.YC[self.face, self.iy, self.ix],
-                )
-                self.cs, self.sn = (
-                    self.ocedata.CS[self.face, self.iy, self.ix],
-                    self.ocedata.SN[self.face, self.iy, self.ix],
-                )
-                self.dx, self.dy = (
-                    self.ocedata.dX[self.face, self.iy, self.ix],
-                    self.ocedata.dY[self.face, self.iy, self.ix],
-                )
-
-            else:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.iy, self.ix],
-                    self.ocedata.YC[self.iy, self.ix],
-                )
-                self.cs, self.sn = (
-                    self.ocedata.CS[self.iy, self.ix],
-                    self.ocedata.SN[self.iy, self.ix],
-                )
-                self.dx, self.dy = (
-                    self.ocedata.dX[self.iy, self.ix],
-                    self.ocedata.dY[self.iy, self.ix],
-                )
+            self.bx, self.by = (
+                self.ocedata.XC[horizontal_index],
+                self.ocedata.YC[horizontal_index],
+            )
+            self.cs, self.sn = (
+                self.ocedata.CS[horizontal_index],
+                self.ocedata.SN[horizontal_index],
+            )
+            self.dx, self.dy = (
+                self.ocedata.dX[horizontal_index],
+                self.ocedata.dY[horizontal_index],
+            )
         elif self.ocedata.readiness["h"] == "oceanparcel":
-            if self.face is not None:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.face, self.iy, self.ix],
-                    self.ocedata.YC[self.face, self.iy, self.ix],
-                )
-
-            else:  # pragema: no cover
-                self.bx, self.by = (
-                    self.ocedata.XC[self.iy, self.ix],
-                    self.ocedata.YC[self.iy, self.ix],
-                )
+            self.bx, self.by = (
+                self.ocedata.XC[horizontal_index],
+                self.ocedata.YC[horizontal_index],
+            )
             self.px, self.py = self.get_px_py()
 
         elif self.ocedata.readiness["h"] == "rectilinear":
