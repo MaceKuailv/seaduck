@@ -720,31 +720,32 @@ class Particle(Position):
         # left  # right  # down  # up
         trans_tend = np.array([translate[i] for i in tend[type1]])
         if self.face is not None:
-            tface, tiy, tix, tiz = (
-                self.face.astype(int),
-                self.iy.astype(int),
-                self.ix.astype(int),
-                self.izl_lin.astype(int),
+            tface, tiy, tix = (
+                self.face,
+                self.iy,
+                self.ix,
             )
             tface[type1], tiy[type1], tix[type1] = self.tp.ind_tend_vec(
                 (tface[type1], tiy[type1], tix[type1]), trans_tend
             )
+            self.face, self.iy, self.ix = (tface, tiy, tix)
         else:
             tiy, tix = (
-                self.iy.astype(int),
-                self.ix.astype(int),
+                self.iy,
+                self.ix,
             )
-            if self.izl_lin is not None:  # pragema: no cover
-                tiz = self.izl_lin.astype(int)
-            else:
-                tiz = (np.ones_like(tiy) * (-1)).astype(int)
             tiy[type1], tix[type1] = self.tp.ind_tend_vec(
                 (tiy[type1], tix[type1]), trans_tend
             )
-        type2 = tend == 4
-        tiz[type2] += 1
-        type3 = tend == 5
-        tiz[type3] -= 1
+            self.iy, self.ix = tiy, tix
+
+        if self.izl_lin is not None:
+            tiz = self.izl_lin
+            type2 = tend == 4
+            tiz[type2] += 1
+            type3 = tend == 5
+            tiz[type3] -= 1
+            self.izl_lin = tiz
 
         # investigate stuck
         #         now_masked = maskc[tiz-1,tface,tiy,tix]==0
@@ -760,12 +761,6 @@ class Particle(Position):
         #             print(t_directed[:,wrong_ind])
         #             print('stuck!')
         #             raise ValueError('ahhhhh!')
-        if self.face is not None:
-            self.face, self.iy, self.ix = (tface, tiy, tix)
-        else:
-            self.iy, self.ix = tiy, tix
-        if self.izl_lin is not None:
-            self.izl_lin = tiz
 
     def _cross_cell_wall_read(self):
         """Update coordinate as a particle crosses cell wall."""

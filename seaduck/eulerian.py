@@ -328,9 +328,9 @@ class Position:
             else:
                 n_iys[j, i], n_ixs[j, i] = n_ind
         if self.face is not None:
-            return n_faces.astype("int"), n_iys.astype("int"), n_ixs.astype("int")
+            return n_faces, n_iys, n_ixs
         else:
-            return None, n_iys.astype("int"), n_ixs.astype("int")
+            return None, n_iys, n_ixs
 
     def fatten_v(self, knw):
         """Fatten in vertical center coord.
@@ -345,13 +345,13 @@ class Position:
         if self.iz is None:
             return None
         if knw.vkernel == "nearest":
-            return copy.deepcopy(self.iz.astype(int))
+            return copy.deepcopy(self.iz)
         elif knw.vkernel in ["dz", "linear"]:
             try:
                 self.iz_lin
             except AttributeError:
                 self.rel.update(self.ocedata.find_rel_v_lin(self.dep))
-            return np.vstack([self.iz_lin.astype(int), self.iz_lin.astype(int) - 1]).T
+            return np.vstack([self.iz_lin, self.iz_lin - 1]).T
         else:
             raise ValueError("vkernel not supported")
 
@@ -368,13 +368,13 @@ class Position:
         if self.izl is None:
             return None
         if knw.vkernel == "nearest":
-            return copy.deepcopy(self.izl.astype(int))
+            return copy.deepcopy(self.izl)
         elif knw.vkernel in ["dz", "linear"]:
             try:
                 self.izl_lin
             except AttributeError:
                 self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
-            return np.vstack([self.izl_lin.astype(int), self.izl_lin.astype(int) - 1]).T
+            return np.vstack([self.izl_lin, self.izl_lin - 1]).T
         else:
             raise ValueError("vkernel not supported")
 
@@ -391,13 +391,13 @@ class Position:
         if self.it is None:
             return None
         if knw.tkernel == "nearest":
-            return copy.deepcopy(self.it.astype(int))
+            return copy.deepcopy(self.it)
         elif knw.tkernel in ["dt", "linear"]:
             try:
                 self.izl_lin
             except AttributeError:
                 self.rel.update(self.ocedata.find_rel_t_lin(self.t))
-            return np.vstack([self.it_lin.astype(int), self.it_lin.astype(int) + 1]).T
+            return np.vstack([self.it_lin, self.it_lin + 1]).T
         else:
             raise ValueError("tkernel not supported")
 
