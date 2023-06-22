@@ -181,12 +181,14 @@ def test_get_vol(od):
         transport=True,
     )
     curv_p.get_vol()
+    assert np.issubdtype(curv_p.vol.dtype, float)
 
 
 def test_maxiteration(ecco_p):
     ecco_p.max_iteration = 1
     delattr(ecco_p, "px")
-    ecco_p.to_next_stop(tf)
+    with pytest.warns(UserWarning):
+        ecco_p.to_next_stop(tf)
 
 
 def test_abandon_ducks(ecco_p):

@@ -319,7 +319,7 @@ def find_rel(
         darray = np.abs(array[1:] - array[:-1])
         darray = np.append(darray, darray[-1])
         dx_right = True
-    ixs = np.zeros_like(value)
+    ixs = np.zeros(len(value), dtype="int")
     rxs = np.ones_like(value) * 0.0
     dxs = np.ones_like(value) * 0.0
     bxs = np.ones_like(value) * 0.0
@@ -341,7 +341,7 @@ def find_rel(
         rxs[i] = dx / darray[idx]
         dxs[i] = darray[idx]
         bxs[i] = bx
-    return ixs.astype(int), rxs, dxs, bxs
+    return ixs, rxs, dxs, bxs
 
 
 # Here are a few partial functions for find_rel
