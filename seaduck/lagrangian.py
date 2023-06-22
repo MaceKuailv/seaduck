@@ -402,7 +402,7 @@ class Particle(Position):
         np.nan_to_num(self.dv, copy=False)
         np.nan_to_num(self.dw, copy=False)
 
-    def note_taking(self, which=None):
+    def note_taking(self, subset_index=None):
         """Record raw data into list of lists.
 
         This method is only called in save_raw = True particles.
@@ -410,37 +410,42 @@ class Particle(Position):
         trajectories.
         With those info, one could reconstruct the analytical
         trajectories to arbitrary position.
+
+        Parameters
+        ----------
+        subset_index: iterable of int or None
+            if not None, assume this method is called from a subset of the full
+            particle object, and subset_index is the indices the subset occupy
+            in the original object.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        where = np.where(which)[0]
         try:
             self.ttlist
         except AttributeError as exc:
             raise AttributeError("This is not a particle_rawlist object") from exc
-        for i in where:
+        if subset_index is None:
+            subset_index = np.arange(self.N)
+        for isub, ifull in enumerate(subset_index):
             if self.face is not None:
-                self.fclist[i].append(self.face[i])
+                self.fclist[ifull].append(self.face[isub])
             if self.it is not None:
-                self.itlist[i].append(self.it[i])
-            self.iylist[i].append(self.iy[i])
+                self.itlist[ifull].append(self.it[isub])
             if self.izl_lin is not None:
-                self.izlist[i].append(self.izl_lin[i])
-            self.ixlist[i].append(self.ix[i])
-            self.rxlist[i].append(self.rx[i])
-            self.rylist[i].append(self.ry[i])
-            if self.rzl_lin is not None:
-                self.rzlist[i].append(self.rzl_lin[i])
-            self.ttlist[i].append(self.t[i])
-            self.uulist[i].append(self.u[i])
-            self.vvlist[i].append(self.v[i])
-            self.wwlist[i].append(self.w[i])
-            self.dulist[i].append(self.du[i])
-            self.dvlist[i].append(self.dv[i])
-            self.dwlist[i].append(self.dw[i])
-            self.xxlist[i].append(self.lon[i])
-            self.yylist[i].append(self.lat[i])
-            self.zzlist[i].append(self.dep[i])
+                self.izlist[ifull].append(self.izl_lin[isub])
+                self.rzlist[ifull].append(self.rzl_lin[isub])
+            self.iylist[ifull].append(self.iy[isub])
+            self.ixlist[ifull].append(self.ix[isub])
+            self.rxlist[ifull].append(self.rx[isub])
+            self.rylist[ifull].append(self.ry[isub])
+            self.ttlist[ifull].append(self.t[isub])
+            self.uulist[ifull].append(self.u[isub])
+            self.vvlist[ifull].append(self.v[isub])
+            self.wwlist[ifull].append(self.w[isub])
+            self.dulist[ifull].append(self.du[isub])
+            self.dvlist[ifull].append(self.dv[isub])
+            self.dwlist[ifull].append(self.dw[isub])
+            self.xxlist[ifull].append(self.lon[isub])
+            self.yylist[ifull].append(self.lat[isub])
+            self.zzlist[ifull].append(self.dep[isub])
 
     def empty_lists(self):
         """Empty/Create the lists.
@@ -450,14 +455,17 @@ class Particle(Position):
         and empty the lists containing the raw data.
         This method does the latter.
         """
-        self.itlist = [[] for i in range(self.N)]
-        self.fclist = [[] for i in range(self.N)]
+        if self.face is not None:
+            self.fclist = [[] for i in range(self.N)]
+        if self.it is not None:
+            self.itlist = [[] for i in range(self.N)]
+        if self.izl_lin is not None:
+            self.rzlist = [[] for i in range(self.N)]
+            self.izlist = [[] for i in range(self.N)]
         self.iylist = [[] for i in range(self.N)]
-        self.izlist = [[] for i in range(self.N)]
         self.ixlist = [[] for i in range(self.N)]
         self.rxlist = [[] for i in range(self.N)]
         self.rylist = [[] for i in range(self.N)]
-        self.rzlist = [[] for i in range(self.N)]
         self.ttlist = [[] for i in range(self.N)]
         self.uulist = [[] for i in range(self.N)]
         self.vvlist = [[] for i in range(self.N)]
@@ -882,7 +890,6 @@ class Particle(Position):
             sub = self.subset(int_todo)
             sub.trim(tol=trim_tol)
             tend = sub.analytical_step(tf_used)
-            # TODO: fix save-raw here.
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
