@@ -34,7 +34,8 @@ def test_create_tree_cartesian(xr_curv):
 )
 def test_incomplete_data(incomplete_data):
     oo = sd.OceData(incomplete_data)
-    oo.find_rel_h(np.array([-14]), np.array([70.5]))
+    hrel = oo.find_rel_h(np.array([-14]), np.array([70.5]))
+    assert isinstance(hrel, sd.ocedata.HRel)
 
 
 @pytest.mark.parametrize("ds", ["curv"], indirect=True)
@@ -74,3 +75,32 @@ def test_not_h_ready(ds):
     temp = ds.drop_vars(["XG", "YG"])
     with pytest.raises(ValueError):
         sd.OceData(temp)
+
+
+@pytest.mark.parametrize("incomplete_data", ["drop_YG"], indirect=True)
+@pytest.mark.parametrize("lat", list(np.linspace(70, 70.618, 3)))
+@pytest.mark.parametrize("lon", list(np.linspace(-17, -13.618, 3)))
+def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon):
+    tub = sd.OceData(incomplete_data)
+    lon = np.array([lon])
+    lat = np.array([lat])
+    hrel = tub.find_rel_h(lon, lat)
+    assert isinstance(hrel, sd.ocedata.HRel)
+    face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
+    new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
+    assert np.allclose(new_lon, lon)
+    assert np.allclose(new_lat, lat)
+
+
+# @pytest.mark.parametrize("od", ["aviso"], indirect = True)
+# @pytest.mark.parametrize("lat",list(np.linspace(-74.618,-40.618,3)))
+# @pytest.mark.parametrize("lon",list(np.linspace(-179.618,179.618,4)))
+# def test_accurate_reproduce_rectilinear(od,lat,lon):
+#     lon = np.array([lon])
+#     lat = np.array([lat])
+#     hrel = od.find_rel_h(lon, lat)
+#     assert isinstance(hrel, sd.ocedata.HRel)
+#     face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
+#     new_lon,new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
+#     assert np.allclose(new_lon,lon)
+#     assert np.allclose(new_lat,lat)
