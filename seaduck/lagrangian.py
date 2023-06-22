@@ -88,11 +88,11 @@ def stationary_time(u, du, x0):
     return tl, tr
 
 
-def time2wall(xs, us, dus):
+def time2wall(pos_list, u_list, du_list):
     """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
-        tl, tr = stationary_time(us[i], dus[i], xs[i])
+        tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
         ts.append(tl)
         ts.append(tr)
     return ts
@@ -270,24 +270,7 @@ class Particle(Position):
 
         self.save_raw = save_raw
         if self.save_raw:
-            self.itlist = [[] for i in range(self.N)]
-            self.fclist = [[] for i in range(self.N)]
-            self.iylist = [[] for i in range(self.N)]
-            self.izlist = [[] for i in range(self.N)]
-            self.ixlist = [[] for i in range(self.N)]
-            self.rxlist = [[] for i in range(self.N)]
-            self.rylist = [[] for i in range(self.N)]
-            self.rzlist = [[] for i in range(self.N)]
-            self.ttlist = [[] for i in range(self.N)]
-            self.uulist = [[] for i in range(self.N)]
-            self.vvlist = [[] for i in range(self.N)]
-            self.wwlist = [[] for i in range(self.N)]
-            self.dulist = [[] for i in range(self.N)]
-            self.dvlist = [[] for i in range(self.N)]
-            self.dwlist = [[] for i in range(self.N)]
-            self.xxlist = [[] for i in range(self.N)]
-            self.yylist = [[] for i in range(self.N)]
-            self.zzlist = [[] for i in range(self.N)]
+            self.empty_lists()
 
     def update_uvw_array(self):
         """Update the prefetched velocity arrays.
@@ -478,7 +461,7 @@ class Particle(Position):
             self.zzlist[i].append(self.dep[i])
 
     def empty_lists(self):
-        """Empty the lists.
+        """Empty/Create the lists.
 
         Some times the raw-data list get too long,
         It would be necessary to dump the data,
@@ -596,16 +579,16 @@ class Particle(Position):
         out = self._out_of_bound()
         # out = np.logical_and(out,u!=0)
         if self.rzl_lin is not None:
-            xs = [self.rx[out], self.ry[out], self.rzl_lin[out] - 1 / 2]
+            pos_list = [self.rx[out], self.ry[out], self.rzl_lin[out] - 1 / 2]
         else:
             x_ = self.rx[out]
-            xs = [x_, self.ry[out], np.zeros_like(x_)]
-        us = [self.u[out], self.v[out], self.w[out]]
-        dus = [self.du[out], self.dv[out], self.dw[out]]
+            pos_list = [x_, self.ry[out], np.zeros_like(x_)]
+        u_list = [self.u[out], self.v[out], self.w[out]]
+        du_list = [self.du[out], self.dv[out], self.dw[out]]
         tmin = -np.ones_like(self.rx[out]) * np.inf
         tmax = np.ones_like(self.rx[out]) * np.inf
         for i in range(3):
-            tl, tr = stationary_time(us[i], dus[i], xs[i])
+            tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
             np.nan_to_num(tl, copy=False)
             np.nan_to_num(tr, copy=False)
             tmin = np.maximum(tmin, np.minimum(tl, tr))
@@ -620,7 +603,7 @@ class Particle(Position):
 
         con_x = []
         for i in range(3):
-            con_x.append(stationary(contract_time, us[i], dus[i], 0))
+            con_x.append(stationary(contract_time, u_list[i], du_list[i], 0))
 
         cdx = np.nan_to_num(con_x[0])
         cdy = np.nan_to_num(con_x[1])
@@ -640,23 +623,22 @@ class Particle(Position):
     def _extract_velocity_position(self):
         """Create list of u, du/dx and x0."""
         if self.rzl_lin is not None:
-            xs = [self.rx, self.ry, self.rzl_lin - 1 / 2]
+            pos_list = [self.rx, self.ry, self.rzl_lin - 1 / 2]
         else:
-            x_temp = self.rx
-            xs = [x_temp, self.ry, np.zeros_like(x_temp)]
-        us = [self.u, self.v, self.w]
-        dus = [self.du, self.dv, self.dw]
-        return us, dus, xs
+            pos_list = [self.rx, self.ry, np.zeros_like(self.rx)]
+        u_list = [self.u, self.v, self.w]
+        du_list = [self.du, self.dv, self.dw]
+        return u_list, du_list, pos_list
 
-    def _move_within_cell(self, t_event, us, dus, xs):
+    def _move_within_cell(self, t_event, u_list, du_list, pos_list):
         """Move all particle for t_event time."""
         self.t += t_event
         new_x = []
         new_u = []
         for i in range(3):
-            x_move = stationary(t_event, us[i], dus[i], 0)
-            new_u.append(us[i] + dus[i] * x_move)
-            new_x.append(x_move + xs[i])
+            x_move = stationary(t_event, u_list[i], du_list[i], 0)
+            new_u.append(u_list[i] + du_list[i] * x_move)
+            new_x.append(x_move + pos_list[i])
 
         for rr in new_x:
             if np.logical_or(rr > 0.6, rr < -0.6).any():
@@ -712,13 +694,13 @@ class Particle(Position):
         """
         if isinstance(tf, float):
             tf = np.array([tf for i in range(self.N)])
-        us, dus, xs = self._extract_velocity_position()
+        u_list, du_list, pos_list = self._extract_velocity_position()
 
-        ts = time2wall(xs, us, dus)
+        ts = time2wall(pos_list, u_list, du_list)
 
         tend, t_event = which_early(tf, ts)
 
-        new_x, new_u = self._move_within_cell(t_event, us, dus, xs)
+        new_x, new_u = self._move_within_cell(t_event, u_list, du_list, pos_list)
 
         # Could potentially move this block all the way back
         self.rx, self.ry, temp = new_x
@@ -771,9 +753,9 @@ class Particle(Position):
         #             print(wrong_ind)
         #             print((tiz-1)[wrong_ind],tface[wrong_ind],
         #             tiy[wrong_ind],tix[wrong_ind])
-        #             print('rx',[xs[i][wrong_ind] for i in range(3)])
-        #             print('u',[us[i][wrong_ind] for i in range(3)])
-        #             print('du',[dus[i][wrong_ind] for i in range(3)])
+        #             print('rx',[pos_list[i][wrong_ind] for i in range(3)])
+        #             print('u',[u_list[i][wrong_ind] for i in range(3)])
+        #             print('du',[du_list[i][wrong_ind] for i in range(3)])
         #             print(tend[wrong_ind])
         #             print(t_directed[:,wrong_ind])
         #             print('stuck!')
@@ -890,7 +872,7 @@ class Particle(Position):
                 setattr(p, i, copy.deepcopy(item))
         return p
 
-    def to_next_stop(self, t1):
+    def to_next_stop(self, t_stop):
         """Integrate all particles towards time tl.
 
         This is done by repeatedly calling analytical step.
@@ -900,11 +882,11 @@ class Particle(Position):
 
         Parameters
         ----------
-        t1: float
+        t_stop: float
             The final time relative to 1970-01-01 in seconds.
         """
         tol = 1e-4
-        tf = t1 - self.t
+        tf = t_stop - self.t
         bool_todo = abs(tf) > tol
         if self.callback is not None:
             bool_todo = np.logical_and(bool_todo, self.callback(self))
@@ -936,7 +918,7 @@ class Particle(Position):
                 sub.get_vol()
             sub.get_u_du()
             self.update_from_subset(sub, int_todo)
-            tf_used = t1 - sub.t
+            tf_used = t_stop - sub.t
             bool_todo = abs(tf_used) > tol
             if self.callback is not None:
                 bool_todo = np.logical_and(bool_todo, self.callback(sub))
@@ -950,7 +932,7 @@ class Particle(Position):
 
         if i == self.max_iteration - 1:  # pragma: no cover
             warnings.warn("maximum iteration count reached")
-        self.t = np.ones(self.N) * t1
+        self.t = np.ones(self.N) * t_stop
         if self.ocedata.readiness["time"]:
             before_first = self.t < self.ocedata.time_midp[0]
             self.it[before_first] = 0
