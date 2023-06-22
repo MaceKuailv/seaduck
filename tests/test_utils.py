@@ -110,6 +110,7 @@ def test_find_ind(value, array, ascending, above, peri, ans):
         array, value, peri=peri, ascending=ascending, above=above
     )
     assert ix == ans
+    assert isinstance(ix, int)
 
 
 @pytest.mark.parametrize(
@@ -134,3 +135,4 @@ def test_find_rel(value, array, darray, ascending, above, peri, dx_right, ans):
         value, array, darray, ascending, above, peri, dx_right
     )
     assert rxs[0] == ans
+    assert np.issubdtype(ixs.dtype, int)
