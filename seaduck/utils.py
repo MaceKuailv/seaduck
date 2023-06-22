@@ -268,11 +268,11 @@ def find_ind_h(lons, lats, tree, h_shape):
     x, y, z = spherical2cartesian(lats, lons)
     _, index1d = tree.query(np.array([x, y, z]).T)
     if len(h_shape) == 3:
-        faces, iys, ixs = np.unravel_index((index1d), h_shape)
+        face, iy, ix = np.unravel_index((index1d), h_shape)
     elif len(h_shape) == 2:
-        faces = None
-        iys, ixs = np.unravel_index((index1d), h_shape)
-    return faces, iys, ixs
+        face = None
+        iy, ix = np.unravel_index((index1d), h_shape)
+    return face, iy, ix
 
 
 @compileable
@@ -546,14 +546,14 @@ def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     if NoneIn([lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree]):
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
-    faces, iys, ixs = find_ind_h(lon, lat, tree, h_shape)
-    if faces is not None:
-        ind = (faces, iys, ixs)
+    face, iy, ix = find_ind_h(lon, lat, tree, h_shape)
+    if face is not None:
+        ind = (face, iy, ix)
     else:
-        ind = (iys, ixs)
+        ind = (iy, ix)
     cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
     rx, ry = find_rx_ry_naive(lon, lat, bx, by, cs, sn, dx, dy)
-    return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
+    return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
 def find_rel_h_rectilinear(x, y, lon, lat):
@@ -576,15 +576,15 @@ def find_rel_h_oceanparcel(
     if NoneIn([x, y, some_x, some_y, XG, YG, tree]):
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
-    faces, iys, ixs = find_ind_h(x, y, tree, h_shape)
-    if faces is not None:
-        ind = (faces, iys, ixs)
+    face, iy, ix = find_ind_h(x, y, tree, h_shape)
+    if face is not None:
+        ind = (face, iy, ix)
     else:
-        ind = (iys, ixs)
+        ind = (iy, ix)
     cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
     px, py = find_px_py(XG, YG, tp, ind)
     rx, ry = find_rx_ry_oceanparcel(x, y, px, py)
-    return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
+    return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
 def weight_f_node(rx, ry):
