@@ -558,11 +558,10 @@ def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
 
 def find_rel_h_rectilinear(x, y, lon, lat):
     """Find the rel-coords using the rectilinear scheme."""
-    ratio = 6371e3 * np.pi / 180
     ix, rx, dx, bx = find_rel_periodic(x, lon, 360.0)
     iy, ry, dy, by = find_rel_periodic(y, lat, 360.0)
-    dx = np.cos(by * np.pi / 180) * ratio * dx
-    dy = ratio * dy
+    dx = np.cos(by * np.pi / 180) * deg2m * dx
+    dy = deg2m * dy
     face = None
     cs = np.ones_like(x)
     sn = np.zeros_like(x)

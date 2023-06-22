@@ -92,15 +92,15 @@ def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon):
     assert np.allclose(new_lat, lat)
 
 
-# @pytest.mark.parametrize("od", ["aviso"], indirect = True)
-# @pytest.mark.parametrize("lat",list(np.linspace(-74.618,-40.618,3)))
-# @pytest.mark.parametrize("lon",list(np.linspace(-179.618,179.618,4)))
-# def test_accurate_reproduce_rectilinear(od,lat,lon):
-#     lon = np.array([lon])
-#     lat = np.array([lat])
-#     hrel = od.find_rel_h(lon, lat)
-#     assert isinstance(hrel, sd.ocedata.HRel)
-#     face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
-#     new_lon,new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
-#     assert np.allclose(new_lon,lon)
-#     assert np.allclose(new_lat,lat)
+@pytest.mark.parametrize("od", ["aviso"], indirect=True)
+@pytest.mark.parametrize("lat", list(np.linspace(-74.618, -44.0, 3)))
+@pytest.mark.parametrize("lon", list(np.linspace(-179.618, 179.618, 4)))
+def test_accurate_reproduce_rectilinear(od, lat, lon):
+    lon = np.array([lon])
+    lat = np.array([lat])
+    hrel = od.find_rel_h(lon, lat)
+    assert isinstance(hrel, sd.ocedata.HRel)
+    face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
+    new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
+    assert np.allclose(new_lon, lon)
+    assert np.allclose(new_lat, lat)
