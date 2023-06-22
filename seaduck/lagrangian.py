@@ -265,13 +265,12 @@ class Particle(Position):
         else:
             self.update_uvw_array()
         (self.u, self.v, self.w, self.du, self.dv, self.dw, self.vol) = (
-            np.zeros(self.N).astype(float) for i in range(7)
+            np.zeros(self.N, dtype="float32") for i in range(7)
         )
         if self.transport:
             self.get_vol()
 
         self.get_u_du()
-        self.fillna()
 
         self.save_raw = save_raw
         if self.save_raw:
@@ -496,7 +495,6 @@ class Particle(Position):
             The relative tolerance when particles is significantly
             close to the cell.
         """
-        # tol = 1e-6 # about 10 m horizontal for 1 degree
         if logging.DEBUG >= logging.root.level:  # pragma: no cover
             xmax = np.nanmax(self.rx)
             xmin = np.nanmin(self.rx)
@@ -798,7 +796,6 @@ class Particle(Position):
                 self.lon, self.lat, self.px, self.py
             )
         else:
-            #         if True:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
             self.rx = (
@@ -908,7 +905,7 @@ class Particle(Position):
                 # record those who cross the wall
                 self.note_taking(int_todo)
 
-        if i == self.max_iteration - 1:  # pragma: no cover
+        if i == self.max_iteration - 1:
             warnings.warn("maximum iteration count reached")
         self.t = np.ones(self.N) * t_stop
         if self.ocedata.readiness["time"]:
