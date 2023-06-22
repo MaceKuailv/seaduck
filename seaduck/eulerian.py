@@ -288,7 +288,7 @@ class Position:
             Read Topology.ind_moves for more detail.
         """
         #         self.ind_h_dict
-        kernel = knw.kernel
+        kernel = knw.kernel.astype(int)
         kernel_tends = [_translate_to_tendency(k) for k in kernel]
         m = len(kernel_tends)
         n = len(self.iy)
@@ -296,10 +296,10 @@ class Position:
 
         # the arrays we are going to return
         if self.face is not None:
-            n_faces = np.zeros((n, m))
+            n_faces = np.zeros((n, m), int)
             n_faces.T[:] = self.face
-        n_iys = np.zeros((n, m))
-        n_ixs = np.zeros((n, m))
+        n_iys = np.zeros((n, m), int)
+        n_ixs = np.zeros((n, m), int)
 
         # first try to fatten it naively(fast and vectorized)
         for i, node in enumerate(kernel):
