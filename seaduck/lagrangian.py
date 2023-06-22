@@ -143,12 +143,12 @@ dvknw = KnW(
 )
 
 # scalar style kernel for datasets without face
-uknw_s = KnW(kernel=ukernel, inheritance=None, ignore_mask=True)
-vknw_s = KnW(kernel=vkernel, inheritance=None, ignore_mask=True)
-duknw_s = KnW(
+uknw_scalar = KnW(kernel=ukernel, inheritance=None, ignore_mask=True)
+vknw_scalar = KnW(kernel=vkernel, inheritance=None, ignore_mask=True)
+duknw_scalar = KnW(
     kernel=ukernel, inheritance=None, hkernel="dx", h_order=1, ignore_mask=True
 )
-dvknw_s = KnW(
+dvknw_scalar = KnW(
     kernel=vkernel, inheritance=None, hkernel="dy", h_order=1, ignore_mask=True
 )
 
@@ -225,10 +225,12 @@ class Particle(Position):
             self.vknw = vknw
             self.dvknw = dvknw
         else:
-            self.uknw = uknw_s
-            self.duknw = duknw_s
-            self.vknw = vknw_s
-            self.dvknw = dvknw_s
+            # velocity without face connection
+            # can be handled like scalar.
+            self.uknw = uknw_scalar
+            self.duknw = duknw_scalar
+            self.vknw = vknw_scalar
+            self.dvknw = dvknw_scalar
 
         #  user defined function to stop integration.
         self.callback = callback
@@ -251,6 +253,9 @@ class Particle(Position):
         self.dont_fly = dont_fly
         if dont_fly:
             if wname is not None:
+                logging.warning(
+                    "Setting the surface velocity to zero. " "Dataset modified. "
+                )
                 self.ocedata[wname].loc[{"Zl": 0}] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
@@ -287,39 +292,17 @@ class Particle(Position):
                 assert isinstance(self.varray, np.ndarray)
                 if self.wname is not None:
                     assert isinstance(self.warray, np.ndarray)
+                return
             except (AttributeError, AssertionError):
-                self.uarray = np.array(self.ocedata[uname])
-                self.varray = np.array(self.ocedata[vname])
-                if self.wname is not None:
-                    self.warray = np.array(self.ocedata[wname])
-                    if self.dont_fly:
-                        # I think it's fine
-                        self.warray[0] = 0.0
-                # else:
-                #     self.warray = None
+                time_slice = slice(None)
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
-            if self.itmax != self.itmin:
-                self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
-                self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
-                if self.wname is not None:
-                    self.warray = np.array(
-                        self.ocedata[wname][self.itmin : self.itmax + 1]
-                    )
-                # else:
-                #     self.warray = None
-            else:
-                self.uarray = np.array(self.ocedata[uname][[self.itmin]])
-                self.varray = np.array(self.ocedata[vname][[self.itmin]])
-                if self.wname is not None:
-                    self.warray = np.array(self.ocedata[wname][[self.itmin]])
-                # else:
-                #     self.warray = None
-            if self.dont_fly:
-                if self.wname is not None:
-                    # I think it's fine
-                    self.warray[:, 0] = 0.0
+            time_slice = slice(self.itmin, self.itmax + 1)
+        self.uarray = np.array(self.ocedata[uname][time_slice])
+        self.varray = np.array(self.ocedata[vname][time_slice])
+        if self.wname is not None:
+            self.warray = np.array(self.ocedata[wname][time_slice])
 
     def get_vol(self):
         """Read in the volume of the cell.
