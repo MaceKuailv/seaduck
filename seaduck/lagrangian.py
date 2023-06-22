@@ -837,11 +837,8 @@ class Particle(Position):
         self._cross_cell_wall_rel()
 
     def deepcopy(self):
-        """Return a clone of the object.
-
-        The object is a Position object, and thus cannot move any more.
-        """
-        p = Position()
+        """Return a clone of the object."""
+        p = super().__new__(type(self))
         p.ocedata = self.ocedata
         p.N = self.N
         varsdict = vars(self)

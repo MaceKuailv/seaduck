@@ -113,8 +113,10 @@ class Position:
     To actually do interpolation, use from_latlon method to tell the ducks where they are.
     """
 
-    def __init__(self):
-        self.rel = RelCoord()
+    def __new__(cls, *arg, **kwarg):
+        new_position = object.__new__(cls)
+        new_position.rel = RelCoord()
+        return new_position
 
     def __getattr__(self, attr):
         if attr == "rel":
@@ -227,7 +229,6 @@ class Position:
             The selected Positions.
         """
         p = object.__new__(type(self))
-        p.rel = RelCoord()
         vardict = vars(self)
         keys = vardict.keys()
         for key in keys:
