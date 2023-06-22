@@ -286,16 +286,16 @@ class OceData:
 
         if way == "oceanparcel":
             for var in ["XC", "YC", "XG", "YG"]:
-                self[var] = np.array(self[var]).astype("float32")
+                self[var] = np.array(self[var], dtype="float32")
             for var in ["rA", "CS", "SN"]:
                 try:
-                    self[var] = np.array(self[var]).astype("float32")
+                    self[var] = np.array(self[var], dtype="float32")
                 except KeyError:
                     logging.info("no %s in dataset, skip", var)
                     self[var] = None
             try:
-                self.dX = np.array(self["dXG"]).astype("float32")
-                self.dY = np.array(self["dYG"]).astype("float32")
+                self.dX = np.array(self["dXG"], dtype="float32")
+                self.dY = np.array(self["dYG"], dtype="float32")
             except KeyError:
                 self.dX = None
                 self.dY = None
@@ -307,14 +307,14 @@ class OceData:
 
         if way == "local_cartesian":
             for var in ["XC", "YC", "CS", "SN"]:
-                self[var] = np.array(self[var]).astype("float32")
-            self.dX = np.array(self["dXG"]).astype("float32")
-            self.dY = np.array(self["dYG"]).astype("float32")
+                self[var] = np.array(self[var], dtype="float32")
+            self.dX = np.array(self["dXG"], dtype="float32")
+            self.dY = np.array(self["dYG"], dtype="float32")
 
             if not self.too_large:  # pragma: no cover
                 for var in ["XG", "YG", "dXC", "dYC", "rA"]:
                     try:
-                        self[var] = np.array(self[var]).astype("float32")
+                        self[var] = np.array(self[var], dtype="float32")
                     except KeyError:
                         logging.info("no %s in dataset, skip", var)
                         self[var] = None
@@ -325,23 +325,23 @@ class OceData:
                 logging.info("cKD created")
 
         if way == "rectilinear":
-            self.lon = np.array(self["lon"]).astype("float32")
-            self.lat = np.array(self["lat"]).astype("float32")
+            self.lon = np.array(self["lon"], dtype="float32")
+            self.lat = np.array(self["lat"], dtype="float32")
 
     def vgrid2array(self):
         """Extract the vertical center point grid data into numpy arrays."""
-        self.Z = np.array(self["Z"]).astype("float32")
+        self.Z = np.array(self["Z"], dtype="float32")
         try:
-            self.dZ = np.array(self["dZ"]).astype("float32")
+            self.dZ = np.array(self["dZ"], dtype="float32")
         except KeyError:
             self.dZ = np.diff(self.Z)
             self.dZ = np.append(self.dZ, self.dZ[-1])
 
     def vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
-        self.Zl = np.array(self["Zl"]).astype("float32")
+        self.Zl = np.array(self["Zl"], dtype="float32")
         try:
-            self.dZl = np.array(self["dZl"]).astype("float32")
+            self.dZl = np.array(self["dZl"], dtype="float32")
         except KeyError:
             if "Zp1" in self._ds.variables:
                 self.dZl = np.diff(np.array(self["Zp1"]))
