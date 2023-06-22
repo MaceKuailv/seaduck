@@ -561,7 +561,7 @@ def find_rel_h_rectilinear(x, y, lon, lat):
     ratio = 6371e3 * np.pi / 180
     ix, rx, dx, bx = find_rel_periodic(x, lon, 360.0)
     iy, ry, dy, by = find_rel_periodic(y, lat, 360.0)
-    dx = np.cos(y * np.pi / 180) * ratio * dx
+    dx = np.cos(by * np.pi / 180) * ratio * dx
     dy = ratio * dy
     face = None
     cs = np.ones_like(x)
