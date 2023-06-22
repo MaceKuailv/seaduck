@@ -168,7 +168,7 @@ def local_to_latlon(u, v, cs, sn):
 
 
 @compileable
-def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, bx, by, bzl):
+def rel2latlon(rx, ry, cs, sn, dx, dy, bx, by):
     """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
@@ -176,8 +176,7 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, bx, by, bzl):
     dlat = temp_x * sn + temp_y * cs
     lon = dlon + bx
     lat = dlat + by
-    dep = bzl + dzl * rzl
-    return lon, lat, dep
+    return lon, lat
 
 
 def create_tree(x, y, R=6371.0, leafsize=16):

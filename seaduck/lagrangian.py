@@ -672,34 +672,24 @@ class Particle(Position):
         return new_x, new_u
 
     def _sync_latlondep_before_cross(self):
+        if self.rzl_lin is not None:
+            self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
+        # Otherwise, keep depth the same.
         try:
             px, py = self.px, self.py
             w = self.get_f_node_weight()
             self.lon = np.einsum("nj,nj->n", w, px.T)
             self.lat = np.einsum("nj,nj->n", w, py.T)
-            if self.rzl_lin is not None:
-                self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         except AttributeError:
-            if self.rzl_lin is not None:
-                rzl_lin = self.rzl_lin
-                dzl_lin = self.dzl_lin
-                bzl_lin = self.bzl_lin
-            else:
-                rzl_lin = np.zeros_like(self.rx)
-                dzl_lin = np.zeros_like(self.rx)
-                bzl_lin = np.zeros_like(self.rx)
-            self.lon, self.lat, self.dep = rel2latlon(
+            self.lon, self.lat = rel2latlon(
                 self.rx,
                 self.ry,
-                rzl_lin,
                 self.cs,
                 self.sn,
                 self.dx,
                 self.dy,
-                dzl_lin,
                 self.bx,
                 self.by,
-                bzl_lin,
             )
 
     def analytical_step(self, tf):
