@@ -509,7 +509,7 @@ class Topology:
             2: np.array([0, -1]),
             3: np.array([0, 1]),
         }
-        naive_move = np.array([move_dic[i] for i in tend]).T.astype(int)
+        naive_move = np.array([move_dic[i] for i in tend], dtype=int).T
         inds[-2:] += naive_move
         cuvwg = kwarg.get("cuvwg", "C")
         illegal = self.check_illegal(inds, cuvwg=cuvwg)

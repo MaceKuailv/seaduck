@@ -121,8 +121,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         function to calculate the hotizontal interpolation/derivative
         weight
     """
-    xs = np.array(list(set(kernel.T[0]))).astype(float)
-    ys = np.array(list(set(kernel.T[1]))).astype(float)
+    xs = np.array(list(set(kernel.T[0])), dtype=float)
+    ys = np.array(list(set(kernel.T[1])), dtype=float)
 
     # if you the kernel is a line rather than a cross
     if len(xs) == 1:
@@ -149,8 +149,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
             y_poly.append(
                 list(combinations([i for i in ys if i != ay], len(ys) - 1 - order))
             )
-    x_poly = np.array(x_poly).astype(float)
-    y_poly = np.array(y_poly).astype(float)
+    x_poly = np.array(x_poly, dtype=float)
+    y_poly = np.array(y_poly, dtype=float)
 
     @compileable
     def the_interp_func(rx, ry):
@@ -335,8 +335,8 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
         function to calculate the hotizontal interpolation/derivative
         weight
     """
-    xs = np.array(list(set(kernel.T[0]))).astype(float)
-    ys = np.array(list(set(kernel.T[1]))).astype(float)
+    xs = np.array(list(set(kernel.T[0])), dtype=float)
+    ys = np.array(list(set(kernel.T[1])), dtype=float)
     xmaxorder = False
     ymaxorder = False
     if xorder < len(xs) - 1:
@@ -363,8 +363,8 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
         y_poly.append(
             list(combinations([i for i in ys if i != ay], len(ys) - 1 - yorder))
         )
-    x_poly = np.array(x_poly).astype(float)
-    y_poly = np.array(y_poly).astype(float)
+    x_poly = np.array(x_poly, dtype=float)
+    y_poly = np.array(y_poly, dtype=float)
 
     @compileable
     def the_square_func(rx, ry):
