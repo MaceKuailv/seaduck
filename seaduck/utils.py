@@ -341,7 +341,7 @@ def find_rel(
         rxs[i] = dx / darray[idx]
         dxs[i] = darray[idx]
         bxs[i] = bx
-    return ixs, rxs, dxs, bxs
+    return ixs.astype(int), rxs, dxs, bxs
 
 
 # Here are a few partial functions for find_rel
