@@ -416,29 +416,29 @@ class OceData:
     def find_rel_v(self, z):
         """Find the rel-coord based on vertical center grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Z)
-        return VRel(iz.astype(int), rz, dz, bz)
+        return VRel(iz, rz, dz, bz)
 
     def find_rel_v_lin(self, z):
         """Find the rel-coord based on vertical center grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Z, self.dZ)
-        return VLinRel(iz.astype(int), rz, dz, bz)
+        return VLinRel(iz, rz, dz, bz)
 
     def find_rel_vl(self, z):
         """Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Zl)
-        return VlRel(iz.astype(int), rz, dz, bz)
+        return VlRel(iz, rz, dz, bz)
 
     def find_rel_vl_lin(self, z):
         """Find the rel-coord based on vertical staggered grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl, dz_above_z=False)
-        return VlLinRel(iz.astype(int), rz, dz, bz)
+        return VlLinRel(iz, rz, dz, bz)
 
     def find_rel_t(self, t):
         """Find the rel-coord based on the temporal direction using the nearest neighbor scheme."""
         it, rt, dt, bt = find_rel_nearest(t, self.ts)
-        return TRel(it.astype(int), rt, dt, bt)
+        return TRel(it, rt, dt, bt)
 
     def find_rel_t_lin(self, t):
         """Find the rel-coord based on the temporal direction using the 2-point linear scheme."""
         it, rt, dt, bt = find_rel_time(t, self.ts)
-        return TLinRel(it.astype(int), rt, dt, bt)
+        return TLinRel(it, rt, dt, bt)
