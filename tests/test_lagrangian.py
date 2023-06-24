@@ -196,3 +196,17 @@ def test_abandon_ducks(ecco_p):
     ecco_p.izl_lin = (np.ones(N) * 50).astype(int)
     new_p = sd.get_masks.abandon_stuck(ecco_p)
     assert len(new_p.izl_lin) < N
+
+
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("seed", list(range(5)))
+def test_reproduce_latlon_oceanparcel(od, seed):
+    np.random.seed(seed)
+    x = np.random.uniform(-180, 180, 1)
+    y = np.random.uniform(-90, 90, 1)
+    t = sd.utils.convert_time("1992-02-01")
+    z = -5.0
+    rand_p = sd.Particle(x=x, y=y, z=z, t=t, data=od)
+    rand_p._sync_latlondep_before_cross()
+    assert np.allclose(rand_p.lon, x)
+    assert np.allclose(rand_p.lat, y)
