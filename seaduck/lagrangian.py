@@ -202,7 +202,7 @@ class Particle(Position):
     ):
         Position.__init__(self)
         self.from_latlon(**kwarg)
-        if self.ocedata.readiness["Zl"]:
+        if self.ocedata.readiness["Zl"] and kwarg.get("z") is not None:
             self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
         else:
             (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
