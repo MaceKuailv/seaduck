@@ -2,6 +2,7 @@ import copy
 
 import numpy as np
 import pytest
+from scipy.interpolate import interp1d
 
 import seaduck as sd
 from seaduck import utils
@@ -202,3 +203,61 @@ def test_partial_flatten():
     thing = np.array((3, 4, 5))
     ind = (thing, thing)
     sd.eulerian._partial_flatten(ind)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_wvel_quant_deepest(ds, od):
+    ind = (11, 75, 73)
+    face, iy, ix = ind
+
+    np.random.seed(20230625)
+    z = np.random.uniform(od.Zl[-1], 0, 5000)
+    x = od.XC[ind] * np.ones_like(z)
+    y = od.YC[ind] * np.ones_like(z)
+    np.ones_like(z)
+
+    vert_p = sd.Position().from_latlon(x=x, y=y, z=z, data=od)
+    assert vert_p.ix[0] == ix, "horizontal index does not match"
+    assert vert_p.iy[0] == iy, "horizontal index does not match"
+    seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.wknw)
+
+    wvel = interp1d(od.Zl, ds.WVELMASS1[:, face, iy, ix])
+    scipy_ans = wvel(z)
+
+    assert np.allclose(scipy_ans, seaduck_ans)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_dw_quant_deepest(ds, od):
+    ind = (11, 75, 73)
+    face, iy, ix = ind
+
+    np.random.seed(20230625)
+    z = np.random.uniform(od.Zl[-1], 0, 5000)
+    x = od.XC[ind] * np.ones_like(z)
+    y = od.YC[ind] * np.ones_like(z)
+    np.ones_like(z)
+
+    vert_p = sd.Position().from_latlon(x=x, y=y, z=z, data=od)
+    assert vert_p.ix[0] == ix, "horizontal index does not match"
+    assert vert_p.iy[0] == iy, "horizontal index does not match"
+    seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.dwknw)
+
+    # dw is going to be a stepwise function.
+    small_offset = 1e-12
+    dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
+    zinterp = [0]
+    dwinterp = [dw[0]]
+    for i, zl in enumerate(od.Zl[1:-1]):
+        zinterp.append(zl + small_offset)
+        dwinterp.append(dw[i])
+        zinterp.append(zl)
+        dwinterp.append(dw[i + 1])
+    zinterp.append(od.Zl[-1])
+    dwinterp.append(dw[-1])
+    dwvel = interp1d(zinterp, dwinterp)
+    scipy_ans = dwvel(z)
+
+    assert np.allclose(scipy_ans, seaduck_ans)
