@@ -39,7 +39,7 @@ t_bnds = np.array(
 
 @pytest.mark.parametrize("od,x,y,z,t", [("ecco", x, y, z, t)], indirect=["od"])
 @pytest.mark.parametrize(
-    "varList",
+    "var_list",
     [
         ["ETAN", "maskC"],
         "SALT",
@@ -47,14 +47,14 @@ t_bnds = np.array(
         {("UVELMASS", "VVELMASS"): (sd.KnW(), sd.KnW())},
     ],
 )
-def test_eulerian_oceinterp(od, varList, x, y, z, t):
-    ans = sd.OceInterp(od, varList, x, y, z, t)
+def test_eulerian_oceinterp(od, var_list, x, y, z, t):
+    ans = sd.OceInterp(od, var_list, x, y, z, t)
     assert isinstance(ans, list)
 
 
 @pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 def test_xarray_interp(ds):
-    ans = sd.OceInterp(ds, "ETAN", x, y, z, t)
+    ans = sd.OceInterp(ds, "ETAN", x, y, z, t, kernel_list=sd.KnW())
     assert isinstance(ans, list)
 
 
@@ -66,11 +66,15 @@ def test_diff_oceinterp(od):
         "inheritance": [[0, 1, 2, 3, 4, 5, 6, 7, 8]],
         "tkernel": "linear",
     }
-    sd.OceInterp(od, ("UVELMASS", "VVELMASS"), x, y, z, t, kernel_kwarg=kernel_kwarg)
+    ans = sd.OceInterp(
+        od, ("UVELMASS", "VVELMASS"), x, y, z, t, kernel_kwarg=kernel_kwarg
+    )
+    assert isinstance(ans[0], tuple)
+    assert isinstance(ans[0][0], np.ndarray)
 
 
 @pytest.mark.parametrize(
-    "od,varList,x,y,z,t,lagrangian,lagrange_kwarg",
+    "od,var_list,x,y,z,t,lagrangian,lagrange_kwarg",
     [
         (
             "ecco",
@@ -88,11 +92,11 @@ def test_diff_oceinterp(od):
 @pytest.mark.parametrize("return_pt_time", [True, False])
 @pytest.mark.filterwarnings("ignore::Warning")
 def test_largangian_oceinterp(
-    od, varList, x, y, z, t, lagrangian, return_pt_time, lagrange_kwarg
+    od, var_list, x, y, z, t, lagrangian, return_pt_time, lagrange_kwarg
 ):
-    sd.OceInterp(
+    ans = sd.OceInterp(
         od,
-        varList,
+        var_list,
         x,
         y,
         z,
@@ -101,10 +105,16 @@ def test_largangian_oceinterp(
         return_pt_time=return_pt_time,
         lagrange_kwarg=lagrange_kwarg,
     )
+    if return_pt_time:
+        ans = ans[1]
+        assert ans[0] is not None
+    assert isinstance(ans, list)
+    for i, var in enumerate(var_list):
+        assert isinstance(ans[i], list), f"{var} not in correct format"
 
 
 @pytest.mark.parametrize(
-    "varList,x,y,z,t,lagrangian,error",
+    "var_list,x,y,z,t,lagrangian,error",
     [
         (
             ["__particle.lat", "__particle.lon"],
@@ -126,14 +136,15 @@ def test_largangian_oceinterp(
         ),
         (None, x, y, z, t, False, ValueError),
         ([None], x, y, z, t, False, ValueError),
+        ("ETAN", x, y, z, 0, False, ValueError),
     ],
 )
 @pytest.mark.filterwarnings("ignore:invalid value encountered in divide")
 @pytest.mark.filterwarnings("ignore:divide by zero encountered in divide")
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_oceinterp_error(od, varList, x, y, z, t, lagrangian, error):
+def test_oceinterp_error(od, var_list, x, y, z, t, lagrangian, error):
     with pytest.raises(error):
-        sd.OceInterp(od, varList, x, y, z, t, lagrangian=lagrangian)
+        sd.OceInterp(od, var_list, x, y, z, t, lagrangian=lagrangian)
 
 
 @pytest.mark.parametrize("t", ["1992-02-01", np.datetime64("1992-02-01")])
@@ -145,3 +156,29 @@ def test_flexible_time_format(od, t, to_array):
     res = sd.OceInterp(od, "ETAN", x, y, z, t)
     assert ~(np.isnan(res[0]).any())
     assert isinstance(res[0], np.ndarray)
+
+
+@pytest.mark.parametrize(
+    "od,var_list",
+    [
+        (
+            "ecco",
+            ["__particle.raw", "__particle.lat"],
+        )
+    ],
+    indirect=["od"],
+)
+def test_lagrangian_warning(od, var_list):
+    with pytest.warns(UserWarning):
+        ans = sd.OceInterp(
+            od,
+            var_list,
+            x,
+            y,
+            z,
+            t,
+            lagrangian=True,
+            return_pt_time=False,
+            return_in_between=True,
+        )
+        assert isinstance(ans, list)
