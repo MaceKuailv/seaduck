@@ -13,12 +13,12 @@ lagrange_token = "__particle."
 
 def OceInterp(
     od,
-    varList,
+    var_list,
     x,
     y,
     z,
     t,
-    kernelList=None,
+    kernel_list=None,
     lagrangian=False,
     lagrange_kwarg={},
     update_stops="default",
@@ -35,9 +35,9 @@ def OceInterp(
     ----------
     od: OceInterp.OceData object or xarray.Dataset (limited support for netCDF Dataset)
         The dataset to work on.
-    varList: str or list
+    var_list: str or list
         A list of variable or pair of variables.
-    kernelList: OceInterp.KnW or list of OceInterp.KnW objects, optional
+    kernel_list: OceInterp.KnW or list of OceInterp.KnW objects, optional
         Indicates which kernel to use for each interpolation.
     x, y, z: numpy.ndarray, float
         The location of the particles, where x and y are in degrees,
@@ -62,32 +62,34 @@ def OceInterp(
     if not isinstance(od, OceData):
         od = OceData(od)
 
-    if isinstance(varList, dict):
-        kernelList = list(varList.values())
-        varList = list(varList.keys())
-    elif isinstance(varList, str):
-        varList = [varList]
-    elif isinstance(varList, tuple):
-        varList = [varList]
-    elif isinstance(varList, list):
+    if isinstance(var_list, dict):
+        kernel_list = list(var_list.values())
+        var_list = list(var_list.keys())
+    elif isinstance(var_list, str):
+        var_list = [var_list]
+    elif isinstance(var_list, tuple):
+        var_list = [var_list]
+    elif isinstance(var_list, list):
         pass
     else:
-        raise ValueError("varList type not recognized.")
-    if isinstance(kernelList, list):
+        raise ValueError("var_list type not recognized.")
+    if isinstance(kernel_list, list):
         pass
-    elif kernelList is None:
-        kernelList = []
+    elif kernel_list is None:
+        kernel_list = []
         the_kernel = KnW(**kernel_kwarg)
-        for i in varList:
+        for i in var_list:
             if isinstance(i, str):
-                kernelList.append(the_kernel)
+                kernel_list.append(the_kernel)
             elif isinstance(i, tuple):
                 if kernel_kwarg != {}:
-                    kernelList.append((the_kernel, the_kernel))
+                    kernel_list.append((the_kernel, the_kernel))
                 else:
-                    kernelList.append((uknw, vknw))
+                    kernel_list.append((uknw, vknw))
             else:
-                raise ValueError("varList need to be made up of string or tuples")
+                raise ValueError(
+                    "members of var_list need to be made up of string or tuples"
+                )
     if isinstance(t, np.ndarray):
         if np.issubdtype(t.dtype, np.datetime64) or np.issubdtype(t.dtype, str):
             t = np.array([convert_time(some_t) for some_t in t])
@@ -96,12 +98,12 @@ def OceInterp(
     if not lagrangian:
         pt = Position()
         pt.from_latlon(x=x, y=y, z=z, t=t, data=od)
-        for i, var in enumerate(varList):
+        for i, var in enumerate(var_list):
             if lagrange_token in var:
                 raise AttributeError(
                     "__particle variables is only available for Lagrangian Particles"
                 )
-        to_return = pt.interpolate(varList, kernelList)
+        to_return = pt.interpolate(var_list, kernel_list)
         return to_return
 
     else:
@@ -120,7 +122,7 @@ def OceInterp(
             t_nec, update_stops=update_stops, return_in_between=return_in_between
         )
         to_return = []
-        for i, var in enumerate(varList):
+        for i, var in enumerate(var_list):
             if var == lagrange_token + "raw":
                 to_return.append(raw)
             elif lagrange_token in var:
@@ -131,7 +133,7 @@ def OceInterp(
             else:
                 sublist = []
                 for snap in raw:
-                    sublist.append(snap.interpolate(var, kernelList[i]))
+                    sublist.append(snap.interpolate(var, kernel_list[i]))
                 to_return.append(sublist)
 
         if return_pt_time:
