@@ -48,7 +48,14 @@ t_bnds = np.array(
     ],
 )
 def test_eulerian_oceinterp(od, varList, x, y, z, t):
-    sd.OceInterp(od, varList, x, y, z, t)
+    ans = sd.OceInterp(od, varList, x, y, z, t)
+    assert isinstance(ans, list)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+def test_xarray_interp(ds):
+    ans = sd.OceInterp(ds, "ETAN", x, y, z, t)
+    assert isinstance(ans, list)
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)

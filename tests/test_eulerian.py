@@ -265,7 +265,7 @@ def test_dw_quant_deepest(ds, od):
     assert vert_p.iy[0] == iy, "horizontal index does not match"
     seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.dwknw)
 
-    # dw is going to be a stepwise function.
+    # dw is a stepwise function.
     small_offset = 1e-12
     dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
     zinterp = [0]
@@ -299,7 +299,7 @@ def test_dw_quant_random(ds, od, seed):
     iy = vert_p.iy[0]
     ix = vert_p.ix[0]
 
-    # dw is going to be a stepwise function.
+    # dw is a stepwise function.
     small_offset = 1e-12
     dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
     zinterp = [0]
