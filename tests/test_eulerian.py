@@ -38,6 +38,8 @@ def ep():
 def test_tz_not_None(od):
     ap = sd.Position()
     ap.from_latlon(x=-37.5, y=-60.4586420059204, z=-9.0, t=698155200.0, data=od)
+    assert "{" in repr(ap.rel)
+    assert isinstance(ap.rel, sd.ocedata.RelCoord)
 
 
 @pytest.mark.parametrize("y,t", [(10.4586420059204, None), (None, 698155200.0)])
