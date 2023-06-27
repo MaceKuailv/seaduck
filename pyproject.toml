@@ -39,7 +39,8 @@ module = [
   "matplotlib.*",
   "numba",
   "pooch",
-  "scipy"
+  "scipy",
+  "scipy.interpolate"
 ]
 
 [tool.ruff]

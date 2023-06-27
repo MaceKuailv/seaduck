@@ -38,7 +38,7 @@ def ep():
 def test_tz_not_None(od):
     ap = sd.Position()
     ap.from_latlon(x=-37.5, y=-60.4586420059204, z=-9.0, t=698155200.0, data=od)
-    assert "{" in repr(ap.rel)
+    assert "{" in repr(getattr(ap, "rel"))
     assert isinstance(ap.rel, sd.ocedata.RelCoord)
 
 
