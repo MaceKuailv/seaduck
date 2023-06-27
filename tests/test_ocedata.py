@@ -18,19 +18,20 @@ def incomplete_data(request):
         return ds_out
     elif request.param == "drop_dyG":
         return ds.drop_vars(["dyG"])
+    elif request.param == "drop_drF":
+        return ds.drop_vars(["drF"])
+    elif request.param == "drop_drF_and_Zp1":
+        return ds.drop_vars(["drF", "Zp1"])
     elif request.param == "drop_time_midp":
         return ds.drop_vars(
             ["time_midp"] + [i for i in ds.data_vars if "time_midp" in ds[i].dims]
         )
 
 
-@pytest.fixture
-def test_create_tree_cartesian(xr_curv):
-    sd.utils.create_tree(xr_curv["XC"], xr_curv["YC"], R=None)
-
-
 @pytest.mark.parametrize(
-    "incomplete_data", ["drop_YG", "drop_dyG", "drop_time_midp"], indirect=True
+    "incomplete_data",
+    ["drop_YG", "drop_dyG", "drop_time_midp", "drop_drF", "drop_drF_and_Zp1"],
+    indirect=True,
 )
 def test_incomplete_data(incomplete_data):
     oo = sd.OceData(incomplete_data)
@@ -64,8 +65,11 @@ def test_manual_alias(ds):
             od.show_alias()
 
 
-@pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_add_missing_grid(od):
+@pytest.mark.parametrize("ds", ["curv"], indirect=True)
+def test_add_missing_grid(ds):
+    od = sd.OceData(ds)
+    od._add_missing_cs_sn()
+    assert isinstance(od["CS"], np.ndarray)
     # TODO
     od._add_missing_grid()
 
@@ -86,6 +90,7 @@ def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon):
     lat = np.array([lat])
     hrel = tub.find_rel_h(lon, lat)
     assert isinstance(hrel, sd.ocedata.HRel)
+    assert "=" in repr(hrel)
     face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
     new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
     assert np.allclose(new_lon, lon)

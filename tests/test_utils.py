@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import xarray as xr
+from scipy import spatial
 
 import seaduck as sd
 
@@ -114,6 +115,15 @@ def test_find_ind(value, array, ascending, above, peri, ans):
 
 
 @pytest.mark.parametrize(
+    "value, array, ascending",
+    [(0.5, ascend, 1), (-2000, dscend, -1)],
+)
+def test_find_ind_out_of_bound(value, array, ascending):
+    with pytest.raises(ValueError):
+        ix, bx = sd.utils.find_ind(array, value, ascending=ascending, above=True)
+
+
+@pytest.mark.parametrize(
     "value,array,darray,ascending,above,peri, dx_right,ans",
     [
         (10, ascend, darray, 1, True, None, False, 0.9),
@@ -136,3 +146,9 @@ def test_find_rel(value, array, darray, ascending, above, peri, dx_right, ans):
     )
     assert rxs[0] == ans
     assert np.issubdtype(ixs.dtype, int)
+
+
+@pytest.mark.parametrize("ds", ["curv", "ecco"], indirect=True)
+def test_create_tree_cartesian(ds):
+    tree = sd.utils.create_tree(ds["XC"], ds["YC"], R=None)
+    assert isinstance(tree, spatial.cKDTree)

@@ -92,15 +92,13 @@ class RelCoord(dict):
             __slots__ = ()
             _fields = fields
 
-            def __init__(self, *args, **kwargs):
+            def __init__(self, *args):
                 if len(args) > len(fields):
                     raise TypeError(
                         f"{class_name} takes {len(fields)} positional arguments"
                         f" but {len(args)} were given"
                     )
                 for name, value in zip(fields, args):
-                    setattr(self, name, value)
-                for name, value in kwargs.items():
                     setattr(self, name, value)
 
             @classmethod
@@ -267,7 +265,8 @@ class OceData:
 
     def _add_missing_cs_sn(self):
         try:
-            assert (self["SN"] is not None) and (self["CS"] is not None)
+            assert self["SN"] is not None
+            assert self["CS"] is not None
         except (AttributeError, AssertionError):
             cs, sn = missing_cs_sn(self)
             self["CS"] = cs

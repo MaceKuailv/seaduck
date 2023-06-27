@@ -538,7 +538,7 @@ class Topology:
         """
         (fc1, _, _) = ind1
         (fc2, _, _) = ind2
-        Non_normal_connection = ValueError(
+        non_normal_connection = ValueError(
             f"The two face connecting the indexes {ind1},{ind2}"
             " are not connected in a normal way"
         )
@@ -565,7 +565,7 @@ class Topology:
                 elif d2to1 == 2:
                     return "U", to_return
                 else:
-                    raise Non_normal_connection
+                    raise non_normal_connection
             elif d2to1 in [0, 3]:
                 to_return = ind1
                 if d1to2 == 1:
@@ -573,9 +573,9 @@ class Topology:
                 elif d1to2 == 2:
                     return "U", to_return
                 else:
-                    raise Non_normal_connection
+                    raise non_normal_connection
             else:
-                raise Non_normal_connection
+                raise non_normal_connection
 
     def _ind_tend_U(self, ind, tend):
         """Move an U-index in a direction.
