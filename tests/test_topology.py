@@ -80,7 +80,8 @@ def test_llc_ind_tend(tp, ind, tend, result):
 @pytest.mark.parametrize("tend", [0, 1, 2, 3])
 @pytest.mark.parametrize("tp", ["aviso", "rect"], indirect=True)
 def test_boxish_ind_tend(tp, tend):
-    tp.ind_tend((0, 0), tend)
+    ind = tp.ind_tend((0, 0), tend)
+    assert len(ind) == 2
 
 
 @pytest.mark.parametrize("tend", [0, 3])
@@ -125,7 +126,8 @@ def test_unable_to_cereate(ds):
 @pytest.mark.parametrize("ds", ["aviso"], indirect=True)
 def test_create_without_time(ds):
     temp = ds.drop_vars("time")
-    Topology(temp)
+    tp = Topology(temp)
+    assert tp.itmax == 0
 
 
 @pytest.mark.parametrize(
@@ -143,7 +145,8 @@ def test_other_errors(tp, func, args, kwargs, error):
 
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_ind_moves_with1illegal(tp):
-    tp.ind_moves((1, -1, 89), [0, 0])
+    res = tp.ind_moves((1, -1, 89), [0, 0])
+    assert res == (-1, -1, -1)
 
 
 @pytest.mark.parametrize(
@@ -218,7 +221,8 @@ def test_mutual_face_error(transitive, face, nface):
 
 def test_uv_mask():
     faces = np.array([1, 1, 1, 1, 4])
-    llc_get_uv_mask_from_face(faces)
+    uu, uv, vu, vv = llc_get_uv_mask_from_face(faces)
+    assert (uu == 1).all()
 
 
 @pytest.mark.parametrize("tp", ["rect"], indirect=True)
@@ -232,52 +236,3 @@ def test_uv_mask_error(tp):
 def test_wall_between_itself(tp):
     with pytest.raises(IndexError):
         tp._find_wall_between((1, 14, 14), (1, 14, 14))
-
-
-# def test_fatten_ind_h_ecco():
-#     faces = np.array([0, 0])
-#     iys = np.array([45, 46])
-#     ixs = np.array([45, 46])
-#     tp = Topology(ecco)
-#     nface, niy, nix = kw.fatten_ind_h(faces, iys, ixs, tp)
-#     assert nface.dtype == "int"
-#     assert nface.shape == (2, 9)
-
-
-# @pytest.mark.parametrize("od", [rect, curv])
-# def test_fatten_ind_h_other(od):
-#     faces = None
-#     iys = np.array([5, 46])
-#     ixs = np.array([5, 6])
-#     tp = Topology(od)
-#     nface, niy, nix = kw.fatten_ind_h(faces, iys, ixs, tp)
-#     assert nface is None
-#     assert nix.dtype == "int"
-#     assert niy.shape == (2, 9)
-
-
-# def test_fatten_ind_3d_ecco():
-#     izs = np.array([9, 10])
-#     faces = np.array([0, 0])
-#     iys = np.array([45, 46])
-#     ixs = np.array([45, 46])
-#     tp = Topology(ecco)
-#     niz, nface, niy, nix = kw.fatten_ind_3d(izs, faces, iys, ixs, tp)
-#     assert niz.dtype == "int"
-#     assert niz.shape == (2, 18)
-
-
-# @pytest.mark.parametrize("od", [rect, curv])
-# def test_fatten_ind_3d_other(od):
-#     izs = np.array([9, 10])
-#     faces = None
-#     iys = np.array([5, 46])
-#     ixs = np.array([5, 46])
-#     tp = Topology(od)
-#     niz, nface, niy, nix = kw.fatten_ind_3d(izs, faces, iys, ixs, tp)
-#     assert niz.dtype == "int"
-#     assert niz.shape == (2, 18)
-
-
-# if __name__ == '__main__':
-#     test_fatten_ind_3d()
