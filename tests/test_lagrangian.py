@@ -64,7 +64,8 @@ def test_to_list_of_time(p):
     stops, raw = p.to_list_of_time(
         normal_stops=normal_stops, update_stops=[normal_stops[1]]
     )
-    assert sd.get_masks.which_not_stuck(p).all()
+    with pytest.warns(UserWarning):
+        assert sd.get_masks.which_not_stuck(p).all()
 
 
 def test_subset_update(p):
@@ -103,7 +104,8 @@ def test_callback(od):
         callback=lambda pt: pt.lon > -14.01,
     )
     curv_p.to_list_of_time(normal_stops=[od.ts[0], od.ts[-1]], update_stops=[])
-    assert sd.get_masks.which_not_stuck(curv_p).all()
+    with pytest.warns(UserWarning):
+        assert sd.get_masks.which_not_stuck(curv_p).all()
 
 
 def test_note_taking_error(p):
@@ -139,6 +141,7 @@ def test_update_w_array(ecco_p, od):
 
     ecco_p.update_uvw_array()
     assert len(ecco_p.uarray.shape) == 4
+    ecco_p.update_uvw_array()
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
@@ -166,6 +169,8 @@ def test_wall_crossing_no_face(od):
         wname="W",
         transport=True,
     )
+    curv_p._cross_cell_wall_read()
+    assert isinstance(curv_p.cs, np.ndarray)
     curv_p._cross_cell_wall_rel()
     assert (~np.isnan(curv_p.rx)).any()
 
