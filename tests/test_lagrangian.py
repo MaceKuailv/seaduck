@@ -57,16 +57,14 @@ normal_stops = np.linspace(t[0], tf, 5)
 
 def test_vol_mode(ecco_p):
     stops, raw = ecco_p.to_list_of_time(normal_stops=[t[0], tf])
+    assert sd.get_masks.which_not_stuck(ecco_p).all()
 
 
 def test_to_list_of_time(p):
     stops, raw = p.to_list_of_time(
         normal_stops=normal_stops, update_stops=[normal_stops[1]]
     )
-
-
-def test_analytical_step(p):
-    p.analytical_step(10.0)
+    assert sd.get_masks.which_not_stuck(p).all()
 
 
 def test_subset_update(p):
@@ -105,6 +103,7 @@ def test_callback(od):
         callback=lambda pt: pt.lon > -14.01,
     )
     curv_p.to_list_of_time(normal_stops=[od.ts[0], od.ts[-1]], update_stops=[])
+    assert sd.get_masks.which_not_stuck(curv_p).all()
 
 
 def test_note_taking_error(p):
@@ -125,6 +124,7 @@ def test_time_out_of_bound_error(ecco_p):
 def test_multidim_uvw_array(ecco_p):
     ecco_p.it[0] += 1
     ecco_p.update_uvw_array()
+    assert ecco_p.uarray.shape[0] == 2
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
@@ -138,6 +138,7 @@ def test_update_w_array(ecco_p, od):
     ecco_p.wname = "w0"
 
     ecco_p.update_uvw_array()
+    assert len(ecco_p.uarray.shape) == 4
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
@@ -147,6 +148,7 @@ def test_wall_crossing(ecco_p, od):
     ecco_p.ocedata.readiness["h"] = "local_cartesian"
 
     ecco_p._cross_cell_wall_rel()
+    assert (~np.isnan(ecco_p.ry)).any()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
@@ -165,6 +167,7 @@ def test_wall_crossing_no_face(od):
         transport=True,
     )
     curv_p._cross_cell_wall_rel()
+    assert (~np.isnan(curv_p.rx)).any()
 
 
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
@@ -210,3 +213,46 @@ def test_reproduce_latlon_oceanparcel(od, seed):
     rand_p._sync_latlondep_before_cross()
     assert np.allclose(rand_p.lon, x)
     assert np.allclose(rand_p.lat, y)
+
+
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("seed", [678, 15, 7])
+def test_get_u_du_quant(seed, od):
+    np.random.seed(seed)
+    ind = tuple(np.random.randint([13, 89, 89]))
+    face, iy, ix = ind
+    # without boundary points
+    x = od.XC[ind]
+    y = od.YC[ind]
+    t = tf
+    z = np.random.uniform(0, -3000)
+    rand_p = sd.Particle(x=x, y=y, z=z, t=t, data=od)
+    u = rand_p.u * rand_p.dx
+    du = rand_p.du * rand_p.dx
+    v = rand_p.v * rand_p.dy
+    dv = rand_p.dv * rand_p.dy
+    w = rand_p.w * rand_p.dzl_lin
+    dw = rand_p.dw * rand_p.dzl_lin
+
+    it = rand_p.it[0]
+    iz = rand_p.izl_lin[0] - 1
+    u1 = float(od["UVELMASS"][it, iz, face, iy, ix])
+    u2 = float(od["UVELMASS"][it, iz, face, iy, ix + 1])
+    v1 = float(od["VVELMASS"][it, iz, face, iy, ix])
+    v2 = float(od["VVELMASS"][it, iz, face, iy + 1, ix])
+    w1 = float(od["WVELMASS"][it, iz + 1, face, iy, ix])
+    w2 = float(od["WVELMASS"][it, iz, face, iy, ix])
+    rx = rand_p.rx[0]
+    ry = rand_p.ry[0]
+    rz = rand_p.rzl_lin[0] - 0.5
+    ushould = (0.5 + rx) * u2 + (0.5 - rx) * u1
+    vshould = (0.5 + ry) * v2 + (0.5 - ry) * v1
+    wshould = (0.5 + rz) * w2 + (0.5 - rz) * w1
+
+    assert u1 != 0
+    assert np.allclose(u2 - u1, du, atol=1e-18)
+    assert np.allclose(v2 - v1, dv, atol=1e-18)
+    assert np.allclose(w2 - w1, dw, atol=1e-18)
+    assert np.allclose(ushould, u, atol=1e-18)
+    assert np.allclose(vshould, v, atol=1e-18)
+    assert np.allclose(wshould, w, atol=1e-18)

@@ -164,13 +164,13 @@ class Position:
         if any(i != self.N for i in length if i > 1):
             raise ValueError("Shapes of input coordinates are not compatible")
 
-        if isinstance(x, float):
+        if isinstance(x, (int, float, np.floating)):
             x = np.ones(self.N, float) * x
-        if isinstance(y, float):
+        if isinstance(y, (int, float, np.floating)):
             y = np.ones(self.N, float) * y
-        if isinstance(z, float):
+        if isinstance(z, (int, float, np.floating)):
             z = np.ones(self.N, float) * z
-        if isinstance(t, float):
+        if isinstance(t, (int, float, np.floating)):
             t = np.ones(self.N, float) * t
 
         for thing in [x, y, z, t]:
@@ -181,7 +181,7 @@ class Position:
         if (x is not None) and (y is not None):
             self.lon = copy.deepcopy(x)
             self.lat = copy.deepcopy(y)
-            self.rel.update(self.ocedata.find_rel_h(x, y))
+            self.rel.update(self.ocedata.find_rel_h(self.lon, self.lat))
         else:
             self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None

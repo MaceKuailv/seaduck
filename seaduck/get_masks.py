@@ -218,10 +218,13 @@ def get_masked(od, ind, cuvwg="C"):
 
 def which_not_stuck(p):
     """Investigate which points are in land mask."""
+    ind = []
+    if p.izl_lin is not None:
+        ind.append(p.izl_lin - 1)
     if p.face is not None:
-        ind = (p.izl_lin - 1, p.face, p.iy, p.ix)
-    else:
-        ind = (p.izl_lin - 1, p.iy, p.ix)
+        ind.append(p.face)
+    ind += [p.iy, p.ix]
+    ind = tuple(ind)
     return get_masked(p.ocedata, ind).astype(bool)
 
 
