@@ -30,10 +30,13 @@ def test_not_the_same(masks):
     assert not np.allclose(maskC, maskW)
 
 
-@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
-def test_repeated_get_mask_array(ds):
-    od = sd.OceData(ds)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_repeated_get_mask_array(od):
+    a_mask = gm.get_masked(od, (1, 1, 1), cuvwg="U")
+    assert a_mask[0] == 1
+    od._ds = od._ds.drop_vars(["maskU"])
     _ = gm.get_mask_arrays(od)
+    assert "maskV" in od._ds.keys()
     assert isinstance(od["maskU"], xr.DataArray)
     _ = gm.get_mask_arrays(od)
 
