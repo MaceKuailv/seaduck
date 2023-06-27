@@ -46,6 +46,10 @@ def test_tz_not_None(od):
 def test_xyt_is_None(od, y, t):
     ap = sd.Position()
     ap.from_latlon(x=-37.5, y=y, z=-9.0, t=t, data=od)
+    if y is None:
+        assert ap.rx is None
+    if t is None:
+        assert ap.rt is None
 
 
 @pytest.mark.parametrize(
@@ -57,12 +61,16 @@ def test_xyt_is_None(od, y, t):
     ],
 )
 def test_fatten(ep, knw, required):
-    ep.fatten(knw, required=required)
+    fattened_inds = ep.fatten(knw, required=required)
+    assert isinstance(fattened_inds[0], np.ndarray)
+    assert len(fattened_inds[0].shape) > 1
 
 
 @pytest.mark.parametrize("varname,knw", [("WVELMASS", uknw), ("UVELMASS", wknw)])
 def test_interp_vertical(ep, varname, knw):
-    ep.interpolate(varname, knw)
+    res = ep.interpolate(varname, knw)
+    assert isinstance(res, np.ndarray)
+    assert len(res.shape) == 1
 
 
 def test_interp_with_NoneZ(ep):
@@ -72,11 +80,13 @@ def test_interp_with_NoneZ(ep):
     wwknw.ignore_mask = False
     vvknw.ignore_mask = False
 
-    ep.interpolate(["UVELMASS", "WVELMASS", "VVELMASS"], [uuknw, wwknw, vvknw])
+    res = ep.interpolate(["UVELMASS", "WVELMASS", "VVELMASS"], [uuknw, wwknw, vvknw])
 
     uuknw.ignore_mask = True
     wwknw.ignore_mask = True
     vvknw.ignore_mask = True
+
+    assert isinstance(res, list)
 
 
 def test_no_face_with_mask(ep):
@@ -99,18 +109,20 @@ def test_no_face_with_mask(ep):
     neo_transform_lookup = {}
     for key in transform_lookup.keys():
         neo_transform_lookup[key] = None
-    ep._mask_value_and_register(
+    mask_dict = ep._mask_value_and_register(
         index_lookup, neo_transform_lookup, hash_mask, hash_index, main_dict
     )
+    assert bool(mask_dict)
 
 
 def test_dict_input(ep):
-    ep._register_interpolation_input(
+    registered = ep._register_interpolation_input(
         "SALT",
         {"SALT": uknw},
         prefetched={"SALT": prefetched},
         i_min={"SALT": (1, 0, 0, 0, 0)},
     )
+    assert len(registered) == 8
 
 
 @pytest.mark.parametrize(
@@ -124,9 +136,10 @@ def test_diff_prefetched(ep, prefetched, varname, knw, num_prefetched):
     prefetch = prefetched
     if num_prefetched == "two":
         prefetch = (prefetch, prefetch)
-    ep._register_interpolation_input(
+    registered = ep._register_interpolation_input(
         varname, knw, prefetched=prefetch, i_min={"SALT": (1, 0, 0, 0, 0)}
     )
+    assert len(registered) == 8
 
 
 @pytest.mark.parametrize(
@@ -195,15 +208,16 @@ def test_fatten_none(ep):
     ep.izl = None
     ep.iz = None
 
-    ep.fatten_v(wknw)
-    ep.fatten_vl(wknw)
-    ep.fatten_t(wknw)
+    assert ep.fatten_v(wknw) is None
+    assert ep.fatten_vl(wknw) is None
+    assert ep.fatten_t(wknw) is None
 
 
 def test_partial_flatten():
     thing = np.array((3, 4, 5))
     ind = (thing, thing)
-    sd.eulerian._partial_flatten(ind)
+    flattened = sd.eulerian._partial_flatten(ind)
+    assert flattened[0].shape == (3, 1)
 
 
 @pytest.mark.parametrize("ds", ["ecco"], indirect=True)
