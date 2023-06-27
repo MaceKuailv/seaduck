@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import xarray as xr
 
 import seaduck as sd
 import seaduck.get_masks as gm
@@ -27,6 +28,14 @@ def test_not_the_same(masks):
     assert not np.allclose(maskC, maskU)
     assert not np.allclose(maskC, maskV)
     assert not np.allclose(maskC, maskW)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+def test_repeated_get_mask_array(ds):
+    od = sd.OceData(ds)
+    _ = gm.get_mask_arrays(od)
+    assert isinstance(od["maskU"], xr.DataArray)
+    _ = gm.get_mask_arrays(od)
 
 
 @pytest.mark.parametrize("od", ["rect", "curv"], indirect=True)
