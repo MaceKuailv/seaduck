@@ -38,7 +38,6 @@ def test_repeated_get_mask_array(od):
     _ = gm.get_mask_arrays(od)
     assert "maskV" in od._ds.keys()
     assert isinstance(od["maskU"], xr.DataArray)
-    _ = gm.get_mask_arrays(od)
 
 
 @pytest.mark.parametrize("od", ["rect", "curv"], indirect=True)

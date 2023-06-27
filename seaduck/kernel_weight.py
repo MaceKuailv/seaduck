@@ -722,8 +722,8 @@ class KnW:
         if not type_same:
             raise TypeError("the argument is not a KnW object")
         try:
-            return (self.kernel == other.kernel).all()
-        except AttributeError:
+            return np.allclose(self.kernel, other.kernel)
+        except (ValueError, AttributeError):
             return False
 
     def same_size(self, other):
@@ -738,9 +738,7 @@ class KnW:
         type_same = isinstance(other, type(self))
         if not type_same:
             return False
-        shpe_same = (
-            self.kernel == other.kernel
-        ).all() and self.inheritance == other.inheritance
+        shpe_same = self.same_hsize(other) and self.inheritance == other.inheritance
         diff_same = (
             (self.hkernel == other.hkernel)
             and (self.vkernel == other.vkernel)

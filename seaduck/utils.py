@@ -199,9 +199,9 @@ def create_tree(x, y, R=6371.0, leafsize=16):
     # Stack
     rid_value = 777777
     if isinstance(x, xr.DataArray):
-        x = x.stack(points=x.dims).fillna(rid_value).data
-        y = y.stack(points=y.dims).fillna(rid_value).data
-        z = z.stack(points=z.dims).fillna(rid_value).data
+        x = x.fillna(rid_value).data.ravel()
+        y = y.fillna(rid_value).data.ravel()
+        z = z.fillna(rid_value).data.ravel()
     elif isinstance(x, np.ndarray):
         x = x.ravel()
         np.nan_to_num(x.ravel(), nan=rid_value, copy=False)
@@ -211,7 +211,7 @@ def create_tree(x, y, R=6371.0, leafsize=16):
         np.nan_to_num(z.ravel(), nan=rid_value, copy=False)
 
     # Construct KD-tree
-    tree = spatial.cKDTree(np.column_stack((x, y, z)), leafsize=leafsize)
+    tree = spatial.cKDTree(np.vstack((x, y, z)).T, leafsize=leafsize)
 
     return tree
 
