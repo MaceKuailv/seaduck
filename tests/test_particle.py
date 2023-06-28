@@ -16,7 +16,7 @@ def one_p():
     )
 
 
-def not_out_of_bound_in_analytical_step(new_p, tf, tol=1e-4):
+def not_out_of_bound_in_analytical_step(new_p, tf=1e80, tol=1e-4):
     u_list, du_list, pos_list = new_p._extract_velocity_position()
     ts = sd.lagrangian.time2wall(pos_list, u_list, du_list)
     tend, t_event = sd.lagrangian.which_early(tf, ts)
@@ -25,7 +25,7 @@ def not_out_of_bound_in_analytical_step(new_p, tf, tol=1e-4):
         try:
             assert not np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any()
         except AssertionError:
-            where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
+            where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0][0]
             raise ValueError(
                 f"Particle way out of bound."
                 # f"tend = {tend[where]},"
@@ -35,6 +35,7 @@ def not_out_of_bound_in_analytical_step(new_p, tf, tol=1e-4):
                 f"start with v = {new_p.v[where]}, dv = {new_p.dv[where]}, y={new_p.ry[where]}"
                 f"start with w = {new_p.w[where]}, dw = {new_p.dv[where]}, z={new_p.rzl_lin[where]}"
             )
+    return tend[0]
 
 
 def test_reproduce_issue55(one_p):
@@ -47,5 +48,61 @@ def test_reproduce_issue55(one_p):
     one_p.w[:] = 0.0
     one_p.dw[:] = -2.8246484204894833e-06
     one_p.rzl_lin[:] = 0.5 + 0.3454546420042159
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    assert tend != 6
 
-    not_out_of_bound_in_analytical_step(one_p, 10799.999999993917)
+
+@pytest.mark.parametrize("seed", [43, 20, 628])
+def test_underflow_du(one_p, seed):
+    (
+        one_p.u,
+        one_p.du,
+        one_p.rx,
+        one_p.v,
+        one_p.dv,
+        one_p.ry,
+        one_p.w,
+        one_p.dw,
+        one_p.rzl_lin,
+    ) = (np.array([i]) for i in np.random.uniform(-0.5, 0.5, 9))
+
+    one_p.rzl_lin += 0.5
+
+    one_p.u /= 1e5
+    one_p.v /= 1e5
+    one_p.w /= 1e5
+
+    one_p.du /= 1e10
+    one_p.dv /= 1e10
+    one_p.dw /= 1e10
+
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    assert tend != 6
+
+
+@pytest.mark.parametrize("seed", [432, 320, 60288])
+def test_underflow_u(one_p, seed):
+    (
+        one_p.u,
+        one_p.du,
+        one_p.rx,
+        one_p.v,
+        one_p.dv,
+        one_p.ry,
+        one_p.w,
+        one_p.dw,
+        one_p.rzl_lin,
+    ) = (np.array([i]) for i in np.random.uniform(-0.5, 0.5, 9))
+
+    one_p.rzl_lin += 0.5
+
+    one_p.u /= 1e10
+    one_p.v /= 1e10
+    one_p.w /= 1e10
+
+    one_p.du /= 1e5
+    one_p.dv /= 1e5
+    one_p.dw /= 1e5
+
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    assert tend != 6
