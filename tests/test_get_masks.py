@@ -1,17 +1,17 @@
 import numpy as np
 import pytest
+import xarray as xr
 
 import seaduck as sd
 import seaduck.get_masks as gm
 from seaduck import utils
-from seaduck.topology import Topology
 
 
 # TODO: have a dataset that actually has maskC and is also not ECCO in the test datasets
 @pytest.fixture
 def masks():
     ds = utils.get_dataset("ecco")
-    return gm.get_masks(sd.OceData(ds), Topology(ds))
+    return gm.get_mask_arrays(sd.OceData(ds))
 
 
 def test_maskC_contains_others(masks):
@@ -30,15 +30,25 @@ def test_not_the_same(masks):
     assert not np.allclose(maskC, maskW)
 
 
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_repeated_get_mask_array(od):
+    a_mask = gm.get_masked(od, (1, 1, 1), cuvwg="U")
+    assert a_mask[0] == 1
+    od._ds = od._ds.drop_vars(["maskU"])
+    _ = gm.get_mask_arrays(od)
+    assert "maskV" in od._ds.keys()
+    assert isinstance(od["maskU"], xr.DataArray)
+
+
 @pytest.mark.parametrize("od", ["rect", "curv"], indirect=True)
 def test_without_maskC(od):
-    with pytest.warns(Warning):
-        _, maskU, *_ = gm.get_masks(od, od.tp)
+    with pytest.warns(UserWarning):
+        _, maskU, *_ = gm.get_mask_arrays(od)
     assert maskU.all()
 
 
 @pytest.mark.parametrize("od", ["rect", "curv"], indirect=True)
 def test_get_masked_without_maskC(od):
-    with pytest.warns(Warning):
+    with pytest.warns(UserWarning):
         hello = gm.get_masked(od, (1, 1))
     assert hello == 1

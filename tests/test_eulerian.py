@@ -2,6 +2,7 @@ import copy
 
 import numpy as np
 import pytest
+from scipy.interpolate import interp1d
 
 import seaduck as sd
 from seaduck import utils
@@ -37,6 +38,7 @@ def ep():
 def test_tz_not_None(od):
     ap = sd.Position()
     ap.from_latlon(x=-37.5, y=-60.4586420059204, z=-9.0, t=698155200.0, data=od)
+    assert isinstance(ap.rel, sd.ocedata.RelCoord)
 
 
 @pytest.mark.parametrize("y,t", [(10.4586420059204, None), (None, 698155200.0)])
@@ -44,6 +46,10 @@ def test_tz_not_None(od):
 def test_xyt_is_None(od, y, t):
     ap = sd.Position()
     ap.from_latlon(x=-37.5, y=y, z=-9.0, t=t, data=od)
+    if y is None:
+        assert ap.rx is None
+    if t is None:
+        assert ap.rt is None
 
 
 @pytest.mark.parametrize(
@@ -55,12 +61,16 @@ def test_xyt_is_None(od, y, t):
     ],
 )
 def test_fatten(ep, knw, required):
-    ep.fatten(knw, required=required)
+    fattened_inds = ep.fatten(knw, required=required)
+    assert isinstance(fattened_inds[0], np.ndarray)
+    assert len(fattened_inds[0].shape) > 1
 
 
 @pytest.mark.parametrize("varname,knw", [("WVELMASS", uknw), ("UVELMASS", wknw)])
 def test_interp_vertical(ep, varname, knw):
-    ep.interpolate(varname, knw)
+    res = ep.interpolate(varname, knw)
+    assert isinstance(res, np.ndarray)
+    assert len(res.shape) == 1
 
 
 def test_interp_with_NoneZ(ep):
@@ -70,11 +80,13 @@ def test_interp_with_NoneZ(ep):
     wwknw.ignore_mask = False
     vvknw.ignore_mask = False
 
-    ep.interpolate(["UVELMASS", "WVELMASS", "VVELMASS"], [uuknw, wwknw, vvknw])
+    res = ep.interpolate(["UVELMASS", "WVELMASS", "VVELMASS"], [uuknw, wwknw, vvknw])
 
     uuknw.ignore_mask = True
     wwknw.ignore_mask = True
     vvknw.ignore_mask = True
+
+    assert isinstance(res, list)
 
 
 def test_no_face_with_mask(ep):
@@ -97,18 +109,20 @@ def test_no_face_with_mask(ep):
     neo_transform_lookup = {}
     for key in transform_lookup.keys():
         neo_transform_lookup[key] = None
-    ep._mask_value_and_register(
+    mask_dict = ep._mask_value_and_register(
         index_lookup, neo_transform_lookup, hash_mask, hash_index, main_dict
     )
+    assert bool(mask_dict)
 
 
 def test_dict_input(ep):
-    ep._register_interpolation_input(
+    registered = ep._register_interpolation_input(
         "SALT",
         {"SALT": uknw},
         prefetched={"SALT": prefetched},
         i_min={"SALT": (1, 0, 0, 0, 0)},
     )
+    assert len(registered) == 8
 
 
 @pytest.mark.parametrize(
@@ -122,9 +136,10 @@ def test_diff_prefetched(ep, prefetched, varname, knw, num_prefetched):
     prefetch = prefetched
     if num_prefetched == "two":
         prefetch = (prefetch, prefetch)
-    ep._register_interpolation_input(
+    registered = ep._register_interpolation_input(
         varname, knw, prefetched=prefetch, i_min={"SALT": (1, 0, 0, 0, 0)}
     )
+    assert len(registered) == 8
 
 
 @pytest.mark.parametrize(
@@ -193,12 +208,125 @@ def test_fatten_none(ep):
     ep.izl = None
     ep.iz = None
 
-    ep.fatten_v(wknw)
-    ep.fatten_vl(wknw)
-    ep.fatten_t(wknw)
+    assert ep.fatten_v(wknw) is None
+    assert ep.fatten_vl(wknw) is None
+    assert ep.fatten_t(wknw) is None
 
 
 def test_partial_flatten():
     thing = np.array((3, 4, 5))
     ind = (thing, thing)
-    sd.eulerian._partial_flatten(ind)
+    flattened = sd.eulerian._partial_flatten(ind)
+    assert flattened[0].shape == (3, 1)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_wvel_quant_deepest(ds, od):
+    ind = (11, 75, 73)
+    face, iy, ix = ind
+
+    np.random.seed(20230625)
+    z = np.random.uniform(od.Zl[-1], 0, 5000)
+    x = od.XC[ind] * np.ones_like(z)
+    y = od.YC[ind] * np.ones_like(z)
+
+    vert_p = sd.Position().from_latlon(x=x, y=y, z=z, data=od)
+    assert vert_p.ix[0] == ix, "horizontal index does not match"
+    assert vert_p.iy[0] == iy, "horizontal index does not match"
+    seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.wknw)
+
+    wvel = interp1d(od.Zl, ds.WVELMASS1[:, face, iy, ix])
+    scipy_ans = wvel(z)
+
+    assert np.allclose(scipy_ans, seaduck_ans)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("seed", list(range(5)))
+def test_wvel_quant_random_place(ds, od, seed):
+    np.random.seed(seed)
+    z = np.random.uniform(od.Zl[-1], 0, 50)
+    x = np.random.uniform(-180, 180, 1) * np.ones_like(z)
+    y = np.random.uniform(-80, 90, 1) * np.ones_like(z)
+
+    vert_p = sd.Position().from_latlon(x=x, y=y, z=z, data=od)
+    seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.wknw)
+
+    face = vert_p.face[0]
+    iy = vert_p.iy[0]
+    ix = vert_p.ix[0]
+
+    wvel = interp1d(od.Zl, ds.WVELMASS1[:, face, iy, ix])
+    scipy_ans = wvel(z)
+
+    assert np.allclose(scipy_ans, seaduck_ans)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+def test_dw_quant_deepest(ds, od):
+    ind = (11, 75, 73)
+    face, iy, ix = ind
+
+    np.random.seed(20230625)
+    z = np.random.uniform(od.Zl[-1], 0, 5000)
+    x = od.XC[ind] * np.ones_like(z)
+    y = od.YC[ind] * np.ones_like(z)
+
+    vert_p = sd.Position().from_latlon(x=x, y=y, z=z, data=od)
+    assert vert_p.ix[0] == ix, "horizontal index does not match"
+    assert vert_p.iy[0] == iy, "horizontal index does not match"
+    seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.dwknw)
+
+    # dw is a stepwise function.
+    small_offset = 1e-12
+    dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
+    zinterp = [0]
+    dwinterp = [dw[0]]
+    for i, zl in enumerate(od.Zl[1:-1]):
+        zinterp.append(zl + small_offset)
+        dwinterp.append(dw[i])
+        zinterp.append(zl)
+        dwinterp.append(dw[i + 1])
+    zinterp.append(od.Zl[-1])
+    dwinterp.append(dw[-1])
+    dwvel = interp1d(zinterp, dwinterp)
+    scipy_ans = dwvel(z)
+
+    assert np.allclose(scipy_ans, seaduck_ans)
+
+
+@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("seed", list(range(7, 12)))
+def test_dw_quant_random(ds, od, seed):
+    np.random.seed(seed)
+    z = np.random.uniform(od.Zl[-1], 0, 50)
+    x = np.random.uniform(-180, 180, 1) * np.ones_like(z)
+    y = np.random.uniform(-80, 90, 1) * np.ones_like(z)
+
+    vert_p = sd.Position().from_latlon(x=x, y=y, z=z, data=od)
+    seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.dwknw)
+
+    face = vert_p.face[0]
+    iy = vert_p.iy[0]
+    ix = vert_p.ix[0]
+
+    # dw is a stepwise function.
+    small_offset = 1e-12
+    dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
+    zinterp = [0]
+    dwinterp = [dw[0]]
+    for i, zl in enumerate(od.Zl[1:-1]):
+        zinterp.append(zl + small_offset)
+        dwinterp.append(dw[i])
+        zinterp.append(zl)
+        dwinterp.append(dw[i + 1])
+    zinterp.append(od.Zl[-1])
+    dwinterp.append(dw[-1])
+    dwvel = interp1d(zinterp, dwinterp)
+    scipy_ans = dwvel(z)
+
+    assert np.allclose(scipy_ans, seaduck_ans)

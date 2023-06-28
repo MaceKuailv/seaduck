@@ -121,8 +121,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
         function to calculate the hotizontal interpolation/derivative
         weight
     """
-    xs = np.array(list(set(kernel.T[0]))).astype(float)
-    ys = np.array(list(set(kernel.T[1]))).astype(float)
+    xs = np.array(list(set(kernel.T[0])), dtype=float)
+    ys = np.array(list(set(kernel.T[1])), dtype=float)
 
     # if you the kernel is a line rather than a cross
     if len(xs) == 1:
@@ -149,8 +149,8 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
             y_poly.append(
                 list(combinations([i for i in ys if i != ay], len(ys) - 1 - order))
             )
-    x_poly = np.array(x_poly).astype(float)
-    y_poly = np.array(y_poly).astype(float)
+    x_poly = np.array(x_poly, dtype=float)
+    y_poly = np.array(y_poly, dtype=float)
 
     @compileable
     def the_interp_func(rx, ry):
@@ -335,8 +335,8 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
         function to calculate the hotizontal interpolation/derivative
         weight
     """
-    xs = np.array(list(set(kernel.T[0]))).astype(float)
-    ys = np.array(list(set(kernel.T[1]))).astype(float)
+    xs = np.array(list(set(kernel.T[0])), dtype=float)
+    ys = np.array(list(set(kernel.T[1])), dtype=float)
     xmaxorder = False
     ymaxorder = False
     if xorder < len(xs) - 1:
@@ -363,8 +363,8 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
         y_poly.append(
             list(combinations([i for i in ys if i != ay], len(ys) - 1 - yorder))
         )
-    x_poly = np.array(x_poly).astype(float)
-    y_poly = np.array(y_poly).astype(float)
+    x_poly = np.array(x_poly, dtype=float)
+    y_poly = np.array(y_poly, dtype=float)
 
     @compileable
     def the_square_func(rx, ry):
@@ -722,8 +722,8 @@ class KnW:
         if not type_same:
             raise TypeError("the argument is not a KnW object")
         try:
-            return (self.kernel == other.kernel).all()
-        except AttributeError:
+            return np.allclose(self.kernel, other.kernel)
+        except (ValueError, AttributeError):
             return False
 
     def same_size(self, other):
@@ -738,9 +738,7 @@ class KnW:
         type_same = isinstance(other, type(self))
         if not type_same:
             return False
-        shpe_same = (
-            self.kernel == other.kernel
-        ).all() and self.inheritance == other.inheritance
+        shpe_same = self.same_hsize(other) and self.inheritance == other.inheritance
         diff_same = (
             (self.hkernel == other.hkernel)
             and (self.vkernel == other.vkernel)

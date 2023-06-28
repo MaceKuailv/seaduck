@@ -74,6 +74,16 @@ class RelCoord(dict):
                 new[var] = None
         return new
 
+    def update_from_subset(self, sub, which):
+        for var in sub.keys():
+            if var in self.keys():
+                if self[var] is not None:
+                    self[var][which] = sub[var]
+            else:
+                raise KeyError(
+                    f"Key {var} is in subset, " "but not in the one to update."
+                )
+
     @classmethod
     def create_class(cls, class_name, fields):
         """Create a subclass with predetermined keys."""
@@ -82,15 +92,13 @@ class RelCoord(dict):
             __slots__ = ()
             _fields = fields
 
-            def __init__(self, *args, **kwargs):
+            def __init__(self, *args):
                 if len(args) > len(fields):
                     raise TypeError(
                         f"{class_name} takes {len(fields)} positional arguments"
                         f" but {len(args)} were given"
                     )
                 for name, value in zip(fields, args):
-                    setattr(self, name, value)
-                for name, value in kwargs.items():
                     setattr(self, name, value)
 
             @classmethod
@@ -257,7 +265,8 @@ class OceData:
 
     def _add_missing_cs_sn(self):
         try:
-            assert (self["SN"] is not None) and (self["CS"] is not None)
+            assert self["SN"] is not None
+            assert self["CS"] is not None
         except (AttributeError, AssertionError):
             cs, sn = missing_cs_sn(self)
             self["CS"] = cs
@@ -276,16 +285,16 @@ class OceData:
 
         if way == "oceanparcel":
             for var in ["XC", "YC", "XG", "YG"]:
-                self[var] = np.array(self[var]).astype("float32")
+                self[var] = np.array(self[var], dtype="float32")
             for var in ["rA", "CS", "SN"]:
                 try:
-                    self[var] = np.array(self[var]).astype("float32")
+                    self[var] = np.array(self[var], dtype="float32")
                 except KeyError:
                     logging.info("no %s in dataset, skip", var)
                     self[var] = None
             try:
-                self.dX = np.array(self["dXG"]).astype("float32")
-                self.dY = np.array(self["dYG"]).astype("float32")
+                self.dX = np.array(self["dXG"], dtype="float32")
+                self.dY = np.array(self["dYG"], dtype="float32")
             except KeyError:
                 self.dX = None
                 self.dY = None
@@ -297,14 +306,14 @@ class OceData:
 
         if way == "local_cartesian":
             for var in ["XC", "YC", "CS", "SN"]:
-                self[var] = np.array(self[var]).astype("float32")
-            self.dX = np.array(self["dXG"]).astype("float32")
-            self.dY = np.array(self["dYG"]).astype("float32")
+                self[var] = np.array(self[var], dtype="float32")
+            self.dX = np.array(self["dXG"], dtype="float32")
+            self.dY = np.array(self["dYG"], dtype="float32")
 
             if not self.too_large:  # pragma: no cover
                 for var in ["XG", "YG", "dXC", "dYC", "rA"]:
                     try:
-                        self[var] = np.array(self[var]).astype("float32")
+                        self[var] = np.array(self[var], dtype="float32")
                     except KeyError:
                         logging.info("no %s in dataset, skip", var)
                         self[var] = None
@@ -315,23 +324,23 @@ class OceData:
                 logging.info("cKD created")
 
         if way == "rectilinear":
-            self.lon = np.array(self["lon"]).astype("float32")
-            self.lat = np.array(self["lat"]).astype("float32")
+            self.lon = np.array(self["lon"], dtype="float32")
+            self.lat = np.array(self["lat"], dtype="float32")
 
     def vgrid2array(self):
         """Extract the vertical center point grid data into numpy arrays."""
-        self.Z = np.array(self["Z"]).astype("float32")
+        self.Z = np.array(self["Z"], dtype="float32")
         try:
-            self.dZ = np.array(self["dZ"]).astype("float32")
+            self.dZ = np.array(self["dZ"], dtype="float32")
         except KeyError:
             self.dZ = np.diff(self.Z)
             self.dZ = np.append(self.dZ, self.dZ[-1])
 
     def vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
-        self.Zl = np.array(self["Zl"]).astype("float32")
+        self.Zl = np.array(self["Zl"], dtype="float32")
         try:
-            self.dZl = np.array(self["dZl"]).astype("float32")
+            self.dZl = np.array(self["dZl"], dtype="float32")
         except KeyError:
             if "Zp1" in self._ds.variables:
                 self.dZl = np.diff(np.array(self["Zp1"]))
@@ -406,29 +415,29 @@ class OceData:
     def find_rel_v(self, z):
         """Find the rel-coord based on vertical center grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Z)
-        return VRel(iz.astype(int), rz, dz, bz)
+        return VRel(iz, rz, dz, bz)
 
     def find_rel_v_lin(self, z):
         """Find the rel-coord based on vertical center grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Z, self.dZ)
-        return VLinRel(iz.astype(int), rz, dz, bz)
+        return VLinRel(iz, rz, dz, bz)
 
     def find_rel_vl(self, z):
         """Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Zl)
-        return VlRel(iz.astype(int), rz, dz, bz)
+        return VlRel(iz, rz, dz, bz)
 
     def find_rel_vl_lin(self, z):
         """Find the rel-coord based on vertical staggered grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl, dz_above_z=False)
-        return VlLinRel(iz.astype(int), rz, dz, bz)
+        return VlLinRel(iz, rz, dz, bz)
 
     def find_rel_t(self, t):
         """Find the rel-coord based on the temporal direction using the nearest neighbor scheme."""
         it, rt, dt, bt = find_rel_nearest(t, self.ts)
-        return TRel(it.astype(int), rt, dt, bt)
+        return TRel(it, rt, dt, bt)
 
     def find_rel_t_lin(self, t):
         """Find the rel-coord based on the temporal direction using the 2-point linear scheme."""
         it, rt, dt, bt = find_rel_time(t, self.ts)
-        return TLinRel(it.astype(int), rt, dt, bt)
+        return TLinRel(it, rt, dt, bt)

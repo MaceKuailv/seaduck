@@ -107,7 +107,7 @@ def mask_w_node(maskC, tp=None):
     return maskW
 
 
-def get_masks(od, tp):
+def get_mask_arrays(od):
     """Mask all staggered valocity points.
 
     A wrapper around mask_u_node, mask_v_node, mask_w_node.
@@ -125,6 +125,7 @@ def get_masks(od, tp):
     maskC,maskU,maskV,maskW: numpy.ndarray
         masks at center points, U-walls, V-walls, W-walls respectively.
     """
+    tp = od.tp
     keys = od._ds.keys()
     if "maskC" not in keys:
         warnings.warn("no maskC in the dataset, assuming nothing is masked.")
@@ -217,10 +218,13 @@ def get_masked(od, ind, cuvwg="C"):
 
 def which_not_stuck(p):
     """Investigate which points are in land mask."""
+    ind = []
+    if p.izl_lin is not None:
+        ind.append(p.izl_lin - 1)
     if p.face is not None:
-        ind = (p.izl_lin - 1, p.face, p.iy, p.ix)
-    else:
-        ind = (p.izl_lin - 1, p.iy, p.ix)
+        ind.append(p.face)
+    ind += [p.iy, p.ix]
+    ind = tuple(ind)
     return get_masked(p.ocedata, ind).astype(bool)
 
 

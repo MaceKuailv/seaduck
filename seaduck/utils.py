@@ -168,7 +168,7 @@ def local_to_latlon(u, v, cs, sn):
 
 
 @compileable
-def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, bx, by, bzl):
+def rel2latlon(rx, ry, cs, sn, dx, dy, bx, by):
     """Translate the spatial rel-coords into lat-lon-dep coords."""
     temp_x = rx * dx / deg2m
     temp_y = ry * dy / deg2m
@@ -176,8 +176,7 @@ def rel2latlon(rx, ry, rzl, cs, sn, dx, dy, dzl, bx, by, bzl):
     dlat = temp_x * sn + temp_y * cs
     lon = dlon + bx
     lat = dlat + by
-    dep = bzl + dzl * rzl
-    return lon, lat, dep
+    return lon, lat
 
 
 def create_tree(x, y, R=6371.0, leafsize=16):
@@ -200,9 +199,9 @@ def create_tree(x, y, R=6371.0, leafsize=16):
     # Stack
     rid_value = 777777
     if isinstance(x, xr.DataArray):
-        x = x.stack(points=x.dims).fillna(rid_value).data
-        y = y.stack(points=y.dims).fillna(rid_value).data
-        z = z.stack(points=z.dims).fillna(rid_value).data
+        x = x.fillna(rid_value).data.ravel()
+        y = y.fillna(rid_value).data.ravel()
+        z = z.fillna(rid_value).data.ravel()
     elif isinstance(x, np.ndarray):
         x = x.ravel()
         np.nan_to_num(x.ravel(), nan=rid_value, copy=False)
@@ -212,7 +211,7 @@ def create_tree(x, y, R=6371.0, leafsize=16):
         np.nan_to_num(z.ravel(), nan=rid_value, copy=False)
 
     # Construct KD-tree
-    tree = spatial.cKDTree(np.column_stack((x, y, z)), leafsize=leafsize)
+    tree = spatial.cKDTree(np.vstack((x, y, z)).T, leafsize=leafsize)
 
     return tree
 
@@ -255,7 +254,7 @@ def find_ind(array, value, peri=None, ascending=1, above=True):
         idx = np.argmin(np.abs(to_180((array - value), peri=peri)))
     if above and array[idx] > value and peri is None:
         idx -= ascending * 1
-    if idx < 0:
+    if idx < 0 or idx >= len(array):
         raise ValueError("Value out of bound.")
     idx = int(idx)
     return idx, array[idx]
@@ -269,11 +268,11 @@ def find_ind_h(lons, lats, tree, h_shape):
     x, y, z = spherical2cartesian(lats, lons)
     _, index1d = tree.query(np.array([x, y, z]).T)
     if len(h_shape) == 3:
-        faces, iys, ixs = np.unravel_index((index1d), h_shape)
+        face, iy, ix = np.unravel_index((index1d), h_shape)
     elif len(h_shape) == 2:
-        faces = None
-        iys, ixs = np.unravel_index((index1d), h_shape)
-    return faces, iys, ixs
+        face = None
+        iy, ix = np.unravel_index((index1d), h_shape)
+    return face, iy, ix
 
 
 @compileable
@@ -320,7 +319,7 @@ def find_rel(
         darray = np.abs(array[1:] - array[:-1])
         darray = np.append(darray, darray[-1])
         dx_right = True
-    ixs = np.zeros_like(value)
+    ixs = np.zeros(len(value), dtype="int")
     rxs = np.ones_like(value) * 0.0
     dxs = np.ones_like(value) * 0.0
     bxs = np.ones_like(value) * 0.0
@@ -547,23 +546,22 @@ def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     if NoneIn([lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree]):
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
-    faces, iys, ixs = find_ind_h(lon, lat, tree, h_shape)
-    if faces is not None:
-        ind = (faces, iys, ixs)
+    face, iy, ix = find_ind_h(lon, lat, tree, h_shape)
+    if face is not None:
+        ind = (face, iy, ix)
     else:
-        ind = (iys, ixs)
+        ind = (iy, ix)
     cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
     rx, ry = find_rx_ry_naive(lon, lat, bx, by, cs, sn, dx, dy)
-    return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
+    return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
 def find_rel_h_rectilinear(x, y, lon, lat):
     """Find the rel-coords using the rectilinear scheme."""
-    ratio = 6371e3 * np.pi / 180
     ix, rx, dx, bx = find_rel_periodic(x, lon, 360.0)
     iy, ry, dy, by = find_rel_periodic(y, lat, 360.0)
-    dx = np.cos(y * np.pi / 180) * ratio * dx
-    dy = ratio * dy
+    dx = np.cos(by * np.pi / 180) * deg2m * dx
+    dy = deg2m * dy
     face = None
     cs = np.ones_like(x)
     sn = np.zeros_like(x)
@@ -577,15 +575,15 @@ def find_rel_h_oceanparcel(
     if NoneIn([x, y, some_x, some_y, XG, YG, tree]):
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
-    faces, iys, ixs = find_ind_h(x, y, tree, h_shape)
-    if faces is not None:
-        ind = (faces, iys, ixs)
+    face, iy, ix = find_ind_h(x, y, tree, h_shape)
+    if face is not None:
+        ind = (face, iy, ix)
     else:
-        ind = (iys, ixs)
+        ind = (iy, ix)
     cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
     px, py = find_px_py(XG, YG, tp, ind)
     rx, ry = find_rx_ry_oceanparcel(x, y, px, py)
-    return faces, iys, ixs, rx, ry, cs, sn, dx, dy, bx, by
+    return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
 def weight_f_node(rx, ry):
