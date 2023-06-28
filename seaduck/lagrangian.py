@@ -878,12 +878,8 @@ class Particle(Position):
         tf_used = tf[int_todo]
         trim_tol = 0.0
         for i in range(self.max_iteration):
-            if i > 50:
+            if i > self.max_iteration*0.95:
                 trim_tol = 1e-3
-            elif i > 30:
-                trim_tol = 1e-6
-            elif i > 10:
-                trim_tol = 1e-10
             logging.debug(len(int_todo), "left")
             sub = self.subset(int_todo)
             sub.trim(tol=trim_tol)
