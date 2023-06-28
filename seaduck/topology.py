@@ -403,7 +403,7 @@ class Topology:
             to_return = box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
             raise NotImplementedError
-        return to_return
+        return tuple(int(i) for i in to_return)
 
     def ind_moves(self, ind, moves, **kwarg):
         """Move an index in a serie of directions.
@@ -449,7 +449,7 @@ class Topology:
         elif self.typ in ["x_periodic", "box"]:
             for move in moves:
                 ind = self.ind_tend(ind, move)
-        return ind
+        return tuple(int(i) for i in ind)
 
     def check_illegal(self, ind, cuvwg="C"):
         """Check if the index is legal.
@@ -509,7 +509,7 @@ class Topology:
             2: np.array([0, -1]),
             3: np.array([0, 1]),
         }
-        naive_move = np.array([move_dic[i] for i in tend]).T.astype(int)
+        naive_move = np.array([move_dic[i] for i in tend], dtype=int).T
         inds[-2:] += naive_move
         cuvwg = kwarg.get("cuvwg", "C")
         illegal = self.check_illegal(inds, cuvwg=cuvwg)
@@ -538,7 +538,7 @@ class Topology:
         """
         (fc1, _, _) = ind1
         (fc2, _, _) = ind2
-        Non_normal_connection = ValueError(
+        non_normal_connection = ValueError(
             f"The two face connecting the indexes {ind1},{ind2}"
             " are not connected in a normal way"
         )
@@ -565,7 +565,7 @@ class Topology:
                 elif d2to1 == 2:
                     return "U", to_return
                 else:
-                    raise Non_normal_connection
+                    raise non_normal_connection
             elif d2to1 in [0, 3]:
                 to_return = ind1
                 if d1to2 == 1:
@@ -573,9 +573,9 @@ class Topology:
                 elif d1to2 == 2:
                     return "U", to_return
                 else:
-                    raise Non_normal_connection
+                    raise non_normal_connection
             else:
-                raise Non_normal_connection
+                raise non_normal_connection
 
     def _ind_tend_U(self, ind, tend):
         """Move an U-index in a direction.

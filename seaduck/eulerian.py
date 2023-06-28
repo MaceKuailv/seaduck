@@ -1,4 +1,5 @@
 import copy
+import logging
 
 import numpy as np
 
@@ -112,8 +113,10 @@ class Position:
     To actually do interpolation, use from_latlon method to tell the ducks where they are.
     """
 
-    def __init__(self):
-        self.rel = RelCoord()
+    def __new__(cls, *arg, **kwarg):
+        new_position = object.__new__(cls)
+        new_position.rel = RelCoord()
+        return new_position
 
     def __getattr__(self, attr):
         if attr == "rel":
@@ -161,14 +164,14 @@ class Position:
         if any(i != self.N for i in length if i > 1):
             raise ValueError("Shapes of input coordinates are not compatible")
 
-        if isinstance(x, float):
-            x = np.array([1.0]) * x
-        if isinstance(y, float):
-            y = np.array([1.0]) * y
-        if isinstance(z, float):
-            z = np.array([1.0]) * z
-        if isinstance(t, float):
-            t = np.array([1.0]) * t
+        if isinstance(x, (int, float, np.floating)):
+            x = np.ones(self.N, float) * x
+        if isinstance(y, (int, float, np.floating)):
+            y = np.ones(self.N, float) * y
+        if isinstance(z, (int, float, np.floating)):
+            z = np.ones(self.N, float) * z
+        if isinstance(t, (int, float, np.floating)):
+            t = np.ones(self.N, float) * t
 
         for thing in [x, y, z, t]:
             if thing is None:
@@ -176,15 +179,15 @@ class Position:
             if len(thing.shape) > 1:
                 raise ValueError("Input need to be 1D numpy arrays")
         if (x is not None) and (y is not None):
-            self.lon = x
-            self.lat = y
-            self.rel.update(self.ocedata.find_rel_h(x, y))
+            self.lon = copy.deepcopy(x)
+            self.lat = copy.deepcopy(y)
+            self.rel.update(self.ocedata.find_rel_h(self.lon, self.lat))
         else:
             self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
             self.lat = None
         if z is not None:
-            self.dep = z
+            self.dep = copy.deepcopy(z)
             if self.ocedata.readiness["Z"]:
                 self.rel.update(self.ocedata.find_rel_v(z))
             else:
@@ -199,7 +202,7 @@ class Position:
             self.dep = None
 
         if t is not None:
-            self.t = t
+            self.t = copy.deepcopy(t)
             if self.ocedata.readiness["time"]:
                 self.rel.update(self.ocedata.find_rel_t(t))
             else:
@@ -225,22 +228,46 @@ class Position:
         the_subset: Position object
             The selected Positions.
         """
-        p = Position()
+        p = object.__new__(type(self))
         vardict = vars(self)
         keys = vardict.keys()
-        for i in keys:
-            item = vardict[i]
+        for key in keys:
+            item = vardict[key]
             if isinstance(item, np.ndarray):
                 if len(item.shape) == 1:
-                    setattr(p, i, item[which])
-                    p.N = len(getattr(p, i))
+                    setattr(p, key, item[which])
+                    p.N = len(getattr(p, key))
+                elif key in ["px", "py"]:
+                    setattr(p, key, item[:, which])
                 else:
-                    setattr(p, i, item)
+                    setattr(p, key, item)
             elif isinstance(item, RelCoord):
-                setattr(p, i, item.subset(which))
+                setattr(p, key, item.subset(which))
             else:
-                setattr(p, i, item)
+                setattr(p, key, item)
         return p
+
+    def update_from_subset(self, sub, which):
+        vardict = vars(sub)
+        keys = vardict.keys()
+        for key in keys:
+            item = vardict[key]
+            if not hasattr(self, key):
+                logging.warning(
+                    f"A new attribute {key} defined" "after updating from subset"
+                )
+                setattr(self, key, item)
+            if getattr(self, key) is None:
+                continue
+            if isinstance(item, np.ndarray):
+                if len(item.shape) == 1:
+                    getattr(self, key)[which] = item
+                elif key in ["px", "py"]:
+                    getattr(self, key)[:, which] = item
+            elif isinstance(item, RelCoord):
+                self.rel.update_from_subset(item, which)
+            elif isinstance(item, list):
+                setattr(self, key, item)
 
     def fatten_h(self, knw, ind_moves_kwarg={}):
         """Fatten horizontal indices.
@@ -262,7 +289,7 @@ class Position:
             Read Topology.ind_moves for more detail.
         """
         #         self.ind_h_dict
-        kernel = knw.kernel
+        kernel = knw.kernel.astype(int)
         kernel_tends = [_translate_to_tendency(k) for k in kernel]
         m = len(kernel_tends)
         n = len(self.iy)
@@ -270,10 +297,10 @@ class Position:
 
         # the arrays we are going to return
         if self.face is not None:
-            n_faces = np.zeros((n, m))
+            n_faces = np.zeros((n, m), int)
             n_faces.T[:] = self.face
-        n_iys = np.zeros((n, m))
-        n_ixs = np.zeros((n, m))
+        n_iys = np.zeros((n, m), int)
+        n_ixs = np.zeros((n, m), int)
 
         # first try to fatten it naively(fast and vectorized)
         for i, node in enumerate(kernel):
@@ -302,9 +329,9 @@ class Position:
             else:
                 n_iys[j, i], n_ixs[j, i] = n_ind
         if self.face is not None:
-            return n_faces.astype("int"), n_iys.astype("int"), n_ixs.astype("int")
+            return n_faces, n_iys, n_ixs
         else:
-            return None, n_iys.astype("int"), n_ixs.astype("int")
+            return None, n_iys, n_ixs
 
     def fatten_v(self, knw):
         """Fatten in vertical center coord.
@@ -319,13 +346,13 @@ class Position:
         if self.iz is None:
             return None
         if knw.vkernel == "nearest":
-            return copy.deepcopy(self.iz.astype(int))
+            return copy.deepcopy(self.iz)
         elif knw.vkernel in ["dz", "linear"]:
             try:
                 self.iz_lin
             except AttributeError:
                 self.rel.update(self.ocedata.find_rel_v_lin(self.dep))
-            return np.vstack([self.iz_lin.astype(int), self.iz_lin.astype(int) - 1]).T
+            return np.vstack([self.iz_lin, self.iz_lin - 1]).T
         else:
             raise ValueError("vkernel not supported")
 
@@ -342,13 +369,13 @@ class Position:
         if self.izl is None:
             return None
         if knw.vkernel == "nearest":
-            return copy.deepcopy(self.izl.astype(int))
+            return copy.deepcopy(self.izl)
         elif knw.vkernel in ["dz", "linear"]:
             try:
                 self.izl_lin
             except AttributeError:
                 self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
-            return np.vstack([self.izl_lin.astype(int), self.izl_lin.astype(int) - 1]).T
+            return np.vstack([self.izl_lin, self.izl_lin - 1]).T
         else:
             raise ValueError("vkernel not supported")
 
@@ -365,13 +392,13 @@ class Position:
         if self.it is None:
             return None
         if knw.tkernel == "nearest":
-            return copy.deepcopy(self.it.astype(int))
+            return copy.deepcopy(self.it)
         elif knw.tkernel in ["dt", "linear"]:
             try:
                 self.izl_lin
             except AttributeError:
                 self.rel.update(self.ocedata.find_rel_t_lin(self.t))
-            return np.vstack([self.it_lin.astype(int), self.it_lin.astype(int) + 1]).T
+            return np.vstack([self.it_lin, self.it_lin + 1]).T
         else:
             raise ValueError("tkernel not supported")
 

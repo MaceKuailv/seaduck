@@ -18,7 +18,7 @@ dependencies = [
   "numpy",
   "pandas",
   "scipy",
-  "dask",
+  "dask[array]",
   "xarray"
 ]
 description = "A python package that interpolates data from ocean dataset from both Eulerian and Lagrangian perspective. "
@@ -39,7 +39,8 @@ module = [
   "matplotlib.*",
   "numba",
   "pooch",
-  "scipy"
+  "scipy",
+  "scipy.interpolate"
 ]
 
 [tool.ruff]

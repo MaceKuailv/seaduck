@@ -88,11 +88,11 @@ def stationary_time(u, du, x0):
     return tl, tr
 
 
-def time2wall(xs, us, dus):
+def time2wall(pos_list, u_list, du_list):
     """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
-        tl, tr = stationary_time(us[i], dus[i], xs[i])
+        tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
         ts.append(tl)
         ts.append(tr)
     return ts
@@ -118,8 +118,8 @@ def which_early(tf, ts):
     t_directed[np.isnan(t_directed)] = np.inf
     t_directed[t_directed <= 0] = np.inf
     tend = t_directed.argmin(axis=0)
-    the_t = np.array([ts[te][i] for i, te in enumerate(tend)])
-    return tend, the_t
+    t_event = np.array([ts[te][i] for i, te in enumerate(tend)])
+    return tend, t_event
 
 
 uvkernel = np.array([[0, 0], [1, 0], [0, 1]])
@@ -143,12 +143,12 @@ dvknw = KnW(
 )
 
 # scalar style kernel for datasets without face
-uknw_s = KnW(kernel=ukernel, inheritance=None, ignore_mask=True)
-vknw_s = KnW(kernel=vkernel, inheritance=None, ignore_mask=True)
-duknw_s = KnW(
+uknw_scalar = KnW(kernel=ukernel, inheritance=None, ignore_mask=True)
+vknw_scalar = KnW(kernel=vkernel, inheritance=None, ignore_mask=True)
+duknw_scalar = KnW(
     kernel=ukernel, inheritance=None, hkernel="dx", h_order=1, ignore_mask=True
 )
-dvknw_s = KnW(
+dvknw_scalar = KnW(
     kernel=vkernel, inheritance=None, hkernel="dy", h_order=1, ignore_mask=True
 )
 
@@ -202,7 +202,7 @@ class Particle(Position):
     ):
         Position.__init__(self)
         self.from_latlon(**kwarg)
-        if self.ocedata.readiness["Zl"]:
+        if self.ocedata.readiness["Zl"] and kwarg.get("z") is not None:
             self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
         else:
             (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
@@ -225,10 +225,12 @@ class Particle(Position):
             self.vknw = vknw
             self.dvknw = dvknw
         else:
-            self.uknw = uknw_s
-            self.duknw = duknw_s
-            self.vknw = vknw_s
-            self.dvknw = dvknw_s
+            # velocity without face connection
+            # can be handled like scalar.
+            self.uknw = uknw_scalar
+            self.duknw = duknw_scalar
+            self.vknw = vknw_scalar
+            self.dvknw = dvknw_scalar
 
         #  user defined function to stop integration.
         self.callback = callback
@@ -251,6 +253,9 @@ class Particle(Position):
         self.dont_fly = dont_fly
         if dont_fly:
             if wname is not None:
+                logging.warning(
+                    "Setting the surface velocity to zero. " "Dataset modified. "
+                )
                 self.ocedata[wname].loc[{"Zl": 0}] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
@@ -260,34 +265,16 @@ class Particle(Position):
         else:
             self.update_uvw_array()
         (self.u, self.v, self.w, self.du, self.dv, self.dw, self.vol) = (
-            np.zeros(self.N).astype(float) for i in range(7)
+            np.zeros(self.N, dtype="float32") for i in range(7)
         )
         if self.transport:
             self.get_vol()
 
         self.get_u_du()
-        self.fillna()
 
         self.save_raw = save_raw
         if self.save_raw:
-            self.itlist = [[] for i in range(self.N)]
-            self.fclist = [[] for i in range(self.N)]
-            self.iylist = [[] for i in range(self.N)]
-            self.izlist = [[] for i in range(self.N)]
-            self.ixlist = [[] for i in range(self.N)]
-            self.rxlist = [[] for i in range(self.N)]
-            self.rylist = [[] for i in range(self.N)]
-            self.rzlist = [[] for i in range(self.N)]
-            self.ttlist = [[] for i in range(self.N)]
-            self.uulist = [[] for i in range(self.N)]
-            self.vvlist = [[] for i in range(self.N)]
-            self.wwlist = [[] for i in range(self.N)]
-            self.dulist = [[] for i in range(self.N)]
-            self.dvlist = [[] for i in range(self.N)]
-            self.dwlist = [[] for i in range(self.N)]
-            self.xxlist = [[] for i in range(self.N)]
-            self.yylist = [[] for i in range(self.N)]
-            self.zzlist = [[] for i in range(self.N)]
+            self.empty_lists()
 
     def update_uvw_array(self):
         """Update the prefetched velocity arrays.
@@ -304,80 +291,41 @@ class Particle(Position):
                 assert isinstance(self.varray, np.ndarray)
                 if self.wname is not None:
                     assert isinstance(self.warray, np.ndarray)
+                return
             except (AttributeError, AssertionError):
-                self.uarray = np.array(self.ocedata[uname])
-                self.varray = np.array(self.ocedata[vname])
-                if self.wname is not None:
-                    self.warray = np.array(self.ocedata[wname])
-                    if self.dont_fly:
-                        # I think it's fine
-                        self.warray[0] = 0.0
-                # else:
-                #     self.warray = None
+                time_slice = slice(None)
         else:
             self.itmin = int(np.min(self.it))
             self.itmax = int(np.max(self.it))
-            if self.itmax != self.itmin:
-                self.uarray = np.array(self.ocedata[uname][self.itmin : self.itmax + 1])
-                self.varray = np.array(self.ocedata[vname][self.itmin : self.itmax + 1])
-                if self.wname is not None:
-                    self.warray = np.array(
-                        self.ocedata[wname][self.itmin : self.itmax + 1]
-                    )
-                # else:
-                #     self.warray = None
-            else:
-                self.uarray = np.array(self.ocedata[uname][[self.itmin]])
-                self.varray = np.array(self.ocedata[vname][[self.itmin]])
-                if self.wname is not None:
-                    self.warray = np.array(self.ocedata[wname][[self.itmin]])
-                # else:
-                #     self.warray = None
-            if self.dont_fly:
-                if self.wname is not None:
-                    # I think it's fine
-                    self.warray[:, 0] = 0.0
+            time_slice = slice(self.itmin, self.itmax + 1)
+        self.uarray = np.array(self.ocedata[uname][time_slice])
+        self.varray = np.array(self.ocedata[vname][time_slice])
+        if self.wname is not None:
+            self.warray = np.array(self.ocedata[wname][time_slice])
 
-    def get_vol(self, which=None):
+    def get_vol(self):
         """Read in the volume of the cell.
 
         For particles that has transport = True,
         volume of the cell is needed for the integration.
         This method read the volume that is calculated at __init__.
-
-        Parameters
-        ----------
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points
-            to do the operation.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        sub = self.subset(which)
-        ind = []
+        index = []
         if self.ocedata.readiness["Zl"]:
-            ind.append(sub.izl_lin - 1)
+            index.append(self.izl_lin - 1)
         if self.face is not None:
-            ind.append(sub.face)
-        ind += [sub.iy, sub.ix]
-        ind = tuple(ind)
-        self.vol[which] = self.ocedata["Vol"][ind]
+            index.append(self.face)
+        index += [self.iy, self.ix]
+        index = tuple(index)
+        self.vol = self.ocedata["Vol"][index]
 
-    def get_u_du(self, which=None):
+    def get_u_du(self):
         """Read the velocity at particle position.
 
         Read the velocity and velocity derivatives in all three dimensions
         using the interpolate method with the default kernel.
         Read eulerian.Position.interpolate for more detail.
-
-        Parameters
-        ----------
-        which: numpy.ndarray
-            Boolean or int array that specify the subset of points to
-            do the operation.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
         if self.too_large:  # pragma: no cover
             prefetched = None
             i_min = None
@@ -404,7 +352,7 @@ class Particle(Position):
         except (TypeError, AttributeError):
             pass
 
-        [w, dw, (u, v), (du, dv)] = self.subset(which).interpolate(
+        [w, dw, (u, v), (du, dv)] = self.interpolate(
             [
                 self.wname,
                 self.wname,
@@ -422,24 +370,24 @@ class Particle(Position):
             dw = np.zeros_like(u)
 
         if not self.transport:
-            self.u[which] = u / self.dx[which]
-            self.v[which] = v / self.dy[which]
-            self.du[which] = du / self.dx[which]
-            self.dv[which] = dv / self.dy[which]
+            self.u = u / self.dx
+            self.v = v / self.dy
+            self.du = du / self.dx
+            self.dv = dv / self.dy
 
         else:
-            self.u[which] = u / self.vol[which]
-            self.v[which] = v / self.vol[which]
-            self.du[which] = du / self.vol[which]
-            self.dv[which] = dv / self.vol[which]
+            self.u = u / self.vol
+            self.v = v / self.vol
+            self.du = du / self.vol
+            self.dv = dv / self.vol
 
         if self.wname is not None:
             if not self.transport:
-                self.w[which] = w / self.dzl_lin[which]
-                self.dw[which] = dw / self.dzl_lin[which]
+                self.w = w / self.dzl_lin
+                self.dw = dw / self.dzl_lin
             else:
-                self.w[which] = w / self.vol[which]
-                self.dw[which] = dw / self.vol[which]
+                self.w = w / self.vol
+                self.dw = dw / self.vol
         self.fillna()
 
     def fillna(self):
@@ -454,7 +402,7 @@ class Particle(Position):
         np.nan_to_num(self.dv, copy=False)
         np.nan_to_num(self.dw, copy=False)
 
-    def note_taking(self, which=None):
+    def note_taking(self, subset_index=None):
         """Record raw data into list of lists.
 
         This method is only called in save_raw = True particles.
@@ -462,54 +410,62 @@ class Particle(Position):
         trajectories.
         With those info, one could reconstruct the analytical
         trajectories to arbitrary position.
+
+        Parameters
+        ----------
+        subset_index: iterable of int or None
+            if not None, assume this method is called from a subset of the full
+            particle object, and subset_index is the indices the subset occupy
+            in the original object.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
-        where = np.where(which)[0]
         try:
             self.ttlist
         except AttributeError as exc:
             raise AttributeError("This is not a particle_rawlist object") from exc
-        for i in where:
+        if subset_index is None:
+            subset_index = np.arange(self.N)
+        for isub, ifull in enumerate(subset_index):
             if self.face is not None:
-                self.fclist[i].append(self.face[i])
+                self.fclist[ifull].append(self.face[isub])
             if self.it is not None:
-                self.itlist[i].append(self.it[i])
-            self.iylist[i].append(self.iy[i])
+                self.itlist[ifull].append(self.it[isub])
             if self.izl_lin is not None:
-                self.izlist[i].append(self.izl_lin[i])
-            self.ixlist[i].append(self.ix[i])
-            self.rxlist[i].append(self.rx[i])
-            self.rylist[i].append(self.ry[i])
-            if self.rzl_lin is not None:
-                self.rzlist[i].append(self.rzl_lin[i])
-            self.ttlist[i].append(self.t[i])
-            self.uulist[i].append(self.u[i])
-            self.vvlist[i].append(self.v[i])
-            self.wwlist[i].append(self.w[i])
-            self.dulist[i].append(self.du[i])
-            self.dvlist[i].append(self.dv[i])
-            self.dwlist[i].append(self.dw[i])
-            self.xxlist[i].append(self.lon[i])
-            self.yylist[i].append(self.lat[i])
-            self.zzlist[i].append(self.dep[i])
+                self.izlist[ifull].append(self.izl_lin[isub])
+                self.rzlist[ifull].append(self.rzl_lin[isub])
+            self.iylist[ifull].append(self.iy[isub])
+            self.ixlist[ifull].append(self.ix[isub])
+            self.rxlist[ifull].append(self.rx[isub])
+            self.rylist[ifull].append(self.ry[isub])
+            self.ttlist[ifull].append(self.t[isub])
+            self.uulist[ifull].append(self.u[isub])
+            self.vvlist[ifull].append(self.v[isub])
+            self.wwlist[ifull].append(self.w[isub])
+            self.dulist[ifull].append(self.du[isub])
+            self.dvlist[ifull].append(self.dv[isub])
+            self.dwlist[ifull].append(self.dw[isub])
+            self.xxlist[ifull].append(self.lon[isub])
+            self.yylist[ifull].append(self.lat[isub])
+            self.zzlist[ifull].append(self.dep[isub])
 
     def empty_lists(self):
-        """Empty the lists.
+        """Empty/Create the lists.
 
         Some times the raw-data list get too long,
         It would be necessary to dump the data,
         and empty the lists containing the raw data.
         This method does the latter.
         """
-        self.itlist = [[] for i in range(self.N)]
-        self.fclist = [[] for i in range(self.N)]
+        if self.face is not None:
+            self.fclist = [[] for i in range(self.N)]
+        if self.it is not None:
+            self.itlist = [[] for i in range(self.N)]
+        if self.izl_lin is not None:
+            self.rzlist = [[] for i in range(self.N)]
+            self.izlist = [[] for i in range(self.N)]
         self.iylist = [[] for i in range(self.N)]
-        self.izlist = [[] for i in range(self.N)]
         self.ixlist = [[] for i in range(self.N)]
         self.rxlist = [[] for i in range(self.N)]
         self.rylist = [[] for i in range(self.N)]
-        self.rzlist = [[] for i in range(self.N)]
         self.ttlist = [[] for i in range(self.N)]
         self.uulist = [[] for i in range(self.N)]
         self.vvlist = [[] for i in range(self.N)]
@@ -535,7 +491,7 @@ class Particle(Position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, tol=1e-6):
+    def trim(self, tol=1e-12):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -547,7 +503,6 @@ class Particle(Position):
             The relative tolerance when particles is significantly
             close to the cell.
         """
-        # tol = 1e-6 # about 10 m horizontal for 1 degree
         if logging.DEBUG >= logging.root.level:  # pragma: no cover
             xmax = np.nanmax(self.rx)
             xmin = np.nanmin(self.rx)
@@ -613,16 +568,16 @@ class Particle(Position):
         out = self._out_of_bound()
         # out = np.logical_and(out,u!=0)
         if self.rzl_lin is not None:
-            xs = [self.rx[out], self.ry[out], self.rzl_lin[out] - 1 / 2]
+            pos_list = [self.rx[out], self.ry[out], self.rzl_lin[out] - 1 / 2]
         else:
             x_ = self.rx[out]
-            xs = [x_, self.ry[out], np.zeros_like(x_)]
-        us = [self.u[out], self.v[out], self.w[out]]
-        dus = [self.du[out], self.dv[out], self.dw[out]]
+            pos_list = [x_, self.ry[out], np.zeros_like(x_)]
+        u_list = [self.u[out], self.v[out], self.w[out]]
+        du_list = [self.du[out], self.dv[out], self.dw[out]]
         tmin = -np.ones_like(self.rx[out]) * np.inf
         tmax = np.ones_like(self.rx[out]) * np.inf
         for i in range(3):
-            tl, tr = stationary_time(us[i], dus[i], xs[i])
+            tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
             np.nan_to_num(tl, copy=False)
             np.nan_to_num(tr, copy=False)
             tmin = np.maximum(tmin, np.minimum(tl, tr))
@@ -637,7 +592,7 @@ class Particle(Position):
 
         con_x = []
         for i in range(3):
-            con_x.append(stationary(contract_time, us[i], dus[i], 0))
+            con_x.append(stationary(contract_time, u_list[i], du_list[i], 0))
 
         cdx = np.nan_to_num(con_x[0])
         cdy = np.nan_to_num(con_x[1])
@@ -654,101 +609,63 @@ class Particle(Position):
 
         self.t[out] += contract_time
 
-    def update_after_cell_change(self):
-        """Update properties after particles cross wall.
-
-        A wall event is triggered when particle reached the wall.
-        This method handle the coords translation as a particle cross
-        a wall.
-        """
-        if self.face is not None:
-            self.face = self.face.astype(int)
-        self.iy = self.iy.astype(int)
-        self.ix = self.ix.astype(int)
-        if self.iz is not None:
-            self.iz = self.iz.astype(int)
-        if self.izl_lin is not None:
-            self.izl_lin = self.izl_lin.astype(int)
-
-        if self.ocedata.readiness["Z"]:
-            self.rel.update(self.ocedata.find_rel_v(self.dep))
-        if self.ocedata.readiness["h"] == "local_cartesian":
-            if self.face is not None:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.face, self.iy, self.ix],
-                    self.ocedata.YC[self.face, self.iy, self.ix],
-                )
-                self.cs, self.sn = (
-                    self.ocedata.CS[self.face, self.iy, self.ix],
-                    self.ocedata.SN[self.face, self.iy, self.ix],
-                )
-                self.dx, self.dy = (
-                    self.ocedata.dX[self.face, self.iy, self.ix],
-                    self.ocedata.dY[self.face, self.iy, self.ix],
-                )
-
-            else:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.iy, self.ix],
-                    self.ocedata.YC[self.iy, self.ix],
-                )
-                self.cs, self.sn = (
-                    self.ocedata.CS[self.iy, self.ix],
-                    self.ocedata.SN[self.iy, self.ix],
-                )
-                self.dx, self.dy = (
-                    self.ocedata.dX[self.iy, self.ix],
-                    self.ocedata.dY[self.iy, self.ix],
-                )
-        elif self.ocedata.readiness["h"] == "oceanparcel":
-            if self.face is not None:
-                self.bx, self.by = (
-                    self.ocedata.XC[self.face, self.iy, self.ix],
-                    self.ocedata.YC[self.face, self.iy, self.ix],
-                )
-
-            else:  # pragema: no cover
-                self.bx, self.by = (
-                    self.ocedata.XC[self.iy, self.ix],
-                    self.ocedata.YC[self.iy, self.ix],
-                )
-
-        elif self.ocedata.readiness["h"] == "rectilinear":
-            self.bx = self.ocedata.lon[self.ix]
-            self.by = self.ocedata.lat[self.iy]
-            self.cs = np.ones_like(self.bx)
-            self.sn = np.zeros_like(self.bx)
-            self.dx = self.ocedata.dlon[self.ix] * np.cos(self.by * np.pi / 180)
-            self.dy = self.ocedata.dlat[self.iy]
-
-        if self.izl_lin is not None:
-            self.bzl_lin = self.ocedata.Zl[self.izl_lin]
-            self.dzl_lin = self.ocedata.dZl[self.izl_lin - 1]
-        if self.dz is not None:
-            self.dz = self.ocedata.dZ[self.iz]
-        try:
-            self.px, self.py = self.get_px_py()
-            self.rx, self.ry = find_rx_ry_oceanparcel(
-                self.lon, self.lat, self.px, self.py
-            )
-        except AttributeError:
-            #         if True:
-            dlon = to_180(self.lon - self.bx)
-            dlat = to_180(self.lat - self.by)
-            self.rx = (
-                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
-                * DEG2M
-                / self.dx
-            )
-            self.ry = (
-                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
-                * DEG2M
-                / self.dy
-            )
+    def _extract_velocity_position(self):
+        """Create list of u, du/dx and x0."""
         if self.rzl_lin is not None:
-            self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
+            pos_list = [self.rx, self.ry, self.rzl_lin - 1 / 2]
+        else:
+            pos_list = [self.rx, self.ry, np.zeros_like(self.rx)]
+        u_list = [self.u, self.v, self.w]
+        du_list = [self.du, self.dv, self.dw]
+        return u_list, du_list, pos_list
 
-    def analytical_step(self, tf, which=None):
+    def _move_within_cell(self, t_event, u_list, du_list, pos_list):
+        """Move all particle for t_event time."""
+        self.t += t_event
+        new_x = []
+        new_u = []
+        for i in range(3):
+            x_move = stationary(t_event, u_list[i], du_list[i], 0)
+            new_u.append(u_list[i] + du_list[i] * x_move)
+            new_x.append(x_move + pos_list[i])
+
+        for rr in new_x:
+            if np.logical_or(rr > 0.51, rr < -0.51).any():
+                where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
+                raise ValueError(
+                    f"Particle way out of bound."
+                    # f"tend = {tend[where]},"
+                    f" t_event = {t_event[where]},"
+                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
+                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
+                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
+                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
+                )
+        return new_x, new_u
+
+    def _sync_latlondep_before_cross(self):
+        """Update 3D location at the end of analytical_step."""
+        if self.rzl_lin is not None:
+            self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
+        # Otherwise, keep depth the same.
+        try:
+            px, py = self.px, self.py
+            w = self.get_f_node_weight()
+            self.lon = np.einsum("nj,nj->n", w, px.T)
+            self.lat = np.einsum("nj,nj->n", w, py.T)
+        except AttributeError:
+            self.lon, self.lat = rel2latlon(
+                self.rx,
+                self.ry,
+                self.cs,
+                self.sn,
+                self.dx,
+                self.dy,
+                self.bx,
+                self.by,
+            )
+
+    def analytical_step(self, tf):
         """Integrate the particle with velocity.
 
         The core method.
@@ -763,155 +680,150 @@ class Particle(Position):
         ----------
         tf: float, numpy.ndarray
             The longest duration of the simulation for each particle.
-        which: numpy.ndarray, optional
-            Boolean or int array that specify the subset of points to
-            do the operation.
         """
-        if which is None:
-            which = np.ones(self.N).astype(bool)
         if isinstance(tf, float):
             tf = np.array([tf for i in range(self.N)])
+        u_list, du_list, pos_list = self._extract_velocity_position()
 
-        tf = tf[which]
+        ts = time2wall(pos_list, u_list, du_list)
 
+        tend, t_event = which_early(tf, ts)
+
+        new_x, new_u = self._move_within_cell(t_event, u_list, du_list, pos_list)
+
+        # Could potentially move this block all the way back
+        self.rx, self.ry, temp = new_x
         if self.rzl_lin is not None:
-            xs = [self.rx[which], self.ry[which], self.rzl_lin[which] - 1 / 2]
-        else:
-            x_temp = self.rx[which]
-            xs = [x_temp, self.ry[which], np.zeros_like(x_temp)]
-        us = [self.u[which], self.v[which], self.w[which]]
-        dus = [self.du[which], self.dv[which], self.dw[which]]
+            self.rzl_lin = temp + 1 / 2
 
-        ts = time2wall(xs, us, dus)
+        self.u, self.v, self.w = new_u
 
-        tend, the_t = which_early(tf, ts)
-        self.t[which] += the_t
+        self._sync_latlondep_before_cross()
 
-        new_x = []
-        new_u = []
-        for i in range(3):
-            x_move = stationary(the_t, us[i], dus[i], 0)
-            new_u.append(us[i] + dus[i] * x_move)
-            new_x.append(x_move + xs[i])
+        return tend
 
-        # for rr in new_x:
-        #    if np.logical_or(rr>0.6,rr<-0.6).any():
-        #        where = np.where(np.logical_or(rr>0.6,rr<-0.6))[0][0]
-        #        raise ValueError(
-        # f'Particle way out of bound.tend = {tend[where]},'
-        # f' the_t = {the_t[where]},'
-        # f' rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}'
-        # f'start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}'
-        # f'start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}'
-        # f'start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}'
-        #                        )
-        for rr in new_x:
-            if np.logical_or(rr > 0.6, rr < -0.6).any():
-                where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
-                raise ValueError(
-                    f"Particle way out of bound.tend = {tend[where]},"
-                    f" the_t = {the_t[where]},"
-                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
-                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
-                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
-                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
-                )
-        self.rx[which], self.ry[which], temp = new_x
-        if self.rzl_lin is not None:
-            self.rzl_lin[which] = temp + 1 / 2
-
-        self.u[which], self.v[which], self.w[which] = new_u
-        try:
-            px, py = self.px, self.py
-            w = self.get_f_node_weight()
-            self.lon = np.einsum("nj,nj->n", w, px.T)
-            self.lat = np.einsum("nj,nj->n", w, py.T)
-            if self.rzl_lin is not None:
-                self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
-        except AttributeError:
-            if self.rzl_lin is not None:
-                rzl_lin = self.rzl_lin
-                dzl_lin = self.dzl_lin
-                bzl_lin = self.bzl_lin
-            else:
-                rzl_lin = np.zeros_like(self.rx)
-                dzl_lin = np.zeros_like(self.rx)
-                bzl_lin = np.zeros_like(self.rx)
-            self.lon, self.lat, self.dep = rel2latlon(
-                self.rx,
-                self.ry,
-                rzl_lin,
-                self.cs,
-                self.sn,
-                self.dx,
-                self.dy,
-                dzl_lin,
-                self.bx,
-                self.by,
-                bzl_lin,
-            )
-        if self.save_raw:
-            # record the moment just before crossing the wall
-            # or the moment reaching destination.
-            self.note_taking(which)
+    def _cross_cell_wall_index(self, tend):
+        """Figure out the new indices as particles cross cell wall."""
         type1 = tend <= 3
         translate = {0: 2, 1: 3, 2: 1, 3: 0}
         # left  # right  # down  # up
         trans_tend = np.array([translate[i] for i in tend[type1]])
         if self.face is not None:
-            tface, tiy, tix, tiz = (
-                self.face[which].astype(int),
-                self.iy[which].astype(int),
-                self.ix[which].astype(int),
-                self.izl_lin[which].astype(int),
+            tface, tiy, tix = (
+                self.face,
+                self.iy,
+                self.ix,
             )
             tface[type1], tiy[type1], tix[type1] = self.tp.ind_tend_vec(
                 (tface[type1], tiy[type1], tix[type1]), trans_tend
             )
+            self.face, self.iy, self.ix = (tface, tiy, tix)
         else:
             tiy, tix = (
-                self.iy[which].astype(int),
-                self.ix[which].astype(int),
+                self.iy,
+                self.ix,
             )
-            if self.izl_lin is not None:  # pragema: no cover
-                tiz = self.izl_lin[which].astype(int)
-            else:
-                tiz = (np.ones_like(tiy) * (-1)).astype(int)
             tiy[type1], tix[type1] = self.tp.ind_tend_vec(
                 (tiy[type1], tix[type1]), trans_tend
             )
-        type2 = tend == 4
-        tiz[type2] += 1
-        type3 = tend == 5
-        tiz[type3] -= 1
+            self.iy, self.ix = tiy, tix
 
-        # investigate stuck
-        #         now_masked = maskc[tiz-1,tface,tiy,tix]==0
-        #         if now_masked.any():
-        #             wrong_ind = (np.where(now_masked))[0]
-        #             print(wrong_ind)
-        #             print((tiz-1)[wrong_ind],tface[wrong_ind],
-        #             tiy[wrong_ind],tix[wrong_ind])
-        #             print('rx',[xs[i][wrong_ind] for i in range(3)])
-        #             print('u',[us[i][wrong_ind] for i in range(3)])
-        #             print('du',[dus[i][wrong_ind] for i in range(3)])
-        #             print(tend[wrong_ind])
-        #             print(t_directed[:,wrong_ind])
-        #             print('stuck!')
-        #             raise ValueError('ahhhhh!')
-        if self.face is not None:
-            self.face[which], self.iy[which], self.ix[which] = (tface, tiy, tix)
-        else:
-            self.iy[which], self.ix[which] = tiy, tix
         if self.izl_lin is not None:
-            self.izl_lin[which] = tiz
+            tiz = self.izl_lin
+            type2 = tend == 4
+            tiz[type2] += 1
+            type3 = tend == 5
+            tiz[type3] -= 1
+            self.izl_lin = tiz
+
+    def _cross_cell_wall_read(self):
+        """Update coordinate as a particle crosses cell wall."""
+        if self.face is not None:
+            horizontal_index = (self.face, self.iy, self.ix)
+        else:
+            horizontal_index = (self.iy, self.ix)
+
+        if self.ocedata.readiness["h"] == "local_cartesian":
+            self.bx, self.by = (
+                self.ocedata.XC[horizontal_index],
+                self.ocedata.YC[horizontal_index],
+            )
+            self.cs, self.sn = (
+                self.ocedata.CS[horizontal_index],
+                self.ocedata.SN[horizontal_index],
+            )
+            self.dx, self.dy = (
+                self.ocedata.dX[horizontal_index],
+                self.ocedata.dY[horizontal_index],
+            )
+        elif self.ocedata.readiness["h"] == "oceanparcel":
+            self.bx, self.by = (
+                self.ocedata.XC[horizontal_index],
+                self.ocedata.YC[horizontal_index],
+            )
+            self.px, self.py = self.get_px_py()
+
+        elif self.ocedata.readiness["h"] == "rectilinear":
+            self.bx = self.ocedata.lon[self.ix]
+            self.by = self.ocedata.lat[self.iy]
+            self.cs = np.ones_like(self.bx)
+            self.sn = np.zeros_like(self.bx)
+            self.dx = self.ocedata.dlon[self.ix] * np.cos(self.by * np.pi / 180)
+            self.dy = self.ocedata.dlat[self.iy]
+
+        if self.izl_lin is not None:
+            self.bzl_lin = self.ocedata.Zl[self.izl_lin]
+            self.dzl_lin = self.ocedata.dZl[self.izl_lin - 1]
+        if self.dz is not None:
+            self.dz = self.ocedata.dZ[self.iz]
+
+    def _cross_cell_wall_rel(self):
+        """Figure out the new RelCoord after crossing cell wall."""
+        if self.ocedata.readiness["Z"]:
+            self.rel.update(self.ocedata.find_rel_v(self.dep))
+        if self.rzl_lin is not None:
+            self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
+
+        if self.ocedata.readiness["h"] == "oceanparcel":
+            self.rx, self.ry = find_rx_ry_oceanparcel(
+                self.lon, self.lat, self.px, self.py
+            )
+        else:
+            dlon = to_180(self.lon - self.bx)
+            dlat = to_180(self.lat - self.by)
+            self.rx = (
+                (dlon * np.cos(self.by * np.pi / 180) * self.cs + dlat * self.sn)
+                * DEG2M
+                / self.dx
+            )
+            self.ry = (
+                (dlat * self.cs - dlon * self.sn * np.cos(self.by * np.pi / 180))
+                * DEG2M
+                / self.dy
+            )
+
+    def cross_cell_wall(self, tend):
+        """Update properties after particles cross wall.
+
+        This function is called when particle reached the wall.
+        The nearest grid points change as well as the way the package
+        describe the location of particles. This method handles the
+        handover of particles between grid points.
+
+        Parameters
+        ----------
+        tend: numpy.ndarray of [0,1,2,3,4,5,6]
+            Which neighboring cell to move into.
+            0-6 means left, right, down, up, deep, shallow,
+            and stay in the current cell, respectively.
+        """
+        self._cross_cell_wall_index(tend)
+        self._cross_cell_wall_read()
+        self._cross_cell_wall_rel()
 
     def deepcopy(self):
-        """Return a clone of the object.
-
-        The object is a Position object, and thus cannot move any more.
-        """
-        p = Position()
+        """Return a clone of the object."""
+        p = super().__new__(type(self))
         p.ocedata = self.ocedata
         p.N = self.N
         varsdict = vars(self)
@@ -925,7 +837,7 @@ class Particle(Position):
                 setattr(p, i, copy.deepcopy(item))
         return p
 
-    def to_next_stop(self, t1):
+    def to_next_stop(self, t_stop):
         """Integrate all particles towards time tl.
 
         This is done by repeatedly calling analytical step.
@@ -935,44 +847,56 @@ class Particle(Position):
 
         Parameters
         ----------
-        tl: float, numpy.ndarray
+        t_stop: float
             The final time relative to 1970-01-01 in seconds.
         """
         tol = 1e-4
-        tf = t1 - self.t
-        todo = abs(tf) > tol
+        tf = t_stop - self.t
+        bool_todo = abs(tf) > tol
         if self.callback is not None:
-            todo = np.logical_and(todo, self.callback(self))
+            bool_todo = np.logical_and(bool_todo, self.callback(self))
+        int_todo = np.where(bool_todo)[0]
+        if len(int_todo) == 0:
+            logging.info("Nothing left to simulate")
+            return
+        tf_used = tf[int_todo]
         trim_tol = 1e-12
         for i in range(self.max_iteration):
             if i > 50:
                 trim_tol = 1e-3
             elif i > 30:
                 trim_tol = 1e-6
-            elif i > 20:
-                trim_tol = 1e-8
             elif i > 10:
                 trim_tol = 1e-10
-            self.trim(tol=trim_tol)
-            logging.debug(sum(todo), "left")
-            self.analytical_step(tf, todo)
-            self.update_after_cell_change()
+            logging.debug(len(int_todo), "left")
+            sub = self.subset(int_todo)
+            sub.trim(tol=trim_tol)
+            tend = sub.analytical_step(tf_used)
+            if self.save_raw:
+                # record the moment just before crossing the wall
+                # or the moment reaching destination.
+                self.note_taking(int_todo)
+            sub.cross_cell_wall(tend)
+
             if self.transport:
-                self.get_vol()
-            self.get_u_du(todo)
-            tf = t1 - self.t
-            todo = abs(tf) > tol
+                sub.get_vol()
+            sub.get_u_du()
+            self.update_from_subset(sub, int_todo)
+            tf_used = t_stop - sub.t
+            bool_todo = abs(tf_used) > tol
             if self.callback is not None:
-                todo = np.logical_and(todo, self.callback(self))
-            if sum(todo) == 0:
+                bool_todo = np.logical_and(bool_todo, self.callback(sub))
+            int_todo = int_todo[bool_todo]
+            tf_used = tf_used[bool_todo]
+            if len(int_todo) == 0:
                 break
             if self.save_raw:
                 # record those who cross the wall
-                self.note_taking(todo)
+                self.note_taking(int_todo)
 
-        if i == self.max_iteration - 1:  # pragma: no cover
+        if i == self.max_iteration - 1:
             warnings.warn("maximum iteration count reached")
-        self.t = np.ones(self.N) * t1
+        self.t = np.ones(self.N) * t_stop
         if self.ocedata.readiness["time"]:
             before_first = self.t < self.ocedata.time_midp[0]
             self.it[before_first] = 0
