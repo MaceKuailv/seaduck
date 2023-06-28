@@ -878,7 +878,7 @@ class Particle(Position):
         tf_used = tf[int_todo]
         trim_tol = 0.0
         for i in range(self.max_iteration):
-            if i > self.max_iteration*0.95:
+            if i > self.max_iteration * 0.95:
                 trim_tol = 1e-3
             logging.debug(len(int_todo), "left")
             sub = self.subset(int_todo)
