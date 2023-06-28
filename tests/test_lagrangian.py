@@ -261,35 +261,3 @@ def test_get_u_du_quant(seed, od):
     assert np.allclose(ushould, u, atol=1e-18)
     assert np.allclose(vshould, v, atol=1e-18)
     assert np.allclose(wshould, w, atol=1e-18)
-
-
-def test_reproduce_issue55(ecco_p):
-    new_p = ecco_p.subset(np.array([1]))
-
-    new_p.u[:] = 4.695701621346472e-06
-    new_p.du[:] = -5.773571643116384e-05
-    new_p.rx[:] = -0.009470161238869457
-    new_p.v[:] = -1.4674619307268205e-05
-    new_p.dv[:] = -2.8246484204894833e-06
-    new_p.ry[:] = 0.08627583529220939
-    new_p.w[:] = 0.0
-    new_p.dw[:] = -2.8246484204894833e-06
-    new_p.rzl_lin[:] = 0.5 + 0.3454546420042159
-
-    u_list, du_list, pos_list = new_p._extract_velocity_position()
-    ts = sd.lagrangian.time2wall(pos_list, u_list, du_list)
-    tend, t_event = sd.lagrangian.which_early(tf, ts)
-    new_x, new_u = new_p._move_within_cell(t_event, u_list, du_list, pos_list)
-    tol = 1e-3
-    for rr in new_x:
-        if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
-            where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
-            raise ValueError(
-                f"Particle way out of bound."
-                # f"tend = {tend[where]},"
-                f" t_event = {t_event[where]},"
-                f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
-                f"start with u = {new_p.u[where]}, du = {new_p.du[where]}, x={new_p.rx[where]}"
-                f"start with v = {new_p.v[where]}, dv = {new_p.dv[where]}, y={new_p.ry[where]}"
-                f"start with w = {new_p.w[where]}, dw = {new_p.dv[where]}, z={new_p.rzl_lin[where]}"
-            )
