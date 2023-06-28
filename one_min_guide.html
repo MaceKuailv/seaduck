@@ -443,6 +443,23 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceInterp</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s2">&quot;SALT&quot;</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+
+<span class="nn">File ~/work/seaduck/seaduck/seaduck/oceinterp.py:99,</span> in <span class="ni">OceInterp</span><span class="nt">(od, var_list, x, y, z, t, kernel_list, lagrangian, lagrange_kwarg, update_stops, return_in_between, return_pt_time, kernel_kwarg)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="n">t</span> <span class="o">=</span> <span class="n">convert_time</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">98</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">99</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;time format not supported&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">100</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">lagrangian</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">101</span>     <span class="n">pt</span> <span class="o">=</span> <span class="n">Position</span><span class="p">()</span>
+
+<span class="ne">ValueError</span>: time format not supported
+</pre></div>
+</div>
+</div>
 </div>
 <p>The package can do much more than this, and it is not much harder than this. To learn more, take a look at other tutorials, for example <a class="reference internal" href="notebook/AVISO.html"><span class="doc std std-doc">here</span></a>.</p>
 </section>
