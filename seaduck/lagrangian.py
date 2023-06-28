@@ -630,7 +630,7 @@ class Particle(Position):
             new_x.append(x_move + pos_list[i])
 
         for rr in new_x:
-            if np.logical_or(rr > 0.6, rr < -0.6).any():
+            if np.logical_or(rr > 0.51, rr < -0.51).any():
                 where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
                 raise ValueError(
                     f"Particle way out of bound."
@@ -735,21 +735,6 @@ class Particle(Position):
             type3 = tend == 5
             tiz[type3] -= 1
             self.izl_lin = tiz
-
-        # investigate stuck
-        #         now_masked = maskc[tiz-1,tface,tiy,tix]==0
-        #         if now_masked.any():
-        #             wrong_ind = (np.where(now_masked))[0]
-        #             print(wrong_ind)
-        #             print((tiz-1)[wrong_ind],tface[wrong_ind],
-        #             tiy[wrong_ind],tix[wrong_ind])
-        #             print('rx',[pos_list[i][wrong_ind] for i in range(3)])
-        #             print('u',[u_list[i][wrong_ind] for i in range(3)])
-        #             print('du',[du_list[i][wrong_ind] for i in range(3)])
-        #             print(tend[wrong_ind])
-        #             print(t_directed[:,wrong_ind])
-        #             print('stuck!')
-        #             raise ValueError('ahhhhh!')
 
     def _cross_cell_wall_read(self):
         """Update coordinate as a particle crosses cell wall."""
