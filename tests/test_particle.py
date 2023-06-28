@@ -18,7 +18,8 @@ def one_p():
 
 def not_out_of_bound_in_analytical_step(new_p, tf=1e80, tol=1e-4):
     u_list, du_list, pos_list = new_p._extract_velocity_position()
-    ts = sd.lagrangian.time2wall(pos_list, u_list, du_list)
+    tf = np.array([tf])
+    ts = sd.lagrangian.time2wall(pos_list, u_list, du_list, tf)
     tend, t_event = sd.lagrangian.which_early(tf, ts)
     new_x, new_u = new_p._move_within_cell(t_event, u_list, du_list, pos_list)
     for rr in new_x:
@@ -52,8 +53,34 @@ def test_reproduce_issue55(one_p):
     assert tend != 6
 
 
+def test_exactly_at_corner(one_p):
+    # reproduce_issue55vol2
+    u = [0.00023098]
+    du = [-1.58748431e-05]
+    x = [-0.5]
+    v = [-4.54496561e-06]
+    dv = [1.31782954e-05]
+    y = [-0.5]
+    w = [0.0]
+    dw = [1.31782954e-05]
+    z = [0.34545464]
+
+    one_p.u[:] = np.array(u)
+    one_p.du[:] = np.array(du)
+    one_p.rx[:] = np.array(x)
+    one_p.v[:] = np.array(v)
+    one_p.dv[:] = np.array(dv)
+    one_p.ry[:] = np.array(y)
+    one_p.w[:] = np.array(w)
+    one_p.dw[:] = np.array(dw)
+    one_p.rzl_lin[:] = 0.5 + np.array(z)
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    assert tend != 6
+
+
 @pytest.mark.parametrize("seed", [43, 20, 628])
 def test_underflow_du(one_p, seed):
+    np.random.seed(seed)
     (
         one_p.u,
         one_p.du,
@@ -82,6 +109,7 @@ def test_underflow_du(one_p, seed):
 
 @pytest.mark.parametrize("seed", [432, 320, 60288])
 def test_underflow_u(one_p, seed):
+    np.random.seed(seed)
     (
         one_p.u,
         one_p.du,
