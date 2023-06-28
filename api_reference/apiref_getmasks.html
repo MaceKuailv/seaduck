@@ -413,25 +413,8 @@ document.write(`
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="seaduck.get_masks.get_masked">
-<span class="sig-prename descclassname"><span class="pre">seaduck.get_masks.</span></span><span class="sig-name descname"><span class="pre">get_masked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.get_masks.get_masked" title="Permalink to this definition">#</a></dt>
-<dd><p>Return whether points are masked.</p>
-<p>Return whether the indexes of intersts are masked or not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>od</strong> (<em>OceData object</em>) – Dataset to find mask values from.</p></li>
-<li><p><strong>ind</strong> (<em>tuple of numpy.ndarray</em>) – Indexes of grid points.</p></li>
-<li><p><strong>cuvwg</strong> (<em>str</em>) – Whether the indexes is for points at center points or on the walls.
-Options are: [‘C’,’U’,’V’,’Wvel’].</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="seaduck.get_masks.get_masks">
-<span class="sig-prename descclassname"><span class="pre">seaduck.get_masks.</span></span><span class="sig-name descname"><span class="pre">get_masks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.get_masks.get_masks" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="seaduck.get_masks.get_mask_arrays">
+<span class="sig-prename descclassname"><span class="pre">seaduck.get_masks.</span></span><span class="sig-name descname"><span class="pre">get_mask_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.get_masks.get_mask_arrays" title="Permalink to this definition">#</a></dt>
 <dd><p>Mask all staggered valocity points.</p>
 <p>A wrapper around mask_u_node, mask_v_node, mask_w_node.
 If there is no maskC in the dataset, just return nothing is masked.</p>
@@ -447,6 +430,23 @@ If there is no maskC in the dataset, just return nothing is masked.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.get_masks.get_masked">
+<span class="sig-prename descclassname"><span class="pre">seaduck.get_masks.</span></span><span class="sig-name descname"><span class="pre">get_masked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.get_masks.get_masked" title="Permalink to this definition">#</a></dt>
+<dd><p>Return whether points are masked.</p>
+<p>Return whether the indexes of intersts are masked or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od</strong> (<em>OceData object</em>) – Dataset to find mask values from.</p></li>
+<li><p><strong>ind</strong> (<em>tuple of numpy.ndarray</em>) – Indexes of grid points.</p></li>
+<li><p><strong>cuvwg</strong> (<em>str</em>) – Whether the indexes is for points at center points or on the walls.
+Options are: [‘C’,’U’,’V’,’Wvel’].</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
