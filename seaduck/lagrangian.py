@@ -88,11 +88,24 @@ def stationary_time(u, du, x0):
     return tl, tr
 
 
-def time2wall(pos_list, u_list, du_list):
+@compileable
+def uleftright_from_udu(u, du, x0):
+    """Calculate the velocity at -0.5 and 0.5."""
+    u_left = u - (x0 + 0.5) * du
+    u_right = u + (0.5 - x0) * du
+    return u_left, u_right
+
+
+def time2wall(pos_list, u_list, du_list, tf):
     """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
         tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
+        ul, ur = uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
+        cannot_left = ul * tf >= 0
+        tl[cannot_left] = -np.sign(tf[cannot_left])
+        cannot_right = ur * tf <= 0
+        tr[cannot_right] = -np.sign(tf[cannot_right])
         ts.append(tl)
         ts.append(tr)
     return ts
@@ -116,7 +129,7 @@ def which_early(tf, ts):
     ts.append(np.ones(len(ts[0])) * tf)  # float or array both ok
     t_directed = np.array(ts) * np.sign(tf)
     t_directed[np.isnan(t_directed)] = np.inf
-    t_directed[t_directed <= 0] = np.inf
+    t_directed[t_directed < 0] = np.inf
     tend = t_directed.argmin(axis=0)
     t_event = np.array([ts[te][i] for i, te in enumerate(tend)])
     return tend, t_event
@@ -621,6 +634,8 @@ class Particle(Position):
 
     def _move_within_cell(self, t_event, u_list, du_list, pos_list):
         """Move all particle for t_event time."""
+        assert np.allclose(u_list[0], self.u)
+        assert np.allclose(du_list[1], self.dv)
         self.t += t_event
         new_x = []
         new_u = []
@@ -629,9 +644,10 @@ class Particle(Position):
             new_u.append(u_list[i] + du_list[i] * x_move)
             new_x.append(x_move + pos_list[i])
 
+        tol = 1e-4
         for rr in new_x:
-            if np.logical_or(rr > 0.51, rr < -0.51).any():
-                where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
+            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
+                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
                 raise ValueError(
                     f"Particle way out of bound."
                     # f"tend = {tend[where]},"
@@ -685,7 +701,7 @@ class Particle(Position):
             tf = np.array([tf for i in range(self.N)])
         u_list, du_list, pos_list = self._extract_velocity_position()
 
-        ts = time2wall(pos_list, u_list, du_list)
+        ts = time2wall(pos_list, u_list, du_list, tf)
 
         tend, t_event = which_early(tf, ts)
 
