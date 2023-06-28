@@ -504,7 +504,7 @@ class Particle(Position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, tol=1e-12):
+    def trim(self, tol=0.0):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -876,7 +876,7 @@ class Particle(Position):
             logging.info("Nothing left to simulate")
             return
         tf_used = tf[int_todo]
-        trim_tol = 1e-12
+        trim_tol = 0.0
         for i in range(self.max_iteration):
             if i > 50:
                 trim_tol = 1e-3
