@@ -96,14 +96,14 @@ def _ind_for_mask(ind, dims):
     return tuple(ind_for_mask)
 
 
-def _subtract_i_min(ind, i_min):
+def _subtract_prefetch_prefix(ind, prefetch_prefix):
     """Subtract the index prefix from the actual index.
 
     This is used when one is reading from a prefetched subset of the data.
     """
     temp_ind = []
-    for i in range(len(i_min)):
-        temp_ind.append(ind[i] - i_min[i])
+    for i in range(len(prefetch_prefix)):
+        temp_ind.append(ind[i] - prefetch_prefix[i])
     return tuple(temp_ind)
 
 
@@ -546,7 +546,9 @@ class Position:
         pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
         return pk4d
 
-    def _register_interpolation_input(self, varName, knw, prefetched=None, i_min=None):
+    def _register_interpolation_input(
+        self, varName, knw, prefetched=None, prefetch_prefix=None
+    ):
         """Register the input of interpolation function.
 
         Part of the interpolation function.
@@ -579,7 +581,7 @@ class Position:
             Lookup the token that uniquely define its computation of the weight using main_key.
             Different main_key could share the same token.
         """
-        # prefetch_dict = {var:(prefetched,i_min)}
+        # prefetch_dict = {var:(prefetched,prefetch_prefix)}
         # main_dict = {var:(var,kernel)}
         # hash_index = {var:hash(cuvwg,kernel_size)}
         # hash_read  = {var:hash(var,kernel_size)}
@@ -643,33 +645,33 @@ class Position:
                 " or list/dictionaries containing that"
             )
 
-        if isinstance(i_min, tuple):
-            i_min = [i_min for i in range(Nvar)]
-        elif i_min is None:
-            i_min = [None for i in range(Nvar)]
-        elif isinstance(i_min, list):
-            if len(i_min) != Nvar:
+        if isinstance(prefetch_prefix, tuple):
+            prefetch_prefix = [prefetch_prefix for i in range(Nvar)]
+        elif prefetch_prefix is None:
+            prefetch_prefix = [None for i in range(Nvar)]
+        elif isinstance(prefetch_prefix, list):
+            if len(prefetch_prefix) != Nvar:
                 raise ValueError(
-                    "Mismatch between the number of prefetched arrays prefix i_min and variables"
+                    "Mismatch between the number of prefetched arrays prefix prefetch_prefix and variables"
                 )
-        elif isinstance(i_min, dict):
-            i_min = [i_min.get(var) for var in varName]
+        elif isinstance(prefetch_prefix, dict):
+            prefetch_prefix = [prefetch_prefix.get(var) for var in varName]
         else:
             raise ValueError(
-                "prefetched prefix i_min needs to be a tuple, or list/dictionaries containing that "
+                "prefetched prefix prefetch_prefix needs to be a tuple, or list/dictionaries containing that "
             )
 
         output_format["ori_list"] = copy.deepcopy(list(zip(varName, knw)))
         new_varName = []
         new_prefetched = []
         new_knw = []
-        new_i_min = []
+        new_prefetch_prefix = []
         for i, var in enumerate(varName):
             if isinstance(var, str):
                 new_varName.append(var)
                 new_prefetched.append(prefetched[i])
                 new_knw.append(knw[i])
-                new_i_min.append(i_min[i])
+                new_prefetch_prefix.append(prefetch_prefix[i])
             elif isinstance(var, tuple):
                 if self.face is None:
                     for j in range(len(var)):
@@ -679,12 +681,12 @@ class Position:
                         else:
                             new_prefetched.append(None)
                         new_knw.append(knw[i][j])
-                        new_i_min.append(i_min[i])
+                        new_prefetch_prefix.append(prefetch_prefix[i])
                 else:
                     new_varName.append(var)
                     new_prefetched.append(prefetched[i])
                     new_knw.append(knw[i])
-                    new_i_min.append(i_min[i])
+                    new_prefetch_prefix.append(prefetch_prefix[i])
             elif var is None:
                 pass
             else:
@@ -694,7 +696,7 @@ class Position:
 
         prefetched = new_prefetched
         knw = new_knw
-        i_min = new_i_min
+        prefetch_prefix = new_prefetch_prefix
         varName = new_varName
         output_format["final_varName"] = list(zip(varName, knw))
 
@@ -727,7 +729,7 @@ class Position:
                 dims.append(tuple(temp))
 
         main_keys = list(zip(varName, kernel_hash))
-        prefetch_dict = dict(zip(main_keys, zip(prefetched, i_min)))
+        prefetch_dict = dict(zip(main_keys, zip(prefetched, prefetch_prefix)))
         main_dict = dict(zip(main_keys, zip(varName, dims, knw)))
         hash_index = dict(
             zip(main_keys, [hash(i) for i in zip(dims, kernel_size_hash)])
@@ -1012,16 +1014,16 @@ class Position:
             main_key = get_key_by_value(hash_read, hs)
             hsind = hash_index[main_key]
             varName, dims, knw = main_dict[main_key]
-            prefetched, i_min = prefetch_dict[main_key]
+            prefetched, prefetch_prefix = prefetch_dict[main_key]
             if isinstance(varName, str):
                 ind = index_lookup[hsind]
                 if prefetched is not None:
-                    if i_min is None:
+                    if prefetch_prefix is None:
                         raise ValueError(
                             "please pass value of the prefix of prefetched dataset, "
                             "even if the prefix is zero"
                         )
-                    temp_ind = _subtract_i_min(ind, i_min)
+                    temp_ind = _subtract_prefetch_prefix(ind, prefetch_prefix)
                     needed = np.nan_to_num(prefetched[temp_ind])
                 else:
                     needed = np.nan_to_num(smart_read(self.ocedata[varName], ind))
@@ -1038,10 +1040,18 @@ class Position:
                 temp_n_v = np.full(vind[0].shape, np.nan)
                 if prefetched is not None:
                     upre, vpre = prefetched
-                    ufromu = np.nan_to_num(upre[_subtract_i_min(indufromu, i_min)])
-                    ufromv = np.nan_to_num(vpre[_subtract_i_min(indufromv, i_min)])
-                    vfromu = np.nan_to_num(upre[_subtract_i_min(indvfromu, i_min)])
-                    vfromv = np.nan_to_num(vpre[_subtract_i_min(indvfromv, i_min)])
+                    ufromu = np.nan_to_num(
+                        upre[_subtract_prefetch_prefix(indufromu, prefetch_prefix)]
+                    )
+                    ufromv = np.nan_to_num(
+                        vpre[_subtract_prefetch_prefix(indufromv, prefetch_prefix)]
+                    )
+                    vfromu = np.nan_to_num(
+                        upre[_subtract_prefetch_prefix(indvfromu, prefetch_prefix)]
+                    )
+                    vfromv = np.nan_to_num(
+                        vpre[_subtract_prefetch_prefix(indvfromv, prefetch_prefix)]
+                    )
                 else:
                     ufromu = np.nan_to_num(smart_read(self.ocedata[uname], indufromu))
                     ufromv = np.nan_to_num(smart_read(self.ocedata[vname], indufromv))
@@ -1170,7 +1180,7 @@ class Position:
         return weight_lookup
 
     def interpolate(
-        self, varName, knw, vec_transform=True, prefetched=None, i_min=None
+        self, varName, knw, vec_transform=True, prefetched=None, prefetch_prefix=None
     ):
         """Do interpolation.
 
@@ -1199,7 +1209,7 @@ class Position:
             The prefetched array for the data, this will effectively overwrite varName.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
-        i_min: tuple, list, dict, None, default None
+        prefetch_prefix: tuple, list, dict, None, default None
             The prefix of the prefetched array.
             Put them in the same order as varName.
             Some level of automatic broadcasting is also supported.
@@ -1220,7 +1230,7 @@ class Position:
             hash_read,
             hash_weight,
         ) = self._register_interpolation_input(
-            varName, knw, prefetched=prefetched, i_min=i_min
+            varName, knw, prefetched=prefetched, prefetch_prefix=prefetch_prefix
         )
         index_lookup = self._fatten_required_index_and_register(hash_index, main_dict)
         transform_lookup = self._transform_vector_and_register(
