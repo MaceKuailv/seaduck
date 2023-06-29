@@ -29,24 +29,26 @@ directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @compileable
-def llc_mutual_direction(face, nface, transitive=False):
+def llc_mutual_direction(face, neighbor_face, transitive=False):
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
     See Topology.mutual direction for more detail.
     """
-    edge_n = np.where(llc_face_connect[face] == nface)
-    nedge_n = np.where(llc_face_connect[nface] == face)
-    if len(edge_n[0]) == 0:
+    connected_to_face = np.where(llc_face_connect[face] == neighbor_face)
+    connected_to_neigh = np.where(llc_face_connect[neighbor_face] == face)
+    if len(connected_to_face[0]) == 0:
         found = False
     else:
-        found = edge_n[0][0] in [0, 1, 2, 3] and nedge_n[0][0] in [0, 1, 2, 3]
+        found = connected_to_face[0][0] in [0, 1, 2, 3] and connected_to_neigh[0][
+            0
+        ] in [0, 1, 2, 3]
     if found:
-        return edge_n[0][0], nedge_n[0][0]
+        return connected_to_face[0][0], connected_to_neigh[0][0]
     elif transitive:
         common = -1
         for i in llc_face_connect[face]:
-            if i in llc_face_connect[nface]:
+            if i in llc_face_connect[neighbor_face]:
                 common = i
                 break
         if common < 0:
@@ -55,17 +57,17 @@ def llc_mutual_direction(face, nface, transitive=False):
             )
         else:
             edge_1 = np.where(llc_face_connect[face] == common)[0][0]
-            nedge_1 = np.where(llc_face_connect[common] == face)[0][0]
-            edge_2 = np.where(llc_face_connect[common] == nface)[0][0]
-            nedge_2 = np.where(llc_face_connect[nface] == common)[0][0]
-            if (edge_1 in [0, 1] and nedge_1 in [0, 1]) or (
-                edge_1 in [2, 3] and nedge_1 in [2, 3]
+            new_edge_1 = np.where(llc_face_connect[common] == face)[0][0]
+            edge_2 = np.where(llc_face_connect[common] == neighbor_face)[0][0]
+            new_edge_2 = np.where(llc_face_connect[neighbor_face] == common)[0][0]
+            if (edge_1 in [0, 1] and new_edge_1 in [0, 1]) or (
+                edge_1 in [2, 3] and new_edge_1 in [2, 3]
             ):
-                return edge_2, nedge_2
-            elif (edge_2 in [0, 1] and nedge_2 in [0, 1]) or (
-                edge_2 in [2, 3] and nedge_2 in [2, 3]
+                return edge_2, new_edge_2
+            elif (edge_2 in [0, 1] and new_edge_2 in [0, 1]) or (
+                edge_2 in [2, 3] and new_edge_2 in [2, 3]
             ):
-                return edge_1, nedge_1
+                return edge_1, new_edge_1
             else:
                 raise NotImplementedError(
                     "the common face is not parallel to either of the face"
@@ -82,13 +84,13 @@ def llc_get_the_other_edge(face, edge):
     See Topology.get_the_other_edge for more detail.
     """
     face_connect = llc_face_connect
-    nface = face_connect[face, edge]
-    if nface == 42:
+    neighbor_face = face_connect[face, edge]
+    if neighbor_face == 42:
         raise IndexError(
             "Reaching the edge where the face is not connected to any other face"
         )
-    nedge_n = np.where(face_connect[nface] == face)
-    return nface, nedge_n[0][0]
+    connected_to_neigh = np.where(face_connect[neighbor_face] == face)
+    return neighbor_face, connected_to_neigh[0][0]
 
 
 @compileable
@@ -154,54 +156,54 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != ixmax:
             ix += 1
         else:
-            nface, nedge = llc_get_the_other_edge(face, 3)
-            if nedge == 1:
-                face, iy, ix = [nface, 0, ixmax - iy]
-            elif nedge == 0:
-                face, iy, ix = [nface, iymax, iy]
-            elif nedge == 2:
-                face, iy, ix = [nface, iy, 0]
-            elif nedge == 3:
-                face, iy, ix = [nface, iymax - iy, ixmax]
+            neighbor_face, new_edge = llc_get_the_other_edge(face, 3)
+            if new_edge == 1:
+                face, iy, ix = [neighbor_face, 0, ixmax - iy]
+            elif new_edge == 0:
+                face, iy, ix = [neighbor_face, iymax, iy]
+            elif new_edge == 2:
+                face, iy, ix = [neighbor_face, iy, 0]
+            elif new_edge == 3:
+                face, iy, ix = [neighbor_face, iymax - iy, ixmax]
     if tendency == 2:
         if ix != 0:
             ix -= 1
         else:
-            nface, nedge = llc_get_the_other_edge(face, 2)
-            if nedge == 1:
-                face, iy, ix = [nface, 0, iy]
-            elif nedge == 0:
-                face, iy, ix = [nface, iymax, ixmax - iy]
-            elif nedge == 2:
-                face, iy, ix = [nface, iymax - iy, 0]
-            elif nedge == 3:
-                face, iy, ix = [nface, iy, ixmax]
+            neighbor_face, new_edge = llc_get_the_other_edge(face, 2)
+            if new_edge == 1:
+                face, iy, ix = [neighbor_face, 0, iy]
+            elif new_edge == 0:
+                face, iy, ix = [neighbor_face, iymax, ixmax - iy]
+            elif new_edge == 2:
+                face, iy, ix = [neighbor_face, iymax - iy, 0]
+            elif new_edge == 3:
+                face, iy, ix = [neighbor_face, iy, ixmax]
     if tendency == 0:
         if iy != iymax:
             iy += 1
         else:
-            nface, nedge = llc_get_the_other_edge(face, 0)
-            if nedge == 1:
-                face, iy, ix = [nface, 0, ix]
-            elif nedge == 0:
-                face, iy, ix = [nface, iymax, ixmax - ix]
-            elif nedge == 2:
-                face, iy, ix = [nface, iymax - ix, 0]
-            elif nedge == 3:
-                face, iy, ix = [nface, ix, ixmax]
+            neighbor_face, new_edge = llc_get_the_other_edge(face, 0)
+            if new_edge == 1:
+                face, iy, ix = [neighbor_face, 0, ix]
+            elif new_edge == 0:
+                face, iy, ix = [neighbor_face, iymax, ixmax - ix]
+            elif new_edge == 2:
+                face, iy, ix = [neighbor_face, iymax - ix, 0]
+            elif new_edge == 3:
+                face, iy, ix = [neighbor_face, ix, ixmax]
     if tendency == 1:
         if iy != 0:
             iy -= 1
         else:
-            nface, nedge = llc_get_the_other_edge(face, 1)
-            if nedge == 1:
-                face, iy, ix = [nface, 0, ixmax - ix]
-            elif nedge == 0:
-                face, iy, ix = [nface, iymax, ix]
-            elif nedge == 2:
-                face, iy, ix = [nface, ix, 0]
-            elif nedge == 3:
-                face, iy, ix = [nface, iymax - ix, ixmax]
+            neighbor_face, new_edge = llc_get_the_other_edge(face, 1)
+            if new_edge == 1:
+                face, iy, ix = [neighbor_face, 0, ixmax - ix]
+            elif new_edge == 0:
+                face, iy, ix = [neighbor_face, iymax, ix]
+            elif new_edge == 2:
+                face, iy, ix = [neighbor_face, ix, 0]
+            elif new_edge == 3:
+                face, iy, ix = [neighbor_face, iymax - ix, ixmax]
     return (face, iy, ix)
 
 
@@ -229,8 +231,10 @@ def llc_get_uv_mask_from_face(faces):
             # if the face is not the same, we need to do something
             else:
                 # get how much the new face is rotated from the old face
-                edge, nedge = llc_mutual_direction(faces[0], faces[i], transitive=True)
-                rot = np.pi - directions[edge] + directions[nedge]
+                edge, new_edge = llc_mutual_direction(
+                    faces[0], faces[i], transitive=True
+                )
+                rot = np.pi - directions[edge] + directions[new_edge]
                 # you can think of this as a rotation matrix
                 UfromUvel[i] = np.cos(rot)
                 UfromVvel[i] = np.sin(rot)
@@ -322,7 +326,7 @@ class Topology:
         """See what is adjacent to the face by this edge.
 
         The (edge) side of the (face) is connected to
-        the (nedge) side of the (nface).
+        the (new_edge) side of the (new_face).
         0,1,2,3 stands for up, down, left, right.
 
         Parameters
@@ -334,10 +338,10 @@ class Topology:
 
         Returns
         -------
-        nface: int
+        new_face: int
             The face adjacent to face in the edge direction.
-        nedge: 0,1,2,3
-            The face is connected to nface in which direction.
+        new_edge: 0,1,2,3
+            The face is connected to new_face in which direction.
         """
         if self.typ == "LLC":
             return llc_get_the_other_edge(face, edge)
@@ -348,7 +352,7 @@ class Topology:
         else:
             raise NotImplementedError
 
-    def mutual_direction(self, face, nface, **kwarg):
+    def mutual_direction(self, face, new_face, **kwarg):
         """Find the relative orientation of two faces.
 
         0,1,2,3 stands for up, down, left, right
@@ -357,7 +361,7 @@ class Topology:
         2. the 1st face is to which direction of the 2nd face.
         """
         if self.typ == "LLC":
-            return llc_mutual_direction(face, nface, **kwarg)
+            return llc_mutual_direction(face, new_face, **kwarg)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -435,8 +439,12 @@ class Topology:
                     # 2 faces that define 'left' differently. That's why
                     # when that happens we need to correct the direction
                     # you want to move the indexes.
-                    edge, nedge = self.mutual_direction(face, ind[0], transitive=True)
-                    rot = (np.pi - directions[edge] + directions[nedge]) % (np.pi * 2)
+                    edge, new_edge = self.mutual_direction(
+                        face, ind[0], transitive=True
+                    )
+                    rot = (np.pi - directions[edge] + directions[new_edge]) % (
+                        np.pi * 2
+                    )
                     if np.isclose(rot, 0):
                         pass
                     elif np.isclose(rot, np.pi / 2):

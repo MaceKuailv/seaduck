@@ -120,7 +120,7 @@ def test_dict_input(ep):
         "SALT",
         {"SALT": uknw},
         prefetched={"SALT": prefetched},
-        i_min={"SALT": (1, 0, 0, 0, 0)},
+        prefetch_prefix={"SALT": (1, 0, 0, 0, 0)},
     )
     assert len(registered) == 8
 
@@ -137,7 +137,7 @@ def test_diff_prefetched(ep, prefetched, varname, knw, num_prefetched):
     if num_prefetched == "two":
         prefetch = (prefetch, prefetch)
     registered = ep._register_interpolation_input(
-        varname, knw, prefetched=prefetch, i_min={"SALT": (1, 0, 0, 0, 0)}
+        varname, knw, prefetched=prefetch, prefetch_prefix={"SALT": (1, 0, 0, 0, 0)}
     )
     assert len(registered) == 8
 
@@ -185,7 +185,7 @@ def test_init_valueerror(od, x, knw):
 
 
 @pytest.mark.parametrize(
-    "varName,knw,prefetch,i_min",
+    "varName,knw,prefetch,prefetch_prefix",
     [
         (1, uknw, None, None),
         ("SALT", [uknw, vknw], None, None),
@@ -198,9 +198,11 @@ def test_init_valueerror(od, x, knw):
         ("SALT", uknw, None, 1),
     ],
 )
-def test_interp_register_error(ep, varName, knw, prefetch, i_min):
+def test_interp_register_error(ep, varName, knw, prefetch, prefetch_prefix):
     with pytest.raises(ValueError):
-        ep._register_interpolation_input(varName, knw, prefetched=prefetch, i_min=i_min)
+        ep._register_interpolation_input(
+            varName, knw, prefetched=prefetch, prefetch_prefix=prefetch_prefix
+        )
 
 
 def test_fatten_none(ep):

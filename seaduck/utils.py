@@ -198,18 +198,18 @@ def create_tree(x, y, R=6371.0, leafsize=16):
         z = xr.zeros_like(y)
 
     # Stack
-    rid_value = 777777
+    ridiculous_value = 777777
     if isinstance(x, xr.DataArray):
-        x = x.fillna(rid_value).data.ravel()
-        y = y.fillna(rid_value).data.ravel()
-        z = z.fillna(rid_value).data.ravel()
+        x = x.fillna(ridiculous_value).data.ravel()
+        y = y.fillna(ridiculous_value).data.ravel()
+        z = z.fillna(ridiculous_value).data.ravel()
     elif isinstance(x, np.ndarray):
         x = x.ravel()
-        np.nan_to_num(x.ravel(), nan=rid_value, copy=False)
+        np.nan_to_num(x.ravel(), nan=ridiculous_value, copy=False)
         y = y.ravel()
-        np.nan_to_num(y.ravel(), nan=rid_value, copy=False)
+        np.nan_to_num(y.ravel(), nan=ridiculous_value, copy=False)
         z = z.ravel()
-        np.nan_to_num(z.ravel(), nan=rid_value, copy=False)
+        np.nan_to_num(z.ravel(), nan=ridiculous_value, copy=False)
 
     # Construct KD-tree
     tree = spatial.cKDTree(np.vstack((x, y, z)).T, leafsize=leafsize)
@@ -250,15 +250,15 @@ def find_ind(array, value, peri=None, ascending=1, above=True):
     """
     array = np.asarray(array)
     if peri is None:
-        idx = np.argmin(np.abs(array - value))
+        index = np.argmin(np.abs(array - value))
     else:
-        idx = np.argmin(np.abs(to_180((array - value), peri=peri)))
-    if above and array[idx] > value and peri is None:
-        idx -= ascending * 1
-    if idx < 0 or idx >= len(array):
+        index = np.argmin(np.abs(to_180((array - value), peri=peri)))
+    if above and array[index] > value and peri is None:
+        index -= ascending * 1
+    if index < 0 or index >= len(array):
         raise ValueError("Value out of bound.")
-    idx = int(idx)
-    return idx, array[idx]
+    index = int(index)
+    return index, array[index]
 
 
 deg2m = 6271e3 * np.pi / 180
@@ -320,10 +320,10 @@ def find_rel(
         darray = np.abs(array[1:] - array[:-1])
         darray = np.append(darray, darray[-1])
         dx_right = True
-    ixs = np.zeros(len(value), dtype="int")
-    rxs = np.ones_like(value) * 0.0
-    dxs = np.ones_like(value) * 0.0
-    bxs = np.ones_like(value) * 0.0
+    ix_arr = np.zeros(len(value), dtype="int")
+    rx_arr = np.ones_like(value) * 0.0
+    dx_arr = np.ones_like(value) * 0.0
+    bx_arr = np.ones_like(value) * 0.0
 
     dx_offset = int(not dx_right) + int(ascending > 0) - 1
     for i, x in enumerate(value):
@@ -336,13 +336,13 @@ def find_rel(
         if not above or peri is not None:
             # peri not None will effectively overwrite above
             dx_offset = int(not dx_right) + int(ascending * dx > 0) - 1
-        idx = ix + dx_offset
+        index = ix + dx_offset
 
-        ixs[i] = ix
-        rxs[i] = dx / darray[idx]
-        dxs[i] = darray[idx]
-        bxs[i] = bx
-    return ixs, rxs, dxs, bxs
+        ix_arr[i] = ix
+        rx_arr[i] = dx / darray[index]
+        dx_arr[i] = darray[index]
+        bx_arr[i] = bx
+    return ix_arr, rx_arr, dx_arr, bx_arr
 
 
 # Here are a few partial functions for find_rel

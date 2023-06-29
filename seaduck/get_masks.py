@@ -35,9 +35,9 @@ def mask_u_node(maskC, tp):
     maskU = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC == 0)).T
     # find out which points are masked will make the search faster.
-    nind = tp.ind_tend_vec(indexes.T[1:], np.ones_like(indexes.T[0], int) * 2)
-    nind = np.vstack([indexes.T[0], nind])
-    switch = indexes[np.where(maskC[tuple(nind)])]
+    new_ind = tp.ind_tend_vec(indexes.T[1:], np.ones_like(indexes.T[0], int) * 2)
+    new_ind = np.vstack([indexes.T[0], new_ind])
+    switch = indexes[np.where(maskC[tuple(new_ind)])]
     maskU[tuple(switch.T)] = 1
 
     return maskU
@@ -69,9 +69,9 @@ def mask_v_node(maskC, tp):
     maskV = copy.deepcopy(maskC)
     indexes = np.array(np.where(maskC == 0)).T
     # find out which points are masked will make the search faster.
-    nind = tp.ind_tend_vec(indexes.T[1:], np.ones_like(indexes.T[0], int) * 1)
-    nind = np.vstack([indexes.T[0], nind])
-    switch = indexes[np.where(maskC[tuple(nind)])]
+    new_ind = tp.ind_tend_vec(indexes.T[1:], np.ones_like(indexes.T[0], int) * 1)
+    new_ind = np.vstack([indexes.T[0], new_ind])
+    switch = indexes[np.where(maskC[tuple(new_ind)])]
     maskV[tuple(switch.T)] = 1
     return maskV
 
@@ -101,9 +101,9 @@ def mask_w_node(maskC, tp=None):
         numpy array with the same shape as the model spacial coordinates.
         1 for wet W-walls (including interface between wet and dry), 0 for dry ones.
     """
-    temp = np.zeros_like(maskC)
-    temp[1:] = maskC[:-1]
-    maskW = np.logical_or(temp, maskC).astype(int)
+    maskW = np.zeros_like(maskC)
+    maskW[1:] = maskC[:-1]
+    maskW = np.logical_or(maskW, maskC).astype(int)
     return maskW
 
 
