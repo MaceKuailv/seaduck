@@ -788,11 +788,6 @@ class Particle(Position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
-            # if (abs(self.rx)>1).any():
-            #     where = np.where(abs(self.rx)>1)[0][0]
-            #     raise ValueError(
-            #         f"lon = {self.lon[where]}, lat = {self.lat[where]}, "
-            #         f"px = {self.px.T[where]}, py = {self.py.T[where]}")
         else:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
