@@ -88,11 +88,24 @@ def stationary_time(u, du, x0):
     return tl, tr
 
 
-def time2wall(pos_list, u_list, du_list):
+@compileable
+def uleftright_from_udu(u, du, x0):
+    """Calculate the velocity at -0.5 and 0.5."""
+    u_left = u - (x0 + 0.5) * du
+    u_right = u + (0.5 - x0) * du
+    return u_left, u_right
+
+
+def time2wall(pos_list, u_list, du_list, tf):
     """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
         tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
+        ul, ur = uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
+        cannot_left = ul * tf >= 0
+        tl[cannot_left] = -np.sign(tf[cannot_left])
+        cannot_right = ur * tf <= 0
+        tr[cannot_right] = -np.sign(tf[cannot_right])
         ts.append(tl)
         ts.append(tr)
     return ts
@@ -116,7 +129,7 @@ def which_early(tf, ts):
     ts.append(np.ones(len(ts[0])) * tf)  # float or array both ok
     t_directed = np.array(ts) * np.sign(tf)
     t_directed[np.isnan(t_directed)] = np.inf
-    t_directed[t_directed <= 0] = np.inf
+    t_directed[t_directed < 0] = np.inf
     tend = t_directed.argmin(axis=0)
     t_event = np.array([ts[te][i] for i, te in enumerate(tend)])
     return tend, t_event
@@ -491,7 +504,7 @@ class Particle(Position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, tol=1e-12):
+    def trim(self, tol=0.0):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -621,6 +634,8 @@ class Particle(Position):
 
     def _move_within_cell(self, t_event, u_list, du_list, pos_list):
         """Move all particle for t_event time."""
+        assert np.allclose(u_list[0], self.u)
+        assert np.allclose(du_list[1], self.dv)
         self.t += t_event
         new_x = []
         new_u = []
@@ -629,9 +644,10 @@ class Particle(Position):
             new_u.append(u_list[i] + du_list[i] * x_move)
             new_x.append(x_move + pos_list[i])
 
+        tol = 1e-4
         for rr in new_x:
-            if np.logical_or(rr > 0.51, rr < -0.51).any():
-                where = np.where(np.logical_or(rr > 0.6, rr < -0.6))[0][0]
+            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
+                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
                 raise ValueError(
                     f"Particle way out of bound."
                     # f"tend = {tend[where]},"
@@ -653,6 +669,7 @@ class Particle(Position):
             w = self.get_f_node_weight()
             self.lon = np.einsum("nj,nj->n", w, px.T)
             self.lat = np.einsum("nj,nj->n", w, py.T)
+            assert np.max(w) < 1.5, f"{np.max(w), np.max(abs(self.rx))}"
         except AttributeError:
             self.lon, self.lat = rel2latlon(
                 self.rx,
@@ -685,7 +702,7 @@ class Particle(Position):
             tf = np.array([tf for i in range(self.N)])
         u_list, du_list, pos_list = self._extract_velocity_position()
 
-        ts = time2wall(pos_list, u_list, du_list)
+        ts = time2wall(pos_list, u_list, du_list, tf)
 
         tend, t_event = which_early(tf, ts)
 
@@ -696,6 +713,19 @@ class Particle(Position):
         if self.rzl_lin is not None:
             self.rzl_lin = temp + 1 / 2
 
+        tol = 1e-4
+        for rr in new_x:
+            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
+                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
+                raise ValueError(
+                    f"Particle way out of bound."
+                    # f"tend = {tend[where]},"
+                    f" t_event = {t_event[where]},"
+                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
+                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
+                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
+                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
+                )
         self.u, self.v, self.w = new_u
 
         self._sync_latlondep_before_cross()
@@ -788,6 +818,11 @@ class Particle(Position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
+            # if (abs(self.rx)>1).any():
+            #     where = np.where(abs(self.rx)>1)[0][0]
+            #     raise ValueError(
+            #         f"lon = {self.lon[where]}, lat = {self.lat[where]}, "
+            #         f"px = {self.px.T[where]}, py = {self.py.T[where]}")
         else:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
@@ -862,12 +897,8 @@ class Particle(Position):
         tf_used = tf[int_todo]
         trim_tol = 1e-12
         for i in range(self.max_iteration):
-            if i > 50:
+            if i > self.max_iteration * 0.95:
                 trim_tol = 1e-3
-            elif i > 30:
-                trim_tol = 1e-6
-            elif i > 10:
-                trim_tol = 1e-10
             logging.debug(len(int_todo), "left")
             sub = self.subset(int_todo)
             sub.trim(tol=trim_tol)
