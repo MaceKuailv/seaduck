@@ -341,15 +341,15 @@ class Particle(Position):
         """
         if self.too_large:  # pragma: no cover
             prefetched = None
-            i_min = None
+            prefetch_prefix = None
         else:
             if "time" not in self.ocedata[self.uname].dims:
                 ifirst = 0
             else:
                 ifirst = self.itmin
-            i_min = [0 for i in self.uarray.shape]
-            i_min[0] = ifirst
-            i_min = tuple(i_min)
+            prefetch_prefix = [0 for i in self.uarray.shape]
+            prefetch_prefix[0] = ifirst
+            prefetch_prefix = tuple(prefetch_prefix)
 
             if self.wname is None:
                 self.warray = None
@@ -374,7 +374,7 @@ class Particle(Position):
             ],
             [self.wknw, self.dwknw, (self.uknw, self.vknw), (self.duknw, self.dvknw)],
             prefetched=prefetched,
-            i_min=i_min,
+            prefetch_prefix=prefetch_prefix,
             vec_transform=False,
         )
 
