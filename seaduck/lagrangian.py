@@ -535,37 +535,37 @@ class Particle(Position):
 
         # if xmax>=0.5-tol:
         where = self.rx >= 0.5 - tol
-        cdx = (0.5 - tol) - self.rx[where]
-        self.rx[where] += cdx
-        self.u[where] += self.du[where] * cdx
+        trim_distance = (0.5 - tol) - self.rx[where]
+        self.rx[where] += trim_distance
+        self.u[where] += self.du[where] * trim_distance
         # if xmin<=-0.5+tol:
         where = self.rx <= -0.5 + tol
-        cdx = (-0.5 + tol) - self.rx[where]
-        self.rx[where] += cdx
-        self.u[where] += self.du[where] * cdx
+        trim_distance = (-0.5 + tol) - self.rx[where]
+        self.rx[where] += trim_distance
+        self.u[where] += self.du[where] * trim_distance
         # if ymax>=0.5-tol:
         where = self.ry >= 0.5 - tol
-        cdx = (0.5 - tol) - self.ry[where]
-        self.ry[where] += cdx
-        self.v[where] += self.dv[where] * cdx
+        trim_distance = (0.5 - tol) - self.ry[where]
+        self.ry[where] += trim_distance
+        self.v[where] += self.dv[where] * trim_distance
         # if ymin<=-0.5+tol:
         where = self.ry <= -0.5 + tol
-        cdx = (-0.5 + tol) - self.ry[where]
-        self.ry[where] += cdx
-        self.v[where] += self.dv[where] * cdx
+        trim_distance = (-0.5 + tol) - self.ry[where]
+        self.ry[where] += trim_distance
+        self.v[where] += self.dv[where] * trim_distance
         if self.rzl_lin is not None:
             np.nanmax(self.rzl_lin)
             np.nanmin(self.rzl_lin)
             # if zmax>=1.-tol:
             where = self.rzl_lin >= 1.0 - tol
-            cdx = (1.0 - tol) - self.rzl_lin[where]
-            self.rzl_lin[where] += cdx
-            self.w[where] += self.dw[where] * cdx
+            trim_distance = (1.0 - tol) - self.rzl_lin[where]
+            self.rzl_lin[where] += trim_distance
+            self.w[where] += self.dw[where] * trim_distance
             # if zmin<=-0.+tol:
             where = self.rzl_lin <= -0.0 + tol
-            cdx = (-0.0 + tol) - self.rzl_lin[where]
-            self.rzl_lin[where] += cdx
-            self.w[where] += self.dw[where] * cdx
+            trim_distance = (-0.0 + tol) - self.rzl_lin[where]
+            self.rzl_lin[where] += trim_distance
+            self.w[where] += self.dw[where] * trim_distance
 
     def _contract(self):  # pragma: no cover
         """Warp time to move particle into cell.
