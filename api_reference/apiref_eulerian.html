@@ -415,16 +415,16 @@ document.write(`
 To actually do interpolation, use from_latlon method to tell the ducks where they are.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.eulerian.Position.fatten">
-<span class="sig-name descname"><span class="pre">fatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fourD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_moves_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">four_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_moves_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.fatten" title="Permalink to this definition">#</a></dt>
 <dd><p>Fatten in all the required dimensions.</p>
 <p>Finding the neighboring center grid points in all 4 dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>knw</strong> (<em>KnW object</em>) – The kernel used to find neighboring points.</p></li>
-<li><p><strong>fourD</strong> (<em>Boolean</em><em>, </em><em>default False</em>) – When we are doing nearest neighbor interpolation on some of the dimensions,
-with fourD = True, this will create dimensions with length 1, and will squeeze
-the dimension if fourD = False</p></li>
+<li><p><strong>four_d</strong> (<em>Boolean</em><em>, </em><em>default False</em>) – When we are doing nearest neighbor interpolation on some of the dimensions,
+with four_d = True, this will create dimensions with length 1, and will squeeze
+the dimension if four_d = False</p></li>
 <li><p><strong>required</strong> (<em>str</em><em>, </em><em>iterable of str</em><em>, </em><em>default &quot;all&quot;</em>) – Which dims is needed in the process</p></li>
 <li><p><strong>ind_moves_kward</strong> (<em>dict</em><em>, </em><em>optional</em>) – Key word argument to put into ind_moves method of the Topology object.
 Read Topology.ind_moves for more detail.</p></li>
@@ -526,7 +526,7 @@ store the output in the Position object.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.eulerian.Position.interpolate">
-<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">varName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec_transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefetched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.interpolate" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec_transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefetched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefetch_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.interpolate" title="Permalink to this definition">#</a></dt>
 <dd><p>Do interpolation.</p>
 <p>This is the method that does the actual interpolation/derivative.
 It is a combination of the following methods:
@@ -539,23 +539,23 @@ _compute_weight_and_registe,.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>varName</strong> (<em>list</em><em>, </em><em>str</em><em>, </em><em>tuple</em>) – The variables to interpolate. Tuples are used for horizontal vectors.
+<li><p><strong>var_name</strong> (<em>list</em><em>, </em><em>str</em><em>, </em><em>tuple</em>) – The variables to interpolate. Tuples are used for horizontal vectors.
 Put str and list in a list if you have multiple things to interpolate.
 This input also defines the format of the output.</p></li>
 <li><p><strong>knw</strong> (<em>KnW object</em><em>, </em><em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em>) – The kernel object used for the operation.
-Put them in the same order as varName.
+Put them in the same order as var_name.
 Some level of automatic broadcasting is also supported.</p></li>
 <li><p><strong>vec_transform</strong> (<em>Boolean</em>) – Whether to project the vector field to the local zonal/meridional direction.</p></li>
-<li><p><strong>prefetched</strong> (<em>numpy.ndarray</em><em>, </em><em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em><em>, </em><em>None</em><em>, </em><em>default None</em>) – The prefetched array for the data, this will effectively overwrite varName.
-Put them in the same order as varName.
+<li><p><strong>prefetched</strong> (<em>numpy.ndarray</em><em>, </em><em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em><em>, </em><em>None</em><em>, </em><em>default None</em>) – The prefetched array for the data, this will effectively overwrite var_name.
+Put them in the same order as var_name.
 Some level of automatic broadcasting is also supported.</p></li>
-<li><p><strong>i_min</strong> (<em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em><em>, </em><em>None</em><em>, </em><em>default None</em>) – The prefix of the prefetched array.
-Put them in the same order as varName.
+<li><p><strong>prefetch_prefix</strong> (<em>tuple</em><em>, </em><em>list</em><em>, </em><em>dict</em><em>, </em><em>None</em><em>, </em><em>default None</em>) – The prefix of the prefetched array.
+Put them in the same order as var_name.
 Some level of automatic broadcasting is also supported.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>to_return</strong> – The interpolation/derivative output in the same format as varName.</p>
+<dd class="field-even"><p><strong>to_return</strong> – The interpolation/derivative output in the same format as var_name.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list, numpy.array, tuple</p>

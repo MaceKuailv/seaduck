@@ -457,7 +457,7 @@ no negative index is permitted for sanity reason.</p>
 <span class="sig-name descname"><span class="pre">get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_the_other_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>See what is adjacent to the face by this edge.</p>
 <p>The (edge) side of the (face) is connected to
-the (nedge) side of the (nface).
+the (new_edge) side of the (new_face).
 0,1,2,3 stands for up, down, left, right.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -468,8 +468,8 @@ the (nedge) side of the (nface).
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>nface</strong> (<em>int</em>) – The face adjacent to face in the edge direction.</p></li>
-<li><p><strong>nedge</strong> (<em>0,1,2,3</em>) – The face is connected to nface in which direction.</p></li>
+<li><p><strong>new_face</strong> (<em>int</em>) – The face adjacent to face in the edge direction.</p></li>
+<li><p><strong>new_edge</strong> (<em>0,1,2,3</em>) – The face is connected to new_face in which direction.</p></li>
 </ul>
 </p>
 </dd>
@@ -548,7 +548,7 @@ return the next cell.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.mutual_direction">
-<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nface</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.mutual_direction" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_face</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.mutual_direction" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the relative orientation of two faces.</p>
 <p>0,1,2,3 stands for up, down, left, right
 given 2 faces, the returns are
@@ -592,7 +592,7 @@ See Topology.ind_tend for more detail.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.topology.llc_mutual_direction">
-<span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">llc_mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.llc_mutual_direction" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">llc_mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor_face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.llc_mutual_direction" title="Permalink to this definition">#</a></dt>
 <dd><p>Find the relative orientation of two faces.</p>
 <p>The compileable version of mutual direction for llc grid.
 See Topology.mutual direction for more detail.</p>
