@@ -277,13 +277,12 @@ class OceData:
 
         This is done based on the readiness['h'] of the OceData object.
         """
-        way = self.readiness["h"]
         if self.too_large:  # pragma: no cover
             logging.warning(
                 "Loading grid into memory, it's a large dataset please be patient"
             )
 
-        if way == "oceanparcel":
+        if self.readiness["h"] == "oceanparcel":
             for var in ["XC", "YC", "XG", "YG"]:
                 self[var] = np.array(self[var], dtype="float32")
             for var in ["rA", "CS", "SN"]:
@@ -304,7 +303,7 @@ class OceData:
             if self.too_large:  # pragma: no cover
                 logging.info("cKD created")
 
-        if way == "local_cartesian":
+        if self.readiness["h"] == "local_cartesian":
             for var in ["XC", "YC", "CS", "SN"]:
                 self[var] = np.array(self[var], dtype="float32")
             self.dX = np.array(self["dXG"], dtype="float32")
@@ -323,7 +322,7 @@ class OceData:
             if self.too_large:  # pragma: no cover
                 logging.info("cKD created")
 
-        if way == "rectilinear":
+        if self.readiness["h"] == "rectilinear":
             self.lon = np.array(self["lon"], dtype="float32")
             self.lat = np.array(self["lat"], dtype="float32")
 
