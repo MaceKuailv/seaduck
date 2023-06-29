@@ -669,7 +669,7 @@ class Particle(Position):
             w = self.get_f_node_weight()
             self.lon = np.einsum("nj,nj->n", w, px.T)
             self.lat = np.einsum("nj,nj->n", w, py.T)
-            assert np.max(w)<1.5, f"{np.max(w), np.max(abs(self.rx))}"
+            assert np.max(w) < 1.5, f"{np.max(w), np.max(abs(self.rx))}"
         except AttributeError:
             self.lon, self.lat = rel2latlon(
                 self.rx,
@@ -712,7 +712,7 @@ class Particle(Position):
         self.rx, self.ry, temp = new_x
         if self.rzl_lin is not None:
             self.rzl_lin = temp + 1 / 2
-        
+
         tol = 1e-4
         for rr in new_x:
             if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
@@ -821,7 +821,8 @@ class Particle(Position):
             # if (abs(self.rx)>1).any():
             #     where = np.where(abs(self.rx)>1)[0][0]
             #     raise ValueError(
-            #         f"lon = {self.lon[where]}, lat = {self.lat[where]}, px = {self.px.T[where]}, py = {self.py.T[where]}")
+            #         f"lon = {self.lon[where]}, lat = {self.lat[where]}, "
+            #         f"px = {self.px.T[where]}, py = {self.py.T[where]}")
         else:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
@@ -896,7 +897,7 @@ class Particle(Position):
         tf_used = tf[int_todo]
         trim_tol = 1e-12
         for i in range(self.max_iteration):
-            if i > self.max_iteration*0.95:
+            if i > self.max_iteration * 0.95:
                 trim_tol = 1e-3
             logging.debug(len(int_todo), "left")
             sub = self.subset(int_todo)
