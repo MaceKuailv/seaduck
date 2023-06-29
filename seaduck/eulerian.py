@@ -15,6 +15,7 @@ from seaduck.utils import (
     get_key_by_value,
     local_to_latlon,
     weight_f_node,
+    to_180
 )
 
 
@@ -487,12 +488,14 @@ class Position:
             )
         else:
             ind = (self.iy, self.ix)
-        return find_px_py(
+        px,py =  find_px_py(
             self.ocedata.XG,
             self.ocedata.YG,
             self.ocedata.tp,
             ind,
         )
+        px = self.lon+to_180(px-self.lon)
+        return px,py
 
     def get_f_node_weight(self):
         """Find weight for the corner points interpolation."""

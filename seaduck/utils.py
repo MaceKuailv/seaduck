@@ -156,7 +156,8 @@ def spherical2cartesian(lat, lon, R=6371.0):
 @compileable
 def to_180(x, peri=360):
     """Convert any longitude scale to [-180,180)."""
-    x = x % peri
+    x = x % peri % peri
+    # underflow resistant
     return x + (-1) * (x // (peri / 2)) * peri
 
 

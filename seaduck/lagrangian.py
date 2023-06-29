@@ -504,7 +504,7 @@ class Particle(Position):
             z_out = False
         return np.logical_or(np.logical_or(x_out, y_out), z_out)
 
-    def trim(self, tol=1e-14):
+    def trim(self, tol=0.0):
         """Move the particles from outside the cell into the cell.
 
         At the same time change the velocity accordingly.
@@ -669,6 +669,7 @@ class Particle(Position):
             w = self.get_f_node_weight()
             self.lon = np.einsum("nj,nj->n", w, px.T)
             self.lat = np.einsum("nj,nj->n", w, py.T)
+            assert np.max(w)<1.5, f"{np.max(w), np.max(abs(self.rx))}"
         except AttributeError:
             self.lon, self.lat = rel2latlon(
                 self.rx,
@@ -711,7 +712,20 @@ class Particle(Position):
         self.rx, self.ry, temp = new_x
         if self.rzl_lin is not None:
             self.rzl_lin = temp + 1 / 2
-
+        
+        tol = 1e-4
+        for rr in new_x:
+            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
+                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
+                raise ValueError(
+                    f"Particle way out of bound."
+                    # f"tend = {tend[where]},"
+                    f" t_event = {t_event[where]},"
+                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
+                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
+                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
+                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
+                )
         self.u, self.v, self.w = new_u
 
         self._sync_latlondep_before_cross()
@@ -804,6 +818,10 @@ class Particle(Position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
+            # if (abs(self.rx)>1).any():
+            #     where = np.where(abs(self.rx)>1)[0][0]
+            #     raise ValueError(
+            #         f"lon = {self.lon[where]}, lat = {self.lat[where]}, px = {self.px.T[where]}, py = {self.py.T[where]}")
         else:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
@@ -876,7 +894,7 @@ class Particle(Position):
             logging.info("Nothing left to simulate")
             return
         tf_used = tf[int_todo]
-        trim_tol = 1e-14
+        trim_tol = 1e-12
         for i in range(self.max_iteration):
             if i > self.max_iteration*0.95:
                 trim_tol = 1e-3
