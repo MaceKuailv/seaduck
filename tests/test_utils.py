@@ -17,9 +17,10 @@ def test_general_len(item, length):
 
 def test_to_180():
     assert sd.utils.to_180(365) == 5
-    
+
+
 def test_to_180_underflow():
-    assert abs(sd.utils.to_180(-1e-20))<1e-10
+    assert abs(sd.utils.to_180(-1e-20)) < 1e-10
 
 
 def test_key_by_values():
