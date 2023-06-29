@@ -19,6 +19,10 @@ def test_to_180():
     assert sd.utils.to_180(365) == 5
 
 
+def test_to_180_underflow():
+    assert abs(sd.utils.to_180(-1e-20)) < 1e-10
+
+
 def test_key_by_values():
     dic = {1: "a", "hello": "b", "alpha": "a"}
     assert sd.utils.get_key_by_value(dic, "b") == "hello"
