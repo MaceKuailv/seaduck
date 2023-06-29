@@ -39,6 +39,39 @@ def not_out_of_bound_in_analytical_step(new_p, tf=1e80, tol=1e-4):
     return tend[0]
 
 
+def random_p(one_p, seed):
+    np.random.seed(seed)
+    (
+        one_p.u,
+        one_p.du,
+        one_p.rx,
+        one_p.v,
+        one_p.dv,
+        one_p.ry,
+        one_p.w,
+        one_p.dw,
+        one_p.rzl_lin,
+    ) = (np.array([i]) for i in np.random.uniform(-0.5, 0.5, 9))
+
+    one_p.rzl_lin += 0.5
+
+    one_p.u /= 1e5
+    one_p.v /= 1e5
+    one_p.w /= 1e5
+
+    one_p.du /= 1e5
+    one_p.dv /= 1e5
+    one_p.dw /= 1e5
+
+    return one_p
+
+
+def u_du_from_uwall(ul, ur, rx):
+    u = ul * (0.5 - rx) + ur * (rx + 0.5)
+    du = ur - ul
+    return u, du
+
+
 def test_reproduce_issue55(one_p):
     one_p.u[:] = 4.695701621346472e-06
     one_p.du[:] = -5.773571643116384e-05
@@ -80,53 +113,7 @@ def test_exactly_at_corner(one_p):
 
 @pytest.mark.parametrize("seed", [43, 20, 628])
 def test_underflow_du(one_p, seed):
-    np.random.seed(seed)
-    (
-        one_p.u,
-        one_p.du,
-        one_p.rx,
-        one_p.v,
-        one_p.dv,
-        one_p.ry,
-        one_p.w,
-        one_p.dw,
-        one_p.rzl_lin,
-    ) = (np.array([i]) for i in np.random.uniform(-0.5, 0.5, 9))
-
-    one_p.rzl_lin += 0.5
-
-    one_p.u /= 1e5
-    one_p.v /= 1e5
-    one_p.w /= 1e5
-
-    one_p.du /= 1e10
-    one_p.dv /= 1e10
-    one_p.dw /= 1e10
-
-    tend = not_out_of_bound_in_analytical_step(one_p)
-    assert tend != 6
-
-
-@pytest.mark.parametrize("seed", [432, 320, 60288])
-def test_underflow_u(one_p, seed):
-    np.random.seed(seed)
-    (
-        one_p.u,
-        one_p.du,
-        one_p.rx,
-        one_p.v,
-        one_p.dv,
-        one_p.ry,
-        one_p.w,
-        one_p.dw,
-        one_p.rzl_lin,
-    ) = (np.array([i]) for i in np.random.uniform(-0.5, 0.5, 9))
-
-    one_p.rzl_lin += 0.5
-
-    one_p.u /= 1e10
-    one_p.v /= 1e10
-    one_p.w /= 1e10
+    one_p = random_p(one_p, seed)
 
     one_p.du /= 1e5
     one_p.dv /= 1e5
@@ -134,3 +121,89 @@ def test_underflow_u(one_p, seed):
 
     tend = not_out_of_bound_in_analytical_step(one_p)
     assert tend != 6
+
+
+@pytest.mark.parametrize("seed", [432, 320, 60288])
+def test_underflow_u(one_p, seed):
+    one_p = random_p(one_p, seed)
+
+    one_p.u /= 1e5
+    one_p.v /= 1e5
+    one_p.w /= 1e5
+
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    assert tend != 6
+
+
+@pytest.mark.parametrize("seed", [0])
+def test_u_du_uwall_conversion(one_p, seed):
+    one_p = random_p(one_p, seed)
+    ul, ur = sd.lagrangian.uleftright_from_udu(one_p.u, one_p.du, one_p.rx)
+    u, du = u_du_from_uwall(ul, ur, one_p.rx)
+    assert np.allclose(u, one_p.u)
+    assert np.allclose(du, one_p.du)
+
+
+@pytest.mark.parametrize("seed", list(range(1999, 2011)))
+def test_impossible_wall(one_p, seed):
+    not_wall = np.random.randint(0, 2, 6)
+    passages = round(np.sum(not_wall))
+    where = list(np.where(not_wall)[0])
+    uwall_list = np.zeros(6)
+    vels = np.random.uniform(-1e-5, 1e-5, passages)
+    vels[-1] = -np.sum(vels[:-1])
+
+    uwall_list[not_wall.astype(bool)] = vels
+    uwall_list *= np.array([1, -1, 1, -1, 1, -1])
+    uwall_list = [np.array([uu]) for uu in uwall_list]
+
+    one_p = random_p(one_p, seed)
+    one_p.u, one_p.du = u_du_from_uwall(uwall_list[0], uwall_list[1], one_p.rx)
+    one_p.v, one_p.dv = u_du_from_uwall(uwall_list[2], uwall_list[3], one_p.ry)
+    one_p.w, one_p.dw = u_du_from_uwall(
+        uwall_list[4], uwall_list[5], one_p.rzl_lin - 0.5
+    )
+
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    if passages > 1:
+        assert tend in where, uwall_list
+
+
+@pytest.mark.parametrize("seed", list(range(2011, 2023)))
+def test_impossible_inflow(one_p, seed):
+    not_wall = np.random.randint(0, 2, 6)
+    passages = round(np.sum(not_wall))
+    where = list(np.where(not_wall)[0])
+    uwall_list = np.random.random(6)
+    uwall_list[~not_wall.astype(bool)] = 1
+    vels = np.random.uniform(-1e-5, 1e-5, passages)
+    vels[-1] = -np.sum(vels[:-1])
+
+    uwall_list[not_wall.astype(bool)] = vels
+    uwall_list *= np.array([1, -1, 1, -1, 1, -1])
+    uwall_list = [np.array([uu]) for uu in uwall_list]
+
+    one_p = random_p(one_p, seed)
+    one_p.u, one_p.du = u_du_from_uwall(uwall_list[0], uwall_list[1], one_p.rx)
+    one_p.v, one_p.dv = u_du_from_uwall(uwall_list[2], uwall_list[3], one_p.ry)
+    one_p.w, one_p.dw = u_du_from_uwall(
+        uwall_list[4], uwall_list[5], one_p.rzl_lin - 0.5
+    )
+
+    tend = not_out_of_bound_in_analytical_step(one_p)
+    if passages > 1:
+        assert tend in where, uwall_list
+
+
+@pytest.mark.parametrize("seed", list(range(2023, 2028)))
+@pytest.mark.parametrize("tf", [1e80, -1e80])
+def test_cross_cell_wall(one_p, seed, tf):
+    one_p = random_p(one_p, seed)
+    tend = one_p.analytical_step(tf)
+    one_p.cross_cell_wall(tend)
+    if (abs(one_p.rx) > 1).any():
+        where = np.where(abs(one_p.rx) > 1)[0][0]
+        raise ValueError(
+            f"lon = {one_p.lon[where]}, lat = {one_p.lat[where]}, "
+            f"px = {one_p.px.T[where]}, py = {one_p.py.T[where]}"
+        )

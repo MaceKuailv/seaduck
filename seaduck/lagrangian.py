@@ -634,8 +634,6 @@ class Particle(Position):
 
     def _move_within_cell(self, t_event, u_list, du_list, pos_list):
         """Move all particle for t_event time."""
-        assert np.allclose(u_list[0], self.u)
-        assert np.allclose(du_list[1], self.dv)
         self.t += t_event
         new_x = []
         new_u = []
@@ -643,20 +641,6 @@ class Particle(Position):
             x_move = stationary(t_event, u_list[i], du_list[i], 0)
             new_u.append(u_list[i] + du_list[i] * x_move)
             new_x.append(x_move + pos_list[i])
-
-        tol = 1e-4
-        for rr in new_x:
-            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
-                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
-                raise ValueError(
-                    f"Particle way out of bound."
-                    # f"tend = {tend[where]},"
-                    f" t_event = {t_event[where]},"
-                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
-                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
-                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
-                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
-                )
         return new_x, new_u
 
     def _sync_latlondep_before_cross(self):
@@ -669,7 +653,6 @@ class Particle(Position):
             w = self.get_f_node_weight()
             self.lon = np.einsum("nj,nj->n", w, px.T)
             self.lat = np.einsum("nj,nj->n", w, py.T)
-            assert np.max(w) < 1.5, f"{np.max(w), np.max(abs(self.rx))}"
         except AttributeError:
             self.lon, self.lat = rel2latlon(
                 self.rx,
@@ -713,19 +696,6 @@ class Particle(Position):
         if self.rzl_lin is not None:
             self.rzl_lin = temp + 1 / 2
 
-        tol = 1e-4
-        for rr in new_x:
-            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
-                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
-                raise ValueError(
-                    f"Particle way out of bound."
-                    # f"tend = {tend[where]},"
-                    f" t_event = {t_event[where]},"
-                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
-                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
-                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
-                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
-                )
         self.u, self.v, self.w = new_u
 
         self._sync_latlondep_before_cross()
