@@ -543,7 +543,7 @@ class Position:
 
     def _find_pk4d(self, knw, cuvwg="C"):  # pragma: no cover
         masked = self._get_masked(knw, cuvwg=cuvwg)
-        pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
+        pk4d = find_pk_4d(masked, inheritance=knw.inheritance)
         return pk4d
 
     def _register_interpolation_input(
@@ -1151,7 +1151,7 @@ class Position:
                 if masked is None:
                     pk4d = None
                 else:
-                    pk4d = find_pk_4d(masked, russian_doll=knw.inheritance)
+                    pk4d = find_pk_4d(masked, inheritance=knw.inheritance)
                 weight = knw.get_weight(
                     rx=rx,
                     ry=ry,
@@ -1168,8 +1168,8 @@ class Position:
                     vpk4d = None
                 else:
                     umask, vmask = masked
-                    upk4d = find_pk_4d(umask, russian_doll=uknw.inheritance)
-                    vpk4d = find_pk_4d(vmask, russian_doll=vknw.inheritance)
+                    upk4d = find_pk_4d(umask, inheritance=uknw.inheritance)
+                    vpk4d = find_pk_4d(vmask, inheritance=vknw.inheritance)
                 uweight = uknw.get_weight(
                     self.rx + 1 / 2, self.ry, rz=rz, rt=rt, pk4d=upk4d
                 )
