@@ -341,15 +341,15 @@ class Particle(Position):
         """
         if self.too_large:  # pragma: no cover
             prefetched = None
-            i_min = None
+            prefetch_prefix = None
         else:
             if "time" not in self.ocedata[self.uname].dims:
                 ifirst = 0
             else:
                 ifirst = self.itmin
-            i_min = [0 for i in self.uarray.shape]
-            i_min[0] = ifirst
-            i_min = tuple(i_min)
+            prefetch_prefix = [0 for i in self.uarray.shape]
+            prefetch_prefix[0] = ifirst
+            prefetch_prefix = tuple(prefetch_prefix)
 
             if self.wname is None:
                 self.warray = None
@@ -374,7 +374,7 @@ class Particle(Position):
             ],
             [self.wknw, self.dwknw, (self.uknw, self.vknw), (self.duknw, self.dvknw)],
             prefetched=prefetched,
-            i_min=i_min,
+            prefetch_prefix=prefetch_prefix,
             vec_transform=False,
         )
 
@@ -535,37 +535,37 @@ class Particle(Position):
 
         # if xmax>=0.5-tol:
         where = self.rx >= 0.5 - tol
-        cdx = (0.5 - tol) - self.rx[where]
-        self.rx[where] += cdx
-        self.u[where] += self.du[where] * cdx
+        trim_distance = (0.5 - tol) - self.rx[where]
+        self.rx[where] += trim_distance
+        self.u[where] += self.du[where] * trim_distance
         # if xmin<=-0.5+tol:
         where = self.rx <= -0.5 + tol
-        cdx = (-0.5 + tol) - self.rx[where]
-        self.rx[where] += cdx
-        self.u[where] += self.du[where] * cdx
+        trim_distance = (-0.5 + tol) - self.rx[where]
+        self.rx[where] += trim_distance
+        self.u[where] += self.du[where] * trim_distance
         # if ymax>=0.5-tol:
         where = self.ry >= 0.5 - tol
-        cdx = (0.5 - tol) - self.ry[where]
-        self.ry[where] += cdx
-        self.v[where] += self.dv[where] * cdx
+        trim_distance = (0.5 - tol) - self.ry[where]
+        self.ry[where] += trim_distance
+        self.v[where] += self.dv[where] * trim_distance
         # if ymin<=-0.5+tol:
         where = self.ry <= -0.5 + tol
-        cdx = (-0.5 + tol) - self.ry[where]
-        self.ry[where] += cdx
-        self.v[where] += self.dv[where] * cdx
+        trim_distance = (-0.5 + tol) - self.ry[where]
+        self.ry[where] += trim_distance
+        self.v[where] += self.dv[where] * trim_distance
         if self.rzl_lin is not None:
             np.nanmax(self.rzl_lin)
             np.nanmin(self.rzl_lin)
             # if zmax>=1.-tol:
             where = self.rzl_lin >= 1.0 - tol
-            cdx = (1.0 - tol) - self.rzl_lin[where]
-            self.rzl_lin[where] += cdx
-            self.w[where] += self.dw[where] * cdx
+            trim_distance = (1.0 - tol) - self.rzl_lin[where]
+            self.rzl_lin[where] += trim_distance
+            self.w[where] += self.dw[where] * trim_distance
             # if zmin<=-0.+tol:
             where = self.rzl_lin <= -0.0 + tol
-            cdx = (-0.0 + tol) - self.rzl_lin[where]
-            self.rzl_lin[where] += cdx
-            self.w[where] += self.dw[where] * cdx
+            trim_distance = (-0.0 + tol) - self.rzl_lin[where]
+            self.rzl_lin[where] += trim_distance
+            self.w[where] += self.dw[where] * trim_distance
 
     def _contract(self):  # pragma: no cover
         """Warp time to move particle into cell.
@@ -634,8 +634,6 @@ class Particle(Position):
 
     def _move_within_cell(self, t_event, u_list, du_list, pos_list):
         """Move all particle for t_event time."""
-        assert np.allclose(u_list[0], self.u)
-        assert np.allclose(du_list[1], self.dv)
         self.t += t_event
         new_x = []
         new_u = []
@@ -643,20 +641,6 @@ class Particle(Position):
             x_move = stationary(t_event, u_list[i], du_list[i], 0)
             new_u.append(u_list[i] + du_list[i] * x_move)
             new_x.append(x_move + pos_list[i])
-
-        tol = 1e-4
-        for rr in new_x:
-            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
-                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
-                raise ValueError(
-                    f"Particle way out of bound."
-                    # f"tend = {tend[where]},"
-                    f" t_event = {t_event[where]},"
-                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
-                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
-                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
-                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
-                )
         return new_x, new_u
 
     def _sync_latlondep_before_cross(self):
@@ -669,7 +653,6 @@ class Particle(Position):
             w = self.get_f_node_weight()
             self.lon = np.einsum("nj,nj->n", w, px.T)
             self.lat = np.einsum("nj,nj->n", w, py.T)
-            assert np.max(w) < 1.5, f"{np.max(w), np.max(abs(self.rx))}"
         except AttributeError:
             self.lon, self.lat = rel2latlon(
                 self.rx,
@@ -713,19 +696,6 @@ class Particle(Position):
         if self.rzl_lin is not None:
             self.rzl_lin = temp + 1 / 2
 
-        tol = 1e-4
-        for rr in new_x:
-            if np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol).any():
-                where = np.where(np.logical_or(rr > 0.5 + tol, rr < -0.5 - tol))[0]
-                raise ValueError(
-                    f"Particle way out of bound."
-                    # f"tend = {tend[where]},"
-                    f" t_event = {t_event[where]},"
-                    f" rx = {new_x[0][where]},ry = {new_x[1][where]},rz = {new_x[2][where]}"
-                    f"start with u = {self.u[where]}, du = {self.du[where]}, x={self.rx[where]}"
-                    f"start with v = {self.v[where]}, dv = {self.dv[where]}, y={self.ry[where]}"
-                    f"start with w = {self.w[where]}, dw = {self.dv[where]}, z={self.rzl_lin[where]}"
-                )
         self.u, self.v, self.w = new_u
 
         self._sync_latlondep_before_cross()
@@ -818,11 +788,6 @@ class Particle(Position):
             self.rx, self.ry = find_rx_ry_oceanparcel(
                 self.lon, self.lat, self.px, self.py
             )
-            # if (abs(self.rx)>1).any():
-            #     where = np.where(abs(self.rx)>1)[0][0]
-            #     raise ValueError(
-            #         f"lon = {self.lon[where]}, lat = {self.lat[where]}, "
-            #         f"px = {self.px.T[where]}, py = {self.py.T[where]}")
         else:
             dlon = to_180(self.lon - self.bx)
             dlat = to_180(self.lat - self.by)
