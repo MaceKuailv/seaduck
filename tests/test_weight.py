@@ -97,11 +97,11 @@ def test_interp_func(kernel, rx, ry):
         (np.array([0.5]), np.array([0.08])),
     ],
 )
-@pytest.mark.parametrize("ktype", ["dx", "dy"])
+@pytest.mark.parametrize("kernel_type", ["dx", "dy"])
 @pytest.mark.parametrize("horder", [0, 1])
-def test_create_different_square(ktype, horder, rx, ry):
+def test_create_different_square(kernel_type, horder, rx, ry):
     k = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    func = kw.get_func(k, hkernel=ktype, h_order=horder)
+    func = kw.get_func(k, hkernel=kernel_type, h_order=horder)
     weight = func(rx, ry)
     assert weight.shape == (1, len(k))
     if horder == 0:
@@ -111,9 +111,9 @@ def test_create_different_square(ktype, horder, rx, ry):
 
 
 @pytest.mark.parametrize("hkernel", ["dx", "dy"])
-def test_auto_doll(hkernel):
+def test_auto_inheritance(hkernel):
     k = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    inheritance = kw.auto_doll(k, hkernel=hkernel)
+    inheritance = kw.auto_inheritance(k, hkernel=hkernel)
     assert len(inheritance) > 1
     assert isinstance(inheritance[0], list)
 
@@ -161,7 +161,7 @@ def test_dy(kernel, rx, ry, order):
     assert np.allclose(0, np.sum(weight), atol=1e-14)
 
 
-@pytest.mark.parametrize("ktype", ["dx", "dy"])
+@pytest.mark.parametrize("kernel_type", ["dx", "dy"])
 @pytest.mark.parametrize(
     "kernel,order",
     [
@@ -189,9 +189,9 @@ def test_dy(kernel, rx, ry, order):
         (np.array([[0, 0], [0, 1], [1, 0], [1, 1]]), 2),
     ],
 )
-def test_order_too_high_error(kernel, order, ktype):
+def test_order_too_high_error(kernel, order, kernel_type):
     with pytest.raises(Exception):
-        kw.kernel_weight(kernel, ktype=ktype, order=order)
+        kw.kernel_weight(kernel, kernel_type=kernel_type, order=order)
 
 
 def test_plot_kernel():

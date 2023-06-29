@@ -44,7 +44,7 @@ def show_kernels(kernels=default_kernels):
         plt.plot(x + 0.1 * i, y + 0.1 * i, "+")
 
 
-def _translate_to_tendency(k):
+def _translate_to_tendency(kernel):
     """Translate a movement to directions.
 
     A kernel looks like
@@ -66,7 +66,7 @@ def _translate_to_tendency(k):
         element in the kernel.
     """
     tend = []
-    x, y = k
+    x, y = kernel
     if y > 0:
         for j in range(y):
             tend.append(0)  # up
@@ -82,7 +82,7 @@ def _translate_to_tendency(k):
     return tend
 
 
-def kernel_weight_x(kernel, ktype="interp", order=0):
+def kernel_weight_x(kernel, kernel_type="interp", order=0):
     r"""Return the function that calculate the interpolation/derivative weight.
 
     input needs to be a cross-shaped (that's where x is coming from) Lagrangian kernel.
@@ -107,7 +107,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
     kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It has to be shaped like a cross
-    ktype: str
+    kernel_type: str
         "interp" (default): Use both x y direction for interpolation,
         implies that order = 0
         "x": Use only x direction for interpolation/derivative
@@ -126,24 +126,24 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
 
     # if you the kernel is a line rather than a cross
     if len(xs) == 1:
-        ktype = "y"
+        kernel_type = "y"
     elif len(ys) == 1:
-        ktype = "x"
+        kernel_type = "x"
 
     x_poly = []
     y_poly = []
-    if ktype == "interp":
+    if kernel_type == "interp":
         for ax in xs:
             x_poly.append(list(combinations([i for i in xs if i != ax], len(xs) - 1)))
         for ay in ys:
             y_poly.append(list(combinations([i for i in ys if i != ay], len(ys) - 1)))
-    if ktype == "x":
+    if kernel_type == "x":
         for ax in xs:
             x_poly.append(
                 list(combinations([i for i in xs if i != ax], len(xs) - 1 - order))
             )
         y_poly = [[[]]]
-    if ktype == "y":
+    if kernel_type == "y":
         x_poly = [[[]]]
         for ay in ys:
             y_poly.append(
@@ -286,9 +286,9 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
                 weight[:, i] = 0.0
         return weight
 
-    if ktype == "interp":
+    if kernel_type == "interp":
         return the_interp_func
-    if ktype == "x":
+    if kernel_type == "x":
         max_order = len(xs) - 1
         if order < max_order:
             return the_x_func
@@ -296,7 +296,7 @@ def kernel_weight_x(kernel, ktype="interp", order=0):
             return the_x_maxorder_func
         else:
             raise ValueError("Kernel is too small for this derivative")
-    if ktype == "y":
+    if kernel_type == "y":
         max_order = len(ys) - 1
         if order < max_order:
             return the_y_func
@@ -370,11 +370,11 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     def the_square_func(rx, ry):
         nonlocal kernel, xs, ys, y_poly, x_poly, xorder, yorder, xmaxorder, ymaxorder
         n = len(rx)
-        mx = len(xs)
-        my = len(ys)
+        num_node_x = len(xs)
+        num_node_y = len(ys)
         m = len(kernel)
-        yweight = np.ones((n, my))
-        xweight = np.ones((n, mx))
+        yweight = np.ones((n, num_node_y))
+        xweight = np.ones((n, num_node_x))
         weight = np.ones((n, m)) * 0.0
 
         if ymaxorder:
@@ -429,7 +429,7 @@ def kernel_weight_s(kernel, xorder=0, yorder=0):
     return the_square_func
 
 
-def kernel_weight(kernel, ktype="interp", order=0):
+def kernel_weight(kernel, kernel_type="interp", order=0):
     """Return a function that compute weights.
 
     A wrapper around kernel_weight_x and kernel_weight_s.
@@ -441,7 +441,7 @@ def kernel_weight(kernel, ktype="interp", order=0):
     kernel: np.ndarray
         2D array with shape (n,2), where n is the number of nodes.
         It need to either shape like a rectangle or a cross
-    ktype: str
+    kernel_type: str
         "interp" (default): Use both x y direction for interpolation,
         implies that order = 0
         "dx": Use only x direction for interpolation/derivative
@@ -455,22 +455,23 @@ def kernel_weight(kernel, ktype="interp", order=0):
         function to calculate the hotizontal interpolation/derivative
         weight
     """
-    mx = len(set(kernel[:, 0]))
-    my = len(set(kernel[:, 1]))
-    if len(kernel) == mx + my - 1:
-        if "d" in ktype:
-            ktype = ktype[1:]
-        return kernel_weight_x(kernel, ktype=ktype, order=order)
-    elif len(kernel) == mx * my:
-        # mx*my == mx+my-1 only when mx==1 or my ==1
-        if ktype == "interp":
+    num_node_x = len(set(kernel[:, 0]))
+    num_node_y = len(set(kernel[:, 1]))
+    if len(kernel) == num_node_x + num_node_y - 1:
+        if "d" in kernel_type:
+            kernel_type = kernel_type[1:]
+        return kernel_weight_x(kernel, kernel_type=kernel_type, order=order)
+    elif len(kernel) == num_node_x * num_node_y:
+        # num_node_x*num_node_y == num_node_x+num_node_y-1
+        # only when num_node_x==1 or num_node_y ==1
+        if kernel_type == "interp":
             return kernel_weight_s(kernel, xorder=0, yorder=0)
-        elif ktype == "dx":
+        elif kernel_type == "dx":
             return kernel_weight_s(kernel, xorder=order, yorder=0)
-        elif ktype == "dy":
+        elif kernel_type == "dy":
             return kernel_weight_s(kernel, xorder=0, yorder=order)
         else:
-            raise ValueError(f"ktype = {ktype} not supported")
+            raise ValueError(f"kernel_type = {kernel_type} not supported")
     else:
         raise NotImplementedError("The shape of the kernel is neither cross or square")
 
@@ -478,16 +479,16 @@ def kernel_weight(kernel, ktype="interp", order=0):
 default_interp_funcs = [kernel_weight_x(a_kernel) for a_kernel in default_kernels]
 
 
-def find_which_points_for_each_kernel(masked, russian_doll="default"):
+def find_which_points_for_each_kernel(masked, inheritance="default"):
     """Find which kernel to use at each point.
 
     masked is going to be a n*m array,
     where n is the number of points of interest.
     m is the size of the largest kernel.
 
-    russian_doll defines the shape of smaller kernels.
+    inheritance defines the shape of smaller kernels.
     say
-    russian_doll = [
+    inheritance = [
     [0,1,2,3,4],
     [0,1],
     [0]
@@ -508,14 +509,14 @@ def find_which_points_for_each_kernel(masked, russian_doll="default"):
     none of the kernel can fit it, so the index will not be in the
     return
     """
-    if russian_doll == "default":
-        russian_doll = default_inheritance
+    if inheritance == "default":
+        inheritance = default_inheritance
     already_wet = []
-    for i, doll in enumerate(russian_doll):
+    for i, doll in enumerate(inheritance):
         wet_1d = masked[:, np.array(doll)].all(axis=1)
         already_wet.append(np.where(wet_1d)[0])
     point_for_each_kernel = [list(already_wet[0])]
-    for i in range(1, len(russian_doll)):
+    for i in range(1, len(inheritance)):
         point_for_each_kernel.append(
             list(np.setdiff1d(already_wet[i], already_wet[i - 1]))
         )
@@ -527,7 +528,7 @@ def get_weight_cascade(
     ry,
     pk,
     kernel_large=default_kernel,
-    russian_doll=default_inheritance,
+    inheritance=default_inheritance,
     funcs=default_interp_funcs,
 ):
     """Compute the weight.
@@ -542,7 +543,7 @@ def get_weight_cascade(
         position to the nearest node
     kernel_large: numpy.ndarray
         A numpy kernel of shape (M,2) that contains all the kernels needed.
-    russian_doll: list of list(s)
+    inheritance: list of list(s)
         The inheritance sequence when some of the node is masked.
     funcs: list of compileable functions
         The weight function of each kernel in the inheritance sequence.
@@ -563,22 +564,25 @@ def get_weight_cascade(
         sub_ry = ry[pk[i]]
         #     slim_weight = interp_func[i](sub_rx,sub_ry)
         sub_weight = np.zeros((len(pk[i]), len(kernel_large)))
-        sub_weight[:, np.array(russian_doll[i])] = funcs[i](sub_rx, sub_ry)
+        sub_weight[:, np.array(inheritance[i])] = funcs[i](sub_rx, sub_ry)
         weight[pk[i]] = sub_weight
     return weight
 
 
-def find_pk_4d(masked, russian_doll=default_inheritance):
-    """Find the masking condition for 4D space time."""
+def find_pk_4d(masked, inheritance=default_inheritance):
+    """Find the masking condition for 4D space time.
+
+    See find_which_points_for_each_kernel
+    """
     maskedT = masked.T
     ind_shape = maskedT.shape
-    tz = []
+    pk4d = []
     for i in range(ind_shape[0]):
         z = []
         for j in range(ind_shape[1]):
-            z.append(find_which_points_for_each_kernel(maskedT[i, j].T, russian_doll))
-        tz.append(z)
-    return tz
+            z.append(find_which_points_for_each_kernel(maskedT[i, j].T, inheritance))
+        pk4d.append(z)
+    return pk4d
 
 
 def kash(kernel):  # hash kernel
@@ -599,7 +603,7 @@ def _get_func_from_hashable(
     kernel_tuple, kernel_shape, hkernel="interp", h_order=0, **kwargs
 ):
     kernel = np.array(kernel_tuple).reshape(kernel_shape)
-    return kernel_weight(kernel, ktype=hkernel, order=h_order)
+    return kernel_weight(kernel, kernel_type=hkernel, order=h_order)
 
 
 def get_func(kernel, **kwargs):
@@ -617,7 +621,7 @@ def get_func(kernel, **kwargs):
     return _get_func_from_hashable(tuple(kernel.ravel()), kernel.shape, **kwargs)
 
 
-def auto_doll(kernel, hkernel="interp"):
+def auto_inheritance(kernel, hkernel="interp"):
     """Find a natural inheritance pattern given one horizontal kernel."""
     if hkernel == "interp":
         doll = [list(range(len(kernel)))]
@@ -679,9 +683,9 @@ class KnW:
         h_order=0,  # depend on hkernel type
         ignore_mask=False,
     ):
-        ksort = np.abs(kernel + np.array([0.01, 0.00618])).sum(axis=1).argsort()
+        kernel_sort = np.abs(kernel + np.array([0.01, 0.00618])).sum(axis=1).argsort()
         # Avoid points having same distance
-        ksort_inv = ksort.argsort()
+        kernel_sort_inv = kernel_sort.argsort()
 
         if (inheritance is not None) and (ignore_mask):
             logging.info(
@@ -690,7 +694,7 @@ class KnW:
             )
 
         if inheritance == "auto":
-            inheritance = auto_doll(kernel, hkernel=hkernel)
+            inheritance = auto_inheritance(kernel, hkernel=hkernel)
         elif inheritance is None:  # does not apply cascade
             inheritance = [list(range(len(kernel)))]
         elif isinstance(inheritance, list):
@@ -698,9 +702,9 @@ class KnW:
         else:
             raise ValueError("Unknown type of inherirance")
 
-        self.kernel = kernel[ksort]
+        self.kernel = kernel[kernel_sort]
         self.inheritance = [
-            sorted([ksort_inv[i] for i in heir]) for heir in inheritance
+            sorted([kernel_sort_inv[i] for i in heir]) for heir in inheritance
         ]
         self.hkernel = hkernel
         self.vkernel = vkernel
@@ -850,7 +854,7 @@ class KnW:
                         ry,
                         pk4d[jt][jz],
                         kernel_large=self.kernel,
-                        russian_doll=self.inheritance,
+                        inheritance=self.inheritance,
                         funcs=self.hfuncs,
                     )
         for jt in range(nt):
