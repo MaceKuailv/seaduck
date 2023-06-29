@@ -588,7 +588,7 @@ we also force all particle’s internal clock to be tl.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.trim">
-<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.trim" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.trim" title="Permalink to this definition">#</a></dt>
 <dd><p>Move the particles from outside the cell into the cell.</p>
 <p>At the same time change the velocity accordingly.
 In the mean time, creating some negiligible error in time.</p>
@@ -672,8 +672,14 @@ The time could be negative.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.lagrangian.time2wall">
-<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">time2wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.time2wall" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">time2wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.time2wall" title="Permalink to this definition">#</a></dt>
 <dd><p>Apply stationary_time three times for all three dimensions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seaduck.lagrangian.uleftright_from_udu">
+<span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">uleftright_from_udu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.uleftright_from_udu" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate the velocity at -0.5 and 0.5.</p>
 </dd></dl>
 
 <dl class="py function">
