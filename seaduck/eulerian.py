@@ -403,7 +403,7 @@ class Position:
         else:
             raise ValueError("tkernel not supported")
 
-    def fatten(self, knw, fourD=False, required="all", ind_moves_kwarg={}):
+    def fatten(self, knw, four_d=False, required="all", ind_moves_kwarg={}):
         """Fatten in all the required dimensions.
 
         Finding the neighboring center grid points in all 4 dimensions.
@@ -412,10 +412,10 @@ class Position:
         ----------
         knw: KnW object
             The kernel used to find neighboring points.
-        fourD: Boolean, default False
+        four_d: Boolean, default False
             When we are doing nearest neighbor interpolation on some of the dimensions,
-            with fourD = True, this will create dimensions with length 1, and will squeeze
-            the dimension if fourD = False
+            with four_d = True, this will create dimensions with length 1, and will squeeze
+            the dimension if four_d = False
         required: str, iterable of str, default "all"
             Which dims is needed in the process
         ind_moves_kward: dict, optional
@@ -456,7 +456,7 @@ class Position:
             if fizl is not None:
                 to_return = _ind_broadcast(fizl, to_return)
                 keys.insert(0, "Zl")
-        elif fourD:
+        elif four_d:
             to_return = [
                 np.expand_dims(to_return[i], axis=-1) for i in range(len(to_return))
             ]
@@ -466,7 +466,7 @@ class Position:
             if fit is not None:
                 to_return = _ind_broadcast(fit, to_return)
                 keys.insert(0, "time")
-        elif fourD:
+        elif four_d:
             to_return = [
                 np.expand_dims(to_return[i], axis=-1) for i in range(len(to_return))
             ]
@@ -513,24 +513,24 @@ class Position:
         return lon, lat
 
     def _get_needed(
-        self, varName, knw, required=None, prefetched=None, **kwarg
+        self, var_name, knw, required=None, prefetched=None, **kwarg
     ):  # pragma: no cover
         if required is None:
-            required = self.ocedata._ds[varName].dims
+            required = self.ocedata._ds[var_name].dims
         ind = self.fatten(knw, required=required, **kwarg)
-        if len(ind) != len(self.ocedata._ds[varName].dims):
+        if len(ind) != len(self.ocedata._ds[var_name].dims):
             raise IndexError(
                 "Dimension mismatch. "
                 "Please check if the Position objects "
                 "have all the dimensions needed"
             )
         if prefetched is None:
-            return smart_read(self.ocedata[varName], ind)
+            return smart_read(self.ocedata[var_name], ind)
         else:
             return prefetched[ind]
 
     def _get_masked(self, knw, cuvwg="C", **kwarg):  # pragma: no cover
-        ind = self.fatten(knw, fourD=True, **kwarg)
+        ind = self.fatten(knw, four_d=True, **kwarg)
         if self.it is not None:
             ind = ind[1:]
         if len(ind) != len(self.ocedata._ds["maskC"].dims):
@@ -547,7 +547,7 @@ class Position:
         return pk4d
 
     def _register_interpolation_input(
-        self, varName, knw, prefetched=None, prefetch_prefix=None
+        self, var_name, knw, prefetched=None, prefetch_prefix=None
     ):
         """Register the input of interpolation function.
 
@@ -558,7 +558,7 @@ class Position:
         Returns
         -------
         output_format: dict
-            Record information about the original varName input.
+            Record information about the original var_name input.
             Provide the formatting information for output,
             such that it matches the input in a direct fashion.
         main_keys: list
@@ -587,32 +587,32 @@ class Position:
         # hash_read  = {var:hash(var,kernel_size)}
         # hash_weight= {var:hash(kernel,cuvwg)}
         output_format = {}
-        if isinstance(varName, (str, tuple)):
-            varName = [varName]
+        if isinstance(var_name, (str, tuple)):
+            var_name = [var_name]
             output_format["single"] = True
-        elif isinstance(varName, list):
+        elif isinstance(var_name, list):
             output_format["single"] = False
         else:
             raise ValueError(
-                "varName needs to be string, tuple, or a list of the above."
+                "var_name needs to be string, tuple, or a list of the above."
             )
-        Nvar = len(varName)
+        num_var = len(var_name)
 
         if isinstance(knw, KnW):
-            knw = [knw for i in range(Nvar)]
+            knw = [knw for i in range(num_var)]
         if isinstance(knw, tuple):
             if len(knw) != 2:
                 raise ValueError(
                     "When knw is a tuple, we assume it to be kernels for a horizontal vector,"
                     "thus, it has to have 2 elements"
                 )
-            knw = [knw for i in range(Nvar)]
+            knw = [knw for i in range(num_var)]
         elif isinstance(knw, list):
-            if len(knw) != Nvar:
+            if len(knw) != num_var:
                 raise ValueError("Mismatch between the number of kernels and variables")
         elif isinstance(knw, dict):
             temp = []
-            for var in varName:
+            for var in var_name:
                 a_knw = knw.get(var)
                 if a_knw is None or not isinstance(a_knw, (tuple, KnW)):
                     raise ValueError(
@@ -627,18 +627,18 @@ class Position:
             )
 
         if isinstance(prefetched, np.ndarray):
-            prefetched = [prefetched for i in range(Nvar)]
+            prefetched = [prefetched for i in range(num_var)]
         elif isinstance(prefetched, tuple):
-            prefetched = [prefetched for i in range(Nvar)]
+            prefetched = [prefetched for i in range(num_var)]
         elif prefetched is None:
-            prefetched = [prefetched for i in range(Nvar)]
+            prefetched = [prefetched for i in range(num_var)]
         elif isinstance(prefetched, list):
-            if len(prefetched) != Nvar:
+            if len(prefetched) != num_var:
                 raise ValueError(
                     "Mismatch between the number of prefetched arrays and variables"
                 )
         elif isinstance(prefetched, dict):
-            prefetched = [prefetched.get(var) for var in varName]
+            prefetched = [prefetched.get(var) for var in var_name]
         else:
             raise ValueError(
                 "prefetched needs to be a numpy array/tuple pair of numpy array,"
@@ -646,36 +646,36 @@ class Position:
             )
 
         if isinstance(prefetch_prefix, tuple):
-            prefetch_prefix = [prefetch_prefix for i in range(Nvar)]
+            prefetch_prefix = [prefetch_prefix for i in range(num_var)]
         elif prefetch_prefix is None:
-            prefetch_prefix = [None for i in range(Nvar)]
+            prefetch_prefix = [None for i in range(num_var)]
         elif isinstance(prefetch_prefix, list):
-            if len(prefetch_prefix) != Nvar:
+            if len(prefetch_prefix) != num_var:
                 raise ValueError(
                     "Mismatch between the number of prefetched arrays prefix prefetch_prefix and variables"
                 )
         elif isinstance(prefetch_prefix, dict):
-            prefetch_prefix = [prefetch_prefix.get(var) for var in varName]
+            prefetch_prefix = [prefetch_prefix.get(var) for var in var_name]
         else:
             raise ValueError(
                 "prefetched prefix prefetch_prefix needs to be a tuple, or list/dictionaries containing that "
             )
 
-        output_format["ori_list"] = copy.deepcopy(list(zip(varName, knw)))
-        new_varName = []
+        output_format["ori_list"] = copy.deepcopy(list(zip(var_name, knw)))
+        new_var_name = []
         new_prefetched = []
         new_knw = []
         new_prefetch_prefix = []
-        for i, var in enumerate(varName):
+        for i, var in enumerate(var_name):
             if isinstance(var, str):
-                new_varName.append(var)
+                new_var_name.append(var)
                 new_prefetched.append(prefetched[i])
                 new_knw.append(knw[i])
                 new_prefetch_prefix.append(prefetch_prefix[i])
             elif isinstance(var, tuple):
                 if self.face is None:
                     for j in range(len(var)):
-                        new_varName.append(var[j])
+                        new_var_name.append(var[j])
                         if prefetched[i] is not None:
                             new_prefetched.append(prefetched[i][j])
                         else:
@@ -683,7 +683,7 @@ class Position:
                         new_knw.append(knw[i][j])
                         new_prefetch_prefix.append(prefetch_prefix[i])
                 else:
-                    new_varName.append(var)
+                    new_var_name.append(var)
                     new_prefetched.append(prefetched[i])
                     new_knw.append(knw[i])
                     new_prefetch_prefix.append(prefetch_prefix[i])
@@ -691,14 +691,14 @@ class Position:
                 pass
             else:
                 raise ValueError(
-                    "varName needs to be string, tuple, or a list of the above."
+                    "var_name needs to be string, tuple, or a list of the above."
                 )
 
         prefetched = new_prefetched
         knw = new_knw
         prefetch_prefix = new_prefetch_prefix
-        varName = new_varName
-        output_format["final_varName"] = list(zip(varName, knw))
+        var_name = new_var_name
+        output_format["final_var_name"] = list(zip(var_name, knw))
 
         kernel_size_hash = []
         kernel_hash = []
@@ -719,7 +719,7 @@ class Position:
                 kernel_hash.append(hash((uknw, vknw)))
                 mask_ignore.append(uknw.ignore_mask or vknw.ignore_mask)
         dims = []
-        for var in varName:
+        for var in var_name:
             if isinstance(var, str):
                 dims.append(self.ocedata[var].dims)
             elif isinstance(var, tuple):
@@ -728,9 +728,9 @@ class Position:
                     temp.append(self.ocedata[vvv].dims)
                 dims.append(tuple(temp))
 
-        main_keys = list(zip(varName, kernel_hash))
+        main_keys = list(zip(var_name, kernel_hash))
         prefetch_dict = dict(zip(main_keys, zip(prefetched, prefetch_prefix)))
-        main_dict = dict(zip(main_keys, zip(varName, dims, knw)))
+        main_dict = dict(zip(main_keys, zip(var_name, dims, knw)))
         hash_index = dict(
             zip(main_keys, [hash(i) for i in zip(dims, kernel_size_hash)])
         )
@@ -738,7 +738,7 @@ class Position:
             zip(main_keys, [hash(i) for i in zip(dims, mask_ignore, kernel_size_hash)])
         )
         hash_read = dict(
-            zip(main_keys, [hash(i) for i in zip(varName, kernel_size_hash)])
+            zip(main_keys, [hash(i) for i in zip(var_name, kernel_size_hash)])
         )
         hash_weight = dict(zip(main_keys, [hash(i) for i in zip(dims, kernel_hash)]))
         return (
@@ -775,10 +775,10 @@ class Position:
         index_lookup = {}
         for hs in hsh:
             main_key = get_key_by_value(hash_index, hs)
-            varName, dims, knw = main_dict[main_key]
-            if isinstance(varName, str):
+            var_name, dims, knw = main_dict[main_key]
+            if isinstance(var_name, str):
                 old_dims = dims
-            elif isinstance(varName, tuple):
+            elif isinstance(var_name, tuple):
                 old_dims = dims[0]
             dims = []
             for i in old_dims:
@@ -787,22 +787,22 @@ class Position:
                 else:
                     dims.append(i)
             dims = tuple(dims)
-            if isinstance(varName, str):
+            if isinstance(var_name, str):
                 if "Xp1" in old_dims and "Yp1" in old_dims:
                     cuvwg = "G"
                 else:
                     cuvwg = "C"
                 ind = self.fatten(
-                    knw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": cuvwg}
+                    knw, required=dims, four_d=True, ind_moves_kwarg={"cuvwg": cuvwg}
                 )
                 index_lookup[hs] = ind
-            elif isinstance(varName, tuple):
+            elif isinstance(var_name, tuple):
                 uknw, vknw = knw
                 uind = self.fatten(
-                    uknw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": "U"}
+                    uknw, required=dims, four_d=True, ind_moves_kwarg={"cuvwg": "U"}
                 )
                 vind = self.fatten(
-                    vknw, required=dims, fourD=True, ind_moves_kwarg={"cuvwg": "V"}
+                    vknw, required=dims, four_d=True, ind_moves_kwarg={"cuvwg": "V"}
                 )
                 index_lookup[hs] = (uind, vind)
 
@@ -839,10 +839,10 @@ class Position:
             return transform_lookup
         for hs in hsh:
             main_key = get_key_by_value(hash_index, hs)
-            varName, dims, knw = main_dict[main_key]
-            if isinstance(varName, str):
+            var_name, dims, knw = main_dict[main_key]
+            if isinstance(var_name, str):
                 transform_lookup[hs] = None
-            elif isinstance(varName, tuple):
+            elif isinstance(var_name, tuple):
                 uind, vind = index_lookup[hs]
                 uind_dic = dict(zip(dims[0], uind))
                 vind_dic = dict(zip(dims[1], vind))
@@ -911,7 +911,7 @@ class Position:
         mask_lookup = {}
         for hs in hsh:
             main_key = get_key_by_value(hash_mask, hs)
-            varName, dims, knw = main_dict[main_key]
+            var_name, dims, knw = main_dict[main_key]
             hsind = hash_index[main_key]
             longDims = "".join([str(a_thing) for a_thing in dims])
             if isinstance(knw, KnW):
@@ -921,7 +921,7 @@ class Position:
 
             if ignore_mask or ("X" not in longDims) or ("Y" not in longDims):
                 mask_lookup[hs] = None
-            elif isinstance(varName, str):
+            elif isinstance(var_name, str):
                 ind = index_lookup[hsind]
                 ind_for_mask = _ind_for_mask(ind, dims)
                 if "Zl" in dims:
@@ -943,7 +943,7 @@ class Position:
                     cuvw = "C"
                 masked = get_masked(self.ocedata, ind_for_mask, cuvwg=cuvw)
                 mask_lookup[hs] = masked
-            elif isinstance(varName, tuple):
+            elif isinstance(var_name, tuple):
                 to_unzip = transform_lookup[hsind]
                 uind, vind = index_lookup[hsind]
                 if to_unzip is None:
@@ -1013,9 +1013,9 @@ class Position:
         for hs in hsh:
             main_key = get_key_by_value(hash_read, hs)
             hsind = hash_index[main_key]
-            varName, dims, knw = main_dict[main_key]
+            var_name, dims, knw = main_dict[main_key]
             prefetched, prefetch_prefix = prefetch_dict[main_key]
-            if isinstance(varName, str):
+            if isinstance(var_name, str):
                 ind = index_lookup[hsind]
                 if prefetched is not None:
                     if prefetch_prefix is None:
@@ -1026,10 +1026,10 @@ class Position:
                     temp_ind = _subtract_prefetch_prefix(ind, prefetch_prefix)
                     needed = np.nan_to_num(prefetched[temp_ind])
                 else:
-                    needed = np.nan_to_num(smart_read(self.ocedata[varName], ind))
+                    needed = np.nan_to_num(smart_read(self.ocedata[var_name], ind))
                 data_lookup[hs] = needed
-            elif isinstance(varName, tuple):
-                uname, vname = varName
+            elif isinstance(var_name, tuple):
+                uname, vname = var_name
                 uind, vind = index_lookup[hsind]
                 (
                     (UfromUvel, UfromVvel, VfromUvel, VfromVvel),
@@ -1100,9 +1100,9 @@ class Position:
         for hs in hsh:
             main_key = get_key_by_value(hash_weight, hs)
             hsmsk = hash_mask[main_key]
-            varName, dims, knw = main_dict[main_key]
+            var_name, dims, knw = main_dict[main_key]
             masked = mask_lookup[hsmsk]
-            if isinstance(varName, tuple):
+            if isinstance(var_name, tuple):
                 ori_dims = dims
                 dims = ori_dims[0]
                 ori_knw = knw
@@ -1139,7 +1139,7 @@ class Position:
             else:
                 rt = 0
 
-            if isinstance(varName, str):
+            if isinstance(var_name, str):
                 if "Xp1" in dims:
                     rx = self.rx + 0.5
                 else:
@@ -1161,7 +1161,7 @@ class Position:
                     bottom_scheme=this_bottom_scheme,
                 )
                 weight_lookup[hs] = weight
-            elif isinstance(varName, tuple):
+            elif isinstance(var_name, tuple):
                 uknw, vknw = ori_knw
                 if masked is None:
                     upk4d = None
@@ -1180,7 +1180,7 @@ class Position:
         return weight_lookup
 
     def interpolate(
-        self, varName, knw, vec_transform=True, prefetched=None, prefetch_prefix=None
+        self, var_name, knw, vec_transform=True, prefetched=None, prefetch_prefix=None
     ):
         """Do interpolation.
 
@@ -1195,29 +1195,29 @@ class Position:
 
         Parameters
         ----------
-        varName: list, str, tuple
+        var_name: list, str, tuple
             The variables to interpolate. Tuples are used for horizontal vectors.
             Put str and list in a list if you have multiple things to interpolate.
             This input also defines the format of the output.
         knw: KnW object, tuple, list, dict
             The kernel object used for the operation.
-            Put them in the same order as varName.
+            Put them in the same order as var_name.
             Some level of automatic broadcasting is also supported.
         vec_transform: Boolean
             Whether to project the vector field to the local zonal/meridional direction.
         prefetched: numpy.ndarray, tuple, list, dict, None, default None
-            The prefetched array for the data, this will effectively overwrite varName.
-            Put them in the same order as varName.
+            The prefetched array for the data, this will effectively overwrite var_name.
+            Put them in the same order as var_name.
             Some level of automatic broadcasting is also supported.
         prefetch_prefix: tuple, list, dict, None, default None
             The prefix of the prefetched array.
-            Put them in the same order as varName.
+            Put them in the same order as var_name.
             Some level of automatic broadcasting is also supported.
 
         Returns
         -------
         to_return: list, numpy.array, tuple
-            The interpolation/derivative output in the same format as varName.
+            The interpolation/derivative output in the same format as var_name.
         """
         to_return = []
         (
@@ -1230,7 +1230,7 @@ class Position:
             hash_read,
             hash_weight,
         ) = self._register_interpolation_input(
-            varName, knw, prefetched=prefetched, prefetch_prefix=prefetch_prefix
+            var_name, knw, prefetched=prefetched, prefetch_prefix=prefetch_prefix
         )
         index_lookup = self._fatten_required_index_and_register(hash_index, main_dict)
         transform_lookup = self._transform_vector_and_register(
@@ -1252,8 +1252,8 @@ class Position:
         )
         # index_list = []
         for key in main_keys:
-            varName, dims, knw = main_dict[key]
-            if isinstance(varName, str):
+            var_name, dims, knw = main_dict[key]
+            if isinstance(var_name, str):
                 needed = data_lookup[hash_read[key]]
                 weight = weight_lookup[hash_weight[key]]
                 needed = _partial_flatten(needed)
@@ -1262,7 +1262,7 @@ class Position:
                 # index_list.append((index_lookup[hash_index[key]],
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
-            elif isinstance(varName, tuple):
+            elif isinstance(var_name, tuple):
                 n_u, n_v = data_lookup[hash_read[key]]
                 uweight, vweight = weight_lookup[hash_weight[key]]
                 u = np.einsum("nijk,nijk->n", n_u, uweight)
@@ -1274,9 +1274,9 @@ class Position:
                 #                    transform_lookup[hash_index[key]],
                 #                    data_lookup[hash_read[key]]))
             else:
-                raise ValueError(f"unexpected varName: {varName}")
+                raise ValueError(f"unexpected var_name: {var_name}")
 
-        final_dict = dict(zip(output_format["final_varName"], to_return))
+        final_dict = dict(zip(output_format["final_var_name"], to_return))
         ori_list = output_format["ori_list"]
         output = []
         # print(ori_list,to_return,final_dict.keys())
