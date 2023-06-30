@@ -1,21 +1,22 @@
 import dask.array
 import numpy as np
 
-# def slice_data_and_shift_indexes(da, indexes_tuple):
-#     """Slice data using min/max indexes, and shift indexes."""
-#     slicers = ()
-#     for indexes, size in zip(indexes_tuple, da.shape):
-#         try:
-#             start = indexes[indexes >= 0].min()
-#         except ValueError:
-#             start = None
-#         stop = stop if (stop := indexes.max() + 1) < size else None
-#         slicers += (slice(start, stop),)
-#     indexes_tuple = tuple(
-#         indexes.ravel() - slicer.start if slicer.start else indexes.ravel()
-#         for indexes, slicer in zip(indexes_tuple, slicers)
-#     )
-#     return da.data[slicers], indexes_tuple
+
+def slice_data_and_shift_indexes(da, indexes_tuple):
+    """Slice data using min/max indexes, and shift indexes."""
+    slicers = ()
+    for indexes, size in zip(indexes_tuple, da.shape):
+        if (indexes < 0).any():
+            slicers += (slice(None),)
+        else:
+            start = indexes[indexes >= 0].min()
+            stop = stop if (stop := indexes.max() + 1) < size else None
+            slicers += (slice(start, stop),)
+    indexes_tuple = tuple(
+        indexes.ravel() - slicer.start if slicer.start else indexes.ravel()
+        for indexes, slicer in zip(indexes_tuple, slicers)
+    )
+    return da.data[slicers], indexes_tuple
 
 
 def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
@@ -64,8 +65,8 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
         # looks normal in other parts of the code.
         return np.empty(shape)
 
-    data = da.data
-    # data, indexes_tuple = slice_data_and_shift_indexes(da, indexes_tuple)
+    # data = da.data
+    data, indexes_tuple = slice_data_and_shift_indexes(da, indexes_tuple)
     if isinstance(data, np.ndarray):
         return data[indexes_tuple].reshape(shape)
 
