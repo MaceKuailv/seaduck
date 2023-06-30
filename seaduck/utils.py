@@ -28,40 +28,68 @@ def pooch_prepare():
     return pooch_testdata, pooch_fetch_kwargs
 
 
+def _flower_func(x, y, pedals=8, sin=True, vmin=0, vmax=1):
+    theta = np.arctan2(x, y)
+    r = np.hypot(x, y)
+    center = np.exp(-(r**2) * 8)
+    if sin:
+        pedal = np.abs(np.sin(pedals / 2 * theta)) / (1 + r)
+    else:
+        pedal = np.abs(np.cos(pedals / 2 * theta)) / (1 + r)
+    return (vmax - vmin) * np.maximum(pedal, center) + vmin
+
+
 def process_ecco(ds):
     """Add more meat to ECCO dataset after the skeleton is downloaded."""
+    np.random.seed(90)
     rand1 = np.random.random((50, 13, 90, 90))
     rand2 = np.random.random((50, 13, 90, 90))
-    rand3 = np.random.random((50, 13, 90, 90))
+    flower_x, flower_y = tuple(np.linspace(-1, 1, 90) for i in range(2))
+    flower_x, flower_y = np.meshgrid(flower_x, flower_y)
+    salt_flower = _flower_func(flower_x, flower_y, vmin=33, vmax=36)
+    etan_flower = _flower_func(flower_x, flower_y, vmin=-0.1, vmax=0.1, sin=False)
+    salt_4d = np.zeros((50, 13, 90, 90))
+    salt_4d[:] = salt_flower
+    etan_3d = np.zeros((13, 90, 90))
+    etan_3d[:] = etan_flower
+
     ds["UVELMASS"] = xr.DataArray(
-        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Y", "Xp1")
+        np.stack([rand1, rand2, rand2], axis=0), dims=("time", "Z", "face", "Y", "Xp1")
     )
     ds["UVELMASS"][0] = ds.UVELMASS1
     ds["UVELMASS"][1] = ds.UVELMASS1 * rand1
     ds["UVELMASS"][2] = ds.UVELMASS1 * rand2
 
     ds["WVELMASS"] = xr.DataArray(
-        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Zl", "face", "Y", "X")
+        np.stack([rand1, rand2, rand2], axis=0), dims=("time", "Zl", "face", "Y", "X")
     )
     ds["WVELMASS"][0] = ds.WVELMASS1
     ds["WVELMASS"][1] = ds.WVELMASS1 * rand1
     ds["WVELMASS"][2] = ds.WVELMASS1 * rand2
 
     ds["VVELMASS"] = xr.DataArray(
-        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Yp1", "X")
+        np.stack([rand1, rand2, rand2], axis=0), dims=("time", "Z", "face", "Yp1", "X")
     )
     ds["VVELMASS"][0] = ds.VVELMASS1
     ds["VVELMASS"][1] = ds.VVELMASS1 * rand1
     ds["VVELMASS"][2] = ds.VVELMASS1 * rand2
 
     ds["SALT"] = xr.DataArray(
-        np.stack([rand1, rand2, rand3], axis=0), dims=("time", "Z", "face", "Y", "X")
+        np.stack([salt_4d, salt_4d * 2 - 34.5, salt_4d], axis=0),
+        dims=("time", "Z", "face", "Y", "X"),
     )
     ds["SALT_snap"] = xr.DataArray(
-        np.stack([rand3, rand1], axis=0), dims=("time_midp", "Z", "face", "Y", "X")
+        np.stack([salt_4d * 2 - 34.5, salt_4d * 2.5], axis=0),
+        dims=("time_midp", "Z", "face", "Y", "X"),
     )
-    ds["ETAN"] = xr.DataArray(rand1[:3], dims=("time", "face", "Y", "X"))
-    ds["ETAN_snap"] = xr.DataArray(rand3[:2], dims=("time_midp", "face", "Y", "X"))
+    ds["ETAN"] = xr.DataArray(
+        np.stack([etan_3d, etan_3d * 2, etan_3d * 3], axis=0),
+        dims=("time", "face", "Y", "X"),
+    )
+    ds["ETAN_snap"] = xr.DataArray(
+        np.stack([etan_3d * 1.5, etan_3d * 2.5], axis=0),
+        dims=("time_midp", "face", "Y", "X"),
+    )
     return ds
 
 
