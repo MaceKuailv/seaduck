@@ -49,7 +49,8 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
     + values: numpy.ndarray
         The values of the points of interest. Has the same shape as the elements in indexes_tuple.
     """
-    if len(indexes_tuple) != da.ndim:
+    num_dims = len(indexes_tuple)
+    if num_dims != da.ndim:
         raise ValueError(
             "indexes_tuple does not match the number of dimensions: "
             f"{len(indexes_tuple)} vs {da.ndim}"
@@ -57,6 +58,7 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
 
     shape = indexes_tuple[0].shape
     size = indexes_tuple[0].size
+    indexes_tuple = tuple(index.ravel() for index in indexes_tuple)
     if not size:
         # This is to make the special case of reading nothing
         # looks normal in other parts of the code.
@@ -86,6 +88,7 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
         for block_id, indexes, chunks in zip(block_ids, indexes_tuple, data.chunks):
             shifted = indexes - sum(chunks[:block_id])
             block_mask = (shifted >= 0) & (shifted < chunks[block_id])
+            assert len(block_mask.shape) == 1, (block_mask.shape, shifted.shape)
             if not (mask := block_mask if mask is None else mask & block_mask).any():
                 break  # empty block
             shifted_indexes.append(shifted)
@@ -100,5 +103,8 @@ def smart_read(da, indexes_tuple, dask_more_efficient=10, chunks="auto"):
     values = np.empty(size)
     for block_ids, (values_indexes, block_indexes) in block_dict.items():
         block_values = data.blocks[block_ids].compute()
+        assert block_values.ndim == num_dims, block_ids
+        assert values.ndim == len(values_indexes), (size, len(values_indexes))
+        assert len(block_indexes) == num_dims, block_ids
         values[values_indexes] = block_values[block_indexes]
     return values.reshape(shape)
