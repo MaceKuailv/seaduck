@@ -415,7 +415,7 @@ class Particle(Position):
         np.nan_to_num(self.dv, copy=False)
         np.nan_to_num(self.dw, copy=False)
 
-    def note_taking(self, subset_index=None):
+    def note_taking(self, subset_index=None, stamp=0):
         """Record raw data into list of lists.
 
         This method is only called in save_raw = True particles.
@@ -459,6 +459,7 @@ class Particle(Position):
             self.xxlist[ifull].append(self.lon[isub])
             self.yylist[ifull].append(self.lat[isub])
             self.zzlist[ifull].append(self.dep[isub])
+            self.vslist[ifull].append(stamp)
 
     def empty_lists(self):
         """Empty/Create the lists.
@@ -489,6 +490,7 @@ class Particle(Position):
         self.xxlist = [[] for i in range(self.N)]
         self.yylist = [[] for i in range(self.N)]
         self.zzlist = [[] for i in range(self.N)]
+        self.vslist = [[] for i in range(self.N)]
 
     def _out_of_bound(self):  # pragma: no cover
         """Return particles that are out of the cell bound.
@@ -871,7 +873,7 @@ class Particle(Position):
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
-                self.note_taking(int_todo)
+                self.note_taking(int_todo, stamp=0)
             sub.cross_cell_wall(tend)
 
             if self.transport:
@@ -888,7 +890,7 @@ class Particle(Position):
                 break
             if self.save_raw:
                 # record those who cross the wall
-                self.note_taking(int_todo)
+                self.note_taking(int_todo, stamp=1)
 
         if i == self.max_iteration - 1:
             warnings.warn("maximum iteration count reached")
@@ -971,7 +973,7 @@ class Particle(Position):
             logging.info(np.datetime64(round(tl), "s"))
             if self.save_raw:
                 # save the very start of everything.
-                self.note_taking()
+                self.note_taking(stamp=2)
             self.to_next_stop(tl)
             if update[i]:
                 if self.too_large:  # pragma: no cover
