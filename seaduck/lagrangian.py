@@ -415,7 +415,7 @@ class Particle(Position):
         np.nan_to_num(self.dv, copy=False)
         np.nan_to_num(self.dw, copy=False)
 
-    def note_taking(self, subset_index=None, stamp=0):
+    def note_taking(self, subset_index=None, stamp=-1):
         """Record raw data into list of lists.
 
         This method is only called in save_raw = True particles.
@@ -437,6 +437,11 @@ class Particle(Position):
             raise AttributeError("This is not a particle_rawlist object") from exc
         if subset_index is None:
             subset_index = np.arange(self.N)
+        else:
+            if len(subset_index) != self.N:
+                raise IndexError(
+                    "The subset used for notetaking is not generated from the int indexes"
+                )
         for isub, ifull in enumerate(subset_index):
             if self.face is not None:
                 self.fclist[ifull].append(self.face[isub])
@@ -858,6 +863,7 @@ class Particle(Position):
         if self.callback is not None:
             bool_todo = np.logical_and(bool_todo, self.callback(self))
         int_todo = np.where(bool_todo)[0]
+        sub = self.subset(int_todo)
         if len(int_todo) == 0:
             logging.info("Nothing left to simulate")
             return
@@ -867,7 +873,6 @@ class Particle(Position):
             if i > self.max_iteration * 0.95:
                 trim_tol = 1e-3
             logging.debug(len(int_todo), "left")
-            sub = self.subset(int_todo)
             sub.trim(tol=trim_tol)
             tend = sub.analytical_step(tf_used)
             if self.save_raw:
@@ -885,9 +890,10 @@ class Particle(Position):
             if self.callback is not None:
                 bool_todo = np.logical_and(bool_todo, self.callback(sub))
             int_todo = int_todo[bool_todo]
-            tf_used = tf_used[bool_todo]
             if len(int_todo) == 0:
                 break
+            sub = self.subset(int_todo)
+            tf_used = tf_used[bool_todo]
             if self.save_raw:
                 # record those who cross the wall
                 sub.note_taking(int_todo, stamp=1)
