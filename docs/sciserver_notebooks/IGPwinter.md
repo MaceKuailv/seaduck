@@ -4,17 +4,17 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.6
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Oceanography
   language: python
   name: oceanography
 ---
 
-# `Particle` in a East Greenland regional simulation
+# `Particle` in an East Greenland regional simulation
 
 Author: Wenrui Jiang, Tom Haine Feb '23
-> **Warning**⚠️ : the notebook was last ran on **2023-06-15** with **seaduck 0.1.3.dev44+g8d60702**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb.
+> **Warning**⚠️ : the notebook was last ran on **2023-07-06** with **seaduck 0.1.dev433+g99d4d3b**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
 ```{code-cell} ipython3
 :tags: [hide-input]
 
@@ -25,29 +25,13 @@ import oceanspy as ospy
 import seaduck as sd
 ```
 
-```````{admonition} Access IGP
-The regional MITgcm run is the IGPwinter simulationT and is publicly available on SciServer. The simulation output could opened using the OceanSpy package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
+```{admonition} Access IGPwinter
+The regional MITgcm run is the IGPwinter simulation and is publicly available on [SciServer](sciserver.org) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
 
-`ecco = ospy.open_oceandataset.from_catalog("ECCO")._ds`
-
-or the daily-mean data ('daily_ecco').
-
-`ecco = ospy.open_oceandataset.from_catalog('daily_ecco')._ds`
+`ecco = ospy.open_oceandataset.from_catalog("IGPwinter")`
 
 Click [here](https://dev-poseidon-ocean.pantheonsite.io/products/datasets/) for a full list of the dataset hosted and [here](https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinterhttps://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter) to find out more.
-``````{admonition} Access full ECCO dataset
-The ECCO dataset is publicly available on SciServer. The simulation output could opened using the OceanSpy package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
-
-Choose between the monthly-mean data ('ECCO')
-
-`ecco = ospy.open_oceandataset.from_catalog("ECCO")._ds`
-
-or the daily-mean data ('daily_ecco').
-
-`ecco = ospy.open_oceandataset.from_catalog('daily_ecco')._ds`
-
-Click [here](https://dev-poseidon-ocean.pantheonsite.io/products/datasets/) for a full list of the dataset hosted.
-```````
+```
 
 ```{code-cell} ipython3
 od = ospy.open_oceandataset.from_catalog("IGPwinter")
@@ -63,7 +47,7 @@ Citation:
 
 +++
 
-We are going to artificially create an open boundary in depth. This is to demonstrate that there is no weird behavior associated with open vertical boundaries.
+We're going to artificially create an open boundary in depth. This is to demonstrate that there's no weird behavior associated with open vertical boundaries.
 
 ```{code-cell} ipython3
 ds = od._ds.isel(Z=slice(0, 50), Zl=slice(0, 50))
@@ -71,9 +55,9 @@ ds = od._ds.isel(Z=slice(0, 50), Zl=slice(0, 50))
 
 ## Prepare the simulation
 
-Since this notebook works with an open domain, it is going to be a little different a few other notebooks.
+Since this notebook works with an open domain (regional model, not global), it's going to differ a bit from other `seaduck` notebooks.
 
-We are interested in looking at the coastal current. First, we need to prepare a `seaduck.OceData` object...
+We're interested in looking at the coastal current. First, we need to prepare a `seaduck.OceData` object...
 
 ```{code-cell} ipython3
 oce = sd.OceData(ds)
@@ -99,7 +83,7 @@ start_time = "2018-01-02"
 t = np.ones_like(x) * sd.utils.convert_time(start_time)
 ```
 
-...and integrate forward in time for one month.
+...and integrate forward in time for one month (the actual trajectory calculation is made below; this is just setting parameters).
 
 ```{code-cell} ipython3
 end_time = "2018-02-01"
@@ -119,13 +103,13 @@ plt.ylabel("Latitude")
 plt.title("Bathymetry of model domain and particle initial position")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_16_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_16_0.png?raw=true)
 
 **Fig.1** The initial position of the particles released (red line) on a horizontal map of the surrounding regions.
 
 +++
 
-We are going to follow a cold puff of fresh water near the Greenland shelf. Since we have `OceanSpy` installed here at SciServer, let me quickly show you a vertical section of this region. (It really takes no effort at all!)
+We are going to follow a cold puff of fresh water near the Greenland shelf. Since we have `OceanSpy` installed here at SciServer, let me quickly show you how to make a vertical section of this region. (It really takes no effort at all!)
 
 ```{code-cell} ipython3
 od_surv = od.subsample.survey_stations(
@@ -136,15 +120,15 @@ od_surv.plot.vertical_section(varName="Temp", contourName="Sigma0")
 plt.ylim([-750, 0])
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_19_1.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_19_1.png?raw=true)
 
-**Fig.2** Vertical section at 71N. This vertical section goes a little further east than the particle position to include the shelf break. Colors denotes the potential temperature, while the contours is the potential density anomaly calculated using OceanSpy (with the equation of state the model used).
+**Fig.2** Vertical section at 71N. This vertical section goes a little further east than the initial particle positions to include the shelf break. Colors denotes the potential temperature, while the contours are the potential density anomaly calculated using OceanSpy (with the equation of state the model used).
 
 +++
 
-Since we are in an open domain (in all three dimensions), given long enough time, some particles will go out of the domain and jeopardise the entire simulation. We can define a callback function to stop that from happening.
+Since we are in an open domain (in all three dimensions), given long enough time, some particles will leave the domain. This will jeopardise the entire simulation!  We can define a callback function to stop that from happening.
 
-If provided, the function will be called every time particles cross walls. It can be used to manipulate the particles. But here we just use it as a stop/continue criterion.
+If provided, the function will be called every time particles cross walls. It can be used to manipulate the particles and catch the out-of-domain issue. But here we just use it as a stop/continue criterion.
 
 ```{code-cell} ipython3
 def continue_criterion(pt):
@@ -162,7 +146,7 @@ oce["vtrans"] = oce["V"] * oce["drF"] * oce["dxG"]
 oce["wtrans"] = oce["W"] * oce["rA"]
 ```
 
-Finally, create the particle object. And that's all of the preparation we need.
+Finally, create the particle object:
 
 ```{code-cell} ipython3
 p = sd.Particle(
@@ -181,6 +165,8 @@ p = sd.Particle(
 ```
 
 ## Perform the particle trajectory simulation
+
+Run the simulation!  This can take some time, so grab a break...
 
 ```{code-cell} ipython3
 stops, raw = p.to_list_of_time([t[0], tf])
@@ -210,9 +196,9 @@ plt.ylabel("Latitude")
 plt.title("Particle trajectories overlaid on bathymetry map")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_32_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_32_0.png?raw=true)
 
-**Fig.3** The particle trajectories overlaid on **Fig.1**. The coloring scheme of bathymetry is also the same as **Fig.1**
+**Fig.3** The particle trajectories overlaid on **Fig.1**. The color scheme for bathymetry is the same as **Fig.1**.
 
 ```{code-cell} ipython3
 

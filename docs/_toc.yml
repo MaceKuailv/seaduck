@@ -34,9 +34,10 @@ parts:
     - file: notebook/topology_tutorial
   - file: sciserver_example
     sections:
-    - file: sciserver_notebooks/IGP
-    - file: sciserver_notebooks/Fjord
+    - file: sciserver_notebooks/IGPwinter
+    - file: sciserver_notebooks/KangerFjord
     - file: sciserver_notebooks/LLC4320
+    - file: sciserver_notebooks/ECCO_plot_stations
 - caption: Contributing
   chapters:
   - file: guide_for_developer
