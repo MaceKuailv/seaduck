@@ -873,7 +873,7 @@ class Particle(Position):
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
-                self.note_taking(int_todo, stamp=0)
+                sub.note_taking(int_todo, stamp=0)
             sub.cross_cell_wall(tend)
 
             if self.transport:
@@ -890,7 +890,7 @@ class Particle(Position):
                 break
             if self.save_raw:
                 # record those who cross the wall
-                self.note_taking(int_todo, stamp=1)
+                sub.note_taking(int_todo, stamp=1)
 
         if i == self.max_iteration - 1:
             warnings.warn("maximum iteration count reached")
