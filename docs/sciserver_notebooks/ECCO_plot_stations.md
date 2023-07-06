@@ -18,7 +18,7 @@ Extract temperature/salinity profiles at specified longitudes, latitudes, and ti
 This notebook uses [Oceanspy](https://oceanspy.readthedocs.io/en/latest/) and demonstrates the interface to the Poseidon-viewer on SciServer.
 
 Author: Tom Haine & Wenrui Jiang, Jun '23
-> **Warning**⚠️ : the notebook was last ran on **2023-07-06** with **seaduck 0.1.dev433+g99d4d3b**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb. 
+> **Warning**⚠️ : the notebook was last ran on **2023-07-06** with **seaduck 0.1.dev433+g99d4d3b**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb.
 ```{code-cell} ipython3
 import seaduck as sd
 import oceanspy as ospy
@@ -31,7 +31,7 @@ plt.rcParams['figure.figsize'] = 12, 8
 ```
 
 ```{admonition} Access ECCO
-The global MITgcm run is the ECCO state estimate and is publicly available on [SciServer](sciserver.org) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method. 
+The global MITgcm run is the ECCO state estimate and is publicly available on [SciServer](sciserver.org) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
 
 `ecco = ospy.open_oceandataset.from_catalog("ECCO")`
 
@@ -49,7 +49,7 @@ od._ds = od._ds.drop_vars('time_bnds')
 od._ds['Temp'] = od._ds['THETA']
 od._ds['S'] = od._ds['SALT']
 this_time = '1992-03-16T12:00:00.000000000'     # Select time of interest. This is cut and pasted (with editing to convert format) from Poseidon-viewer, but in future should be returned in the JSON object.
-    
+
 varList = ['Temp', 'S']       # Select variables of interest.
 Nvars = len(varList)
 od._ds = od._ds.drop_vars([var for var in od._ds.data_vars if var not in varList])
@@ -63,7 +63,7 @@ lons, lats = ospy.utils.viewer_to_range(ps)
 Nstations = len(lons)
 ```
 
-### `seaduck.OceInterp` interpolates the temperature and salinity to the specified coordinates. 
+### `seaduck.OceInterp` interpolates the temperature and salinity to the specified coordinates.
 This process makes synthetic hydrographic profiles from ECCO. Compute the potential density anomaly from the T/S data too.
 
 ```{code-cell} ipython3
@@ -122,10 +122,10 @@ for i in range(Nstations):
 
 
     plt.subplot(1,3,3)
-    plt.plot(sd_sigma0[i,:],depths,'o', color=colors[i], label='station ' + str(legestations_ds[i]))        
+    plt.plot(sd_sigma0[i,:],depths,'o', color=colors[i], label='station ' + str(legestations_ds[i]))
     plt.xlabel('Density anomaly [kg/m^3]')
     plt.grid()
-    
+
 plt.subplot(1,3,1)
 plt.xlabel('Temperature [oC]')
 plt.ylabel('Depth [m]')
