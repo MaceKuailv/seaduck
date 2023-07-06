@@ -14,7 +14,7 @@ kernelspec:
 # `Particle` in an East Greenland regional simulation
 
 Author: Wenrui Jiang, Tom Haine Feb '23
-> **Warning**⚠️ : the notebook was last ran on **2023-07-06** with **seaduck 0.1.dev433+g99d4d3b**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb. 
+> **Warning**⚠️ : the notebook was last ran on **2023-07-06** with **seaduck 0.1.dev433+g99d4d3b**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
 ```{code-cell} ipython3
 :tags: [hide-input]
 
@@ -26,7 +26,7 @@ import seaduck as sd
 ```
 
 ```{admonition} Access IGPwinter
-The regional MITgcm run is the IGPwinter simulation and is publicly available on [SciServer](sciserver.org) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method. 
+The regional MITgcm run is the IGPwinter simulation and is publicly available on [SciServer](sciserver.org) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
 
 `ecco = ospy.open_oceandataset.from_catalog("IGPwinter")`
 
