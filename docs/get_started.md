@@ -9,7 +9,7 @@ If you have questions about any function, you can always go to [API references](
 :gutter: 3
 
 :::{grid-item-card}
-:link: sciserver_notebooks/IGP
+:link: sciserver_notebooks/IGPwinter
 :link-type: doc
 :class-header: bg-light
 
@@ -34,7 +34,7 @@ ECCO dataset for now, but I want to have a 4320 example notebook.
 :::
 
 :::{grid-item-card}
-:link: sciserver_notebooks/Fjord
+:link: sciserver_notebooks/KangerFjord
 :link-type: doc
 :class-header: bg-light
 

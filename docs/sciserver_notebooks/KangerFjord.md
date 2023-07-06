@@ -4,17 +4,18 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.6
+    jupytext_version: 1.14.7
 kernelspec:
   display_name: Oceanography
   language: python
   name: oceanography
 ---
 
-# Demonstrate Position object with Fjord
+# Demonstrate `eulerian.Position` object with Fjord
 
 Author: Wenrui Jiang, 14 June 2023
-> **Warning**⚠️ : the notebook was last ran on **2023-06-15** with **seaduck 0.1.3.dev44+g8d60702**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/Fjord.ipynb. The `eulerian.Position` object is really what connect a point and the numerical model. Its `interpolate` method really is the core of this package. We are going to use a rather interesting example to demonstrate the functionalities of `eulerian.Position`.
+> **Warning**⚠️ : the notebook was last ran on **2023-07-06** with **seaduck 0.1.dev433+g99d4d3b**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb.
+The `eulerian.Position` object is really what connects a point and the numerical model. Its `interpolate` method really is the core of this package. We're going to use a rather interesting example to demonstrate the functionalities of `eulerian.Position`.
 
 ```{code-cell} ipython3
 import oceanspy as ospy
@@ -29,13 +30,9 @@ import cmocean
 mpl.rcParams["figure.dpi"] = 300
 ```
 
-Here on sciserver, we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below:
+Here on SciServer, we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by [Fraser et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435):
 
 ```{code-cell} ipython3
----
-jupyter:
-  outputs_hidden: true
----
 fjord = ospy.open_oceandataset.from_catalog("KangerFjord")
 ```
 
@@ -50,7 +47,7 @@ Citation:
 
 +++
 
-Let's first look at what the dataset looks like. We are going to use ETOPO dataset to give you an idea where this domain is located.
+Let's first explore the dataset a bit. We are going to use [ETOPO](https://www.ncei.noaa.gov/products/etopo-global-relief-modelhttps://www.ncei.noaa.gov/products/etopo-global-relief-model) dataset to give you an idea where this domain is located.
 
 ```{code-cell} ipython3
 etopo = ospy.open_oceandataset.from_catalog("ETOPO")
@@ -88,7 +85,7 @@ plt.ylabel("Latitude")
 plt.colorbar(c, label="m")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/Fjord_files/Fjord_8_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_19_0.png?raw=true)
 
 +++ {"tags": ["mdformat-skip"]}
 
@@ -118,7 +115,7 @@ Let's create the `eulerian.Position` object
 p = sd.Position().from_latlon(x, y, z, t, data=tub)
 ```
 
-Two kernels are defined here, both of them are the default kernel used by the package. However, we are going to "hack" one of them to demonstrate the "cascade" capacity of interpolation.
+Two interpolation kernels are defined here, both of them are default kernels used by the package. However, we are going to "hack" one of them to demonstrate the "cascade" capacity of interpolation.
 
 ```{code-cell} ipython3
 kernel = sd.KnW()
@@ -127,7 +124,7 @@ kernel_to_be_hacked = sd.KnW()
 
 +++ {"tags": ["mdformat-skip"]}
 
-First, we do the normal interpolation on $\eta$ in the normal way, and plot it
+First, we do the normal interpolation on $\eta$ in the normal way, and plot it:
 
 ```{code-cell} ipython3
 eta = p.interpolate("Eta", kernel)
@@ -143,11 +140,11 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/Fjord_files/Fjord_19_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_24_0.png?raw=true)
 
-We are going to "hack" the code to make it return the size of the kernels used.
+Now let's "hack" the code to make it return the size of the kernels used.
 
-The details of the hack is not very important. But if you are interested you can read the inline comments below.
+The details of the hack is not very important. But if you're interested you can read the inline comments below.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -182,13 +179,14 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/Fjord_files/Fjord_24_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_29_0.png?raw=true)
 
 ## Filling between
 
-As you have seen earlier, the grid of this dataset is very uneven.
+As you have seen earlier, the grid of this dataset has very uneven spacing.
 
-Well, the strength of the `eulerian.Position` object is filling in information in between, so let's do that.
+Well, the strength of the `eulerian.Position` object is filling in information (interpolation) between the grid points.
+So let's do that. We specify part of the model domain to fill in using the parameters to the `utils.easy_3d_cube` call.
 
 ```{code-cell} ipython3
 :tags: [hide-input]
@@ -218,6 +216,6 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/Fjord_files/Fjord_29_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_8_0.png?raw=true)
 
 I'd say the filling-in is done pretty well!
