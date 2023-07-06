@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Particle in a East Greenland regional simulation &#8212; My sample book</title>
+    <title>Particle in an East Greenland regional simulation &#8212; My sample book</title>
   
   
   
@@ -60,10 +60,10 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'sciserver_notebooks/IGP';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sciserver_notebooks/IGPwinter';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Demonstrate Position object with Fjord" href="Fjord.html" />
+    <link rel="next" title="Demonstrate eulerian.Position object with Fjord" href="KangerFjord.html" />
     <link rel="prev" title="Examples using SciServer ocean datasets" href="../sciserver_example.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -193,9 +193,10 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../sciserver_example.html">Examples using SciServer ocean datasets</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in a East Greenland regional simulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Fjord.html">Demonstrate Position object with Fjord</a></li>
-<li class="toctree-l2"><a class="reference internal" href="LLC4320.html">Plot the streamlines on LLC4320</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in an East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KangerFjord.html">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LLC4320.html">Plot surface streamlines on LLC4320</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ECCO_plot_stations.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</a></li>
 </ul>
 </li>
 </ul>
@@ -280,7 +281,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2Fsciserver_notebooks/IGP.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/MaceKuailv/seaduck/issues/new?title=Issue%20on%20page%20%2Fsciserver_notebooks/IGPwinter.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -310,7 +311,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/sciserver_notebooks/IGP.md" target="_blank"
+      <li><a href="../_sources/sciserver_notebooks/IGPwinter.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -392,7 +393,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Particle in a East Greenland regional simulation</h1>
+    <h1>Particle in an East Greenland regional simulation</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -421,11 +422,11 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="particle-in-a-east-greenland-regional-simulation">
-<h1><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in a East Greenland regional simulation<a class="headerlink" href="#particle-in-a-east-greenland-regional-simulation" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="particle-in-an-east-greenland-regional-simulation">
+<h1><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in an East Greenland regional simulation<a class="headerlink" href="#particle-in-an-east-greenland-regional-simulation" title="Permalink to this headline">#</a></h1>
 <p>Author: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <blockquote>
-<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-06-15</strong> with <strong>seaduck 0.1.3.dev44+g8d60702</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.</p>
+<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-07-06</strong> with <strong>seaduck 0.1.dev433+g99d4d3b</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.</p>
 </div></blockquote>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -444,22 +445,11 @@ document.write(`
 </div>
 </details>
 </div>
-<div class="admonition-access-igp admonition">
-<p class="admonition-title">Access IGP</p>
-<p>The regional MITgcm run is the IGPwinter simulationT and is publicly available on SciServer. The simulation output could opened using the OceanSpy package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
-<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;ECCO&quot;)._ds</span></code></p>
-<p>or the daily-mean data (‘daily_ecco’).</p>
-<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog('daily_ecco')._ds</span></code></p>
+<div class="admonition-access-igpwinter admonition">
+<p class="admonition-title">Access IGPwinter</p>
+<p>The regional MITgcm run is the IGPwinter simulation and is publicly available on <span class="xref myst">SciServer</span> (from the Oceanography container). The simulation output can be opened using the <a class="reference external" href="https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy">OceanSpy</a> package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;IGPwinter&quot;)</span></code></p>
 <p>Click <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">here</a> for a full list of the dataset hosted and <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinterhttps://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter">here</a> to find out more.</p>
-<div class="admonition-access-full-ecco-dataset admonition">
-<p class="admonition-title">Access full ECCO dataset</p>
-<p>The ECCO dataset is publicly available on SciServer. The simulation output could opened using the OceanSpy package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
-<p>Choose between the monthly-mean data (‘ECCO’)</p>
-<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;ECCO&quot;)._ds</span></code></p>
-<p>or the daily-mean data (‘daily_ecco’).</p>
-<p><code class="docutils literal notranslate"><span class="pre">ecco</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog('daily_ecco')._ds</span></code></p>
-<p>Click <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">here</a> for a full list of the dataset hosted.</p>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -475,7 +465,7 @@ document.write(`
  <span class="o">*</span> <span class="n">Renfrew</span> <span class="n">et</span> <span class="n">al</span><span class="o">.</span><span class="p">,</span> <span class="mi">2019</span> <span class="o">-</span> <span class="n">BAMS</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>We are going to artificially create an open boundary in depth. This is to demonstrate that there is no weird behavior associated with open vertical boundaries.</p>
+<p>We’re going to artificially create an open boundary in depth. This is to demonstrate that there’s no weird behavior associated with open vertical boundaries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Z</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">Zl</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
@@ -485,8 +475,8 @@ document.write(`
 </div>
 <section id="prepare-the-simulation">
 <h2>Prepare the simulation<a class="headerlink" href="#prepare-the-simulation" title="Permalink to this headline">#</a></h2>
-<p>Since this notebook works with an open domain, it is going to be a little different a few other notebooks.</p>
-<p>We are interested in looking at the coastal current. First, we need to prepare a <code class="docutils literal notranslate"><span class="pre">seaduck.OceData</span></code> object…</p>
+<p>Since this notebook works with an open domain (regional model, not global), it’s going to differ a bit from other <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> notebooks.</p>
+<p>We’re interested in looking at the coastal current. First, we need to prepare a <code class="docutils literal notranslate"><span class="pre">seaduck.OceData</span></code> object…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
@@ -518,7 +508,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>…and integrate forward in time for one month.</p>
+<p>…and integrate forward in time for one month (the actual trajectory calculation is made below; this is just setting parameters).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">end_time</span> <span class="o">=</span> <span class="s2">&quot;2018-02-01&quot;</span>
@@ -544,9 +534,9 @@ document.write(`
 </div>
 </div>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_16_0.png?raw=true" /></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_16_0.png?raw=true" /></p>
 <p><strong>Fig.1</strong> The initial position of the particles released (red line) on a horizontal map of the surrounding regions.</p>
-<p>We are going to follow a cold puff of fresh water near the Greenland shelf. Since we have <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code> installed here at SciServer, let me quickly show you a vertical section of this region. (It really takes no effort at all!)</p>
+<p>We are going to follow a cold puff of fresh water near the Greenland shelf. Since we have <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code> installed here at SciServer, let me quickly show you how to make a vertical section of this region. (It really takes no effort at all!)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">od_surv</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">subsample</span><span class="o">.</span><span class="n">survey_stations</span><span class="p">(</span>
@@ -560,10 +550,10 @@ document.write(`
 </div>
 </div>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_19_1.png?raw=true" /></p>
-<p><strong>Fig.2</strong> Vertical section at 71N. This vertical section goes a little further east than the particle position to include the shelf break. Colors denotes the potential temperature, while the contours is the potential density anomaly calculated using OceanSpy (with the equation of state the model used).</p>
-<p>Since we are in an open domain (in all three dimensions), given long enough time, some particles will go out of the domain and jeopardise the entire simulation. We can define a callback function to stop that from happening.</p>
-<p>If provided, the function will be called every time particles cross walls. It can be used to manipulate the particles. But here we just use it as a stop/continue criterion.</p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_19_1.png?raw=true" /></p>
+<p><strong>Fig.2</strong> Vertical section at 71N. This vertical section goes a little further east than the initial particle positions to include the shelf break. Colors denotes the potential temperature, while the contours are the potential density anomaly calculated using OceanSpy (with the equation of state the model used).</p>
+<p>Since we are in an open domain (in all three dimensions), given long enough time, some particles will leave the domain. This will jeopardise the entire simulation!  We can define a callback function to stop that from happening.</p>
+<p>If provided, the function will be called every time particles cross walls. It can be used to manipulate the particles and catch the out-of-domain issue. But here we just use it as a stop/continue criterion.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">continue_criterion</span><span class="p">(</span><span class="n">pt</span><span class="p">):</span>
@@ -585,7 +575,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>Finally, create the particle object. And that’s all of the preparation we need.</p>
+<p>Finally, create the particle object:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">Particle</span><span class="p">(</span>
@@ -609,6 +599,7 @@ document.write(`
 </section>
 <section id="perform-the-particle-trajectory-simulation">
 <h2>Perform the particle trajectory simulation<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this headline">#</a></h2>
+<p>Run the simulation!  This can take some time, so grab a break…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="p">,</span> <span class="n">raw</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">to_list_of_time</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tf</span><span class="p">])</span>
@@ -654,8 +645,8 @@ document.write(`
 </div>
 </details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGP_files/IGP_32_0.png?raw=true" /></p>
-<p><strong>Fig.3</strong> The particle trajectories overlaid on <strong>Fig.1</strong>. The coloring scheme of bathymetry is also the same as <strong>Fig.1</strong></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_32_0.png?raw=true" /></p>
+<p><strong>Fig.3</strong> The particle trajectories overlaid on <strong>Fig.1</strong>. The color scheme for bathymetry is the same as <strong>Fig.1</strong>.</p>
 </section>
 </section>
 </section>
@@ -701,11 +692,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="Fjord.html"
+       href="KangerFjord.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Demonstrate Position object with Fjord</p>
+        <p class="prev-next-title">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

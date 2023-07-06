@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Plot the streamlines on LLC4320 &#8212; My sample book</title>
+    <title>Plot surface streamlines on LLC4320 &#8212; My sample book</title>
   
   
   
@@ -65,8 +65,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'sciserver_notebooks/LLC4320';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="A guide for new contributors" href="../guide_for_developer.html" />
-    <link rel="prev" title="Demonstrate Position object with Fjord" href="Fjord.html" />
+    <link rel="next" title="OceInterp interpolation in the ECCO global state estimate." href="ECCO_plot_stations.html" />
+    <link rel="prev" title="Demonstrate eulerian.Position object with Fjord" href="KangerFjord.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -195,9 +195,10 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../sciserver_example.html">Examples using SciServer ocean datasets</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="IGP.html"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in a East Greenland regional simulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Fjord.html">Demonstrate Position object with Fjord</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Plot the streamlines on LLC4320</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IGPwinter.html"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in an East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KangerFjord.html">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Plot surface streamlines on LLC4320</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ECCO_plot_stations.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</a></li>
 </ul>
 </li>
 </ul>
@@ -394,7 +395,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Plot the streamlines on LLC4320</h1>
+    <h1>Plot surface streamlines on LLC4320</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -407,8 +408,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-streamlines-online">Calculate the streamlines online</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-preparation">Plotting Preparation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voila">Voila!</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-arctic">Looking from Arctic</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-antarctica">Looking from Antarctica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-arctic">Looking from the Arctic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-antarctic">Looking from the Antarctic</a></li>
 </ul>
 </li>
 </ul>
@@ -422,12 +423,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="plot-the-streamlines-on-llc4320">
-<h1>Plot the streamlines on LLC4320<a class="headerlink" href="#plot-the-streamlines-on-llc4320" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="plot-surface-streamlines-on-llc4320">
+<h1>Plot surface streamlines on LLC4320<a class="headerlink" href="#plot-surface-streamlines-on-llc4320" title="Permalink to this headline">#</a></h1>
 <p>Author: Wenrui Jiang 14 June, 2023</p>
 <blockquote>
-<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-06-15</strong> with <strong>seaduck 0.1.3.dev44+g8d60702</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
-LLC4320 is a kilometer scale global simulation with complex grid topology. This is a good test for the performance of the package.</p>
+<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-07-06</strong> with <strong>seaduck 0.1.dev433+g99d4d3b</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
+The LLC4320 ocean circulation model solution is a kilometer-scale, global simulation with complex grid topology. This is a good dataset to test the performance of the <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> package.</p>
 </div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -446,9 +447,15 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
+<div class="admonition-access-llc4320 admonition">
+<p class="admonition-title">Access LLC4320</p>
+<p>The global MITgcm run is the LLC4320 simulation and is publicly available on <span class="xref myst">SciServer</span> (from the Oceanography container). The simulation output can be opened using the <a class="reference external" href="https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy">OceanSpy</a> package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
+<p><code class="docutils literal notranslate"><span class="pre">od</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;LLC4320&quot;)</span></code></p>
+<p>Click <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">here</a> for a full list of the SciServer datasets.</p>
+</div>
 <section id="calculate-the-streamlines-online">
 <h2>Calculate the streamlines online<a class="headerlink" href="#calculate-the-streamlines-online" title="Permalink to this headline">#</a></h2>
-<p>First we get the dataset into <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object with help from <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code>. This step require the grid to be loaded into memory as numpy arrays and creating the cKD tree on top of that, so it is going to take some time.</p>
+<p>First we get the dataset into <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object with help from <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code>. This step requires the grid to be loaded into memory as <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays and then create the cKD tree on top of that, so it’s going to take some time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;LLC4320&quot;</span><span class="p">)</span>
@@ -458,7 +465,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>Initiate the particles randomly so that they are distributed evenly on the globe.</p>
+<p>Initiate the particles randomly, so that they’re distributed evenly on the globe. Use <code class="docutils literal notranslate"><span class="pre">N</span></code> = <span class="math notranslate nohighlight">\(1.5 \\times 10^5\)</span> particles.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -488,8 +495,8 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_5_0.png?raw=true" /></p>
-<p>We will be using just one vertical layer of a single snapshot in the output to make the streamlines.</p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_29_2.png?raw=true" /></p>
+<p>We’ll use just one vertical layer (the first one, which is at the surface) of a single snapshot (the first one) to make the streamlines.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;U&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
@@ -498,7 +505,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>By setting <code class="docutils literal notranslate"><span class="pre">wname</span> <span class="pre">=</span> <span class="pre">None</span></code>, we create a particle moving in the 2D mode.</p>
+<p>By setting <code class="docutils literal notranslate"><span class="pre">wname</span> <span class="pre">=</span> <span class="pre">None</span></code>, we fix particles to move on a horizontal surface. Think of isobaric floats.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
@@ -516,8 +523,8 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>The package knows that LLC4320 is a large dataset, so it is not prefetching data to not overwhelm itself.</p>
-<p>In general, this is a smart thing to do. However, since we are using the 2D velocity, which is much smaller than all the component, we actually have enough memory for prefetching. We can manually change that by:</p>
+<p>The package knows that LLC4320 is a large dataset, so by default it doesn’t prefetch data. Otherwise, <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> is overwhelmed. In general, this is a smart thing to do.</p>
+<p>However, since we are using a static 2D velocity field here, which is much smaller than the 3D time-varying field, we actually have enough memory to prefetch. So tell <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> this bit of LLC4320 isn’t overwhelmingly big:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">too_large</span> <span class="o">=</span> <span class="kc">False</span>
@@ -533,7 +540,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>Everything went well. Now, we are going to run it with 3 hour timestep for 30 days.</p>
+<p>Everything went well. Now, we are going to compute trajectories with a 3 hour timestep for 30 days. This will take a while: time for a nap…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="mi">10800</span>
@@ -551,7 +558,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>It took around 3 hours to run a month of simulation for <span class="math notranslate nohighlight">\(1.5\times 10^{5}\)</span> particles. We can now extract the things we need to plot, namely longitude, latitude, and horizontal speed.</p>
+<p>It took around 1.5 hours to run a month of simulation for <span class="math notranslate nohighlight">\(1.5\times 10^{5}\)</span> particles. We can now extract the things we need to plot, namely longitude, latitude, and horizontal speed.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
@@ -566,7 +573,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </section>
 <section id="plotting-preparation">
 <h2>Plotting Preparation<a class="headerlink" href="#plotting-preparation" title="Permalink to this headline">#</a></h2>
-<p>The ETOPO topography data set is also accessible on sciserver using <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code>. This will give us absolutely beautiful plots.</p>
+<p>The <a class="reference external" href="https://www.ncei.noaa.gov/products/etopo-global-relief-model">ETOPO</a> topography dataset is also accessible on SciServer using <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code>. This will give us absolutely beautiful plots.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">etopo</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;ETOPO&quot;</span><span class="p">)</span>
@@ -574,7 +581,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>For this notebook, we only need the over sea level part, because there is already so much going on in the water.</p>
+<p>For this notebook, we only need the land, because there is already so much going on in the water. So clip the <code class="docutils literal notranslate"><span class="pre">etopo</span></code> data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">etopo</span> <span class="o">=</span> <span class="n">etopo</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">etopo</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">Depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
@@ -582,7 +589,7 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </div>
 </div>
 </div>
-<p>Here is the function for plotting. The lines will have use speed as colormaps. This part is going to take some time, but I hope you find it worth the wait.</p>
+<p>Here is the function for plotting. The lines will be colored with speed. This part is going to take some time, but I hope you think it’s worth the wait.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pretty_stream_plot</span><span class="p">(</span>
@@ -655,32 +662,46 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 </section>
 <section id="voila">
 <h2>Voila!<a class="headerlink" href="#voila" title="Permalink to this headline">#</a></h2>
-<section id="looking-from-arctic">
-<h3>Looking from Arctic<a class="headerlink" href="#looking-from-arctic" title="Permalink to this headline">#</a></h3>
+<section id="looking-from-the-arctic">
+<h3>Looking from the Arctic<a class="headerlink" href="#looking-from-the-arctic" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">north_projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">NorthPolarStereo</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">38.0</span><span class="p">)</span>
-<span class="n">pretty_stream_plot</span><span class="p">(</span><span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">,</span> <span class="n">spds</span><span class="p">,</span> <span class="n">north_projection</span><span class="p">,</span> <span class="n">south</span><span class="o">=</span><span class="mf">6.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_29_2.png?raw=true" /></p>
-<p><strong>Fig.1</strong> Streamlines of 150,000 particles released at 00:00 Apr 25 th, 2012 in LLC4320 simulated for 30 days. The color shading shows the current speed. This is looking from the North Pole.</p>
-</section>
-<section id="looking-from-antarctica">
-<h3>Looking from Antarctica<a class="headerlink" href="#looking-from-antarctica" title="Permalink to this headline">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">south_projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">SouthPolarStereo</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">38.0</span><span class="p">)</span>
-<span class="n">pretty_stream_plot</span><span class="p">(</span><span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">,</span> <span class="n">spds</span><span class="p">,</span> <span class="n">south_projection</span><span class="p">,</span> <span class="n">north</span><span class="o">=-</span><span class="mf">6.5</span><span class="p">)</span>
+<span class="n">pretty_stream_plot</span><span class="p">(</span>
+    <span class="n">lats</span><span class="p">,</span>
+    <span class="n">lons</span><span class="p">,</span>
+    <span class="n">spds</span><span class="p">,</span>
+    <span class="n">north_projection</span><span class="p">,</span>
+    <span class="n">south</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+    <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;LLC4320_files/LLC4320_29_2.png&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_32_2.png?raw=true" /></p>
+<p><strong>Fig.1</strong> Streamlines of 150,000 particles released at 00:00 Apr 25, 2012 in LLC4320 simulated for 30 days. The color shading shows the current speed. This is looking from the North Pole.</p>
+</section>
+<section id="looking-from-the-antarctic">
+<h3>Looking from the Antarctic<a class="headerlink" href="#looking-from-the-antarctic" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">south_projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">SouthPolarStereo</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">38.0</span><span class="p">)</span>
+<span class="n">pretty_stream_plot</span><span class="p">(</span>
+    <span class="n">lats</span><span class="p">,</span>
+    <span class="n">lons</span><span class="p">,</span>
+    <span class="n">spds</span><span class="p">,</span>
+    <span class="n">south_projection</span><span class="p">,</span>
+    <span class="n">north</span><span class="o">=-</span><span class="mf">6.5</span><span class="p">,</span>
+    <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;LLC4320_files/LLC4320_32_2.png&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_5_0.png?raw=true" /></p>
 <p><strong>Fig.2</strong> Similar to <strong>Fig.1</strong>, but looking from the South Pole.</p>
 </section>
 </section>
@@ -718,20 +739,20 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="Fjord.html"
+       href="KangerFjord.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Demonstrate Position object with Fjord</p>
+        <p class="prev-next-title">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</p>
       </div>
     </a>
     <a class="right-next"
-       href="../guide_for_developer.html"
+       href="ECCO_plot_stations.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">A guide for new contributors</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -756,8 +777,8 @@ LLC4320 is a kilometer scale global simulation with complex grid topology. This 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-streamlines-online">Calculate the streamlines online</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-preparation">Plotting Preparation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voila">Voila!</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-arctic">Looking from Arctic</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-antarctica">Looking from Antarctica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-arctic">Looking from the Arctic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-antarctic">Looking from the Antarctic</a></li>
 </ul>
 </li>
 </ul>
