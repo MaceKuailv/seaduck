@@ -465,7 +465,7 @@ class Particle(Position):
             self.xxlist[ifull].append(self.lon[isub])
             self.yylist[ifull].append(self.lat[isub])
             self.zzlist[ifull].append(self.dep[isub])
-            if isinstance(stamp,int):
+            if isinstance(stamp, int):
                 self.vslist[ifull].append(stamp)
             else:
                 self.vslist[ifull].append(stamp[isub])
