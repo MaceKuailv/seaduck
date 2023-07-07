@@ -102,10 +102,11 @@ def time2wall(pos_list, u_list, du_list, tf):
     for i in range(3):
         tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
         ul, ur = uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
-        cannot_left = ul * tf >= 0
-        tl[cannot_left] = -np.sign(tf[cannot_left])
-        cannot_right = ur * tf <= 0
-        tr[cannot_right] = -np.sign(tf[cannot_right])
+        sign = np.sign(tf)
+        cannot_left = -ul * sign <= 1e-14
+        tl[cannot_left] = -sign[cannot_left]
+        cannot_right = ur * tf <= 1e-14
+        tr[cannot_right] = -sign[cannot_right]
         ts.append(tl)
         ts.append(tr)
     return ts
@@ -464,7 +465,10 @@ class Particle(Position):
             self.xxlist[ifull].append(self.lon[isub])
             self.yylist[ifull].append(self.lat[isub])
             self.zzlist[ifull].append(self.dep[isub])
-            self.vslist[ifull].append(stamp)
+            if isinstance(stamp,int):
+                self.vslist[ifull].append(stamp)
+            else:
+                self.vslist[ifull].append(stamp[isub])
 
     def empty_lists(self):
         """Empty/Create the lists.
@@ -868,17 +872,15 @@ class Particle(Position):
             logging.info("Nothing left to simulate")
             return
         tf_used = tf[int_todo]
-        trim_tol = 1e-12
+        trim_tol = 1e-14
         for i in range(self.max_iteration):
-            if i > self.max_iteration * 0.95:
-                trim_tol = 1e-3
             logging.debug(len(int_todo), "left")
             sub.trim(tol=trim_tol)
             tend = sub.analytical_step(tf_used)
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
-                sub.note_taking(int_todo, stamp=0)
+                sub.note_taking(int_todo, stamp=tend)
             sub.cross_cell_wall(tend)
 
             if self.transport:
@@ -896,7 +898,7 @@ class Particle(Position):
             tf_used = tf_used[bool_todo]
             if self.save_raw:
                 # record those who cross the wall
-                sub.note_taking(int_todo, stamp=1)
+                sub.note_taking(int_todo, stamp=7)
 
         if i == self.max_iteration - 1:
             warnings.warn("maximum iteration count reached")
@@ -979,7 +981,7 @@ class Particle(Position):
             logging.info(np.datetime64(round(tl), "s"))
             if self.save_raw:
                 # save the very start of everything.
-                self.note_taking(stamp=2)
+                self.note_taking(stamp=15)
             self.to_next_stop(tl)
             if update[i]:
                 if self.too_large:  # pragma: no cover
