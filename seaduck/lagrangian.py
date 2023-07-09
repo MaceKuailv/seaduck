@@ -103,9 +103,9 @@ def time2wall(pos_list, u_list, du_list, tf):
         tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
         ul, ur = uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
         sign = np.sign(tf)
-        cannot_left = -ul * sign <= 1e-14
+        cannot_left = -ul * sign <= 1e-11 # aroung 3000 years 
         tl[cannot_left] = -sign[cannot_left]
-        cannot_right = ur * tf <= 1e-14
+        cannot_right = ur * tf <= 1e-11
         tr[cannot_right] = -sign[cannot_right]
         ts.append(tl)
         ts.append(tr)
