@@ -5,9 +5,9 @@ import numpy as np
 
 from seaduck.runtime_conf import compileable
 
-legal_tends = [0, 1, 2, 3]  # up,down,left,right #list(llc_face_connect.columns)
+# legal_tends = [0, 1, 2, 3]  # up,down,left,right #list(LLC_FACE_CONNECT.columns)
 
-llc_face_connect = np.array(
+LLC_FACE_CONNECT = np.array(
     [
         [1, 42, 12, 3],
         [2, 0, 11, 4],
@@ -25,7 +25,7 @@ llc_face_connect = np.array(
     ]
 )
 
-directions = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
+DIRECTIONS = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @compileable
@@ -35,8 +35,8 @@ def llc_mutual_direction(face, neighbor_face, transitive=False):
     The compileable version of mutual direction for llc grid.
     See Topology.mutual direction for more detail.
     """
-    connected_to_face = np.where(llc_face_connect[face] == neighbor_face)
-    connected_to_neigh = np.where(llc_face_connect[neighbor_face] == face)
+    connected_to_face = np.where(LLC_FACE_CONNECT[face] == neighbor_face)
+    connected_to_neigh = np.where(LLC_FACE_CONNECT[neighbor_face] == face)
     if len(connected_to_face[0]) == 0:
         found = False
     else:
@@ -47,8 +47,8 @@ def llc_mutual_direction(face, neighbor_face, transitive=False):
         return connected_to_face[0][0], connected_to_neigh[0][0]
     elif transitive:
         common = -1
-        for i in llc_face_connect[face]:
-            if i in llc_face_connect[neighbor_face]:
+        for i in LLC_FACE_CONNECT[face]:
+            if i in LLC_FACE_CONNECT[neighbor_face]:
                 common = i
                 break
         if common < 0:
@@ -56,10 +56,10 @@ def llc_mutual_direction(face, neighbor_face, transitive=False):
                 "The two faces does not share common face, transitive did not help"
             )
         else:
-            edge_1 = np.where(llc_face_connect[face] == common)[0][0]
-            new_edge_1 = np.where(llc_face_connect[common] == face)[0][0]
-            edge_2 = np.where(llc_face_connect[common] == neighbor_face)[0][0]
-            new_edge_2 = np.where(llc_face_connect[neighbor_face] == common)[0][0]
+            edge_1 = np.where(LLC_FACE_CONNECT[face] == common)[0][0]
+            new_edge_1 = np.where(LLC_FACE_CONNECT[common] == face)[0][0]
+            edge_2 = np.where(LLC_FACE_CONNECT[common] == neighbor_face)[0][0]
+            new_edge_2 = np.where(LLC_FACE_CONNECT[neighbor_face] == common)[0][0]
             if (edge_1 in [0, 1] and new_edge_1 in [0, 1]) or (
                 edge_1 in [2, 3] and new_edge_1 in [2, 3]
             ):
@@ -83,7 +83,7 @@ def llc_get_the_other_edge(face, edge):
     The compileable version of get_the_other_edge for llc grid.
     See Topology.get_the_other_edge for more detail.
     """
-    face_connect = llc_face_connect
+    face_connect = LLC_FACE_CONNECT
     neighbor_face = face_connect[face, edge]
     if neighbor_face == 42:
         raise IndexError(
@@ -234,7 +234,7 @@ def llc_get_uv_mask_from_face(faces):
                 edge, new_edge = llc_mutual_direction(
                     faces[0], faces[i], transitive=True
                 )
-                rot = np.pi - directions[edge] + directions[new_edge]
+                rot = np.pi - DIRECTIONS[edge] + DIRECTIONS[new_edge]
                 # you can think of this as a rotation matrix
                 UfromUvel[i] = np.cos(rot)
                 UfromVvel[i] = np.sin(rot)
@@ -442,7 +442,7 @@ class Topology:
                     edge, new_edge = self.mutual_direction(
                         face, ind[0], transitive=True
                     )
-                    rot = (np.pi - directions[edge] + directions[new_edge]) % (
+                    rot = (np.pi - DIRECTIONS[edge] + DIRECTIONS[new_edge]) % (
                         np.pi * 2
                     )
                     if np.isclose(rot, 0):
