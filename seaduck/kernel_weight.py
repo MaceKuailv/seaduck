@@ -8,24 +8,23 @@ import numpy as np
 from seaduck.runtime_conf import compileable
 
 # default kernel for interpolation.
-default_kernel = np.array(
+DEFAULT_KERNEL = np.array(
     [[0, 0], [0, 1], [0, 2], [0, -1], [0, -2], [-1, 0], [-2, 0], [1, 0], [2, 0]]
 )
-default_inheritance = [
+DEFAULT_INHERITANCE = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8],
     [0, 1, 2, 3, 5, 7, 8],
     [0, 1, 3, 5, 7],
     [0],
 ]
-weight_func: dict[int, str] = {}
 
-default_kernels = [
-    np.array([default_kernel[i] for i in doll]) for doll in default_inheritance
+DEFAULT_KERNELS = [
+    np.array([DEFAULT_KERNEL[i] for i in doll]) for doll in DEFAULT_INHERITANCE
 ]
 
 
 # It just tell you what the kernels look like
-def show_kernels(kernels=default_kernels):
+def show_kernels(kernels=DEFAULT_KERNELS):
     """Plot a small scatter plot of the shape of a list of kernel.
 
     Parameters
@@ -476,7 +475,7 @@ def kernel_weight(kernel, kernel_type="interp", order=0):
         raise NotImplementedError("The shape of the kernel is neither cross or square")
 
 
-default_interp_funcs = [kernel_weight_x(a_kernel) for a_kernel in default_kernels]
+default_interp_funcs = [kernel_weight_x(a_kernel) for a_kernel in DEFAULT_KERNELS]
 
 
 def find_which_points_for_each_kernel(masked, inheritance="default"):
@@ -510,7 +509,7 @@ def find_which_points_for_each_kernel(masked, inheritance="default"):
     return
     """
     if inheritance == "default":
-        inheritance = default_inheritance
+        inheritance = DEFAULT_INHERITANCE
     already_wet = []
     for i, doll in enumerate(inheritance):
         wet_1d = masked[:, np.array(doll)].all(axis=1)
@@ -527,8 +526,8 @@ def get_weight_cascade(
     rx,
     ry,
     pk,
-    kernel_large=default_kernel,
-    inheritance=default_inheritance,
+    kernel_large=DEFAULT_KERNEL,
+    inheritance=DEFAULT_INHERITANCE,
     funcs=default_interp_funcs,
 ):
     """Compute the weight.
@@ -569,7 +568,7 @@ def get_weight_cascade(
     return weight
 
 
-def find_pk_4d(masked, inheritance=default_inheritance):
+def find_pk_4d(masked, inheritance=DEFAULT_INHERITANCE):
     """Find the masking condition for 4D space time.
 
     See find_which_points_for_each_kernel
@@ -675,7 +674,7 @@ class KnW:
 
     def __init__(
         self,
-        kernel=default_kernel,
+        kernel=DEFAULT_KERNEL,
         inheritance="auto",  # None, or list of lists
         hkernel="interp",  # dx,dy
         vkernel="nearest",  # linear,dz
