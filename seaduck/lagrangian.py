@@ -102,10 +102,11 @@ def time2wall(pos_list, u_list, du_list, tf):
     for i in range(3):
         tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
         ul, ur = uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
-        cannot_left = ul * tf >= 0
-        tl[cannot_left] = -np.sign(tf[cannot_left])
-        cannot_right = ur * tf <= 0
-        tr[cannot_right] = -np.sign(tf[cannot_right])
+        sign = np.sign(tf)
+        cannot_left = -ul * sign <= 1e-12  # aroung 30000 years
+        tl[cannot_left] = -sign[cannot_left]
+        cannot_right = ur * tf <= 1e-12
+        tr[cannot_right] = -sign[cannot_right]
         ts.append(tl)
         ts.append(tr)
     return ts
@@ -415,7 +416,7 @@ class Particle(Position):
         np.nan_to_num(self.dv, copy=False)
         np.nan_to_num(self.dw, copy=False)
 
-    def note_taking(self, subset_index=None):
+    def note_taking(self, subset_index=None, stamp=-1):
         """Record raw data into list of lists.
 
         This method is only called in save_raw = True particles.
@@ -437,6 +438,11 @@ class Particle(Position):
             raise AttributeError("This is not a particle_rawlist object") from exc
         if subset_index is None:
             subset_index = np.arange(self.N)
+        else:
+            if len(subset_index) != self.N:
+                raise IndexError(
+                    "The subset used for notetaking is not generated from the int indexes"
+                )
         for isub, ifull in enumerate(subset_index):
             if self.face is not None:
                 self.fclist[ifull].append(self.face[isub])
@@ -459,6 +465,10 @@ class Particle(Position):
             self.xxlist[ifull].append(self.lon[isub])
             self.yylist[ifull].append(self.lat[isub])
             self.zzlist[ifull].append(self.dep[isub])
+            if isinstance(stamp, int):
+                self.vslist[ifull].append(stamp)
+            else:
+                self.vslist[ifull].append(stamp[isub])
 
     def empty_lists(self):
         """Empty/Create the lists.
@@ -489,6 +499,7 @@ class Particle(Position):
         self.xxlist = [[] for i in range(self.N)]
         self.yylist = [[] for i in range(self.N)]
         self.zzlist = [[] for i in range(self.N)]
+        self.vslist = [[] for i in range(self.N)]
 
     def _out_of_bound(self):  # pragma: no cover
         """Return particles that are out of the cell bound.
@@ -856,22 +867,20 @@ class Particle(Position):
         if self.callback is not None:
             bool_todo = np.logical_and(bool_todo, self.callback(self))
         int_todo = np.where(bool_todo)[0]
+        sub = self.subset(int_todo)
         if len(int_todo) == 0:
             logging.info("Nothing left to simulate")
             return
         tf_used = tf[int_todo]
-        trim_tol = 1e-12
+        trim_tol = 1e-14
         for i in range(self.max_iteration):
-            if i > self.max_iteration * 0.95:
-                trim_tol = 1e-3
             logging.debug(len(int_todo), "left")
-            sub = self.subset(int_todo)
             sub.trim(tol=trim_tol)
             tend = sub.analytical_step(tf_used)
             if self.save_raw:
                 # record the moment just before crossing the wall
                 # or the moment reaching destination.
-                self.note_taking(int_todo)
+                sub.note_taking(int_todo, stamp=tend)
             sub.cross_cell_wall(tend)
 
             if self.transport:
@@ -883,12 +892,13 @@ class Particle(Position):
             if self.callback is not None:
                 bool_todo = np.logical_and(bool_todo, self.callback(sub))
             int_todo = int_todo[bool_todo]
-            tf_used = tf_used[bool_todo]
             if len(int_todo) == 0:
                 break
+            sub = self.subset(int_todo)
+            tf_used = tf_used[bool_todo]
             if self.save_raw:
                 # record those who cross the wall
-                self.note_taking(int_todo)
+                sub.note_taking(int_todo, stamp=7)
 
         if i == self.max_iteration - 1:
             warnings.warn("maximum iteration count reached")
@@ -971,7 +981,7 @@ class Particle(Position):
             logging.info(np.datetime64(round(tl), "s"))
             if self.save_raw:
                 # save the very start of everything.
-                self.note_taking()
+                self.note_taking(stamp=15)
             self.to_next_stop(tl)
             if update[i]:
                 if self.too_large:  # pragma: no cover

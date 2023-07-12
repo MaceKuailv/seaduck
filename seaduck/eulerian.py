@@ -501,51 +501,6 @@ class Position:
         """Find weight for the corner points interpolation."""
         return weight_f_node(self.rx, self.ry)
 
-    def _get_lon_lat(self):  # pragma: no cover
-        """Return the lat-lon value based on relative coordinate.
-
-        This method only work if the dataset has readiness['h'] == 'oceanparcel'.
-        """
-        px, py = self.get_px_py()
-        w = self.get_f_node_weight()
-        lon = np.einsum("nj,nj->n", w, px.T)
-        lat = np.einsum("nj,nj->n", w, py.T)
-        return lon, lat
-
-    def _get_needed(
-        self, var_name, knw, required=None, prefetched=None, **kwarg
-    ):  # pragma: no cover
-        if required is None:
-            required = self.ocedata._ds[var_name].dims
-        ind = self.fatten(knw, required=required, **kwarg)
-        if len(ind) != len(self.ocedata._ds[var_name].dims):
-            raise IndexError(
-                "Dimension mismatch. "
-                "Please check if the Position objects "
-                "have all the dimensions needed"
-            )
-        if prefetched is None:
-            return smart_read(self.ocedata[var_name], ind)
-        else:
-            return prefetched[ind]
-
-    def _get_masked(self, knw, cuvwg="C", **kwarg):  # pragma: no cover
-        ind = self.fatten(knw, four_d=True, **kwarg)
-        if self.it is not None:
-            ind = ind[1:]
-        if len(ind) != len(self.ocedata._ds["maskC"].dims):
-            raise IndexError(
-                "Dimension mismatch. "
-                "Please check if the Position objects "
-                "have all the dimensions needed"
-            )
-        return get_masked(self.ocedata, ind, cuvwg=cuvwg)
-
-    def _find_pk4d(self, knw, cuvwg="C"):  # pragma: no cover
-        masked = self._get_masked(knw, cuvwg=cuvwg)
-        pk4d = find_pk_4d(masked, inheritance=knw.inheritance)
-        return pk4d
-
     def _register_interpolation_input(
         self, var_name, knw, prefetched=None, prefetch_prefix=None
     ):
