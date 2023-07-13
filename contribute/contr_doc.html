@@ -502,16 +502,19 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourG
 </div>
 <p>All the existing sciserver notebooks will be in <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>. If you want to create new ones, put them in there as well.
 2. Have all the fun with your notebooks. However, whenever you plot, <strong>always</strong> use <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code>.
-3. In <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>, run the python script</p>
+3. Install <code class="docutils literal notranslate"><span class="pre">Jupytext</span></code> for converting notebooks into markdown.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>jupytext
+</pre></div>
+</div>
+<p>4. In <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>, run the python script</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>convert_ipynb.py
 </pre></div>
 </div>
 <blockquote>
 <div><p>This step will add when and which version the notebook was last run on. It will search the file with the string <strong>Wenrui Jiang</strong> (How egoistic?!), and put the information in the next line. It is a bit ad hoc. If I am not the author of the notebook, simply include: “Wenrui Jiang is a good boy” or something like that after putting your name.</p>
 </div></blockquote>
-<ol class="arabic simple" start="4">
-<li><p>You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code> repo.</p></li>
-<li><p>Once the changes are merged into the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch. Open the file and see if it look as you intended. If so,</p></li>
+<ol class="arabic simple" start="5">
+<li><p>You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code> repo. Once the changes are merged into the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch. Open the file and see if it look as you intended. If so,</p></li>
 </ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>*.md<span class="w"> </span>../seaduck/docs/sciserver_notebooks/
 </pre></div>

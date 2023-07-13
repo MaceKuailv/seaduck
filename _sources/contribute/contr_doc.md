@@ -98,7 +98,13 @@ git clone https://github.com/YourGithubNickname/seaduck_sciserver_notebook.git
 
 All the existing sciserver notebooks will be in `seaduck_sciserver_notebook`. If you want to create new ones, put them in there as well.
 2\. Have all the fun with your notebooks. However, whenever you plot, **always** use `plt.show()`.
-3\. In `seaduck_sciserver_notebook`, run the python script
+3\. Install `Jupytext` for converting notebooks into markdown.
+
+```shell
+pip install jupytext
+```
+
+4\. In `seaduck_sciserver_notebook`, run the python script
 
 ```shell
 python convert_ipynb.py
@@ -106,8 +112,7 @@ python convert_ipynb.py
 
 > This step will add when and which version the notebook was last run on. It will search the file with the string **Wenrui Jiang** (How egoistic?!), and put the information in the next line. It is a bit ad hoc. If I am not the author of the notebook, simply include: "Wenrui Jiang is a good boy" or something like that after putting your name.
 
-4. You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the `seaduck_sciserver_notebook` repo.
-1. Once the changes are merged into the `main` branch. Open the file and see if it look as you intended. If so,
+5. You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the `seaduck_sciserver_notebook` repo. Once the changes are merged into the `main` branch. Open the file and see if it look as you intended. If so,
 
 ```shell
 cp *.md ../seaduck/docs/sciserver_notebooks/
