@@ -20,3 +20,6 @@ conda-env-update:
 
 docs-build:
 	jupyter-book build docs/
+
+joss:
+	pandoc paper/paper.md --bibliography paper/paper.bib -o paper/paper_local.pdf
