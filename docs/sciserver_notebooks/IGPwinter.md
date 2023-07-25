@@ -1,13 +1,20 @@
-______________________________________________________________________
-
-## jupytext: text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.14.7 kernelspec: display_name: Oceanography language: python name: oceanography
+---
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.14.7
+kernelspec:
+  display_name: Oceanography
+  language: python
+  name: oceanography
+---
 
 # `Particle` in an East Greenland regional simulation
 
 Author: Wenrui Jiang, Tom Haine Feb '23
-
 > **Warning**⚠️ : the notebook was last ran on **2023-07-13** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
-
 ```{code-cell} ipython3
 :tags: [hide-input]
 
@@ -96,7 +103,6 @@ plt.ylabel("Latitude")
 plt.title("Bathymetry of model domain and particle initial position")
 plt.show()
 ```
-
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_16_0.png?raw=true)
 
 **Fig.1** The initial position of the particles released (red line) on a horizontal map of the surrounding regions.
@@ -114,7 +120,6 @@ od_surv.plot.vertical_section(varName="Temp", contourName="Sigma0")
 plt.ylim([-750, 0])
 plt.show()
 ```
-
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_19_1.png?raw=true)
 
 **Fig.2** Vertical section at 71N. This vertical section goes a little further east than the initial particle positions to include the shelf break. Colors denotes the potential temperature, while the contours are the potential density anomaly calculated using OceanSpy (with the equation of state the model used).
@@ -191,7 +196,6 @@ plt.ylabel("Latitude")
 plt.title("Particle trajectories overlaid on bathymetry map")
 plt.show()
 ```
-
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter_files/IGPwinter_32_0.png?raw=true)
 
 **Fig.3** The particle trajectories overlaid on **Fig.1**. The color scheme for bathymetry is the same as **Fig.1**.
