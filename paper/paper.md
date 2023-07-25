@@ -1,32 +1,29 @@
-______________________________________________________________________
-
-title: 'Seaduck: A python package for Eulerian and Lagrangian interpolation on ocean datasets'
+---
+title:  'Seaduck: A python package for Eulerian and Lagrangian interpolation on ocean datasets'
 tags:
-
-- Python
-- oceanography
-- interpolation
-- lagarangian particle
-  authors:
-- name: Wenrui Jiang
-  orcid: 0009-0000-7319-9469
-  equal-contrib: false
-  affiliation: 1
-- name: Thomas W. N. Haine
-  orcid: 0000-0001-8231-2419
-  affiliation: 1
-- name: Mattia Almansi
-  orcid: 0000-0001-6849-3647
-  affiliation: 2
-  affiliations:
-- name: Lyman Spitzer, Jr. Fellow, Princeton University, USA
-  index: 1
-- name: B-Open Solutions s.r.l, Italy
-  index: 2
-  date: 25 July 2023
-  bibliography: paper.bib
-
-______________________________________________________________________
+  - Python
+  - oceanography
+  - interpolation
+  - Lagarangian particle
+authors:
+  - name: Wenrui Jiang
+    orcid: 0009-0000-7319-9469
+    equal-contrib: false
+    affiliation: 1
+  - name: Thomas W. N. Haine
+    orcid: 0000-0001-8231-2419
+    affiliation: 1
+  - name: Mattia Almansi
+    orcid: 0000-0001-6849-3647
+    affiliation: 2
+    affiliations:
+  - name: Department of Earth and Planetary Sciences, The Johns Hopkins University
+    index: 1
+  - name: B-Open Solutions s.r.l, Italy
+    index: 2
+date: 25 July 2023
+bibliography: paper.bib
+---
 
 # Summary
 
