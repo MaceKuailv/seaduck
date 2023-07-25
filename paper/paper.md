@@ -24,7 +24,7 @@ tags:
 - name: B-Open Solutions s.r.l, Italy
   index: 2
   date: 25 July 2023
-  bibliography: paper.bib
+  bibliography: paper/paper.bib
 
 ______________________________________________________________________
 
