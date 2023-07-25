@@ -1,21 +1,13 @@
----
-jupytext:
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.14.7
-kernelspec:
-  display_name: Oceanography
-  language: python
-  name: oceanography
----
+______________________________________________________________________
+
+## jupytext: text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.14.7 kernelspec: display_name: Oceanography language: python name: oceanography
 
 # Demonstrate `eulerian.Position` object with Fjord
 
 Author: Wenrui Jiang, 14 June 2023
+
 > **Warning**⚠️ : the notebook was last ran on **2023-07-13** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb.
-The `eulerian.Position` object is really what connects a point and the numerical model. Its `interpolate` method really is the core of this package. We're going to use a rather interesting example to demonstrate the functionalities of `eulerian.Position`.
+> The `eulerian.Position` object is really what connects a point and the numerical model. Its `interpolate` method really is the core of this package. We're going to use a rather interesting example to demonstrate the functionalities of `eulerian.Position`.
 
 ```{code-cell} ipython3
 import oceanspy as ospy
@@ -85,12 +77,14 @@ plt.ylabel("Latitude")
 plt.colorbar(c, label="m")
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_8_0.png?raw=true)
 
-+++ {"tags": ["mdformat-skip"]}
++++ {"tags": \["mdformat-skip"\]}
 
 ## Doing Interpolation
-We are going to use the sea surface height field $\eta$ as an example.
+
+We are going to use the sea surface height field $\\eta$ as an example.
 
 First, we are going to convert the `xarray.Dataset` to `seaduck.OceData`.
 
@@ -122,9 +116,9 @@ kernel = sd.KnW()
 kernel_to_be_hacked = sd.KnW()
 ```
 
-+++ {"tags": ["mdformat-skip"]}
++++ {"tags": \["mdformat-skip"\]}
 
-First, we do the normal interpolation on $\eta$ in the normal way, and plot it:
+First, we do the normal interpolation on $\\eta$ in the normal way, and plot it:
 
 ```{code-cell} ipython3
 eta = p.interpolate("Eta", kernel)
@@ -140,6 +134,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_19_0.png?raw=true)
 
 Now let's "hack" the code to make it return the size of the kernels used.
@@ -181,6 +176,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_24_0.png?raw=true)
 
 ## Filling between
@@ -218,6 +214,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_29_0.png?raw=true)
 
 I'd say the filling-in is done pretty well!

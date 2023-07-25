@@ -1,15 +1,6 @@
----
-jupytext:
-  text_representation:
-    extension: .md
-    format_name: myst
-    format_version: 0.13
-    jupytext_version: 1.14.7
-kernelspec:
-  display_name: Python 3.8 (py38)
-  language: python
-  name: py38
----
+______________________________________________________________________
+
+## jupytext: text_representation: extension: .md format_name: myst format_version: 0.13 jupytext_version: 1.14.7 kernelspec: display_name: Python 3.8 (py38) language: python name: py38
 
 # `OceInterp` interpolation in the ECCO global state estimate.
 
@@ -18,7 +9,9 @@ Extract temperature/salinity profiles at specified longitudes, latitudes, and ti
 This notebook uses [Oceanspy](https://oceanspy.readthedocs.io/en/latest/) and demonstrates the interface to the Poseidon-viewer on SciServer.
 
 Author: Tom Haine & Wenrui Jiang, Jun '23
+
 > **Warning**⚠️ : the notebook was last ran on **2023-07-13** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb.
+
 ```{code-cell} ipython3
 import seaduck as sd
 import oceanspy as ospy
@@ -139,6 +132,7 @@ for i in range(Nstations):
 plt.legend()
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations_files/ECCO_plot_stations_9_1.png?raw=true)
 
 ### Plot vertical T/S station profiles:
@@ -195,6 +189,7 @@ plt.legend()
 
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations_files/ECCO_plot_stations_11_0.png?raw=true)
 
 ### Plot T/S diagram.
@@ -214,6 +209,7 @@ plt.legend()
 plt.grid()
 plt.show()
 ```
+
 ![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations_files/ECCO_plot_stations_13_0.png?raw=true)
 
 ```{code-cell} ipython3
