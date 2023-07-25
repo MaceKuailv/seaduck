@@ -8,7 +8,6 @@ tags:
 authors:
   - name: Wenrui Jiang
     orcid: 0009-0000-7319-9469
-    equal-contrib: false
     affiliation: 1
   - name: Thomas W. N. Haine
     orcid: 0000-0001-8231-2419
