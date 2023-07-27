@@ -422,7 +422,7 @@ document.write(`
 <h1>Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord<a class="headerlink" href="#demonstrate-eulerian-position-object-with-fjord" title="Permalink to this headline">#</a></h1>
 <p>Author: Wenrui Jiang, 14 June 2023</p>
 <blockquote>
-<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-07-13</strong> with <strong>seaduck 0.1.3</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
+<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-07-27</strong> with <strong>seaduck 0.1.3</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
 The <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object is really what connects a point and the numerical model. Its <code class="docutils literal notranslate"><span class="pre">interpolate</span></code> method really is the core of this package. We’re going to use a rather interesting example to demonstrate the functionalities of <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code>.</p>
 </div></blockquote>
 <div class="cell docutils container">
@@ -441,7 +441,7 @@ The <code class="docutils literal notranslate"><span class="pre">eulerian.Positi
 </div>
 </div>
 </div>
-<p>Here on SciServer, we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435">Fraser et al., 2018</a>:</p>
+<p>Here on <a class="reference external" href="https://sciserver.org/https://sciserver.org/">SciServer</a>, we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435">Fraser et al., 2018</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fjord</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;KangerFjord&quot;</span><span class="p">)</span>
