@@ -18,7 +18,7 @@ Extract temperature/salinity profiles at specified longitudes, latitudes, and ti
 This notebook uses [Oceanspy](https://oceanspy.readthedocs.io/en/latest/) and demonstrates the interface to the Poseidon-viewer on SciServer.
 
 Author: Tom Haine & Wenrui Jiang, Jun '23
-> **Warning**⚠️ : the notebook was last ran on **2023-07-27** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb. 
+> **Warning**⚠️ : the notebook was last ran on **2023-07-27** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb.
 ```{code-cell} ipython3
 import seaduck as sd
 import oceanspy as ospy

@@ -14,7 +14,7 @@ kernelspec:
 # `Particle` in an East Greenland regional simulation
 
 Author: Wenrui Jiang, Tom Haine Feb '23
-> **Warning**⚠️ : the notebook was last ran on **2023-07-27** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb. 
+> **Warning**⚠️ : the notebook was last ran on **2023-07-27** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
 ```{code-cell} ipython3
 :tags: [hide-input]
 
