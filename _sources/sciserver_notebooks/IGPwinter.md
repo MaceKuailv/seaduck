@@ -26,7 +26,7 @@ import seaduck as sd
 ```
 
 ```{admonition} Access IGPwinter
-The regional MITgcm run is the IGPwinter simulation [( Renfrew et al., 2019 Renfrew et al., 2019)](https://journals.ametsoc.org/view/journals/bams/100/9/bams-d-18-0217.1.xmlhttps://journals.ametsoc.org/view/journals/bams/100/9/bams-d-18-0217.1.xml) and is publicly available on [SciServer](https://sciserver.org/https://sciserver.org/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
+The regional MITgcm run is the IGPwinter simulation [( Renfrew et al., 2019)](https://journals.ametsoc.org/view/journals/bams/100/9/bams-d-18-0217.1.xml) and is publicly available on [SciServer](https://sciserver.org/https://sciserver.org/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
 
 `ecco = ospy.open_oceandataset.from_catalog("IGPwinter")`
 
