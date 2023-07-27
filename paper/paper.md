@@ -28,7 +28,7 @@ bibliography: paper.bib
 
 Numerical simulations of the Earth's oceans are becoming more realistic and sophisticated. However, their complex layout and shear volume make it difficult for researchers to access and understand these data. Additionally, most ocean models,  mostly finite-volume models, compute and calculate spatially-integrated properties, such as grid-cell averaged temperature or wall-integrated mass flux. On the other hand, in-situ oceanographic observations are effectively collected at points in space and time. This fundamental difference makes the comparison between observations and results from numerical simulation difficult.
 
-In this work, we present seaduck, a Python package that can perform both Eulerian and Lagrangian interpolation on generic ocean datasets with good performance and scalability. This package accesses numerical datasets from the perspective of space-time points. It automatically navigates complex layouts of datasets and transforms discrete information to continuous fields. The value and derivatives of those fields can be access at any points in the domain defined by the user. Similar to fixed and mobile observational platforms, the points can be either stationary (Eulerian) or advected by the flow (Lagrangian). 
+In this work, we present seaduck, a Python package that can perform both Eulerian and Lagrangian interpolation on generic ocean datasets with good performance and scalability. This package accesses numerical datasets from the perspective of space-time points. It automatically navigates complex layouts of datasets and transforms discrete information to continuous fields. The value and derivatives of those fields can be access at any points in the domain defined by the user. Similar to fixed and mobile observational platforms, the points can be either stationary (Eulerian) or advected by the flow (Lagrangian).
 
 # Statement of need
 
@@ -42,13 +42,13 @@ With the above suite of functionalities, seaduck is capable of accomplishing man
 
 # Usage Examples
 
-While some usage examples are presented here, many more can be found in the documentation for seaduck (https://macekuailv.github.io/seaduck/). The notebooks  of the following examples run on SciServer[@sciserver], an openly available cloud compute resource. A supplementary GitHub repository (https://github.com/MaceKuailv/seaduck_sciserver_notebook) holds all SciServer notebooks, which is being continuously maintained. 
+While some usage examples are presented here, many more can be found in the documentation for seaduck (https://macekuailv.github.io/seaduck/). The notebooks  of the following examples run on SciServer[@sciserver], an openly available cloud compute resource. A supplementary GitHub repository (https://github.com/MaceKuailv/seaduck_sciserver_notebook) holds all SciServer notebooks, which is being continuously maintained.
 
 ![Fig.1 (a) Scatterplot with colors showing the sea surface height value near Kangerdlugssuaq Fjord defined in the model and interpolated by seaduck.\label{fig:onlyone}. (b) Streaklines of particle advected by stationary 2D slice of the LLC4320 simulation, colors denotes the current speed.](fig1.png)
 
 ## Interpolation / regridding
 
-In this subsection, we are going to explore the interpolation/regridding functionality of the package. As an example, we used a realistic simulation of the Kangerdlugssuaq Fjord [@Fraser2018] as an example. This is an MITgcm simulation with very uneven grid spacings, i.e. grids close or in the fjord is much more densely placed than the rest. For the interpolation on sea surface height field, we use all the center grid points of the datasets as well as another 60,000 points in a rectangular region where the model grid points are sparsely places (between 66.5N to 67N, between 28.5W to 34.5 W, 600 in longitudinal direction and 100 in latitudinal direction). As shown in Fig. 1a. The interpolated field matches the background field very well, even when the interpolation is happening close to land ocean interface. 
+In this subsection, we are going to explore the interpolation/regridding functionality of the package. As an example, we used a realistic simulation of the Kangerdlugssuaq Fjord [@Fraser2018] as an example. This is an MITgcm simulation with very uneven grid spacings, i.e. grids close or in the fjord is much more densely placed than the rest. For the interpolation on sea surface height field, we use all the center grid points of the datasets as well as another 60,000 points in a rectangular region where the model grid points are sparsely places (between 66.5N to 67N, between 28.5W to 34.5 W, 600 in longitudinal direction and 100 in latitudinal direction). As shown in Fig. 1a. The interpolated field matches the background field very well, even when the interpolation is happening close to land ocean interface.
 
 ## Global particle simulation on LLC4320
 
