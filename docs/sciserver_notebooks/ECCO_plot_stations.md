@@ -31,7 +31,7 @@ plt.rcParams["figure.figsize"] = 12, 8
 ```
 
 ```{admonition} Access ECCO
-The global MITgcm run is the ECCO state estimate [(Forget et al, 2015)](https://gmd.copernicus.org/articles/8/3071/2015/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method. 
+The global MITgcm run is the ECCO state estimate [(Forget et al, 2015)](https://gmd.copernicus.org/articles/8/3071/2015/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
 
 `ecco = ospy.open_oceandataset.from_catalog("ECCO")`
 
