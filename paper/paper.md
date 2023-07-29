@@ -60,6 +60,6 @@ In this example, a stationary, surface slice of the LLC4320 [@llc4320] simulatio
 
 # Acknowledgements
 
-The authors thank Erik van Sebille and Alex Szlay for enlightening discussions during the development of the package. 
+The authors thank Erik van Sebille and Alex Szlay for enlightening discussions during the development of the package.
 
 # References
