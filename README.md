@@ -31,6 +31,7 @@ Before pushing to GitHub, run the following commands:
 1. Run tests: `make unit-tests`
 1. Run the static type checker: `make type-check`
 1. Build the documentation: `make docs-build`
+1. Build the pdf version of the paper `make joss`
 
 ## License
 
