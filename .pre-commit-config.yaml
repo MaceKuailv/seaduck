@@ -33,7 +33,7 @@ repos:
   rev: 0.7.16
   hooks:
   - id: mdformat
-    exclude: docs/sciserver_notebooks/.
+    exclude: ^(docs/sciserver_notebooks/\w+.md|paper/paper.md)$
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.9.0
   hooks:
