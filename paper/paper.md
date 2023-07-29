@@ -44,12 +44,16 @@ With the above functionality, seaduck can accomplish many common tasks in ocean 
 
 While some usage examples are presented here, many more can be found in the documentation for seaduck (https://macekuailv.github.io/seaduck/). The notebooks  of the following examples run on SciServer [@sciserver], an openly available cloud compute resource for scientific data analysis. A supplementary GitHub repository (https://github.com/MaceKuailv/seaduck_sciserver_notebook) holds all SciServer notebooks, and is being continuously maintained.
 
-![Fig.1 (a) Scatterplot with colors showing the sea surface height value near Kangerdlugssuaq Fjord defined in the model and interpolated by seaduck.\label{fig:onlyone} (b) Streaklines of particle advected by stationary 2D slice of the LLC4320 simulation. Colors denote the current speed.](fig1.png)
+
 
 ## Interpolation / regridding
 
-As an example of seaduck's interpolation/regridding functionality, consider a realistic simulation of the Kangerdlugssuaq Fjord, which is in east Greenland [@Fraser2018]. This is an MITgcm simulation with uneven grid spacing such that grid cells within the fjord are much more densely packed than elsewhere. The goal is to interpolate, and hence regrid, the sea surface height field, $\eta$, to a uniform grid spacing in the southern part of the domain. As shown in Fig. 1a, the interpolated field matches the background field very well, even for points close to land.
+As an example of seaduck's interpolation/regridding functionality, consider a realistic simulation of the Kangerdlugssuaq Fjord, which is in east Greenland [@Fraser2018]. This is an MITgcm [@mitgcm] simulation with uneven grid spacing such that grid cells within the fjord are much more densely packed than elsewhere. The goal is to interpolate, and hence regrid, the sea surface height field, $\eta$, to a uniform grid spacing in the southern part of the domain. In Fig. 1, the coherent patch between 66.5 N and 67 N is a very dense scatter plot of the interpolated value where neighboring points are connected together. The rest of this plot is scatter plot of model output at center grid points. The close agreement between the interpolated and output value can be clearly seen in Fig. 1. The interpolation also remains smooth near strong gradient and land boundaries. 
+
+![Fig.1 Scatterplot with colors showing the sea surface height value near Kangerdlugssuaq Fjord defined in the model and interpolated by seaduck.\label{fig:onlyone} ](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/Fjord_29_0.png?raw=true)
 
 ## Global particle simulation on LLC4320
 
-In this example, a stationary, surface slice of the LLC4320 [@llc4320] simulation is used. LLC4320 is a kilometer-scale model of the global ocean circulation with complex topology. 150,000 Lagrangian particles are released randomly and evenly on the globe, and seaduck computes their trajectories for 30 days. Fig. 1b shows the particle trajectories for the northern hemisphere, which contains around 10$^8$ velocity points. The colors denote the current speed. This simulation takes about an hour to run on SciServer [@sciserver].
+In this example, a stationary, surface slice of the LLC4320 [@llc4320] simulation is used. LLC4320 is a kilometer-scale model of the global ocean circulation with complex topology. 150,000 Lagrangian particles are released randomly and evenly on the globe, and seaduck computes their trajectories for 30 days. Fig. 2 shows the particle trajectories for the northern hemisphere, which contains around 10$^8$ velocity points. The colors denote the current speed. This simulation takes about an hour to run on SciServer [@sciserver].
+
+![Fig 2. Streaklines of particle advected by stationary 2D slice of the LLC4320 simulation. Colors denote the current speed.](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/LLC4320_29_2.png?raw=true)
