@@ -5,7 +5,7 @@ import seaduck as sd
 from seaduck import utils
 
 # Set the number of particles here.
-N = int(9)
+N = 9
 
 # Increase this if you want more in x direction.
 skew = 3
