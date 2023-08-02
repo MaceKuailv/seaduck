@@ -15,7 +15,7 @@ authors:
   - name: Mattia Almansi
     orcid: 0000-0001-6849-3647
     affiliation: 2
-    affiliations:
+affiliations:
   - name: Department of Earth and Planetary Sciences, The Johns Hopkins University
     index: 1
   - name: B-Open Solutions s.r.l, Italy
