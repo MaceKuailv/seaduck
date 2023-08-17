@@ -592,16 +592,13 @@ class Topology:
         that comes from staggered grid. Read ind_tend for more info.
         """
         # TODO: implement different grid offset case
-        if tend in [2, 3]:
-            return "U", self.ind_tend(ind, tend)
+        first = self.ind_tend(ind, tend)
+        if first[0] == ind[0]:
+            return "U", first
         else:
-            first = self.ind_tend(ind, tend)
-            if first[0] == ind[0]:
-                return "U", first
-            else:
-                alter = self.ind_moves(ind, [2, tend])
-                # TODO: Add the case of alter == first for three-way join of faces.Low priority
-                return self._find_wall_between(first, alter)
+            alter = self.ind_moves(ind, [2, tend])
+            # TODO: Add the case of alter == first for three-way join of faces.Low priority
+            return self._find_wall_between(first, alter)
 
     def _ind_tend_V(self, ind, tend):
         """Move a V-index in a direction.
@@ -610,15 +607,12 @@ class Topology:
         that comes from staggered grid. Read ind_tend for more info.
         """
         # TODO: implement different grid offset case
-        if tend in [0, 1]:
-            return "V", self.ind_tend(ind, tend)
+        first = self.ind_tend(ind, tend)
+        if first[0] == ind[0]:
+            return "V", first
         else:
-            first = self.ind_tend(ind, tend)
-            if first[0] == ind[0]:
-                return "V", first
-            else:
-                alter = self.ind_moves(ind, [1, tend])
-                return self._find_wall_between(first, alter)
+            alter = self.ind_moves(ind, [1, tend])
+            return self._find_wall_between(first, alter)
 
     def _ind_tend_G(self, ind, tend):
         """Move a G-index(corner point) in a direction.
