@@ -243,7 +243,7 @@ def test_wall_between_itself(tp):
     [((10, 89, 45), 0, ("U", (2, 44, 0))), ((7, 0, 45), 1, ("U", (5, 44, 89)))],
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
-def test_ind_tend_v(tp, ind, tend, exp):
+def test_ind_tend_v_detailed(tp, ind, tend, exp):
     ans = tp._ind_tend_V(ind, tend)
     assert ans == exp
 
@@ -253,6 +253,6 @@ def test_ind_tend_v(tp, ind, tend, exp):
     [((2, 44, 0), 2, ("V", (10, 89, 45))), ((5, 44, 89), 3, ("V", (7, 0, 45)))],
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
-def test_ind_tend_u(tp, ind, tend, exp):
+def test_ind_tend_u_detailed(tp, ind, tend, exp):
     ans = tp._ind_tend_U(ind, tend)
     assert ans == exp
