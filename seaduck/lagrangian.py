@@ -105,7 +105,7 @@ def time2wall(pos_list, u_list, du_list, tf):
         sign = np.sign(tf)
         cannot_left = -ul * sign <= 1e-12  # aroung 30000 years
         tl[cannot_left] = -sign[cannot_left]
-        cannot_right = ur * tf <= 1e-12
+        cannot_right = ur * sign <= 1e-12
         tr[cannot_right] = -sign[cannot_right]
         ts.append(tl)
         ts.append(tr)
