@@ -95,6 +95,8 @@ def OceInterp(
             t = np.array([convert_time(some_t) for some_t in t])
     elif isinstance(t, (np.datetime64, str)):
         t = convert_time(t)
+    elif isinstance(t, float):
+        pass
     else:
         raise ValueError("time format not supported")
     if not lagrangian:
