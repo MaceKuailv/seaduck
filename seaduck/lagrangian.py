@@ -983,7 +983,7 @@ class Particle(Position):
                 # save the very start of everything.
                 self.note_taking(stamp=15)
             self.to_next_stop(tl)
-            if update[i]:
+            if update[i] or i == 0:
                 if self.too_large:  # pragma: no cover
                     self.get_u_du()
                 elif "time" not in self.ocedata[self.uname].dims:  # pragema: no cover
