@@ -6,7 +6,7 @@ The package can be installed simply by
 pip install seaduck
 ```
 
-or, alternatively (not available yet)
+or, alternatively
 
 ```shell
 conda install -c conda-forge seaduck
