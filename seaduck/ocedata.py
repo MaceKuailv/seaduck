@@ -274,7 +274,7 @@ class OceData:
             self["CS"] = cs
             self["SN"] = sn
 
-    def hgrid2array(self):
+    def _hgrid2array(self):
         """Extract the horizontal grid data into numpy arrays.
 
         This is done based on the readiness['h'] of the OceData object.
@@ -328,7 +328,7 @@ class OceData:
             self.lon = np.array(self["lon"], dtype="float32")
             self.lat = np.array(self["lat"], dtype="float32")
 
-    def vgrid2array(self):
+    def _vgrid2array(self):
         """Extract the vertical center point grid data into numpy arrays."""
         self.Z = np.array(self["Z"], dtype="float32")
         try:
@@ -337,7 +337,7 @@ class OceData:
             self.dZ = np.diff(self.Z)
             self.dZ = np.append(self.dZ, self.dZ[-1])
 
-    def vlgrid2array(self):
+    def _vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
         self.Zl = np.array(self["Zl"], dtype="float32")
         try:
@@ -353,7 +353,7 @@ class OceData:
         # self.dZl = np.roll(self.dZl,1)
         # self.dZl[0] = 1e-10
 
-    def tgrid2array(self):
+    def _tgrid2array(self):
         """Extract the temporal grid data into numpy arrays."""
         self.t_base = 0
         self.ts = np.array(self["time"])
@@ -364,16 +364,16 @@ class OceData:
         except KeyError:
             self.time_midp = (self.ts[1:] + self.ts[:-1]) / 2
 
-    def grid2array(self):
+    def _grid2array(self):
         """Assemble all the extraction methods."""
         if self.readiness["h"]:
-            self.hgrid2array()
+            self._hgrid2array()
         if self.readiness["Z"]:
-            self.vgrid2array()
+            self._vgrid2array()
         if self.readiness["Zl"]:
-            self.vlgrid2array()
+            self._vlgrid2array()
         if self.readiness["time"]:
-            self.tgrid2array()
+            self._tgrid2array()
 
     def find_rel_h(self, x, y):
         """Find the horizontal rel-coordinate.

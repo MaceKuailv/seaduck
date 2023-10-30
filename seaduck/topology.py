@@ -29,7 +29,7 @@ DIRECTIONS = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @compileable
-def llc_mutual_direction(face, neighbor_face, transitive=False):
+def _llc_mutual_direction(face, neighbor_face, transitive=False):
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
@@ -77,7 +77,7 @@ def llc_mutual_direction(face, neighbor_face, transitive=False):
 
 
 @compileable
-def llc_get_the_other_edge(face, edge):
+def _llc_get_the_other_edge(face, edge):
     """See what is adjacent to the face by this edge.
 
     The compileable version of get_the_other_edge for llc grid.
@@ -94,7 +94,7 @@ def llc_get_the_other_edge(face, edge):
 
 
 @compileable
-def box_ind_tend(ind, tend, iymax, ixmax):
+def _box_ind_tend(ind, tend, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for regional (box) grid.
@@ -118,7 +118,7 @@ def box_ind_tend(ind, tend, iymax, ixmax):
 
 
 @compileable
-def x_per_ind_tend(ind, tend, iymax, ixmax):
+def _x_per_ind_tend(ind, tend, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for zonally periodic (x-per) grid.
@@ -143,7 +143,7 @@ def x_per_ind_tend(ind, tend, iymax, ixmax):
 
 
 @compileable
-def llc_ind_tend(ind, tendency, iymax, ixmax):
+def _llc_ind_tend(ind, tendency, iymax, ixmax):
     """Move an index in a direction.
 
     The compileable version of ind_tend for llc grid.
@@ -156,7 +156,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != ixmax:
             ix += 1
         else:
-            neighbor_face, new_edge = llc_get_the_other_edge(face, 3)
+            neighbor_face, new_edge = _llc_get_the_other_edge(face, 3)
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ixmax - iy]
             elif new_edge == 0:
@@ -169,7 +169,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != 0:
             ix -= 1
         else:
-            neighbor_face, new_edge = llc_get_the_other_edge(face, 2)
+            neighbor_face, new_edge = _llc_get_the_other_edge(face, 2)
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, iy]
             elif new_edge == 0:
@@ -182,7 +182,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
         if iy != iymax:
             iy += 1
         else:
-            neighbor_face, new_edge = llc_get_the_other_edge(face, 0)
+            neighbor_face, new_edge = _llc_get_the_other_edge(face, 0)
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ix]
             elif new_edge == 0:
@@ -195,7 +195,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
         if iy != 0:
             iy -= 1
         else:
-            neighbor_face, new_edge = llc_get_the_other_edge(face, 1)
+            neighbor_face, new_edge = _llc_get_the_other_edge(face, 1)
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ixmax - ix]
             elif new_edge == 0:
@@ -208,7 +208,7 @@ def llc_ind_tend(ind, tendency, iymax, ixmax):
 
 
 @compileable
-def llc_get_uv_mask_from_face(faces):
+def _llc_get_uv_mask_from_face(faces):
     """Get the masking of UV points.
 
     The compileable version of get_uv_mask_from_face for llc grid.
@@ -231,7 +231,7 @@ def llc_get_uv_mask_from_face(faces):
             # if the face is not the same, we need to do something
             else:
                 # get how much the new face is rotated from the old face
-                edge, new_edge = llc_mutual_direction(
+                edge, new_edge = _llc_mutual_direction(
                     faces[0], faces[i], transitive=True
                 )
                 rot = np.pi - DIRECTIONS[edge] + DIRECTIONS[new_edge]
@@ -344,7 +344,7 @@ class Topology:
             The face is connected to new_face in which direction.
         """
         if self.typ == "LLC":
-            return llc_get_the_other_edge(face, edge)
+            return _llc_get_the_other_edge(face, edge)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -361,7 +361,7 @@ class Topology:
         2. the 1st face is to which direction of the 2nd face.
         """
         if self.typ == "LLC":
-            return llc_mutual_direction(face, new_face, **kwarg)
+            return _llc_mutual_direction(face, new_face, **kwarg)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -392,7 +392,7 @@ class Topology:
             return tuple(-1 for i in ind)
         if self.typ == "LLC":
             if cuvwg == "C":
-                to_return = llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+                to_return = _llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
             elif cuvwg == "U":
                 _, to_return = self._ind_tend_U(ind, tend)
             elif cuvwg == "V":
@@ -402,9 +402,9 @@ class Topology:
             else:
                 raise ValueError("The type of grid point should be among C,U,V,G")
         elif self.typ == "x_periodic":
-            to_return = x_per_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            to_return = _box_ind_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         elif self.typ == "box":
-            to_return = box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            to_return = _box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
             raise NotImplementedError
         return tuple(int(i) for i in to_return)
@@ -646,7 +646,7 @@ class Topology:
             1D iterable of faces, the first one is assumed to be the reference.
         """
         if self.typ == "LLC":
-            return llc_get_uv_mask_from_face(faces)
+            return _llc_get_uv_mask_from_face(faces)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"

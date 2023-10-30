@@ -14,7 +14,7 @@ DEG2M = 6271e3 * np.pi / 180
 
 
 @compileable
-def increment(t, u, du):
+def _increment(t, u, du):
     """Find how far it will travel in duration t.
 
     For a one dimensional particle with speed u and speed derivative du,
@@ -35,7 +35,7 @@ def increment(t, u, du):
     return incr
 
 
-def stationary(t, u, du, x0):
+def _stationary(t, u, du, x0):
     """Find the final position after time t.
 
     For a one dimensional Particle with speed u and speed derivative du
@@ -53,12 +53,12 @@ def stationary(t, u, du, x0):
     x0: float, numpy.ndarray
         The starting position.
     """
-    incr = increment(t, u, du)
+    incr = _increment(t, u, du)
     return incr + x0
 
 
 @compileable
-def stationary_time(u, du, x0):
+def _stationary_time(u, du, x0):
     """Find the amount of time to leave the cell.
 
     Find the amount of time it needs for a Particle to hit x = -0.5 and 0.5.
@@ -89,19 +89,19 @@ def stationary_time(u, du, x0):
 
 
 @compileable
-def uleftright_from_udu(u, du, x0):
+def _uleftright_from_udu(u, du, x0):
     """Calculate the velocity at -0.5 and 0.5."""
     u_left = u - (x0 + 0.5) * du
     u_right = u + (0.5 - x0) * du
     return u_left, u_right
 
 
-def time2wall(pos_list, u_list, du_list, tf):
+def _time2wall(pos_list, u_list, du_list, tf):
     """Apply stationary_time three times for all three dimensions."""
     ts = []
     for i in range(3):
-        tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
-        ul, ur = uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
+        tl, tr = _stationary_time(u_list[i], du_list[i], pos_list[i])
+        ul, ur = _uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
         sign = np.sign(tf)
         cannot_left = -ul * sign <= 1e-12  # aroung 30000 years
         tl[cannot_left] = -sign[cannot_left]
@@ -112,7 +112,7 @@ def time2wall(pos_list, u_list, du_list, tf):
     return ts
 
 
-def which_early(tf, ts):
+def _which_early(tf, ts):
     """Find out which event happens first.
 
     We are trying to integrate the Particle to time tf.
@@ -125,7 +125,7 @@ def which_early(tf, ts):
     tf: float, numpy.ndarray
         The final time
     ts: list
-        The list of events calculated using time2wall
+        The list of events calculated using _time2wall
     """
     ts.append(np.ones(len(ts[0])) * tf)  # float or array both ok
     t_directed = np.array(ts) * np.sign(tf)
@@ -601,7 +601,7 @@ class Particle(Position):
         tmin = -np.ones_like(self.rx[out]) * np.inf
         tmax = np.ones_like(self.rx[out]) * np.inf
         for i in range(3):
-            tl, tr = stationary_time(u_list[i], du_list[i], pos_list[i])
+            tl, tr = _stationary_time(u_list[i], du_list[i], pos_list[i])
             np.nan_to_num(tl, copy=False)
             np.nan_to_num(tr, copy=False)
             tmin = np.maximum(tmin, np.minimum(tl, tr))
@@ -616,7 +616,7 @@ class Particle(Position):
 
         con_x = []
         for i in range(3):
-            con_x.append(stationary(contract_time, u_list[i], du_list[i], 0))
+            con_x.append(_stationary(contract_time, u_list[i], du_list[i], 0))
 
         cdx = np.nan_to_num(con_x[0])
         cdy = np.nan_to_num(con_x[1])
@@ -649,7 +649,7 @@ class Particle(Position):
         new_x = []
         new_u = []
         for i in range(3):
-            x_move = stationary(t_event, u_list[i], du_list[i], 0)
+            x_move = _stationary(t_event, u_list[i], du_list[i], 0)
             new_u.append(u_list[i] + du_list[i] * x_move)
             new_x.append(x_move + pos_list[i])
         return new_x, new_u
@@ -696,9 +696,9 @@ class Particle(Position):
             tf = np.array([tf for i in range(self.N)])
         u_list, du_list, pos_list = self._extract_velocity_position()
 
-        ts = time2wall(pos_list, u_list, du_list, tf)
+        ts = _time2wall(pos_list, u_list, du_list, tf)
 
-        tend, t_event = which_early(tf, ts)
+        tend, t_event = _which_early(tf, ts)
 
         new_x, new_u = self._move_within_cell(t_event, u_list, du_list, pos_list)
 
