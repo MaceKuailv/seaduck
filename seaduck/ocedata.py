@@ -214,12 +214,14 @@ class OceData:
         Returns
         -------
         readiness: dict
-            'h': The scheme of horizontal interpolation to be used,
-                 including 'oceanparcel', 'local_cartesian', and 'rectilinear'.
-            'Z': Whether the dataset has a vertical dimension at the center points.
-            'Zl': Whether the dataset has a vertical dimension at staggered points
-                 (vertical velocity).
-            'time': Whether the dataset has a temporal dimension.
+            1. h: The scheme of horizontal interpolation to be used, including
+               oceanparcel, local_cartesian, and 'rectilinear'.
+            2. Z: Whether the dataset has a vertical dimension at the center points.
+            3. Zl: Whether the dataset has a vertical dimension at
+               staggered points (vertical velocity).
+            4. time: Whether the dataset has a temporal dimension.
+        missing: list
+            The missing variable names.
         """
         # TODO: make the check more detailed
         varnames = list(self._ds.data_vars) + list(self._ds.coords)
