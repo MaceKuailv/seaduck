@@ -11,6 +11,8 @@ execute:
   timeout: 300
   execute_notebooks: 'auto'
   stderr_output: "remove"
+  warn_if: 
+    - error
   exclude_patterns:
   - '*.md'
 
