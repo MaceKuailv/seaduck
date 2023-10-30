@@ -113,7 +113,7 @@ def test_create_different_square(kernel_type, horder, rx, ry):
 @pytest.mark.parametrize("hkernel", ["dx", "dy"])
 def test_auto_inheritance(hkernel):
     k = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    inheritance = kw.auto_inheritance(k, hkernel=hkernel)
+    inheritance = kw._auto_inheritance(k, hkernel=hkernel)
     assert len(inheritance) > 1
     assert isinstance(inheritance[0], list)
 
