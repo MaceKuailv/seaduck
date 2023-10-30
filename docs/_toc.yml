@@ -8,7 +8,7 @@ parts:
     sections:
     - file: one_min_guide
     - file: network_of_object
-  - file: api_reference
+  - file: public_api_reference
     sections:
     - file: api_reference/apiref_OceData.rst
     - file: api_reference/apiref_topology.rst
@@ -16,6 +16,8 @@ parts:
     - file: api_reference/apiref_lagrangian.rst
     - file: api_reference/apiref_OceInterp.rst
     - file: api_reference/apiref_kernelNweight.rst
+  - file: internal_api_reference
+    sections:
     - file: api_reference/apiref_smartread.rst
     - file: api_reference/apiref_getmasks.rst
     - file: api_reference/apiref_utils.rst

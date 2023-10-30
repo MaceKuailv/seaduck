@@ -4,7 +4,7 @@ import logging
 import numpy as np
 
 from seaduck.get_masks import get_masked
-from seaduck.kernel_weight import KnW, _translate_to_tendency, _find_pk_4d
+from seaduck.kernel_weight import KnW, _find_pk_4d, _translate_to_tendency
 from seaduck.ocedata import HRel, OceData, RelCoord, TRel, VlRel, VRel
 from seaduck.smart_read import smart_read
 from seaduck.utils import (
