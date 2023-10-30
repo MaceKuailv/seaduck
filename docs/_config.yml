@@ -27,6 +27,8 @@ sphinx:
   config:
     html_theme: sphinx_book_theme
     autodoc_member_order: groupwise
+    html_theme_options:
+      navigation_with_keys: false
     # html_theme_options: {
     #     "relbarbgcolor": 'Orange',
     #     "codebgcolor": 'Coral'
@@ -43,6 +45,3 @@ repository:
 html:
   use_issues_button: true
   use_repository_button: true
-
-html_theme_options:
-  navigation_with_keys: false
