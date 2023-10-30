@@ -7,4 +7,5 @@
 [utils](api_reference/apiref_utils.rst)
 
 ## Relative coordinate handling
+
 [RelCoord](api_reference/apiref_RelCoord.rst)
