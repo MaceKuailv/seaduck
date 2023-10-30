@@ -178,7 +178,7 @@ class OceData:
         readiness, missing = self.check_readiness()
         self.readiness = readiness
         if readiness:
-            self.grid2array()
+            self._grid2array()
         else:
             raise ValueError(
                 f"""

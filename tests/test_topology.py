@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from seaduck.topology import Topology, llc_get_uv_mask_from_face, llc_mutual_direction
+from seaduck.topology import Topology, _llc_get_uv_mask_from_face, _llc_mutual_direction
 
 try:
     import numba
@@ -205,7 +205,7 @@ def test_wall_between(tp):
     ],
 )
 def test_transitive_mututal_direction(face, nface, rot):
-    e1, e2 = llc_mutual_direction(face, nface, transitive=True)
+    e1, e2 = _llc_mutual_direction(face, nface, transitive=True)
     isrot = (e1 // 2 + e2 // 2) % 2
     assert isrot == rot
 
@@ -216,12 +216,12 @@ def test_transitive_mututal_direction(face, nface, rot):
 @pytest.mark.parametrize("transitive,face, nface", [(True, 0, 7), (False, 4, 9)])
 def test_mutual_face_error(transitive, face, nface):
     with pytest.raises(ValueError):
-        llc_mutual_direction(face, nface, transitive=transitive)
+        _llc_mutual_direction(face, nface, transitive=transitive)
 
 
 def test_uv_mask():
     faces = np.array([1, 1, 1, 1, 4])
-    uu, uv, vu, vv = llc_get_uv_mask_from_face(faces)
+    uu, uv, vu, vv = _llc_get_uv_mask_from_face(faces)
     assert (uu == 1).all()
 
 

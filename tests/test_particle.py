@@ -19,8 +19,8 @@ def one_p():
 def not_out_of_bound_in_analytical_step(new_p, tf=1e80, tol=1e-4):
     u_list, du_list, pos_list = new_p._extract_velocity_position()
     tf = np.array([tf])
-    ts = sd.lagrangian.time2wall(pos_list, u_list, du_list, tf)
-    tend, t_event = sd.lagrangian.which_early(tf, ts)
+    ts = sd.lagrangian._time2wall(pos_list, u_list, du_list, tf)
+    tend, t_event = sd.lagrangian._which_early(tf, ts)
     new_x, new_u = new_p._move_within_cell(t_event, u_list, du_list, pos_list)
     for rr in new_x:
         try:
@@ -138,7 +138,7 @@ def test_underflow_u(one_p, seed):
 @pytest.mark.parametrize("seed", [0])
 def test_u_du_uwall_conversion(one_p, seed):
     one_p = random_p(one_p, seed)
-    ul, ur = sd.lagrangian.uleftright_from_udu(one_p.u, one_p.du, one_p.rx)
+    ul, ur = sd.lagrangian._uleftright_from_udu(one_p.u, one_p.du, one_p.rx)
     u, du = u_du_from_uwall(ul, ur, one_p.rx)
     assert np.allclose(u, one_p.u)
     assert np.allclose(du, one_p.du)
