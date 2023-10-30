@@ -46,4 +46,5 @@ parts:
     - file: contribute/prep_env
     - file: contribute/contr_cod
     - file: contribute/contr_doc
+    - file: contribute/report_iss
     - file: contribute/tidyNpr
