@@ -402,7 +402,7 @@ class Topology:
             else:
                 raise ValueError("The type of grid point should be among C,U,V,G")
         elif self.typ == "x_periodic":
-            to_return = _box_ind_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            to_return = _box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         elif self.typ == "box":
             to_return = _box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
