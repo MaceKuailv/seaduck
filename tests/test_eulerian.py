@@ -210,9 +210,9 @@ def test_fatten_none(ep):
     ep.izl = None
     ep.iz = None
 
-    assert ep.fatten_v(wknw) is None
-    assert ep.fatten_vl(wknw) is None
-    assert ep.fatten_t(wknw) is None
+    assert ep._fatten_v(wknw) is None
+    assert ep._fatten_vl(wknw) is None
+    assert ep._fatten_t(wknw) is None
 
 
 def test_partial_flatten():

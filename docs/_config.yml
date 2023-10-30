@@ -1,8 +1,8 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: My sample book
-author: The Jupyter Book Community
+title: Seaduck Tutorial
+author: Wenrui Jiang
 logo: logo.png
 
 # Force re-execution of notebooks on each build.
@@ -27,14 +27,12 @@ sphinx:
   config:
     html_theme: sphinx_book_theme
     autodoc_member_order: groupwise
+    html_theme_options:
+      navigation_with_keys: false
     # html_theme_options: {
     #     "relbarbgcolor": 'Orange',
     #     "codebgcolor": 'Coral'
     # }
-
-# Add a bibtex file so that we can create citations
-bibtex_bibfiles:
-- references.bib
 
 # Information about where the book exists on the web
 repository:

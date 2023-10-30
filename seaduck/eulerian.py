@@ -4,10 +4,8 @@ import logging
 import numpy as np
 
 from seaduck.get_masks import get_masked
-from seaduck.kernel_weight import KnW, _translate_to_tendency, find_pk_4d
+from seaduck.kernel_weight import KnW, _find_pk_4d, _translate_to_tendency
 from seaduck.ocedata import HRel, OceData, RelCoord, TRel, VlRel, VRel
-
-# from OceInterp.kernel_and_weight import _translate_to_tendency,find_pk_4d
 from seaduck.smart_read import smart_read
 from seaduck.utils import (
     _general_len,
@@ -270,7 +268,7 @@ class Position:
             elif isinstance(item, list):
                 setattr(self, key, item)
 
-    def fatten_h(self, knw, ind_moves_kwarg={}):
+    def _fatten_h(self, knw, ind_moves_kwarg={}):
         """Fatten horizontal indices.
 
         Fatten means to find the neighboring points of the points of interest based on the kernel.
@@ -334,7 +332,7 @@ class Position:
         else:
             return None, n_iys, n_ixs
 
-    def fatten_v(self, knw):
+    def _fatten_v(self, knw):
         """Fatten in vertical center coord.
 
         Find the neighboring center grid points in the vertical direction.
@@ -357,7 +355,7 @@ class Position:
         else:
             raise ValueError("vkernel not supported")
 
-    def fatten_vl(self, knw):
+    def _fatten_vl(self, knw):
         """Fatten in vertical staggered coord.
 
         Finding the neighboring staggered grid points in the vertical direction.
@@ -380,7 +378,7 @@ class Position:
         else:
             raise ValueError("vkernel not supported")
 
-    def fatten_t(self, knw):
+    def _fatten_t(self, knw):
         """Fatten in the temporal coord.
 
         Finding the neighboring center grid points in the temporal dimension.
@@ -435,7 +433,7 @@ class Position:
             or _in_required("Y", required)
             or _in_required("face", required)
         ):
-            ffc, fiy, fix = self.fatten_h(knw, ind_moves_kwarg=ind_moves_kwarg)
+            ffc, fiy, fix = self._fatten_h(knw, ind_moves_kwarg=ind_moves_kwarg)
             if ffc is not None:
                 to_return = (ffc, fiy, fix)
                 keys = ["face", "Y", "X"]
@@ -447,12 +445,12 @@ class Position:
             keys = ["place_holder"]
 
         if _in_required("Z", required):
-            fiz = self.fatten_v(knw)
+            fiz = self._fatten_v(knw)
             if fiz is not None:
                 to_return = _ind_broadcast(fiz, to_return)
                 keys.insert(0, "Z")
         elif _in_required("Zl", required):
-            fizl = self.fatten_vl(knw)
+            fizl = self._fatten_vl(knw)
             if fizl is not None:
                 to_return = _ind_broadcast(fizl, to_return)
                 keys.insert(0, "Zl")
@@ -462,7 +460,7 @@ class Position:
             ]
 
         if _in_required("time", required):
-            fit = self.fatten_t(knw)
+            fit = self._fatten_t(knw)
             if fit is not None:
                 to_return = _ind_broadcast(fit, to_return)
                 keys.insert(0, "time")
@@ -1106,7 +1104,7 @@ class Position:
                 if masked is None:
                     pk4d = None
                 else:
-                    pk4d = find_pk_4d(masked, inheritance=knw.inheritance)
+                    pk4d = _find_pk_4d(masked, inheritance=knw.inheritance)
                 weight = knw.get_weight(
                     rx=rx,
                     ry=ry,
@@ -1123,8 +1121,8 @@ class Position:
                     vpk4d = None
                 else:
                     umask, vmask = masked
-                    upk4d = find_pk_4d(umask, inheritance=uknw.inheritance)
-                    vpk4d = find_pk_4d(vmask, inheritance=vknw.inheritance)
+                    upk4d = _find_pk_4d(umask, inheritance=uknw.inheritance)
+                    vpk4d = _find_pk_4d(vmask, inheritance=vknw.inheritance)
                 uweight = uknw.get_weight(
                     self.rx + 1 / 2, self.ry, rz=rz, rt=rt, pk4d=upk4d
                 )

@@ -568,7 +568,7 @@ def get_weight_cascade(
     return weight
 
 
-def find_pk_4d(masked, inheritance=DEFAULT_INHERITANCE):
+def _find_pk_4d(masked, inheritance=DEFAULT_INHERITANCE):
     """Find the masking condition for 4D space time.
 
     See find_which_points_for_each_kernel
@@ -584,7 +584,7 @@ def find_pk_4d(masked, inheritance=DEFAULT_INHERITANCE):
     return pk4d
 
 
-def kash(kernel):  # hash kernel
+def _kash(kernel):  # hash kernel
     """Hash a horizontal kernel.
 
     Return the hash value.
@@ -620,7 +620,7 @@ def get_func(kernel, **kwargs):
     return _get_func_from_hashable(tuple(kernel.ravel()), kernel.shape, **kwargs)
 
 
-def auto_inheritance(kernel, hkernel="interp"):
+def _auto_inheritance(kernel, hkernel="interp"):
     """Find a natural inheritance pattern given one horizontal kernel."""
     if hkernel == "interp":
         doll = [list(range(len(kernel)))]
@@ -693,7 +693,7 @@ class KnW:
             )
 
         if inheritance == "auto":
-            inheritance = auto_inheritance(kernel, hkernel=hkernel)
+            inheritance = _auto_inheritance(kernel, hkernel=hkernel)
         elif inheritance is None:  # does not apply cascade
             inheritance = [list(range(len(kernel)))]
         elif isinstance(inheritance, list):
@@ -752,7 +752,7 @@ class KnW:
     def __hash__(self):
         return hash(
             (
-                kash(self.kernel),
+                _kash(self.kernel),
                 tuple(tuple(i for i in heir) for heir in self.inheritance),
                 self.ignore_mask,
                 self.h_order,
@@ -766,7 +766,7 @@ class KnW:
         """Produce a hash value based on the 4D size of the KnW object."""
         only_size = {"dz": 2, "linear": 2, "dt": 2, "nearest": 1}
         return hash(
-            (kash(self.kernel), only_size[self.vkernel], only_size[self.tkernel])
+            (_kash(self.kernel), only_size[self.vkernel], only_size[self.tkernel])
         )
 
     def get_weight(

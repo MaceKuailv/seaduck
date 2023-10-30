@@ -1,4 +1,4 @@
-# API Reference
+# Public API Reference
 
 ## Dataset-related object
 
@@ -17,9 +17,3 @@
 ## Kernel object
 
 [Kernal_and_Weight](api_reference/apiref_kernelNweight.rst)
-
-## Utils
-
-[smart_read](api_reference/apiref_smartread.rst)
-[get_masks](api_reference/apiref_getmasks.rst)
-[utils](api_reference/apiref_utils.rst)
