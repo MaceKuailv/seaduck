@@ -19,10 +19,10 @@ or, alternatively (for latest code development), see [a guide for new contibutor
 - python
 - numpy
 - xarray
+- dask
 
 ## Optional dependencies
 
 - pandas
 - numba
 - matplotlib
-- dask
