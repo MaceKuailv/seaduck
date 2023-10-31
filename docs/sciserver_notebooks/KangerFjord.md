@@ -47,7 +47,7 @@ Citation:
 
 +++
 
-Let's first explore the dataset a bit. We are going to use [ETOPO](https://www.ncei.noaa.gov/products/etopo-global-relief-modelhttps://www.ncei.noaa.gov/products/etopo-global-relief-model) dataset to give you an idea where this domain is located.
+Let's first explore the dataset a bit. We are going to use [ETOPO](https://www.ncei.noaa.gov/products/etopo-global-relief-model) dataset to give you an idea where this domain is located.
 
 ```{code-cell} ipython3
 etopo = ospy.open_oceandataset.from_catalog("ETOPO")
