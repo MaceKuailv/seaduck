@@ -19,6 +19,9 @@ conda-env-update:
 	$(CONDA) env update $(CONDAFLAGS) -f environment.yml
 
 docs-build:
+	jupyter-book build docs/ -W --keep-going
+
+link-check:
 	jupyter-book build docs/ -W --keep-going --builder linkcheck
 
 joss:
