@@ -23,14 +23,14 @@ Running Lagrangian particle on regional dataset
 :::
 
 :::{grid-item-card}
-:link: notebook/global_ECCO
+:link: sciserver_notebooks/IGPwinter
 :link-type: doc
 :class-header: bg-light
 
 Example with complex grid
 ^^^
 
-ECCO dataset for now, but I want to have a 4320 example notebook.
+Running Lagrangian particle on the LLC4320 dataset. 
 :::
 
 :::{grid-item-card}
