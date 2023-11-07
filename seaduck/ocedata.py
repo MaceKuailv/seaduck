@@ -181,10 +181,8 @@ class OceData:
             self._grid2array()
         else:
             raise ValueError(
-                f"""
-            use add_missing_variables or set_alias to create {missing},
-            then call OceData.grid2array.
-            """
+                f"use add_missing_variables or set_alias to create {missing},"
+                "then call OceData.grid2array."
             )
 
     def __setitem__(self, key, item):
