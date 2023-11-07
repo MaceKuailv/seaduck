@@ -30,7 +30,7 @@ Running Lagrangian particle on regional dataset
 Example with complex grid
 ^^^
 
-Running Lagrangian particle on the LLC4320 dataset. 
+Running Lagrangian particle on the LLC4320 dataset.
 :::
 
 :::{grid-item-card}
