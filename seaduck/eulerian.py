@@ -180,7 +180,7 @@ class Position:
         if (x is not None) and (y is not None):
             self.lon = copy.deepcopy(x)
             self.lat = copy.deepcopy(y)
-            self.rel.update(self.ocedata.find_rel_h(self.lon, self.lat))
+            self.rel.update(self.ocedata._find_rel_h(self.lon, self.lat))
         else:
             self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
@@ -188,11 +188,11 @@ class Position:
         if z is not None:
             self.dep = copy.deepcopy(z)
             if self.ocedata.readiness["Z"]:
-                self.rel.update(self.ocedata.find_rel_v(z))
+                self.rel.update(self.ocedata._find_rel_v(z))
             else:
                 self.rel.update(VRel._make(None for i in range(4)))
             if self.ocedata.readiness["Zl"]:
-                self.rel.update(self.ocedata.find_rel_vl(z))
+                self.rel.update(self.ocedata._find_rel_vl(z))
             else:
                 self.rel.update(VlRel._make(None for i in range(4)))
         else:
@@ -203,7 +203,7 @@ class Position:
         if t is not None:
             self.t = copy.deepcopy(t)
             if self.ocedata.readiness["time"]:
-                self.rel.update(self.ocedata.find_rel_t(t))
+                self.rel.update(self.ocedata._find_rel_t(t))
             else:
                 self.rel.update(TRel._make(None for i in range(4)))
         else:
@@ -247,6 +247,17 @@ class Position:
         return p
 
     def update_from_subset(self, sub, which):
+        """Update from the original one from a subset of the Position object.
+
+        Parameters
+        ----------
+        sub: Position object
+            The Position object to be updated from.
+        which: numpy.ndarray, optional
+            Define which points correpond to the subset
+            It be an array of either boolean or int.
+            The selection is similar to that of selecting from a 1D numpy array.
+        """
         vardict = vars(sub)
         keys = vardict.keys()
         for key in keys:
@@ -350,7 +361,7 @@ class Position:
             try:
                 self.iz_lin
             except AttributeError:
-                self.rel.update(self.ocedata.find_rel_v_lin(self.dep))
+                self.rel.update(self.ocedata._find_rel_v_lin(self.dep))
             return np.vstack([self.iz_lin, self.iz_lin - 1]).T
         else:
             raise ValueError("vkernel not supported")
@@ -373,7 +384,7 @@ class Position:
             try:
                 self.izl_lin
             except AttributeError:
-                self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
+                self.rel.update(self.ocedata._find_rel_vl_lin(self.dep))
             return np.vstack([self.izl_lin, self.izl_lin - 1]).T
         else:
             raise ValueError("vkernel not supported")
@@ -396,7 +407,7 @@ class Position:
             try:
                 self.izl_lin
             except AttributeError:
-                self.rel.update(self.ocedata.find_rel_t_lin(self.t))
+                self.rel.update(self.ocedata._find_rel_t_lin(self.t))
             return np.vstack([self.it_lin, self.it_lin + 1]).T
         else:
             raise ValueError("tkernel not supported")
@@ -477,6 +488,13 @@ class Position:
         """Get the nearest 4 corner points of the given point.
 
         Used for oceanparcel style horizontal interpolation.
+
+        Returns
+        -------
+        px: numpy.ndarray
+            the longitude of the Position's surrounding 4 corner points.
+        py: numpy.ndarray
+            the latitude of those points mentioned above.
         """
         if self.face is not None:
             ind = (

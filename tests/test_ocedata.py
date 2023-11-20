@@ -35,7 +35,7 @@ def incomplete_data(request):
 )
 def test_incomplete_data(incomplete_data):
     oo = sd.OceData(incomplete_data)
-    hrel = oo.find_rel_h(np.array([-14]), np.array([70.5]))
+    hrel = oo._find_rel_h(np.array([-14]), np.array([70.5]))
     assert isinstance(hrel, sd.ocedata.HRel)
 
 
@@ -88,7 +88,7 @@ def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon):
     tub = sd.OceData(incomplete_data)
     lon = np.array([lon])
     lat = np.array([lat])
-    hrel = tub.find_rel_h(lon, lat)
+    hrel = tub._find_rel_h(lon, lat)
     assert isinstance(hrel, sd.ocedata.HRel)
     assert "=" in repr(hrel)
     face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
@@ -103,7 +103,7 @@ def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon):
 def test_accurate_reproduce_rectilinear(od, lat, lon):
     lon = np.array([lon])
     lat = np.array([lat])
-    hrel = od.find_rel_h(lon, lat)
+    hrel = od._find_rel_h(lon, lat)
     assert isinstance(hrel, sd.ocedata.HRel)
     face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
     new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
@@ -117,10 +117,10 @@ def test_accurate_reproduce_rectilinear(od, lat, lon):
 def test_accurate_reproduce_time(od, style, t):
     t = np.array([t])
     if style == "nearest":
-        trel = od.find_rel_t(t)
+        trel = od._find_rel_t(t)
         assert isinstance(trel, sd.ocedata.TRel)
     elif style == "linear":
-        trel = od.find_rel_t_lin(t)
+        trel = od._find_rel_t_lin(t)
         assert isinstance(trel, sd.ocedata.TLinRel)
     it, rt, dt, bt = trel.values()
     assert np.allclose(bt + dt * rt, t)
@@ -132,10 +132,10 @@ def test_accurate_reproduce_time(od, style, t):
 def test_accurate_reproduce_z(od, style, z):
     z = np.array([z])
     if style == "nearest":
-        vrel = od.find_rel_v(z)
+        vrel = od._find_rel_v(z)
         assert isinstance(vrel, sd.ocedata.VRel)
     elif style == "linear":
-        vrel = od.find_rel_v_lin(z)
+        vrel = od._find_rel_v_lin(z)
         assert isinstance(vrel, sd.ocedata.VLinRel)
     iz, rz, dz, bz = vrel.values()
     assert np.allclose(bz + dz * rz, z)
@@ -147,10 +147,10 @@ def test_accurate_reproduce_z(od, style, z):
 def test_accurate_reproduce_z_staggered(od, style, z):
     z = np.array([z])
     if style == "nearest":
-        vrel = od.find_rel_vl(z)
+        vrel = od._find_rel_vl(z)
         assert isinstance(vrel, sd.ocedata.VlRel)
     elif style == "linear":
-        vrel = od.find_rel_vl_lin(z)
+        vrel = od._find_rel_vl_lin(z)
         assert isinstance(vrel, sd.ocedata.VlLinRel)
     iz, rz, dz, bz = vrel.values()
     assert np.allclose(bz + dz * rz, z)
