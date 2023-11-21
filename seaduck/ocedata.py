@@ -181,10 +181,8 @@ class OceData:
             self._grid2array()
         else:
             raise ValueError(
-                f"""
-            use add_missing_variables or set_alias to create {missing},
-            then call OceData.grid2array.
-            """
+                f"use add_missing_variables or set_alias to create {missing},"
+                "then call OceData.grid2array."
             )
 
     def __setitem__(self, key, item):
@@ -260,7 +258,14 @@ class OceData:
         pass
 
     def show_alias(self):
-        """Print out the alias in a nice pd.DataFrame format."""
+        """Print out the renaming in a nice pd.DataFrame format.
+
+        Returns
+        -------
+        pretty_alias: pandas.DataFrame
+            Carry the same information as self.alias,
+            look a little nicer.
+        """
         return pd.DataFrame.from_dict(
             self.alias, orient="index", columns=["original name"]
         )
@@ -375,7 +380,7 @@ class OceData:
         if self.readiness["time"]:
             self._tgrid2array()
 
-    def find_rel_h(self, x, y):
+    def _find_rel_h(self, x, y):
         """Find the horizontal rel-coordinate.
 
         Find the horizontal rel-coordinate of the given 4-D position based on readiness['h'].
@@ -413,32 +418,32 @@ class OceData:
             h_rel_tuple = find_rel_h_rectilinear(x, y, self.lon, self.lat)
         return HRel._make(h_rel_tuple)
 
-    def find_rel_v(self, z):
+    def _find_rel_v(self, z):
         """Find the rel-coord based on vertical center grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Z)
         return VRel(iz, rz, dz, bz)
 
-    def find_rel_v_lin(self, z):
+    def _find_rel_v_lin(self, z):
         """Find the rel-coord based on vertical center grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Z, self.dZ)
         return VLinRel(iz, rz, dz, bz)
 
-    def find_rel_vl(self, z):
+    def _find_rel_vl(self, z):
         """Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme."""
         iz, rz, dz, bz = find_rel_nearest(z, self.Zl)
         return VlRel(iz, rz, dz, bz)
 
-    def find_rel_vl_lin(self, z):
+    def _find_rel_vl_lin(self, z):
         """Find the rel-coord based on vertical staggered grid using the 2-point linear scheme."""
         iz, rz, dz, bz = find_rel_z(z, self.Zl, self.dZl, dz_above_z=False)
         return VlLinRel(iz, rz, dz, bz)
 
-    def find_rel_t(self, t):
+    def _find_rel_t(self, t):
         """Find the rel-coord based on the temporal direction using the nearest neighbor scheme."""
         it, rt, dt, bt = find_rel_nearest(t, self.ts)
         return TRel(it, rt, dt, bt)
 
-    def find_rel_t_lin(self, t):
+    def _find_rel_t_lin(self, t):
         """Find the rel-coord based on the temporal direction using the 2-point linear scheme."""
         it, rt, dt, bt = find_rel_time(t, self.ts)
         return TLinRel(it, rt, dt, bt)

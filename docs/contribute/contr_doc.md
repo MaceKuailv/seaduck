@@ -119,7 +119,15 @@ cp *.md ../seaduck/docs/sciserver_notebooks/
 ```
 
 6. Change directory back to seaduck. Follow step 4 to 7 in the [previous](text_file) section.
-   (deploy_doc)=
+1. Before the changes are merged, check if the external links work by
+
+```shell
+make link-check
+```
+
+This check could have some persistent false positive, because some website don't like link checkers, which is indistinguishable from any other crawler. If you see a bad link, try it in your browser if it works that ignore the warning. If it still does not work, then find the proper link.
+
+(deploy_doc)=
 
 ## Deploy documentation
 

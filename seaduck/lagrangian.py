@@ -217,7 +217,7 @@ class Particle(Position):
         Position.__init__(self)
         self.from_latlon(**kwarg)
         if self.ocedata.readiness["Zl"] and kwarg.get("z") is not None:
-            self.rel.update(self.ocedata.find_rel_vl_lin(self.dep))
+            self.rel.update(self.ocedata._find_rel_vl_lin(self.dep))
         else:
             (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
                 None for i in range(4)
@@ -791,7 +791,7 @@ class Particle(Position):
     def _cross_cell_wall_rel(self):
         """Figure out the new RelCoord after crossing cell wall."""
         if self.ocedata.readiness["Z"]:
-            self.rel.update(self.ocedata.find_rel_v(self.dep))
+            self.rel.update(self.ocedata._find_rel_v(self.dep))
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 

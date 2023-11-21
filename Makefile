@@ -21,5 +21,8 @@ conda-env-update:
 docs-build:
 	jupyter-book build docs/ -W --keep-going
 
+link-check:
+	jupyter-book build docs/ -W --keep-going --builder linkcheck
+
 joss:
 	pandoc paper/paper.md --bibliography paper/paper.bib -o paper/paper_local.pdf
