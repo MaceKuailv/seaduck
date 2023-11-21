@@ -415,66 +415,18 @@ staggered points (vertical velocity).</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_h">
-<span class="sig-name descname"><span class="pre">find_rel_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_h" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the horizontal rel-coordinate.</p>
-<p>Find the horizontal rel-coordinate of the given 4-D position based on readiness[‘h’].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>np.ndarray</em>) – 1D array of longitude and latitude.</p></li>
-<li><p><strong>y</strong> (<em>np.ndarray</em>) – 1D array of longitude and latitude.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>hrel</strong> – A dictionary that defines the horizontal rel-coords</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>seaduck.ocedata.HRel object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_t">
-<span class="sig-name descname"><span class="pre">find_rel_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_t" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on the temporal direction using the nearest neighbor scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_t_lin">
-<span class="sig-name descname"><span class="pre">find_rel_t_lin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_t_lin" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on the temporal direction using the 2-point linear scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_v">
-<span class="sig-name descname"><span class="pre">find_rel_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_v" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical center grid using the nearest neighbor scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_v_lin">
-<span class="sig-name descname"><span class="pre">find_rel_v_lin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_v_lin" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical center grid using the 2-point linear scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_vl">
-<span class="sig-name descname"><span class="pre">find_rel_vl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_vl" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical staggered grid using the nearest neighbor scheme.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="seaduck.ocedata.OceData.find_rel_vl_lin">
-<span class="sig-name descname"><span class="pre">find_rel_vl_lin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.find_rel_vl_lin" title="Permalink to this definition">#</a></dt>
-<dd><p>Find the rel-coord based on vertical staggered grid using the 2-point linear scheme.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="seaduck.ocedata.OceData.show_alias">
 <span class="sig-name descname"><span class="pre">show_alias</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.ocedata.OceData.show_alias" title="Permalink to this definition">#</a></dt>
-<dd><p>Print out the alias in a nice pd.DataFrame format.</p>
+<dd><p>Print out the renaming in a nice pd.DataFrame format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>pretty_alias</strong> – Carry the same information as self.alias,
+look a little nicer.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

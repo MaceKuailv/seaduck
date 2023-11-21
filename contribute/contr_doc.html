@@ -481,9 +481,13 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourG
 </pre></div>
 </div>
 <ol class="arabic simple" start="6">
-<li><p>Change directory back to seaduck. Follow step 4 to 7 in the <a class="reference internal" href="#text-file"><span class="std std-ref">previous</span></a> section.</p>
-</li>
+<li><p>Change directory back to seaduck. Follow step 4 to 7 in the <a class="reference internal" href="#text-file"><span class="std std-ref">previous</span></a> section.</p></li>
+<li><p>Before the changes are merged, check if the external links work by</p></li>
 </ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>link-check
+</pre></div>
+</div>
+<p>This check could have some persistent false positive, because some website don’t like link checkers, which is indistinguishable from any other crawler. If you see a bad link, try it in your browser if it works that ignore the warning. If it still does not work, then find the proper link.</p>
 </section>
 <section id="deploy-documentation">
 <span id="deploy-doc"></span><h2>Deploy documentation<a class="headerlink" href="#deploy-documentation" title="Permalink to this heading">#</a></h2>

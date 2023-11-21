@@ -426,6 +426,15 @@ store the output in the Position object.</p>
 <span class="sig-name descname"><span class="pre">get_px_py</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.get_px_py" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the nearest 4 corner points of the given point.</p>
 <p>Used for oceanparcel style horizontal interpolation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>px</strong> (<em>numpy.ndarray</em>) – the longitude of the Position’s surrounding 4 corner points.</p></li>
+<li><p><strong>py</strong> (<em>numpy.ndarray</em>) – the latitude of those points mentioned above.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -489,7 +498,18 @@ The selection is similar to that of selecting from a 1D numpy array.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.eulerian.Position.update_from_subset">
 <span class="sig-name descname"><span class="pre">update_from_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.eulerian.Position.update_from_subset" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Update from the original one from a subset of the Position object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sub</strong> (<em>Position object</em>) – The Position object to be updated from.</p></li>
+<li><p><strong>which</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Define which points correpond to the subset
+It be an array of either boolean or int.
+The selection is similar to that of selecting from a 1D numpy array.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
