@@ -30,7 +30,7 @@ import cmocean
 mpl.rcParams["figure.dpi"] = 300
 ```
 
-Here on [SciServer](https://sciserver.org/https://sciserver.org/), we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by [Fraser et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435):
+Here on [SciServer](https://sciserver.org/), we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by [Fraser et al., 2018](https://doi.org/10.1029/2018JC014435)
 
 ```{code-cell} ipython3
 fjord = ospy.open_oceandataset.from_catalog("KangerFjord")
@@ -47,7 +47,7 @@ Citation:
 
 +++
 
-Let's first explore the dataset a bit. We are going to use [ETOPO](https://www.ncei.noaa.gov/products/etopo-global-relief-modelhttps://www.ncei.noaa.gov/products/etopo-global-relief-model) dataset to give you an idea where this domain is located.
+Let's first explore the dataset a bit. We are going to use [ETOPO](https://www.ncei.noaa.gov/products/etopo-global-relief-model) dataset to give you an idea where this domain is located.
 
 ```{code-cell} ipython3
 etopo = ospy.open_oceandataset.from_catalog("ETOPO")

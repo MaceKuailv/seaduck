@@ -31,11 +31,11 @@ plt.rcParams["figure.figsize"] = 12, 8
 ```
 
 ```{admonition} Access ECCO
-The global MITgcm run is the ECCO state estimate [(Forget et al, 2015)](https://gmd.copernicus.org/articles/8/3071/2015/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspyhttps://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#oceanspy.open_oceandataset.from_catalog) method.
+The global MITgcm run is the ECCO state estimate [(Forget et al, 2015)](https://gmd.copernicus.org/articles/8/3071/2015/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#) method.
 
 `ecco = ospy.open_oceandataset.from_catalog("ECCO")`
 
-Click [here](https://dev-poseidon-ocean.pantheonsite.io/products/datasets/) for a full list of the dataset hosted and [here](https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinterhttps://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter) to find out more.
+Click [here](https://dev-poseidon-ocean.pantheonsite.io/products/datasets/) for a full list of the dataset hosted and [here](https://oceanspy.readthedocs.io/en/latest/datasets.html#igpwinter) to find out more.
 ```
 
 ```{code-cell} ipython3
