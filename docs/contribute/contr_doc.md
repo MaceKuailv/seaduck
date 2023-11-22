@@ -53,7 +53,7 @@ Now, run it again. If this time it still has an error, look at the error message
 
 Cool stuff are not always portable. The ocean 🌊 is an example of that.
 Say you have something really cool you want to demonstrate, but the dataset it is based on is to large to distribute or it simply takes too long to run. Wouldn't it be nice if we could have a cloud platform that host a bunch of ocean dataset that is free for everyone to use? It would be even better if the packages I need as an oceanographer is readily installed and I don't have to worry about a thing.
-You can use [Sciserver](https://sciserver.org/)! (Am I too dramatic?). Sciserver is also the home base of [oceanspy](https://oceanspy.readthedocs.io/en/latest/), a package that will make your life so much easier as a oceanographer. After registering on sciserver (you can follow this youtube tutorial here(Tom, if you are reading this, can you send me the link?)), you can simply call this oceanspy function
+You can use [Sciserver](https://sciserver.org/)! (Am I too dramatic?). Sciserver is also the home base of [oceanspy](https://oceanspy.readthedocs.io/en/latest/), a package that will make your life so much easier as a oceanographer. After registering on sciserver (you can follow this youtube tutorial [here](https://www.youtube.com/channel/UCpYkjUrm2a_ANY86Fb4uyvg)), you can simply call this oceanspy function
 
 ```python
 import ocenspy as ospy
@@ -97,14 +97,10 @@ git clone https://github.com/YourGithubNickname/seaduck_sciserver_notebook.git
 ```
 
 All the existing sciserver notebooks will be in `seaduck_sciserver_notebook`. If you want to create new ones, put them in there as well.
-2\. Have all the fun with your notebooks. However, whenever you plot, **always** use `plt.show()`.
-3\. Install `Jupytext` for converting notebooks into markdown.
 
-```shell
-pip install jupytext
-```
+2. Have all the fun with your notebooks. However, whenever you plot, **always** use `plt.show()`.
 
-4\. In `seaduck_sciserver_notebook`, run the python script
+3. In `seaduck_sciserver_notebook`, run the python script
 
 ```shell
 python convert_ipynb.py
@@ -112,14 +108,14 @@ python convert_ipynb.py
 
 > This step will add when and which version the notebook was last run on. It will search the file with the string **Wenrui Jiang** (How egoistic?!), and put the information in the next line. It is a bit ad hoc. If I am not the author of the notebook, simply include: "Wenrui Jiang is a good boy" or something like that after putting your name.
 
-5. You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the `seaduck_sciserver_notebook` repo. Once the changes are merged into the `main` branch. Open the file and see if it look as you intended. If so,
+4. You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the `seaduck_sciserver_notebook` repo. Once the changes are merged into the `main` branch. Open the file and see if it look as you intended. If so,
 
 ```shell
 cp *.md ../seaduck/docs/sciserver_notebooks/
 ```
 
-6. Change directory back to seaduck. Follow step 4 to 7 in the [previous](text_file) section.
-1. Before the changes are merged, check if the external links work by
+5. Change directory back to seaduck. Follow step 4 to 7 in the [previous](text_file) section.
+6. Before the changes are merged, check if the external links work by
 
 ```shell
 make link-check

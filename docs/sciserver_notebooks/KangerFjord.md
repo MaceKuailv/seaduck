@@ -14,7 +14,7 @@ kernelspec:
 # Demonstrate `eulerian.Position` object with Fjord
 
 Author: Wenrui Jiang, 14 June 2023
-> **Warning**⚠️ : the notebook was last ran on **2023-07-27** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb.
+> **Warning**⚠️ : the notebook was last ran on **2023-11-22** with **seaduck 1.0.0**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb. 
 The `eulerian.Position` object is really what connects a point and the numerical model. Its `interpolate` method really is the core of this package. We're going to use a rather interesting example to demonstrate the functionalities of `eulerian.Position`.
 
 ```{code-cell} ipython3
@@ -30,7 +30,7 @@ import cmocean
 mpl.rcParams["figure.dpi"] = 300
 ```
 
-Here on [SciServer](https://sciserver.org/), we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by [Fraser et al., 2018](https://doi.org/10.1029/2018JC014435)
+Here on [SciServer](https://sciserver.org/), we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by [Fraser et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435):
 
 ```{code-cell} ipython3
 fjord = ospy.open_oceandataset.from_catalog("KangerFjord")
@@ -85,12 +85,12 @@ plt.ylabel("Latitude")
 plt.colorbar(c, label="m")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_8_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_8_0.png?raw=true)
 
 +++ {"tags": ["mdformat-skip"]}
 
 ## Doing Interpolation
-We are going to use the sea surface height field $\eta$ as an example.
+We are going to use the sea surface height field $\eta$ as an example. 
 
 First, we are going to convert the `xarray.Dataset` to `seaduck.OceData`.
 
@@ -140,7 +140,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_19_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_19_0.png?raw=true)
 
 Now let's "hack" the code to make it return the size of the kernels used.
 
@@ -181,7 +181,7 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_24_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_24_0.png?raw=true)
 
 ## Filling between
 
@@ -218,6 +218,6 @@ plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.show()
 ```
-![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_29_0.png?raw=true)
+![png](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_29_0.png?raw=true)
 
 I'd say the filling-in is done pretty well!
