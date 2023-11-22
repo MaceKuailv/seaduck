@@ -428,7 +428,7 @@ document.write(`
 <h2>Cooler (Sciserver) notebooks<a class="headerlink" href="#cooler-sciserver-notebooks" title="Permalink to this heading">#</a></h2>
 <p>Cool stuff are not always portable. The ocean 🌊 is an example of that.
 Say you have something really cool you want to demonstrate, but the dataset it is based on is to large to distribute or it simply takes too long to run. Wouldn’t it be nice if we could have a cloud platform that host a bunch of ocean dataset that is free for everyone to use? It would be even better if the packages I need as an oceanographer is readily installed and I don’t have to worry about a thing.
-You can use <a class="reference external" href="https://sciserver.org/">Sciserver</a>! (Am I too dramatic?). Sciserver is also the home base of <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/">oceanspy</a>, a package that will make your life so much easier as a oceanographer. After registering on sciserver (you can follow this youtube tutorial here(Tom, if you are reading this, can you send me the link?)), you can simply call this oceanspy function</p>
+You can use <a class="reference external" href="https://sciserver.org/">Sciserver</a>! (Am I too dramatic?). Sciserver is also the home base of <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/">oceanspy</a>, a package that will make your life so much easier as a oceanographer. After registering on sciserver (you can follow this youtube tutorial <a class="reference external" href="https://www.youtube.com/channel/UCpYkjUrm2a_ANY86Fb4uyvg">here</a>), you can simply call this oceanspy function</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ocenspy</span> <span class="k">as</span> <span class="nn">ospy</span>
 <span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s1">&#39;NameOfDataset&#39;</span><span class="p">)</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span>
@@ -461,26 +461,24 @@ mv<span class="w"> </span>seaduck/<span class="w"> </span>seaduck_dvlp/
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YourGithubNickname/seaduck_sciserver_notebook.git
 </pre></div>
 </div>
-<p>All the existing sciserver notebooks will be in <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>. If you want to create new ones, put them in there as well.
-2. Have all the fun with your notebooks. However, whenever you plot, <strong>always</strong> use <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code>.
-3. Install <code class="docutils literal notranslate"><span class="pre">Jupytext</span></code> for converting notebooks into markdown.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>jupytext
-</pre></div>
-</div>
-<p>4. In <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>, run the python script</p>
+<p>All the existing sciserver notebooks will be in <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>. If you want to create new ones, put them in there as well.</p>
+<ol class="arabic simple" start="2">
+<li><p>Have all the fun with your notebooks. However, whenever you plot, <strong>always</strong> use <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code>.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code>, run the python script</p></li>
+</ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>convert_ipynb.py
 </pre></div>
 </div>
 <blockquote>
 <div><p>This step will add when and which version the notebook was last run on. It will search the file with the string <strong>Wenrui Jiang</strong> (How egoistic?!), and put the information in the next line. It is a bit ad hoc. If I am not the author of the notebook, simply include: “Wenrui Jiang is a good boy” or something like that after putting your name.</p>
 </div></blockquote>
-<ol class="arabic simple" start="5">
+<ol class="arabic simple" start="4">
 <li><p>You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the <code class="docutils literal notranslate"><span class="pre">seaduck_sciserver_notebook</span></code> repo. Once the changes are merged into the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch. Open the file and see if it look as you intended. If so,</p></li>
 </ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>*.md<span class="w"> </span>../seaduck/docs/sciserver_notebooks/
 </pre></div>
 </div>
-<ol class="arabic simple" start="6">
+<ol class="arabic simple" start="5">
 <li><p>Change directory back to seaduck. Follow step 4 to 7 in the <a class="reference internal" href="#text-file"><span class="std std-ref">previous</span></a> section.</p></li>
 <li><p>Before the changes are merged, check if the external links work by</p></li>
 </ol>
