@@ -383,7 +383,7 @@ document.write(`
 <h1>Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord<a class="headerlink" href="#demonstrate-eulerian-position-object-with-fjord" title="Permalink to this heading">#</a></h1>
 <p>Author: Wenrui Jiang, 14 June 2023</p>
 <blockquote>
-<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-07-27</strong> with <strong>seaduck 0.1.3</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
+<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2023-11-22</strong> with <strong>seaduck 1.0.0</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
 The <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object is really what connects a point and the numerical model. Its <code class="docutils literal notranslate"><span class="pre">interpolate</span></code> method really is the core of this package. We’re going to use a rather interesting example to demonstrate the functionalities of <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code>.</p>
 </div></blockquote>
 <div class="cell docutils container">
@@ -402,7 +402,7 @@ The <code class="docutils literal notranslate"><span class="pre">eulerian.Positi
 </div>
 </div>
 </div>
-<p>Here on <a class="reference external" href="https://sciserver.org/">SciServer</a>, we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by <a class="reference external" href="https://doi.org/10.1029/2018JC014435">Fraser et al., 2018</a></p>
+<p>Here on <a class="reference external" href="https://sciserver.org/">SciServer</a>, we have an interesting dataset simulating the interaction between background circulation and Kangerdlugssuaq Fjord. More information can be found below, and see the paper by <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018JC014435">Fraser et al., 2018</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fjord</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;KangerFjord&quot;</span><span class="p">)</span>
@@ -473,7 +473,7 @@ Citation:
 </div>
 </details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_8_0.png?raw=true" /></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_8_0.png?raw=true" /></p>
 <section id="doing-interpolation">
 <h2>Doing Interpolation<a class="headerlink" href="#doing-interpolation" title="Permalink to this heading">#</a></h2>
 <p>We are going to use the sea surface height field <span class="math notranslate nohighlight">\(\eta\)</span> as an example.</p>
@@ -545,7 +545,7 @@ Citation:
 </div>
 </details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_19_0.png?raw=true" /></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_19_0.png?raw=true" /></p>
 <p>Now let’s “hack” the code to make it return the size of the kernels used.</p>
 <p>The details of the hack is not very important. But if you’re interested you can read the inline comments below.</p>
 <div class="cell tag_hide-input docutils container">
@@ -600,7 +600,7 @@ Citation:
 </div>
 </details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_24_0.png?raw=true" /></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_24_0.png?raw=true" /></p>
 </section>
 <section id="filling-between">
 <h2>Filling between<a class="headerlink" href="#filling-between" title="Permalink to this heading">#</a></h2>
@@ -652,7 +652,7 @@ So let’s do that. We specify part of the model domain to fill in using the par
 </div>
 </details>
 </div>
-<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/Fjord_29_0.png?raw=true" /></p>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord_files/KangerFjord_29_0.png?raw=true" /></p>
 <p>I’d say the filling-in is done pretty well!</p>
 </section>
 </section>
