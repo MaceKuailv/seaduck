@@ -23,14 +23,16 @@ Running Lagrangian particle on regional dataset
 :::
 
 :::{grid-item-card}
-:link: sciserver_notebooks/IGPwinter
+:link: sciserver_notebooks/LLC4320
 :link-type: doc
 :class-header: bg-light
 
-Example with complex grid
+Example with complex grid (LLC4320)
 ^^^
+```{image} https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/LLC4320Thumbnail.png?raw=true
+:height: 200
+```
 
-Running Lagrangian particle on the LLC4320 dataset.
 :::
 
 :::{grid-item-card}
