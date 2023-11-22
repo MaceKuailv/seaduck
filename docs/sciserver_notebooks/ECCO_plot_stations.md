@@ -18,7 +18,7 @@ Extract temperature/salinity profiles at specified longitudes, latitudes, and ti
 This notebook uses [Oceanspy](https://oceanspy.readthedocs.io/en/latest/) and demonstrates the interface to the Poseidon-viewer on SciServer.
 
 Author: Tom Haine & Wenrui Jiang, Jun '23
-> **Warning**⚠️ : the notebook was last ran on **2023-07-27** with **seaduck 0.1.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb.
+> **Warning**⚠️ : the notebook was last ran on **2023-11-22** with **seaduck 1.0.0**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations.ipynb.
 ```{code-cell} ipython3
 import seaduck as sd
 import oceanspy as ospy
@@ -31,7 +31,7 @@ plt.rcParams["figure.figsize"] = 12, 8
 ```
 
 ```{admonition} Access ECCO
-The global MITgcm run is the ECCO state estimate [(Forget et al, 2015)](https://gmd.copernicus.org/articles/8/3071/2015/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html#) method.
+The global MITgcm run is the ECCO state estimate [(Forget et al, 2015)](https://gmd.copernicus.org/articles/8/3071/2015/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html) method.
 
 `ecco = ospy.open_oceandataset.from_catalog("ECCO")`
 
