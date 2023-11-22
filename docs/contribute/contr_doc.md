@@ -100,7 +100,7 @@ All the existing sciserver notebooks will be in `seaduck_sciserver_notebook`. If
 
 2. Have all the fun with your notebooks. However, whenever you plot, **always** use `plt.show()`.
 
-3. In `seaduck_sciserver_notebook`, run the python script
+1. In `seaduck_sciserver_notebook`, run the python script
 
 ```shell
 python convert_ipynb.py
@@ -115,7 +115,7 @@ cp *.md ../seaduck/docs/sciserver_notebooks/
 ```
 
 5. Change directory back to seaduck. Follow step 4 to 7 in the [previous](text_file) section.
-6. Before the changes are merged, check if the external links work by
+1. Before the changes are merged, check if the external links work by
 
 ```shell
 make link-check

@@ -14,7 +14,7 @@ kernelspec:
 # Demonstrate `eulerian.Position` object with Fjord
 
 Author: Wenrui Jiang, 14 June 2023
-> **Warning**⚠️ : the notebook was last ran on **2023-11-22** with **seaduck 1.0.0**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb. 
+> **Warning**⚠️ : the notebook was last ran on **2023-11-22** with **seaduck 1.0.0**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/KangerFjord.ipynb.
 The `eulerian.Position` object is really what connects a point and the numerical model. Its `interpolate` method really is the core of this package. We're going to use a rather interesting example to demonstrate the functionalities of `eulerian.Position`.
 
 ```{code-cell} ipython3
@@ -90,7 +90,7 @@ plt.show()
 +++ {"tags": ["mdformat-skip"]}
 
 ## Doing Interpolation
-We are going to use the sea surface height field $\eta$ as an example. 
+We are going to use the sea surface height field $\eta$ as an example.
 
 First, we are going to convert the `xarray.Dataset` to `seaduck.OceData`.
 
