@@ -29,12 +29,8 @@ link-bibliography: false
 
 Numerical simulations of the Earth's oceans are becoming more realistic and sophisticated. Their complex layout and sheer volume make it difficult for researchers to access and understand these data, however. Additionally, most ocean models, mostly finite-volume models, compute and calculate spatially-integrated properties, such as grid-cell averaged temperature or wall-integrated mass flux. On the other hand, in-situ oceanographic observations are effectively collected at points in space and time. This fundamental difference makes the comparison between observations and results from numerical simulation difficult.
 
-<<<<<<< HEAD
 In this work, we present seaduck, a Python package that can perform both Eulerian interpolation and Lagrangian particle simulation on generic ocean datasets with good performance and scalability. This package accesses numerical datasets from the perspective of space-time points. It automatically navigates complex dataset layouts (grid topologies) and transforms discrete information into continuous fields. The values and derivatives of those fields can be accessed at any point in the 3+1 dimensional space-time domain defined by the user. For example, users can compute oceanographic properties as Eulerian timeseries (at fixed points in space), like from moored oceanographic current meters, or as Lagrangian timeseries (drifting with the current), like from oceanographic floats
-=======
-In this work, we present seaduck, a Python package that can perform both Eulerian interpolation and Lagrangian particle simulation on generic ocean datasets with good performance and scalability. This package accesses numerical datasets from the perspective of space-time points. It automatically navigates complex dataset layouts (grid topologies) and transforms discrete information into continuous fields. The values and derivatives of those fields can be accessed at any point in the 3+1 dimensional space-time domain defined by the user.
-With the Lagrangian particle simulator integrated, aside from stationary points (Eulerian), users can also access oceanographic properties at points advected by the flow (Lagrangian), similar to collecting data from drifting observational oceanographic instrument platforms.
->>>>>>> 3214322d86b9c36923f6381345a7155ad392f136
+
 
 # Statement of need
 
