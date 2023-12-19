@@ -57,6 +57,8 @@ As an example of seaduck's interpolation/regridding functionality,  consider a r
 ## Global particle simulation on LLC4320
 
 In this example, a stationary, surface slice of the LLC4320 [@llc4320] simulation is used. LLC4320 is a kilometer-scale model of the global ocean circulation with complex topology. 150,000 Lagrangian particles are released randomly and evenly on the globe, and seaduck computes their trajectories for 30 days. Figure. 2 shows the particle trajectories for the northern hemisphere, which contains around 10$^8$ velocity points. The colors denote the current speed. This simulation takes about an hour to run on SciServer [@sciserver].
+
+
 ![Particle streaklines of particle advected by stationary 2D slice of the LLC4320 simulation. Colors denote the current speed.](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/LLC4320_29_smaller.png?raw=true)
 
 
