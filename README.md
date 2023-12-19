@@ -14,6 +14,10 @@ A python package that interpolates data from ocean dataset from both Eulerian an
 Seaduck documentation:
 https://macekuailv.github.io/seaduck/
 
+## Citation
+
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.05967/status.svg)](https://doi.org/10.21105/joss.05967)
+
 ## Workflow for developers/contributors
 
 For best experience create a new conda environment (e.g. bubblebath):
