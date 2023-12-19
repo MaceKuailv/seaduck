@@ -51,6 +51,7 @@ While some usage examples are presented here, many more can be found in the docu
 
 As an example of seaduck's interpolation/regridding functionality,  consider a realistic simulation of the Kangerdlugssuaq Fjord, which is  in east Greenland [@Fraser2018]. The simulation uses the MITgcm [@mitgcm] with uneven grid spacing such that grid cells within the fjord are much more densely packed than elsewhere. The goal is to interpolate, and  hence regrid, the sea surface height field, to a uniform grid spacing in the southern part of the domain. In  Figure. 1, the coherent patch between 66.5 N and 67 N is a very dense  scatter plot of the interpolated  field.  The close agreement between the interpolated and output value  can be clearly seen in Figure. 1. The interpolated field also remains  smooth near strong gradients and land boundaries.
 
+
 ![Scatterplot with colors showing the sea surface height value near Kangerdlugssuaq Fjord defined in the model and interpolated by seaduck.\label{fig:onlyone}](https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/stable_images/Fjord_29_0.png?raw=true)
 
 ## Global particle simulation on LLC4320
