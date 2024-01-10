@@ -4,6 +4,7 @@ parts:
 - caption: Tutorial
   chapters:
   - file: how_to_install
+  - file: how_to_cite
   - file: get_started
     sections:
     - file: one_min_guide
