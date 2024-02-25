@@ -1,6 +1,14 @@
+try:  # pragma: no cover
+    import xgcm
+except ImportError:  # pragma: no cover
+    pass
+
+
 def _raise_if_no_xgcm():
     try:
         import xgcm
+
+        xgcm
     except ImportError:
         raise ImportError(
             "The python package xgcm is needed."
