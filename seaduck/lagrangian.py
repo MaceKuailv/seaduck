@@ -255,12 +255,7 @@ class Particle(Position):
             try:
                 self.ocedata["Vol"]
             except KeyError:
-                if self.ocedata.readiness["Zl"]:
-                    self.ocedata["Vol"] = np.array(
-                        self.ocedata._ds["drF"] * self.ocedata._ds["rA"]
-                    )
-                else:
-                    self.ocedata["Vol"] = np.array(self.ocedata._ds["rA"])
+                self.ocedate._add_missing_vol()
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
