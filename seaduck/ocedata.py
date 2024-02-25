@@ -281,9 +281,7 @@ class OceData:
 
     def _add_missing_vol(self):
         if self.readiness["Zl"]:
-            self["Vol"] = np.array(
-                self._ds["drF"] * self._ds["rA"]
-            )
+            self["Vol"] = np.array(self._ds["drF"] * self._ds["rA"])
         else:
             self["Vol"] = np.array(self._ds["rA"])
 
