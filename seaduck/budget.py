@@ -20,7 +20,10 @@ def _raise_if_no_xgcm():
 def create_ecco_grid(ds):
     face_connections = {
         "face": {
-            0: {"X": ((12, "Y", False), (3, "X", False)), "Y": (None, (1, "Y", False))},
+            0: {
+                "X": ((12, "Y", False), (3, "X", False)), 
+                "Y": (None, (1, "Y", False))
+            },
             1: {
                 "X": ((11, "Y", False), (4, "X", False)),
                 "Y": ((0, "Y", False), (2, "Y", False)),
@@ -29,7 +32,10 @@ def create_ecco_grid(ds):
                 "X": ((10, "Y", False), (5, "X", False)),
                 "Y": ((1, "Y", False), (6, "X", False)),
             },
-            3: {"X": ((0, "X", False), (9, "Y", False)), "Y": (None, (4, "Y", False))},
+            3: {
+                "X": ((0, "X", False), (9, "Y", False)), 
+                "Y": (None, (4, "Y", False))
+            },
             4: {
                 "X": ((1, "X", False), (8, "Y", False)),
                 "Y": ((3, "Y", False), (5, "Y", False)),
@@ -50,7 +56,10 @@ def create_ecco_grid(ds):
                 "X": ((7, "X", False), (9, "X", False)),
                 "Y": ((4, "X", False), (11, "Y", False)),
             },
-            9: {"X": ((8, "X", False), None), "Y": ((3, "X", False), (12, "Y", False))},
+            9: {
+                "X": ((8, "X", False), None), 
+                "Y": ((3, "X", False), (12, "Y", False))
+            },
             10: {
                 "X": ((6, "Y", False), (11, "X", False)),
                 "Y": ((7, "Y", False), (2, "X", False)),
