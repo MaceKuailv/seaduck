@@ -1,6 +1,6 @@
 # To close budget on particles
 
-> We are activatively tidying up the code for budget closure. The process is quite slow because the boy need to prioritize on getting his PhD :P. 
+> We are activatively tidying up the code for budget closure. The process is quite slow because the boy need to prioritize on getting his PhD :P.
 
 The pdf in this directory describes, in theory, how to close budget on Lagrangian particles using seaduck. A paper will (hopefully) be published soon on this, and there will be a proper way to cite then.
 

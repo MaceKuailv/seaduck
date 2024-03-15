@@ -279,7 +279,7 @@ class OceData:
             self["CS"] = cs
             self["SN"] = sn
 
-    def _add_missing_vol(self,as_numpy = False):
+    def _add_missing_vol(self, as_numpy=False):
         if self.readiness["Zl"]:
             vol = self._ds["drF"] * self._ds["rA"]
         else:

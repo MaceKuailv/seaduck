@@ -100,7 +100,9 @@ def hor_div(tub, grid, xfluxname, yfluxname):
     except KeyError:
         tub._add_missing_vol()
     xy_diff = grid.diff_2d_vector(
-        {"X": tub[xfluxname].fillna(0), "Y": tub[yfluxname].fillna(0)}, boundary="fill", fill_value=0.0
+        {"X": tub[xfluxname].fillna(0), "Y": tub[yfluxname].fillna(0)},
+        boundary="fill",
+        fill_value=0.0,
     )
     x_diff = xy_diff["X"]
     y_diff = xy_diff["Y"]
@@ -125,8 +127,12 @@ def ver_div(tub, grid, zfluxname):
         tub["Vol"]
     except KeyError:
         tub._add_missing_vol()
-    vConv = grid.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0) / tub["Vol"]
+    vConv = (
+        grid.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
+        / tub["Vol"]
+    )
     return vConv
+
 
 def total_div(tub, grid, xfluxname, yfluxname, zfluxname):
     """Calculate 3D divergence using xgcm.
@@ -143,7 +149,8 @@ def total_div(tub, grid, xfluxname, yfluxname, zfluxname):
     """
     hConv = hor_div(tub, grid, xfluxname, yfluxname)
     vConv = ver_div(tub, grid, zfluxname)
-    return hConv+vConv
+    return hConv + vConv
+
 
 def _slice_corner(array, fc, iy1, iy2, ix1, ix2):
     left = np.minimum(ix1, ix2)

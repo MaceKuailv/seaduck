@@ -255,7 +255,7 @@ class Particle(Position):
             try:
                 self.ocedata["Vol"]
             except KeyError:
-                self.ocedata._add_missing_vol(as_numpy = True)
+                self.ocedata._add_missing_vol(as_numpy=True)
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
