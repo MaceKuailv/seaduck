@@ -40,7 +40,8 @@ module = [
   "numba",
   "pooch",
   "scipy",
-  "scipy.interpolate"
+  "scipy.interpolate",
+  "xgcm"
 ]
 
 [tool.ruff]
