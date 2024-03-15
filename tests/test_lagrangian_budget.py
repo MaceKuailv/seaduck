@@ -3,7 +3,7 @@ import pytest
 
 import seaduck as sd
 from seaduck import utils
-from seaduck.lagrangian import ind_tend_uv
+from seaduck.lagrangian_budget import ind_tend_uv
 
 
 @pytest.fixture
