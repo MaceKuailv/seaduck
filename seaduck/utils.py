@@ -90,6 +90,9 @@ def process_ecco(ds):
         np.stack([etan_3d * 1.5, etan_3d * 2.5], axis=0),
         dims=("time_midp", "face", "Y", "X"),
     )
+    ds["utrans"] = ds["UVELMASS"] * ds["drF"] * ds["dyG"]
+    ds["vtrans"] = ds["VVELMASS"] * ds["drF"] * ds["dxG"]
+    ds["wtrans"] = ds["WVELMASS"] * ds["rA"]
     return ds
 
 
