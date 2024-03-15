@@ -75,7 +75,7 @@ def create_ecco_grid(ds):
         coords={
             "X": {"center": "X", "left": "Xp1"},
             "Y": {"center": "Y", "left": "Yp1"},
-            "Z": {"center": "Z", "left": "Zl", "outer": "Zp1", "right": "Zu"},
+            "Z": {"center": "Z", "left": "Zl"},
             "time": {"center": "time", "inner": "time_midp"},
         },
     )
@@ -100,7 +100,7 @@ def hor_div(tub, grid, xfluxname, yfluxname):
     except KeyError:
         tub._add_missing_vol()
     xy_diff = grid.diff_2d_vector(
-        {"X": tub[xfluxname], "Y": tub[yfluxname]}, boundary="fill", fill_value=0.0
+        {"X": tub[xfluxname].fillna(0), "Y": tub[yfluxname].fillna(0)}, boundary="fill", fill_value=0.0
     )
     x_diff = xy_diff["X"]
     y_diff = xy_diff["Y"]
@@ -117,17 +117,33 @@ def ver_div(tub, grid, zfluxname):
         The dataset to calculate data from
     grid: xgcm.Grid
         The Grid of the dataset
-    zfluxname: string
-        The name of the variables corresponding to the vertical flux
+    xfluxname, yfluxname, zfluxname: string
+        The name of the variables corresponding to the fluxes
         in concentration m^3/s
     """
     try:
         tub["Vol"]
     except KeyError:
         tub._add_missing_vol()
-    vConv = grid.diff(tub[zfluxname], "Z", boundary="fill", fill_value=0.0) / tub["Vol"]
+    vConv = grid.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0) / tub["Vol"]
     return vConv
 
+def total_div(tub, grid, xfluxname, yfluxname, zfluxname):
+    """Calculate 3D divergence using xgcm.
+
+    Parameters
+    ----------
+    tub: sd.OceData or xr.Dataset
+        The dataset to calculate data from
+    grid: xgcm.Grid
+        The Grid of the dataset
+    zfluxname: string
+        The name of the variables corresponding to the vertical flux
+        in concentration m^3/s
+    """
+    hConv = hor_div(tub, grid, xfluxname, yfluxname)
+    vConv = ver_div(tub, grid, zfluxname)
+    return hConv+vConv
 
 def _slice_corner(array, fc, iy1, iy2, ix1, ix2):
     left = np.minimum(ix1, ix2)
