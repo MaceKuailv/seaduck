@@ -24,19 +24,19 @@ MOVE_DIC = {
 }
 
 
-def read_from_ds(nc, oce):
+def read_from_ds(particle_ds, oce):
     temp = Position.__new__(Particle)
     temp.ocedata = oce
     temp.tp = temp.ocedata.tp
 
-    # it = np.array(nc.it)
-    izl = np.array(nc.iz)
-    fc = np.array(nc.fc)
-    iy = np.array(nc.iy)
-    ix = np.array(nc.ix)
-    rzl = np.array(nc.rz)
-    ry = np.array(nc.ry)
-    rx = np.array(nc.rx)
+    # it = np.array(particle_ds.it)
+    izl = np.array(particle_ds.iz)
+    fc = np.array(particle_ds.fc)
+    iy = np.array(particle_ds.iy)
+    ix = np.array(particle_ds.ix)
+    rzl = np.array(particle_ds.rz)
+    ry = np.array(particle_ds.ry)
+    rx = np.array(particle_ds.rx)
 
     # temp.it  = it .astype(int)
     temp.izl_lin = izl.astype(int)
@@ -50,12 +50,12 @@ def read_from_ds(nc, oce):
 
     temp.N = len(temp.ix)
 
-    uu = np.array(nc.uu)
-    vv = np.array(nc.vv)
-    ww = np.array(nc.ww)
-    du = np.array(nc.du)
-    dv = np.array(nc.dv)
-    dw = np.array(nc.dw)
+    uu = np.array(particle_ds.uu)
+    vv = np.array(particle_ds.vv)
+    ww = np.array(particle_ds.ww)
+    du = np.array(particle_ds.du)
+    dv = np.array(particle_ds.dv)
+    dw = np.array(particle_ds.dw)
 
     temp.u = uu
     temp.v = vv
@@ -64,14 +64,14 @@ def read_from_ds(nc, oce):
     temp.dv = dv
     temp.dw = dw
 
-    temp.lon = np.array(nc.xx)
-    temp.lat = np.array(nc.yy)
-    temp.dep = np.array(nc.zz)
-    temp.t = np.array(nc.tt)
+    temp.lon = np.array(particle_ds.xx)
+    temp.lat = np.array(particle_ds.yy)
+    temp.dep = np.array(particle_ds.zz)
+    temp.t = np.array(particle_ds.tt)
 
-    temp.vs = np.array(nc.vs)
+    temp.vs = np.array(particle_ds.vs)
 
-    temp.shapes = list(nc.shapes)
+    temp.shapes = list(particle_ds.shapes)
 
     return temp
 
@@ -97,15 +97,6 @@ def pseudo_motion(pt):
     tendf, tf = _which_early(1e80, ts_forward)
     tendb, tb = _which_early(-1e80, ts_backward)
 
-    # fly = np.logical_and(pt.izl_lin == 1, np.logical_or(tendf == 5, tendb == 5))
-    # assert (~fly).all()
-    # if np.logical_and(tendf == 6,tendb == 6).any():# expensive check
-    #     where = np.logical_and(tendf == 6,tendb == 6)
-    #     raise Exception(f"x,y,z:{pt.rx[where],pt.ry[where],pt.rzl_lin[where]}"
-    #                     f"u,v,w:{pt.u[where],pt.v[where],pt.w[where]}"
-    #                     f"du,dv,dw:{pt.du[where],pt.dv[where],pt.dw[where]}"
-    #                     f"{[i[where] for i in ts_forward]}"
-    #                    )
     return tendf, tf, tendb, tb
 
 
