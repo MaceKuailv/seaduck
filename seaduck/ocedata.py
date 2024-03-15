@@ -279,11 +279,16 @@ class OceData:
             self["CS"] = cs
             self["SN"] = sn
 
-    def _add_missing_vol(self):
+    def _add_missing_vol(self,as_numpy = False):
         if self.readiness["Zl"]:
-            self["Vol"] = np.array(self._ds["drF"] * self._ds["rA"])
+            vol = self._ds["drF"] * self._ds["rA"]
         else:
-            self["Vol"] = np.array(self._ds["rA"])
+            vol = self._ds["rA"]
+
+        if as_numpy:
+            self["Vol"] = np.array(vol)
+        else:
+            self["Vol"] = vol
 
     def _hgrid2array(self):
         """Extract the horizontal grid data into numpy arrays.
