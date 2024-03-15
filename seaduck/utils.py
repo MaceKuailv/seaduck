@@ -7,7 +7,7 @@ import numpy as np
 import xarray as xr
 from scipy import spatial
 
-from seaduck.runtime_conf import compileable
+from seaduck.runtime_conf import compileable, compileable_parallel, prange
 
 try:
     import pooch
@@ -713,3 +713,33 @@ def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):
     if print_total_number:
         print(f"A total of {len(x)} positions are defined.")
     return x, y, z, t
+
+
+@compileable
+def pointinpolygon(x, y, poly):
+    n = len(poly)
+    inside = False
+    p2x = 0.0
+    p2y = 0.0
+    xints = 0.0
+    p1x, p1y = poly[0]
+    for i in prange(n + 1):
+        p2x, p2y = poly[i % n]
+        if y > min(p1y, p2y):
+            if y <= max(p1y, p2y):
+                if x <= max(p1x, p2x):
+                    if p1y != p2y:
+                        xints = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                    if p1x == p2x or x <= xints:
+                        inside = not inside
+        p1x, p1y = p2x, p2y
+
+    return inside
+
+
+@compileable_parallel
+def parallelpointinpolygon(xs, ys, poly):
+    D = np.empty(len(xs), dtype=bool)
+    for i in prange(0, len(D)):
+        D[i] = pointinpolygon(xs[i], ys[i], poly)
+    return D
