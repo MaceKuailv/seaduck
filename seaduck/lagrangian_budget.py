@@ -3,10 +3,10 @@ from itertools import accumulate
 
 import numpy as np
 import xarray as xr
-from utils import parallelpointinpolygon
 
 from seaduck.eulerian import Position
 from seaduck.lagrangian import Particle, _time2wall, _uleftright_from_udu, _which_early
+from seaduck.utils import parallelpointinpolygon
 
 try:
     import zarr
