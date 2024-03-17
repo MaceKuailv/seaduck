@@ -3,7 +3,13 @@ import pytest
 
 import seaduck as sd
 from seaduck import utils
-from seaduck.lagrangian_budget import ind_tend_uv
+from seaduck.lagrangian_budget import (
+    find_ind_frac_tres,
+    ind_tend_uv,
+    particle2xarray,
+    redo_index,
+    store_lists,
+)
 
 
 @pytest.fixture
@@ -13,7 +19,7 @@ def custom_pt():
     z = np.ones_like(x) * (-9)
     t = np.ones_like(x)
     od = sd.OceData(utils.get_dataset("ecco"))
-    return sd.Particle(
+    pt = sd.Particle(
         x=x,
         y=y,
         z=z,
@@ -25,6 +31,8 @@ def custom_pt():
         transport=True,
         save_raw=True,
     )
+    pt.to_next_stop(t[0] + 1e7)
+    return pt
 
 
 # @pytest.fixture
@@ -47,3 +55,26 @@ def test_ind_tend_uv(ind, exp):
     tp = tub.tp
     ans = ind_tend_uv(ind, tp)
     assert exp == ans
+
+
+def test_redo_index(custom_pt):
+    vf, vb, frac = redo_index(custom_pt)
+    assert (frac <= 1).all()
+    assert (frac >= 0).all()
+
+
+def test_ind_frac_find(custom_pt):
+    particle_datasets = particle2xarray(custom_pt)
+    tub = sd.OceData(utils.get_dataset("ecco"))
+    ind1, ind2, frac, tres, last, first = find_ind_frac_tres(particle_datasets, tub)
+    assert ind1.shape[0] == 5
+    assert (frac != 1).any()
+    assert (tres >= 0).all()
+
+
+@pytest.mark.parametrize(
+    "use_region",
+    [False],
+)
+def test_store_lists(custom_pt, use_region):
+    store_lists(custom_pt, "PleaseIgnore_dump.zarr", use_region=use_region)

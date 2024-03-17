@@ -8,9 +8,9 @@ from seaduck.eulerian import Position
 from seaduck.lagrangian import Particle, _time2wall, _uleftright_from_udu, _which_early
 from seaduck.utils import parallelpointinpolygon
 
-try:
+try:  # pragma: no cover
     import zarr
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 
 UV_DIC = {"U": 0, "V": 1}
@@ -234,9 +234,9 @@ def find_ind_frac_tres(neo, oce, use_region=False, reg_polys=None):
     old_first, old_last = first_last(temp.shapes)
     neither = np.array(
         [i for i in range(temp.N) if i not in old_first and i not in old_last]
-    )
-    first = np.array([i for i in old_first])
-    last = np.array([i for i in old_last])
+    ).astype(int)
+    first = np.array(old_first).astype(int)
+    last = np.array(old_last).astype(int)
 
     ind1 = np.zeros((5, temp.N), "int16")
     ind2 = np.ones((5, temp.N), "int16")
@@ -270,14 +270,6 @@ def flatten(lstoflst, shapes=None):
     for i in range(1, len(lstoflst)):
         thething[suffix[i - 1] : suffix[i]] = lstoflst[i]
     return thething
-
-
-def bring_back(flt, shapes):
-    suffix = np.cumsum(shapes)
-    R = []
-    for i in range(len(shapes)):
-        R.append(flt[suffix[i] - shapes[i] : suffix[i]])
-    return R
 
 
 def particle2xarray(p):
@@ -329,10 +321,10 @@ def particle2xarray(p):
     return ds
 
 
-def dump_to_zarr(neo, oce, filename, use_region=False):
+def dump_to_zarr(neo, oce, filename, use_region=False, reg_polys=None):
     if use_region:
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
-            neo, oce, use_region=use_region
+            neo, oce, use_region=use_region, reg_polys=reg_polys
         )
     else:
         ind1, ind2, frac, tres, last, first = find_ind_frac_tres(neo, oce)
@@ -370,6 +362,6 @@ def dump_to_zarr(neo, oce, filename, use_region=False):
     zarr.consolidate_metadata(filename)
 
 
-def store_lists(pt, name):
+def store_lists(pt, name, use_region=False, reg_polys = None):
     neo = particle2xarray(pt)
-    dump_to_zarr(neo, pt.ocedata, name, use_region=True)
+    dump_to_zarr(neo, pt.ocedata, name, use_region=use_region, reg_polys = reg_polys)
