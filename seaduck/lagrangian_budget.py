@@ -5,8 +5,12 @@ import numpy as np
 import xarray as xr
 
 from seaduck.eulerian import Position
-from seaduck.lagrangian import Particle, _time2wall, _uleftright_from_udu, _which_early
-from seaduck.utils import parallelpointinpolygon
+from seaduck.utils import (
+    _time2wall,
+    _uleftright_from_udu,
+    _which_early,
+    parallelpointinpolygon,
+)
 
 try:  # pragma: no cover
     import zarr
@@ -25,7 +29,7 @@ MOVE_DIC = {
 
 
 def read_from_ds(particle_ds, oce):
-    temp = Position.__new__(Particle)
+    temp = Position.__new__(Position)
     temp.ocedata = oce
     temp.tp = temp.ocedata.tp
 
