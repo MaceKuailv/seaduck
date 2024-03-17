@@ -218,12 +218,12 @@ def redo_index(pt):
     return vf, vb, frac
 
 
-def find_ind_frac_tres(neo, oce, use_region=False, reg_polys=None):
+def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
-    if use_region:
+    if region_names:
         masks = []
-        for reg in reg_polys:
+        for reg in region_polys:
             mask = parallelpointinpolygon(temp.lon, temp.lat, reg)
             # mask = np.where(mask)[0]
             masks.append(mask)
@@ -255,7 +255,7 @@ def find_ind_frac_tres(neo, oce, use_region=False, reg_polys=None):
     ind1[:, last], ind2[:, last], frac[last] = redo_index(lasts)
 
     tres = tres_fraction(temp, first, last, frac[first], frac[last])
-    if use_region:
+    if region_names:
         return ind1, ind2, frac, masks, tres, old_last, old_first
     else:
         return ind1, ind2, frac, tres, old_last, old_first
@@ -321,17 +321,17 @@ def particle2xarray(p):
     return ds
 
 
-def dump_to_zarr(neo, oce, filename, use_region=False, reg_polys=None):
-    if use_region:
+def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
+    if region_names:
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
-            neo, oce, use_region=use_region, reg_polys=reg_polys
+            neo, oce, region_names=region_names, region_polys=region_polys
         )
     else:
         ind1, ind2, frac, tres, last, first = find_ind_frac_tres(neo, oce)
 
     neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
-    if use_region:
-        for ir, reg in enumerate(use_region):
+    if region_names:
+        for ir, reg in enumerate(region_names):
             neo[reg] = xr.DataArray(masks[ir].astype(bool), dims="nprof")
         # neo['gulf'] = xr.DataArray(gulf_ind.astype(bool),dims = 'nprof')
         # neo['labr'] = xr.DataArray(labr_ind.astype(bool),dims = 'nprof')
@@ -362,6 +362,8 @@ def dump_to_zarr(neo, oce, filename, use_region=False, reg_polys=None):
     zarr.consolidate_metadata(filename)
 
 
-def store_lists(pt, name, use_region=False, reg_polys = None):
+def store_lists(pt, name, region_names=False, region_polys=None):
     neo = particle2xarray(pt)
-    dump_to_zarr(neo, pt.ocedata, name, use_region=use_region, reg_polys = reg_polys)
+    dump_to_zarr(
+        neo, pt.ocedata, name, region_names=region_names, region_polys=region_polys
+    )
