@@ -798,7 +798,7 @@ class Particle(Position):
         update_stops="default",
         return_in_between=True,
         dump_filename=False,
-        store_kwarg = {},
+        store_kwarg={},
     ):
         """Integrate the particles to a list of time.
 

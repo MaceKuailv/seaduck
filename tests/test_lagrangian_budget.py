@@ -114,6 +114,7 @@ def test_store_lists(custom_pt):
 
 
 def test_store_lists_with_region(custom_pt, region_info):
+    pytest.importorskip("numba")
     region_names, region_polys = region_info
     store_lists(
         custom_pt,
