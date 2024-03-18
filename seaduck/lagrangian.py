@@ -867,7 +867,8 @@ class Particle(Position):
         to_return = []
         for i, tl in enumerate(stops):
             timestr = str(np.datetime64(round(tl), "s"))
-            logging.info(timestr)
+            # logging.info(timestr)
+            print(timestr)
             if self.save_raw:
                 # save the very start of everything.
                 self.note_taking(stamp=15)

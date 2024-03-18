@@ -5,6 +5,7 @@ import numpy as np
 import xarray as xr
 
 from seaduck.eulerian import Position
+from seaduck.runtime_conf import compileable
 from seaduck.utils import (
     _time2wall,
     _uleftright_from_udu,
@@ -103,13 +104,17 @@ def pseudo_motion(pt):
 
     return tendf, tf, tendb, tb
 
+@compileable
+def fast_cumsum(shapes):
+    return np.cumsum(shapes)
 
-def first_last(shapes):
-    acc = np.array(list(accumulate(shapes)))
+def first_last_neither(shapes):
+    acc = fast_cumsum(shapes)
     last = acc - 1
     first = np.roll(acc, 1)
     first[0] = 0
-    return first, last
+    neither = np.array([acc[i] + j for i, length in enumerate(shapes) for j in range(1, length - 1)])
+    return first, last, neither
 
 
 def pt_ulist(pt):
@@ -231,16 +236,7 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
             mask = parallelpointinpolygon(temp.lon, temp.lat, reg)
             # mask = np.where(mask)[0]
             masks.append(mask)
-    # inds = deepcopy_inds(temp)
-    # np_inds = np.array(inds)
-
-    # wrong_ind, lookup_ind = matching_row_indexes(np_inds.T, wrong.T)
-    old_first, old_last = first_last(temp.shapes)
-    neither = np.array(
-        [i for i in range(temp.N) if i not in old_first and i not in old_last]
-    ).astype(int)
-    first = np.array(old_first).astype(int)
-    last = np.array(old_last).astype(int)
+    first, last, neither = first_last_neither(np.array(temp.shapes))
 
     ind1 = np.zeros((5, temp.N), "int16")
     ind2 = np.ones((5, temp.N), "int16")
@@ -260,9 +256,9 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
 
     tres = tres_fraction(temp, first, last, frac[first], frac[last])
     if region_names:
-        return ind1, ind2, frac, masks, tres, old_last, old_first
+        return ind1, ind2, frac, masks, tres, last, first
     else:
-        return ind1, ind2, frac, tres, old_last, old_first
+        return ind1, ind2, frac, tres, last, first
 
 
 def flatten(lstoflst, shapes=None):
