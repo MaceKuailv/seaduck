@@ -798,6 +798,7 @@ class Particle(Position):
         update_stops="default",
         return_in_between=True,
         dump_filename=False,
+        store_kwarg = {},
     ):
         """Integrate the particles to a list of time.
 
@@ -881,12 +882,12 @@ class Particle(Position):
                     self.get_u_du()
                 if return_in_between:
                     if dump_filename:
-                        store_lists(self, dump_filename + timestr)
+                        store_lists(self, dump_filename + timestr, **store_kwarg)
                     else:
                         to_return.append(self.deepcopy())
             else:
                 if dump_filename:
-                    store_lists(self, dump_filename + timestr)
+                    store_lists(self, dump_filename + timestr, **store_kwarg)
                 else:
                     to_return.append(self.deepcopy())
             if self.save_raw:
