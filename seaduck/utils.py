@@ -7,7 +7,12 @@ import numpy as np
 import xarray as xr
 from scipy import spatial
 
-from seaduck.runtime_conf import compileable, compileable_parallel, prange
+from seaduck.runtime_conf import compileable, compileable_parallel
+
+try:
+    import numba
+except ImportError:
+    pass
 
 try:
     import pooch
@@ -726,7 +731,7 @@ def pointinpolygon(x, y, poly):
     p2y = 0.0
     xints = 0.0
     p1x, p1y = poly[0]
-    for i in prange(n + 1):
+    for i in numba.prange(n + 1):
         p2x, p2y = poly[i % n]
         if y > min(p1y, p2y):
             if y <= max(p1y, p2y):
@@ -742,8 +747,8 @@ def pointinpolygon(x, y, poly):
 
 @compileable_parallel
 def parallelpointinpolygon(xs, ys, poly):
-    D = np.empty(len(xs), dtype=bool)
-    for i in prange(0, len(D)):
+    D = np.empty(len(xs), dtype=numba.boolean)
+    for i in numba.prange(0, len(D)):
         D[i] = pointinpolygon(xs[i], ys[i], poly)
     return D
 
