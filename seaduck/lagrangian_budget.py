@@ -1,5 +1,4 @@
 import copy
-from itertools import accumulate
 
 import numpy as np
 import xarray as xr
@@ -104,16 +103,20 @@ def pseudo_motion(pt):
 
     return tendf, tf, tendb, tb
 
+
 @compileable
 def fast_cumsum(shapes):
     return np.cumsum(shapes)
+
 
 def first_last_neither(shapes):
     acc = fast_cumsum(shapes)
     last = acc - 1
     first = np.roll(acc, 1)
     first[0] = 0
-    neither = np.array([acc[i] + j for i, length in enumerate(shapes) for j in range(1, length - 1)])
+    neither = np.array(
+        [first[i] + j for i, length in enumerate(shapes) for j in range(1, length - 1)]
+    )
     return first, last, neither
 
 

@@ -5,6 +5,7 @@ import seaduck as sd
 from seaduck import utils
 from seaduck.lagrangian_budget import (
     find_ind_frac_tres,
+    first_last_neither,
     flatten,
     ind_tend_uv,
     particle2xarray,
@@ -122,3 +123,11 @@ def test_store_lists_with_region(custom_pt, region_info):
         region_names=region_names,
         region_polys=region_polys,
     )
+
+
+def test_first_last_neither():
+    shapes = np.random.randint(2, 5, 10)
+    first, last, neither = first_last_neither(shapes)
+    merged = np.sort(np.concatenate([first, last, neither]))
+    sums = np.sum(shapes)
+    assert np.allclose(np.arange(sums), merged)
