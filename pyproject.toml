@@ -41,7 +41,8 @@ module = [
   "pooch",
   "scipy",
   "scipy.interpolate",
-  "xgcm"
+  "xgcm",
+  "zarr"
 ]
 
 [tool.ruff]
