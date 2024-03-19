@@ -109,15 +109,18 @@ def fast_cumsum(shapes):
     return np.cumsum(shapes)
 
 
-def first_last_neither(shapes):
+def first_last_neither(shapes, return_neither = True):
     acc = fast_cumsum(shapes)
     last = acc - 1
     first = np.roll(acc, 1)
     first[0] = 0
-    neither = np.array(
-        [first[i] + j for i, length in enumerate(shapes) for j in range(1, length - 1)]
-    )
-    return first, last, neither
+    if not return_neither:
+        return first, last
+    else:
+        neither = np.array(
+            [first[i] + j for i, length in enumerate(shapes) for j in range(1, length - 1)]
+        )
+        return first, last, neither
 
 
 def pt_ulist(pt):
@@ -370,3 +373,58 @@ def store_lists(pt, name, region_names=False, region_polys=None):
     dump_to_zarr(
         neo, pt.ocedata, name, region_names=region_names, region_polys=region_polys
     )
+
+def prefetch_scalar(ds_slc,scalar_names):
+    prefetch = {}
+    for var in scalar_names:
+        # print(var, end = ' ')
+        prefetch[var] = np.array(ds_slc[var])
+    return prefetch
+
+def prefetch_vector(ds_slc,
+                    xname = 'sxprime',
+                    yname = 'syprime',
+                    zname = 'szprime'
+                   ):
+    return np.array(tuple(np.array(ds_slc[i]) for i in [xname,yname,zname]))
+
+def read_prefetched_scalar(ind,scalar_names,prefetch):
+    res = {}
+    for var in scalar_names:
+        res[var] = prefetch[var][ind]
+    return res
+
+def lhs_contribution(t, scalar_dic, last, lhs_name = 'lhs'):
+    deltat = np.nan_to_num(np.diff(t))
+    deltat[last[:-1]] = 0
+    lhs_scalar = scalar_dic[lhs_name][:-1]
+    correction = deltat*lhs_sum
+    return correction
+
+def contr_p_relaxed(deltas, tres, step_dic, termlist, wrong_ind, p = 1):
+    nds = len(deltas)
+    # if len(wrong_ind)>0:
+    #     if wrong_ind[-1] == len(deltas):
+    #         wrong_ind = wrong_ind[:-1]
+    dic = {'error': np.zeros(nds)}
+    # dic['error'][wrong_ind] = deltas[wrong_ind]
+    # deltas[wrong_ind] = 0
+    # tres[wrong_ind] = 0
+    
+    deno = np.zeros(nds)
+    sums = np.zeros(nds)
+    for var in termlist:
+        deno += step_dic[var][:-1]**(p+1)
+        sums += step_dic[var][:-1]
+    disparity = deltas-sums*tres
+    total = np.zeros(nds)
+    # dic['quality'] = np.nan_to_num(np.abs((disparity/tres)**(p+1)/deno))
+    # mask = (dic['quality']<=1).astype(int)
+    for var in termlist:
+        ratio = step_dic[var][:-1]**(p+1)/deno
+        dic[var] = step_dic[var][:-1]*tres+ratio*disparity
+        total+=dic[var]
+    final_correction = ds-total
+    assert np.allclose(final_correction,0)
+    dic['error'] += final_correction
+    return dic
