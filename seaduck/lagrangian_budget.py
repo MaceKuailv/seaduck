@@ -398,10 +398,10 @@ def lhs_contribution(t, scalar_dic, last, lhs_name = 'lhs'):
     deltat = np.nan_to_num(np.diff(t))
     deltat[last[:-1]] = 0
     lhs_scalar = scalar_dic[lhs_name][:-1]
-    correction = deltat*lhs_sum
+    correction = deltat*lhs_scalar
     return correction
 
-def contr_p_relaxed(deltas, tres, step_dic, termlist, wrong_ind, p = 1):
+def contr_p_relaxed(deltas, tres, step_dic, termlist, p = 1):
     nds = len(deltas)
     # if len(wrong_ind)>0:
     #     if wrong_ind[-1] == len(deltas):
@@ -424,7 +424,7 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, wrong_ind, p = 1):
         ratio = step_dic[var][:-1]**(p+1)/deno
         dic[var] = step_dic[var][:-1]*tres+ratio*disparity
         total+=dic[var]
-    final_correction = ds-total
+    final_correction = deltas-total
     assert np.allclose(final_correction,0)
     dic['error'] += final_correction
     return dic
