@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>seaduck.kernel_weight &#8212; Seaduck Tutorial</title>
   
@@ -29,39 +28,35 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_kernelNweight';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current nav bd-sidenav">
@@ -347,7 +353,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -363,6 +371,27 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW"><code class="docutils literal notranslate"><span class="pre">KnW</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.get_weight"><code class="docutils literal notranslate"><span class="pre">KnW.get_weight()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.same_hsize"><code class="docutils literal notranslate"><span class="pre">KnW.same_hsize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.same_size"><code class="docutils literal notranslate"><span class="pre">KnW.same_size()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.size_hash"><code class="docutils literal notranslate"><span class="pre">KnW.size_hash()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.find_which_points_for_each_kernel"><code class="docutils literal notranslate"><span class="pre">find_which_points_for_each_kernel()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.get_func"><code class="docutils literal notranslate"><span class="pre">get_func()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.get_weight_cascade"><code class="docutils literal notranslate"><span class="pre">get_weight_cascade()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.kernel_weight"><code class="docutils literal notranslate"><span class="pre">kernel_weight()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.kernel_weight_s"><code class="docutils literal notranslate"><span class="pre">kernel_weight_s()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.kernel_weight_x"><code class="docutils literal notranslate"><span class="pre">kernel_weight_x()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.show_kernels"><code class="docutils literal notranslate"><span class="pre">show_kernels()</span></code></a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -373,16 +402,16 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="module-seaduck.kernel_weight">
-<span id="seaduck-kernel-weight"></span><h1>seaduck.kernel_weight<a class="headerlink" href="#module-seaduck.kernel_weight" title="Permalink to this heading">#</a></h1>
+<span id="seaduck-kernel-weight"></span><h1>seaduck.kernel_weight<a class="headerlink" href="#module-seaduck.kernel_weight" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">KnW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">2],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[-</span> <span class="pre">2,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inheritance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">KnW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-1],</span> <span class="pre">[0,</span> <span class="pre">-2],</span> <span class="pre">[-1,</span> <span class="pre">0],</span> <span class="pre">[-2,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inheritance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tkernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Kernel object.</p>
 <p>A class that describes anything about the
 interpolation/derivative kernel to be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kernel</strong> (<em>numpy.ndarray</em>) – The largest horizontal kernel to be used</p></li>
 <li><p><strong>inheritance</strong> (<em>list</em>) – The inheritance sequence of the kernels</p></li>
@@ -402,10 +431,10 @@ inheritance, or if performance is a big concern.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW.get_weight">
-<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk4d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no</span> <span class="pre">flux'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.get_weight" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk4d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no</span> <span class="pre">flux'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.get_weight" title="Link to this definition">#</a></dt>
 <dd><p>Return the weight of values given particle rel-coords.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rx</strong> (<em>numpy.ndarray</em>) – 1D array of non-dimensional particle positions</p></li>
 <li><p><strong>ry</strong> (<em>numpy.ndarray</em>) – 1D array of non-dimensional particle positions</p></li>
@@ -417,12 +446,12 @@ the bottom boundary.
 Choose None for vertical flux, ‘no flux’ for most other cases.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>weight</strong> – The weight of interpolation/derivative for the points
 with shape (N,M),
 M is the num of node in the largest kernel.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
@@ -430,19 +459,19 @@ M is the num of node in the largest kernel.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW.same_hsize">
-<span class="sig-name descname"><span class="pre">same_hsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.same_hsize" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">same_hsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.same_hsize" title="Link to this definition">#</a></dt>
 <dd><p>Return True if 2 KnW object has the same horizontal size.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW.same_size">
-<span class="sig-name descname"><span class="pre">same_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.same_size" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">same_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.same_size" title="Link to this definition">#</a></dt>
 <dd><p>Return True if 2 KnW object has the same 4D size.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.KnW.size_hash">
-<span class="sig-name descname"><span class="pre">size_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.size_hash" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">size_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.KnW.size_hash" title="Link to this definition">#</a></dt>
 <dd><p>Produce a hash value based on the 4D size of the KnW object.</p>
 </dd></dl>
 
@@ -450,7 +479,7 @@ M is the num of node in the largest kernel.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.find_which_points_for_each_kernel">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">find_which_points_for_each_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masked</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inheritance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.find_which_points_for_each_kernel" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">find_which_points_for_each_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masked</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inheritance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.find_which_points_for_each_kernel" title="Link to this definition">#</a></dt>
 <dd><p>Find which kernel to use at each point.</p>
 <p>masked is going to be a n*m array,
 where n is the number of points of interest.
@@ -478,7 +507,7 @@ return</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.get_func">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_func" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_func" title="Link to this definition">#</a></dt>
 <dd><p>Return functions that compute weights.</p>
 <p>Similar to the kernel_weight function,
 the only difference is that this function can
@@ -495,27 +524,27 @@ See _get_func_from_hashable</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.get_weight_cascade">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_weight_cascade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rx,</span> <span class="pre">ry,</span> <span class="pre">pk,</span> <span class="pre">kernel_large=array([[</span> <span class="pre">0,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-2,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">2,</span>&#160; <span class="pre">0]]),</span> <span class="pre">inheritance=[[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7],</span> <span class="pre">[0]],</span> <span class="pre">funcs=[&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_y_maxorder_func&gt;]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_weight_cascade" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">get_weight_cascade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rx,</span> <span class="pre">ry,</span> <span class="pre">pk,</span> <span class="pre">kernel_large=array([[</span> <span class="pre">0,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span>&#160; <span class="pre">2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">0,</span> <span class="pre">-2],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[-2,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">1,</span>&#160; <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[</span> <span class="pre">2,</span>&#160; <span class="pre">0]]),</span> <span class="pre">inheritance=[[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7,</span> <span class="pre">8],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">7],</span> <span class="pre">[0]],</span> <span class="pre">funcs=[&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_interp_func&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">kernel_weight_x.&lt;locals&gt;.the_y_maxorder_func&gt;]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.get_weight_cascade" title="Link to this definition">#</a></dt>
 <dd><p>Compute the weight.</p>
 <p>apply the corresponding functions that was figured out in
 find_which_points_for_each_kernel</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rx</strong> (<em>numpy.ndarray</em>) – 1D array with length N of non-dimensional relative horizontal
 position to the nearest node</p></li>
 <li><p><strong>ry</strong> (<em>numpy.ndarray</em>) – 1D array with length N of non-dimensional relative horizontal
 position to the nearest node</p></li>
 <li><p><strong>kernel_large</strong> (<em>numpy.ndarray</em>) – A numpy kernel of shape (M,2) that contains all the kernels needed.</p></li>
-<li><p><strong>inheritance</strong> (<em>list of list</em><em>(</em><em>s</em><em>)</em>) – The inheritance sequence when some of the node is masked.</p></li>
-<li><p><strong>funcs</strong> (<em>list of compileable functions</em>) – The weight function of each kernel in the inheritance sequence.</p></li>
+<li><p><strong>inheritance</strong> (<em>list</em><em> of </em><em>list</em><em>(</em><em>s</em><em>)</em>) – The inheritance sequence when some of the node is masked.</p></li>
+<li><p><strong>funcs</strong> (<em>list</em><em> of </em><em>compileable functions</em>) – The weight function of each kernel in the inheritance sequence.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>+ weight</strong> – The horizontal weight of interpolation/derivative for the points
 with shape (N,M)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
@@ -523,13 +552,13 @@ with shape (N,M)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.kernel_weight">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight" title="Link to this definition">#</a></dt>
 <dd><p>Return a function that compute weights.</p>
 <p>A wrapper around kernel_weight_x and kernel_weight_s.
 Return the function that calculate the interpolation/derivative weight
 of a  Lagrangian kernel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 2D array with shape (n,2), where n is the number of nodes.
 It need to either shape like a rectangle or a cross</p></li>
@@ -540,11 +569,11 @@ implies that order = 0
 <li><p><strong>order</strong> (<em>int</em>) – The order of derivatives. Zero for interpolation.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>func(rx,ry)</strong> – function to calculate the hotizontal interpolation/derivative
 weight</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>compilable function</p>
 </dd>
 </dl>
@@ -552,12 +581,12 @@ weight</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.kernel_weight_s">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight_s" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight_s" title="Link to this definition">#</a></dt>
 <dd><p>Return the function that calculate the interpolation/derivative weight.</p>
 <p>input needs to be a rectangle-shaped (that’s where x is coming from)
 Lagrangian kernel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 2D array with shape (n,2), where n is the number of nodes.
 It has to be shaped like a rectangle</p></li>
@@ -567,11 +596,11 @@ Zero for interpolation.</p></li>
 Zero for interpolation.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>func(rx,ry)</strong> – function to calculate the hotizontal interpolation/derivative
 weight</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>compilable function</p>
 </dd>
 </dl>
@@ -579,7 +608,7 @@ weight</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.kernel_weight_x">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight_x" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">kernel_weight_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.kernel_weight_x" title="Link to this definition">#</a></dt>
 <dd><p>Return the function that calculate the interpolation/derivative weight.</p>
 <p>input needs to be a cross-shaped (that’s where x is coming from) Lagrangian kernel.</p>
 <p>If you don’t want to know what is going on under the hood.
@@ -595,7 +624,7 @@ k = 1: w = [(x+1)+(x-1)]/(0-1)(0+1)</p>
 <p>for a cross shape kernel:
 f(rx,ry) = f_x(rx) + f_y(ry) - f(0,0)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 2D array with shape (n,2), where n is the number of nodes.
 It has to be shaped like a cross</p></li>
@@ -606,11 +635,11 @@ implies that order = 0
 <li><p><strong>order</strong> (<em>int</em>) – The order of derivatives. Zero for interpolation.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>func(rx,ry)</strong> – function to calculate the hotizontal interpolation/derivative
 weight</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>compilable function</p>
 </dd>
 </dl>
@@ -618,11 +647,11 @@ weight</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="seaduck.kernel_weight.show_kernels">
-<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">show_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">2],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[-</span> <span class="pre">2,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-</span> <span class="pre">1],</span> <span class="pre">[-</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0]])]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.show_kernels" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">seaduck.kernel_weight.</span></span><span class="sig-name descname"><span class="pre">show_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-1],</span> <span class="pre">[0,</span> <span class="pre">-2],</span> <span class="pre">[-1,</span> <span class="pre">0],</span> <span class="pre">[-2,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">2],</span> <span class="pre">[0,</span> <span class="pre">-1],</span> <span class="pre">[-1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0],</span> <span class="pre">[2,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">-1],</span> <span class="pre">[-1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">0]]),</span> <span class="pre">array([[0,</span> <span class="pre">0]])]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.kernel_weight.show_kernels" title="Link to this definition">#</a></dt>
 <dd><p>Plot a small scatter plot of the shape of a list of kernel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kernels</strong> (<em>list of numpy.ndarray</em>) – Each of the element is a (n,2) shaped array,
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kernels</strong> (<em>list</em><em> of </em><em>numpy.ndarray</em>) – Each of the element is a (n,2) shaped array,
 where n is the number of element in the kernel.</p>
 </dd>
 </dl>
@@ -685,7 +714,33 @@ where n is the number of element in the kernel.</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"></div>
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW"><code class="docutils literal notranslate"><span class="pre">KnW</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.get_weight"><code class="docutils literal notranslate"><span class="pre">KnW.get_weight()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.same_hsize"><code class="docutils literal notranslate"><span class="pre">KnW.same_hsize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.same_size"><code class="docutils literal notranslate"><span class="pre">KnW.same_size()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.KnW.size_hash"><code class="docutils literal notranslate"><span class="pre">KnW.size_hash()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.find_which_points_for_each_kernel"><code class="docutils literal notranslate"><span class="pre">find_which_points_for_each_kernel()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.get_func"><code class="docutils literal notranslate"><span class="pre">get_func()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.get_weight_cascade"><code class="docutils literal notranslate"><span class="pre">get_weight_cascade()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.kernel_weight"><code class="docutils literal notranslate"><span class="pre">kernel_weight()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.kernel_weight_s"><code class="docutils literal notranslate"><span class="pre">kernel_weight_s()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.kernel_weight_x"><code class="docutils literal notranslate"><span class="pre">kernel_weight_x()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.kernel_weight.show_kernels"><code class="docutils literal notranslate"><span class="pre">show_kernels()</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -706,7 +761,7 @@ By Wenrui Jiang
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

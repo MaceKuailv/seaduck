@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Use seaduck.Particle with AVISO &#8212; Seaduck Tutorial</title>
   
@@ -29,39 +28,35 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebook/AVISO';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -387,7 +393,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="use-seaduck-particle-with-aviso">
-<h1>Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO<a class="headerlink" href="#use-seaduck-particle-with-aviso" title="Permalink to this heading">#</a></h1>
+<h1>Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO<a class="headerlink" href="#use-seaduck-particle-with-aviso" title="Link to this heading">#</a></h1>
 <p><strong>Particles are simulated in the Southern Ocean AVISO altimetry surface-ocean velocity field.</strong></p>
 <p>Author: Wenrui Jiang, Tom Haine Feb ‘23</p>
 <div class="cell tag_hide-input docutils container">
@@ -411,7 +417,7 @@ document.write(`
 </details>
 </div>
 <section id="loading-data">
-<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this heading">#</a></h2>
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Link to this heading">#</a></h2>
 <p>The velocity field dataset is derived from AVISO sea surface height products, which were processed by SSALTO/DUACS and distributed by AVISO+ (<a class="reference external" href="https://www.aviso.altimetry.fr">https://www.aviso.altimetry.fr</a>) with support from CNESThose products were processed by SSALTO/DUACS and distributed by AVISO+ (<a class="reference external" href="https://www.aviso.altimetry.fr">https://www.aviso.altimetry.fr</a>) with support from CNES. The velocities are defined on a lat-lon grid with staggered velocity components. It’s a snapshot from a single time (see below). <code class="docutils literal notranslate"><span class="pre">seaduck.utils</span></code> provides a few datasets for testing and demonstration purposes. The corresponding dataset is called when the corresponding functions are called.</p>
 <div class="alert alert-block alert-warning">
 <b>Download:</b> If you are running this notebook for the first time, The dataset needs to be downloaded and cached, which can be a little slow.
@@ -786,19 +792,19 @@ dl.xr-attrs {
   stroke: currentColor;
   fill: currentColor;
 }
-</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt;
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 4MB
 Dimensions:  (X: 3600, Xp1: 3600, Y: 300, Yp1: 300, time: 1)
 Coordinates:
-  * X        (X) float32 -179.9 -179.8 -179.7 -179.6 ... 179.7 179.8 179.9 180.0
-  * Xp1      (Xp1) float32 -179.9 -179.9 -179.8 -179.6 ... 179.8 179.9 179.9
-  * Y        (Y) float32 -74.9 -74.8 -74.7 -74.6 ... -45.3 -45.2 -45.1 -45.0
-  * Yp1      (Yp1) float32 -74.95 -74.85 -74.75 -74.65 ... -45.25 -45.15 -45.05
-  * time     (time) datetime64[ns] 2017-01-01
+  * X        (X) float32 14kB -179.9 -179.8 -179.7 -179.6 ... 179.8 179.9 180.0
+  * Xp1      (Xp1) float32 14kB -179.9 -179.9 -179.8 ... 179.8 179.9 179.9
+  * Y        (Y) float32 1kB -74.9 -74.8 -74.7 -74.6 ... -45.3 -45.2 -45.1 -45.0
+  * Yp1      (Yp1) float32 1kB -74.95 -74.85 -74.75 ... -45.25 -45.15 -45.05
+  * time     (time) datetime64[ns] 8B 2017-01-01
 Data variables:
-    lat      (Y) float32 dask.array&lt;chunksize=(300,), meta=np.ndarray&gt;
-    lon      (X) float32 dask.array&lt;chunksize=(3600,), meta=np.ndarray&gt;
-    u        (Yp1, X) float16 dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;
-    v        (Y, Xp1) float16 dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;
+    lat      (Y) float32 1kB dask.array&lt;chunksize=(300,), meta=np.ndarray&gt;
+    lon      (X) float32 14kB dask.array&lt;chunksize=(3600,), meta=np.ndarray&gt;
+    u        (Yp1, X) float16 2MB dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;
+    v        (Y, Xp1) float16 2MB dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;
 Attributes: (12/42)
     Conventions:                     CF-1.6
     Metadata_Conventions:            Unidata Dataset Discovery v1.0
@@ -812,10 +818,10 @@ Attributes: (12/42)
     time_coverage_end:               2017-01-01T12:00:00Z
     time_coverage_resolution:        P1D
     time_coverage_start:             2016-12-31T12:00:00Z
-    title:                           DT merged all satellites Global Gridded ...</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-90018db1-d3d9-4432-a6c3-e9650c96bc3e' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-90018db1-d3d9-4432-a6c3-e9650c96bc3e' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>X</span>: 3600</li><li><span class='xr-has-index'>Xp1</span>: 3600</li><li><span class='xr-has-index'>Y</span>: 300</li><li><span class='xr-has-index'>Yp1</span>: 300</li><li><span class='xr-has-index'>time</span>: 1</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-936210c1-e2df-400f-b367-c1d4b2791ff8' class='xr-section-summary-in' type='checkbox'  checked><label for='section-936210c1-e2df-400f-b367-c1d4b2791ff8' class='xr-section-summary' >Coordinates: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>X</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-179.9 -179.8 ... 179.9 180.0</div><input id='attrs-b458f418-c61d-444c-8154-ea78abd5ac70' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-b458f418-c61d-444c-8154-ea78abd5ac70' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-6e00c502-c8ae-406c-8783-486fd4d7a4ed' class='xr-var-data-in' type='checkbox'><label for='data-6e00c502-c8ae-406c-8783-486fd4d7a4ed' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>X</dd><dt><span>bounds :</span></dt><dd>lon_bnds</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>valid_max :</span></dt><dd>180.0</dd><dt><span>valid_min :</span></dt><dd>-179.89999389648438</dd></dl></div><div class='xr-var-data'><pre>array([-179.9, -179.8, -179.7, ...,  179.8,  179.9,  180. ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Xp1</span></div><div class='xr-var-dims'>(Xp1)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-179.9 -179.9 ... 179.9 179.9</div><input id='attrs-cc110dd9-e0f8-45e7-95a7-a87ecdf03841' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-cc110dd9-e0f8-45e7-95a7-a87ecdf03841' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f206826b-8167-426d-a142-08eb2c41e4df' class='xr-var-data-in' type='checkbox'><label for='data-f206826b-8167-426d-a142-08eb2c41e4df' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-179.95, -179.85, -179.75, ...,  179.75,  179.85,  179.95],
-      dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Y</span></div><div class='xr-var-dims'>(Y)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-74.9 -74.8 -74.7 ... -45.1 -45.0</div><input id='attrs-00f87228-2c8c-40f6-a07d-bc36f894796a' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-00f87228-2c8c-40f6-a07d-bc36f894796a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-0cc90fc7-aef6-4ca8-8b70-524a876b540a' class='xr-var-data-in' type='checkbox'><label for='data-0cc90fc7-aef6-4ca8-8b70-524a876b540a' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>Y</dd><dt><span>bounds :</span></dt><dd>lat_bnds</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>valid_max :</span></dt><dd>89.80000152587891</dd><dt><span>valid_min :</span></dt><dd>-80.0999984741211</dd></dl></div><div class='xr-var-data'><pre>array([-74.9     , -74.799995, -74.7     , ..., -45.199997, -45.1     ,
-       -45.      ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Yp1</span></div><div class='xr-var-dims'>(Yp1)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-74.95 -74.85 ... -45.15 -45.05</div><input id='attrs-4079881b-9bb2-4b70-a259-9d2693cc759a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-4079881b-9bb2-4b70-a259-9d2693cc759a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d61264cb-c5cb-4639-999f-ee61fb74364e' class='xr-var-data-in' type='checkbox'><label for='data-d61264cb-c5cb-4639-999f-ee61fb74364e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-74.95    , -74.85    , -74.75    , ..., -45.25    , -45.149998,
-       -45.05    ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2017-01-01</div><input id='attrs-c47a908a-dacc-4d12-ae0f-192848b6ebd8' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-c47a908a-dacc-4d12-ae0f-192848b6ebd8' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-46f7504d-38cd-4e32-b6ff-6d04da559b3e' class='xr-var-data-in' type='checkbox'><label for='data-46f7504d-38cd-4e32-b6ff-6d04da559b3e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>T</dd><dt><span>long_name :</span></dt><dd>Time</dd><dt><span>standard_name :</span></dt><dd>time</dd></dl></div><div class='xr-var-data'><pre>array([&#x27;2017-01-01T00:00:00.000000000&#x27;], dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-728c6aef-ef90-4c67-85c6-b4af8a656355' class='xr-section-summary-in' type='checkbox'  checked><label for='section-728c6aef-ef90-4c67-85c6-b4af8a656355' class='xr-section-summary' >Data variables: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>lat</span></div><div class='xr-var-dims'>(Y)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(300,), meta=np.ndarray&gt;</div><input id='attrs-4c7e661b-346a-416e-b931-5cc9d58af494' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-4c7e661b-346a-416e-b931-5cc9d58af494' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-fb609997-234c-4c43-9b15-2a5c73b5fa45' class='xr-var-data-in' type='checkbox'><label for='data-fb609997-234c-4c43-9b15-2a5c73b5fa45' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>Y</dd><dt><span>bounds :</span></dt><dd>lat_bnds</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>valid_max :</span></dt><dd>89.80000152587891</dd><dt><span>valid_min :</span></dt><dd>-80.0999984741211</dd></dl></div><div class='xr-var-data'><table>
+    title:                           DT merged all satellites Global Gridded ...</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-2bfaadd5-a692-47a4-878b-c1c9cfc83890' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-2bfaadd5-a692-47a4-878b-c1c9cfc83890' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>X</span>: 3600</li><li><span class='xr-has-index'>Xp1</span>: 3600</li><li><span class='xr-has-index'>Y</span>: 300</li><li><span class='xr-has-index'>Yp1</span>: 300</li><li><span class='xr-has-index'>time</span>: 1</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-ed66ea46-ffbc-4841-a669-22a6f2a8ecd2' class='xr-section-summary-in' type='checkbox'  checked><label for='section-ed66ea46-ffbc-4841-a669-22a6f2a8ecd2' class='xr-section-summary' >Coordinates: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>X</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-179.9 -179.8 ... 179.9 180.0</div><input id='attrs-f7139199-72b2-4732-b3eb-189f4c3f644d' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-f7139199-72b2-4732-b3eb-189f4c3f644d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-7fef3f8b-ade6-4ccd-82b3-2f9e88015cb9' class='xr-var-data-in' type='checkbox'><label for='data-7fef3f8b-ade6-4ccd-82b3-2f9e88015cb9' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>X</dd><dt><span>bounds :</span></dt><dd>lon_bnds</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>valid_max :</span></dt><dd>180.0</dd><dt><span>valid_min :</span></dt><dd>-179.89999389648438</dd></dl></div><div class='xr-var-data'><pre>array([-179.9, -179.8, -179.7, ...,  179.8,  179.9,  180. ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Xp1</span></div><div class='xr-var-dims'>(Xp1)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-179.9 -179.9 ... 179.9 179.9</div><input id='attrs-889c6109-3099-47d8-a7e1-3f3853128fe2' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-889c6109-3099-47d8-a7e1-3f3853128fe2' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ea63ab3c-f44e-48b9-a11c-437155909609' class='xr-var-data-in' type='checkbox'><label for='data-ea63ab3c-f44e-48b9-a11c-437155909609' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-179.95, -179.85, -179.75, ...,  179.75,  179.85,  179.95],
+      dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Y</span></div><div class='xr-var-dims'>(Y)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-74.9 -74.8 -74.7 ... -45.1 -45.0</div><input id='attrs-f2148add-1ce5-4d7a-92ce-fbee9229e002' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-f2148add-1ce5-4d7a-92ce-fbee9229e002' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b2af3c45-7fd0-407b-8202-2e8678f3092c' class='xr-var-data-in' type='checkbox'><label for='data-b2af3c45-7fd0-407b-8202-2e8678f3092c' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>Y</dd><dt><span>bounds :</span></dt><dd>lat_bnds</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>valid_max :</span></dt><dd>89.80000152587891</dd><dt><span>valid_min :</span></dt><dd>-80.0999984741211</dd></dl></div><div class='xr-var-data'><pre>array([-74.9     , -74.799995, -74.7     , ..., -45.199997, -45.1     ,
+       -45.      ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Yp1</span></div><div class='xr-var-dims'>(Yp1)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-74.95 -74.85 ... -45.15 -45.05</div><input id='attrs-7c13688a-1fee-479f-8b25-f39714fe5d0d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-7c13688a-1fee-479f-8b25-f39714fe5d0d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a8ed046a-3b8c-4fd3-bd57-251723c64a98' class='xr-var-data-in' type='checkbox'><label for='data-a8ed046a-3b8c-4fd3-bd57-251723c64a98' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-74.95    , -74.85    , -74.75    , ..., -45.25    , -45.149998,
+       -45.05    ], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2017-01-01</div><input id='attrs-2ba4c032-1177-4bea-8db2-818ca7160e47' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-2ba4c032-1177-4bea-8db2-818ca7160e47' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a62323a5-5148-4f67-8f41-dbb4b144c3b5' class='xr-var-data-in' type='checkbox'><label for='data-a62323a5-5148-4f67-8f41-dbb4b144c3b5' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>T</dd><dt><span>long_name :</span></dt><dd>Time</dd><dt><span>standard_name :</span></dt><dd>time</dd></dl></div><div class='xr-var-data'><pre>array([&#x27;2017-01-01T00:00:00.000000000&#x27;], dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-fbf7ef76-8d11-4be3-b55e-0396a89aeeee' class='xr-section-summary-in' type='checkbox'  checked><label for='section-fbf7ef76-8d11-4be3-b55e-0396a89aeeee' class='xr-section-summary' >Data variables: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>lat</span></div><div class='xr-var-dims'>(Y)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(300,), meta=np.ndarray&gt;</div><input id='attrs-38844745-fafe-4ac4-97af-e73b1e7d44d5' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-38844745-fafe-4ac4-97af-e73b1e7d44d5' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-0031b7c1-1bcf-455d-ac35-f91b52aa4444' class='xr-var-data-in' type='checkbox'><label for='data-0031b7c1-1bcf-455d-ac35-f91b52aa4444' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>Y</dd><dt><span>bounds :</span></dt><dd>lat_bnds</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>valid_max :</span></dt><dd>89.80000152587891</dd><dt><span>valid_min :</span></dt><dd>-80.0999984741211</dd></dl></div><div class='xr-var-data'><table>
     <tr>
         <td>
             <table style="border-collapse: collapse;">
@@ -870,7 +876,7 @@ Attributes: (12/42)
 </svg>
         </td>
     </tr>
-</table></div></li><li class='xr-var-item'><div class='xr-var-name'><span>lon</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(3600,), meta=np.ndarray&gt;</div><input id='attrs-ec20e698-f6c2-498c-bb02-921cbf1586a9' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-ec20e698-f6c2-498c-bb02-921cbf1586a9' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f70cf7aa-2f6b-4236-9573-2fd4a362e8dd' class='xr-var-data-in' type='checkbox'><label for='data-f70cf7aa-2f6b-4236-9573-2fd4a362e8dd' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>X</dd><dt><span>bounds :</span></dt><dd>lon_bnds</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>valid_max :</span></dt><dd>180.0</dd><dt><span>valid_min :</span></dt><dd>-179.89999389648438</dd></dl></div><div class='xr-var-data'><table>
+</table></div></li><li class='xr-var-item'><div class='xr-var-name'><span>lon</span></div><div class='xr-var-dims'>(X)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(3600,), meta=np.ndarray&gt;</div><input id='attrs-9c5a5764-3b4f-4f6e-ab31-f116f9f4bfc0' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-9c5a5764-3b4f-4f6e-ab31-f116f9f4bfc0' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-89610c0b-fbf3-4f9b-90b8-2480aea97852' class='xr-var-data-in' type='checkbox'><label for='data-89610c0b-fbf3-4f9b-90b8-2480aea97852' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>axis :</span></dt><dd>X</dd><dt><span>bounds :</span></dt><dd>lon_bnds</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>valid_max :</span></dt><dd>180.0</dd><dt><span>valid_min :</span></dt><dd>-179.89999389648438</dd></dl></div><div class='xr-var-data'><table>
     <tr>
         <td>
             <table style="border-collapse: collapse;">
@@ -925,7 +931,7 @@ Attributes: (12/42)
 </svg>
         </td>
     </tr>
-</table></div></li><li class='xr-var-item'><div class='xr-var-name'><span>u</span></div><div class='xr-var-dims'>(Yp1, X)</div><div class='xr-var-dtype'>float16</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;</div><input id='attrs-5b5ccc6b-beed-49ea-84bf-726c89698e3e' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-5b5ccc6b-beed-49ea-84bf-726c89698e3e' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-270addc3-8f58-48b1-9d28-dd7c30c56c31' class='xr-var-data-in' type='checkbox'><label for='data-270addc3-8f58-48b1-9d28-dd7c30c56c31' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><table>
+</table></div></li><li class='xr-var-item'><div class='xr-var-name'><span>u</span></div><div class='xr-var-dims'>(Yp1, X)</div><div class='xr-var-dtype'>float16</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;</div><input id='attrs-e9ad3224-214d-4316-a79b-9fb13375d56c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e9ad3224-214d-4316-a79b-9fb13375d56c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8033c9d4-352b-4193-b700-2ca8acafa4b0' class='xr-var-data-in' type='checkbox'><label for='data-8033c9d4-352b-4193-b700-2ca8acafa4b0' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><table>
     <tr>
         <td>
             <table style="border-collapse: collapse;">
@@ -984,7 +990,7 @@ Attributes: (12/42)
 </svg>
         </td>
     </tr>
-</table></div></li><li class='xr-var-item'><div class='xr-var-name'><span>v</span></div><div class='xr-var-dims'>(Y, Xp1)</div><div class='xr-var-dtype'>float16</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;</div><input id='attrs-2639a005-1bb4-496a-9ea9-7469da2acd0d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-2639a005-1bb4-496a-9ea9-7469da2acd0d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-7dab63b0-96a6-421a-805b-ae964f9c5778' class='xr-var-data-in' type='checkbox'><label for='data-7dab63b0-96a6-421a-805b-ae964f9c5778' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><table>
+</table></div></li><li class='xr-var-item'><div class='xr-var-name'><span>v</span></div><div class='xr-var-dims'>(Y, Xp1)</div><div class='xr-var-dtype'>float16</div><div class='xr-var-preview xr-preview'>dask.array&lt;chunksize=(75, 1800), meta=np.ndarray&gt;</div><input id='attrs-5f8ace23-32ad-4cd8-811b-a44f36716223' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-5f8ace23-32ad-4cd8-811b-a44f36716223' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-08c063a9-584c-4870-a571-09017af0579d' class='xr-var-data-in' type='checkbox'><label for='data-08c063a9-584c-4870-a571-09017af0579d' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><table>
     <tr>
         <td>
             <table style="border-collapse: collapse;">
@@ -1043,7 +1049,7 @@ Attributes: (12/42)
 </svg>
         </td>
     </tr>
-</table></div></li></ul></div></li><li class='xr-section-item'><input id='section-49a1ceac-9b7b-4021-b8bd-8c5b77128168' class='xr-section-summary-in' type='checkbox'  ><label for='section-49a1ceac-9b7b-4021-b8bd-8c5b77128168' class='xr-section-summary' >Indexes: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>X</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-0f6012f0-79e9-4d5d-aa84-20058a2731f7' class='xr-index-data-in' type='checkbox'/><label for='index-0f6012f0-79e9-4d5d-aa84-20058a2731f7' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([-179.89999389648438,  -179.8000030517578,  -179.6999969482422,
+</table></div></li></ul></div></li><li class='xr-section-item'><input id='section-8b38f2eb-7219-4aae-80d4-a873bcbe6624' class='xr-section-summary-in' type='checkbox'  ><label for='section-8b38f2eb-7219-4aae-80d4-a873bcbe6624' class='xr-section-summary' >Indexes: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>X</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-99838e04-7749-4a8b-87e2-6681196df6d1' class='xr-index-data-in' type='checkbox'/><label for='index-99838e04-7749-4a8b-87e2-6681196df6d1' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([-179.89999389648438,  -179.8000030517578,  -179.6999969482422,
        -179.60000610351562,              -179.5, -179.39999389648438,
         -179.3000030517578,  -179.1999969482422, -179.10000610351562,
                     -179.0,
@@ -1052,7 +1058,7 @@ Attributes: (12/42)
         179.39999389648438,               179.5,  179.60000610351562,
          179.6999969482422,   179.8000030517578,  179.89999389648438,
                      180.0],
-      dtype=&#x27;float32&#x27;, name=&#x27;X&#x27;, length=3600))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>Xp1</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-2a58e61b-bb35-48e2-9e02-423b830f3bb4' class='xr-index-data-in' type='checkbox'/><label for='index-2a58e61b-bb35-48e2-9e02-423b830f3bb4' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([ -179.9499969482422, -179.85000610351562,             -179.75,
+      dtype=&#x27;float32&#x27;, name=&#x27;X&#x27;, length=3600))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>Xp1</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-412f1113-c18c-4d77-b664-ca0634d9d2f1' class='xr-index-data-in' type='checkbox'/><label for='index-412f1113-c18c-4d77-b664-ca0634d9d2f1' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([ -179.9499969482422, -179.85000610351562,             -179.75,
        -179.64999389648438,  -179.5500030517578,  -179.4499969482422,
        -179.35000610351562,             -179.25, -179.14999389648438,
         -179.0500030517578,
@@ -1061,7 +1067,7 @@ Attributes: (12/42)
         179.35000610351562,   179.4499969482422,   179.5500030517578,
         179.64999389648438,              179.75,  179.85000610351562,
          179.9499969482422],
-      dtype=&#x27;float32&#x27;, name=&#x27;Xp1&#x27;, length=3600))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>Y</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-6fb87ab7-33fa-4f4a-9d52-cd0c0dc6b70b' class='xr-index-data-in' type='checkbox'/><label for='index-6fb87ab7-33fa-4f4a-9d52-cd0c0dc6b70b' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([  -74.9000015258789,  -74.79999542236328,  -74.69999694824219,
+      dtype=&#x27;float32&#x27;, name=&#x27;Xp1&#x27;, length=3600))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>Y</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-6e9e87a5-d137-4bc6-9ffa-697fed20d3a3' class='xr-index-data-in' type='checkbox'/><label for='index-6e9e87a5-d137-4bc6-9ffa-697fed20d3a3' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([  -74.9000015258789,  -74.79999542236328,  -74.69999694824219,
          -74.5999984741211,               -74.5,   -74.4000015258789,
         -74.29999542236328,  -74.19999694824219,   -74.0999984741211,
                      -74.0,
@@ -1070,7 +1076,7 @@ Attributes: (12/42)
        -45.599998474121094,               -45.5,  -45.39999771118164,
         -45.29999923706055,  -45.19999694824219, -45.099998474121094,
                      -45.0],
-      dtype=&#x27;float32&#x27;, name=&#x27;Y&#x27;, length=300))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>Yp1</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-b579a063-c002-4ac1-954c-9bf492d4d924' class='xr-index-data-in' type='checkbox'/><label for='index-b579a063-c002-4ac1-954c-9bf492d4d924' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([ -74.94999694824219,   -74.8499984741211,              -74.75,
+      dtype=&#x27;float32&#x27;, name=&#x27;Y&#x27;, length=300))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>Yp1</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-54970577-8121-4103-9f80-e748c5f4ff2a' class='xr-index-data-in' type='checkbox'/><label for='index-54970577-8121-4103-9f80-e748c5f4ff2a' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([ -74.94999694824219,   -74.8499984741211,              -74.75,
          -74.6500015258789,  -74.54999542236328,  -74.44999694824219,
          -74.3499984741211,              -74.25,   -74.1500015258789,
         -74.04999542236328,
@@ -1079,7 +1085,7 @@ Attributes: (12/42)
         -45.64999771118164,  -45.54999923706055,  -45.44999694824219,
        -45.349998474121094,              -45.25,  -45.14999771118164,
         -45.04999923706055],
-      dtype=&#x27;float32&#x27;, name=&#x27;Yp1&#x27;, length=300))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>time</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-82334dbf-1705-4335-874a-d000d7fa7d3f' class='xr-index-data-in' type='checkbox'/><label for='index-82334dbf-1705-4335-874a-d000d7fa7d3f' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(DatetimeIndex([&#x27;2017-01-01&#x27;], dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, freq=None))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-c3713d6d-f860-4169-a9d6-f089ea15e6b4' class='xr-section-summary-in' type='checkbox'  ><label for='section-c3713d6d-f860-4169-a9d6-f089ea15e6b4' class='xr-section-summary' >Attributes: <span>(42)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>Conventions :</span></dt><dd>CF-1.6</dd><dt><span>Metadata_Conventions :</span></dt><dd>Unidata Dataset Discovery v1.0</dd><dt><span>cdm_data_type :</span></dt><dd>Grid</dd><dt><span>comment :</span></dt><dd>Sea Surface Height measured by Altimetry and derived variables</dd><dt><span>contact :</span></dt><dd>aviso@altimetry.fr</dd><dt><span>creator_email :</span></dt><dd>aviso@altimetry.fr</dd><dt><span>creator_name :</span></dt><dd>SSALTO/DUACS-MR</dd><dt><span>creator_url :</span></dt><dd>http://www.aviso.altimetry.fr</dd><dt><span>date_created :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>date_issued :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>date_modified :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>geospatial_lat_max :</span></dt><dd>89.80000152587891</dd><dt><span>geospatial_lat_min :</span></dt><dd>-80.0999984741211</dd><dt><span>geospatial_lat_resolution :</span></dt><dd>0.09999999999999432</dd><dt><span>geospatial_lat_units :</span></dt><dd>degrees_north</dd><dt><span>geospatial_lon_max :</span></dt><dd>180.0</dd><dt><span>geospatial_lon_min :</span></dt><dd>-179.89999389648438</dd><dt><span>geospatial_lon_resolution :</span></dt><dd>0.1</dd><dt><span>geospatial_lon_units :</span></dt><dd>degrees_east</dd><dt><span>geospatial_vertical_max :</span></dt><dd>0.0</dd><dt><span>geospatial_vertical_min :</span></dt><dd>0.0</dd><dt><span>geospatial_vertical_positive :</span></dt><dd>down</dd><dt><span>geospatial_vertical_resolution :</span></dt><dd>point</dd><dt><span>geospatial_vertical_units :</span></dt><dd>m</dd><dt><span>history :</span></dt><dd>2021-03-18 17:28:12Z: Creation</dd><dt><span>institution :</span></dt><dd>CLS, CNES</dd><dt><span>keywords :</span></dt><dd>Oceans &gt; Ocean Topography &gt; Sea Surface Height</dd><dt><span>keywords_vocabulary :</span></dt><dd>NetCDF COARDS Climate and Forecast Standard Names</dd><dt><span>platform :</span></dt><dd>Altika OSTM/Jason-2 Haiyang-2A Cryosat-2 Jason-3 Sentinel-3A Sentinel-3B</dd><dt><span>processing_level :</span></dt><dd>L4</dd><dt><span>product_version :</span></dt><dd>1.0</dd><dt><span>project :</span></dt><dd>SSALTO/DUACS-MR</dd><dt><span>reference :</span></dt><dd>http://www.aviso.altimetry.fr</dd><dt><span>source :</span></dt><dd>Altimetry measurements</dd><dt><span>ssalto_duacs_comment :</span></dt><dd>The reference mission used for the altimeter inter-calibration processing is Topex/Poseidon between 1993-01-01 and 2002-04-23, Jason-1 between 2002-04-24 and 2008-10-18, OSTM/Jason-2 between 2008-10-19 and 2016-06-25, Jason-3 since 2016-06-25.</dd><dt><span>standard_name_vocabulary :</span></dt><dd>NetCDF Climate and Forecast (CF) Metadata Convention Standard Name Table v37</dd><dt><span>summary :</span></dt><dd>CLS Delayed-Time Level-4 sea surface height and derived variables measured by multi-satellite altimetry observations over the Global Ocean. Merging method is based on Multiscale interpolation (Ubelmann et al., 2021)</dd><dt><span>time_coverage_duration :</span></dt><dd>P1D</dd><dt><span>time_coverage_end :</span></dt><dd>2017-01-01T12:00:00Z</dd><dt><span>time_coverage_resolution :</span></dt><dd>P1D</dd><dt><span>time_coverage_start :</span></dt><dd>2016-12-31T12:00:00Z</dd><dt><span>title :</span></dt><dd>DT merged all satellites Global Gridded CLS Sea Surface Height L4 product and derived variables</dd></dl></div></li></ul></div></div></div></div>
+      dtype=&#x27;float32&#x27;, name=&#x27;Yp1&#x27;, length=300))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>time</div></div><div class='xr-index-preview'>PandasIndex</div><div></div><input id='index-bd3fef70-516d-44d1-9d17-d4991a7efe58' class='xr-index-data-in' type='checkbox'/><label for='index-bd3fef70-516d-44d1-9d17-d4991a7efe58' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(DatetimeIndex([&#x27;2017-01-01&#x27;], dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, freq=None))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-9b5a25e9-f58c-40d9-ac07-c4d66a797f15' class='xr-section-summary-in' type='checkbox'  ><label for='section-9b5a25e9-f58c-40d9-ac07-c4d66a797f15' class='xr-section-summary' >Attributes: <span>(42)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>Conventions :</span></dt><dd>CF-1.6</dd><dt><span>Metadata_Conventions :</span></dt><dd>Unidata Dataset Discovery v1.0</dd><dt><span>cdm_data_type :</span></dt><dd>Grid</dd><dt><span>comment :</span></dt><dd>Sea Surface Height measured by Altimetry and derived variables</dd><dt><span>contact :</span></dt><dd>aviso@altimetry.fr</dd><dt><span>creator_email :</span></dt><dd>aviso@altimetry.fr</dd><dt><span>creator_name :</span></dt><dd>SSALTO/DUACS-MR</dd><dt><span>creator_url :</span></dt><dd>http://www.aviso.altimetry.fr</dd><dt><span>date_created :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>date_issued :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>date_modified :</span></dt><dd>2021-03-18T17:28:05Z</dd><dt><span>geospatial_lat_max :</span></dt><dd>89.80000152587891</dd><dt><span>geospatial_lat_min :</span></dt><dd>-80.0999984741211</dd><dt><span>geospatial_lat_resolution :</span></dt><dd>0.09999999999999432</dd><dt><span>geospatial_lat_units :</span></dt><dd>degrees_north</dd><dt><span>geospatial_lon_max :</span></dt><dd>180.0</dd><dt><span>geospatial_lon_min :</span></dt><dd>-179.89999389648438</dd><dt><span>geospatial_lon_resolution :</span></dt><dd>0.1</dd><dt><span>geospatial_lon_units :</span></dt><dd>degrees_east</dd><dt><span>geospatial_vertical_max :</span></dt><dd>0.0</dd><dt><span>geospatial_vertical_min :</span></dt><dd>0.0</dd><dt><span>geospatial_vertical_positive :</span></dt><dd>down</dd><dt><span>geospatial_vertical_resolution :</span></dt><dd>point</dd><dt><span>geospatial_vertical_units :</span></dt><dd>m</dd><dt><span>history :</span></dt><dd>2021-03-18 17:28:12Z: Creation</dd><dt><span>institution :</span></dt><dd>CLS, CNES</dd><dt><span>keywords :</span></dt><dd>Oceans &gt; Ocean Topography &gt; Sea Surface Height</dd><dt><span>keywords_vocabulary :</span></dt><dd>NetCDF COARDS Climate and Forecast Standard Names</dd><dt><span>platform :</span></dt><dd>Altika OSTM/Jason-2 Haiyang-2A Cryosat-2 Jason-3 Sentinel-3A Sentinel-3B</dd><dt><span>processing_level :</span></dt><dd>L4</dd><dt><span>product_version :</span></dt><dd>1.0</dd><dt><span>project :</span></dt><dd>SSALTO/DUACS-MR</dd><dt><span>reference :</span></dt><dd>http://www.aviso.altimetry.fr</dd><dt><span>source :</span></dt><dd>Altimetry measurements</dd><dt><span>ssalto_duacs_comment :</span></dt><dd>The reference mission used for the altimeter inter-calibration processing is Topex/Poseidon between 1993-01-01 and 2002-04-23, Jason-1 between 2002-04-24 and 2008-10-18, OSTM/Jason-2 between 2008-10-19 and 2016-06-25, Jason-3 since 2016-06-25.</dd><dt><span>standard_name_vocabulary :</span></dt><dd>NetCDF Climate and Forecast (CF) Metadata Convention Standard Name Table v37</dd><dt><span>summary :</span></dt><dd>CLS Delayed-Time Level-4 sea surface height and derived variables measured by multi-satellite altimetry observations over the Global Ocean. Merging method is based on Multiscale interpolation (Ubelmann et al., 2021)</dd><dt><span>time_coverage_duration :</span></dt><dd>P1D</dd><dt><span>time_coverage_end :</span></dt><dd>2017-01-01T12:00:00Z</dd><dt><span>time_coverage_resolution :</span></dt><dd>P1D</dd><dt><span>time_coverage_start :</span></dt><dd>2016-12-31T12:00:00Z</dd><dt><span>title :</span></dt><dd>DT merged all satellites Global Gridded CLS Sea Surface Height L4 product and derived variables</dd></dl></div></li></ul></div></div></div></div>
 </div>
 <p>Now, create the <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object which provides methods to translate between lat-lon and grid-oriented coords. The model coords frequently needed are also cached.</p>
 <div class="cell docutils container">
@@ -1155,7 +1161,7 @@ Attributes: (12/42)
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d79a06789076ec42e506927a009e7ed0a39951e285c93c018ed9f9fce6cd0956.png" src="../_images/d79a06789076ec42e506927a009e7ed0a39951e285c93c018ed9f9fce6cd0956.png" />
+<img alt="../_images/ead1ce586973dbdec21fc5ea2e2b5ca68dcebd268edf2749a1f97b0e21770606.png" src="../_images/ead1ce586973dbdec21fc5ea2e2b5ca68dcebd268edf2749a1f97b0e21770606.png" />
 </div>
 </div>
 <p><strong>Fig.1</strong> Initial position of the particles.</p>
@@ -1201,7 +1207,7 @@ Attributes: (12/42)
 </div>
 </section>
 <section id="create-the-oceinterp-lagrangian-particle-object">
-<h2>Create the <code class="docutils literal notranslate"><span class="pre">OceInterp.lagrangian.particle</span></code> object.<a class="headerlink" href="#create-the-oceinterp-lagrangian-particle-object" title="Permalink to this heading">#</a></h2>
+<h2>Create the <code class="docutils literal notranslate"><span class="pre">OceInterp.lagrangian.particle</span></code> object.<a class="headerlink" href="#create-the-oceinterp-lagrangian-particle-object" title="Link to this heading">#</a></h2>
 <p>We have all the information we need. The final step of preparation is to create the <code class="docutils literal notranslate"><span class="pre">seaduck.lagrangian.particle</span></code> object. We need to tell the <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> this information about the particles: where and when they start, which bathtub they’re in, and the names of the velocity components; because it’s not great at guessing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1221,14 +1227,14 @@ Attributes: (12/42)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaduck.lagrangian.Particle at 0x7f3cc00a4990&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaduck.lagrangian.Particle at 0x7fcd746d6650&gt;
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="perform-the-particle-trajectory-simulation">
-<h2>Perform the particle trajectory simulation.<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Permalink to this heading">#</a></h2>
+<h2>Perform the particle trajectory simulation.<a class="headerlink" href="#perform-the-particle-trajectory-simulation" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">to_list_of_time</span></code> method does the Lagrangian trajectory calculation.</p>
 <p>Notice how we define when to dump output (<code class="docutils literal notranslate"><span class="pre">normal_stops</span></code>) and when to update the velocity field (<code class="docutils literal notranslate"><span class="pre">update_stops</span></code>). By default, the <code class="docutils literal notranslate"><span class="pre">stops</span></code> returned by the integration is the combination (union) of <code class="docutils literal notranslate"><span class="pre">normal_stops</span></code> and <code class="docutils literal notranslate"><span class="pre">update_stops</span></code>. <code class="docutils literal notranslate"><span class="pre">raw</span></code> is a list of <code class="docutils literal notranslate"><span class="pre">OceInterp.eulerian.position</span></code> objects with the same length as <code class="docutils literal notranslate"><span class="pre">stops</span></code>.</p>
 <div class="cell docutils container">
@@ -1239,11 +1245,31 @@ Attributes: (12/42)
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1970-01-01T00:00:00
+1970-01-04T10:40:00
+1970-01-07T21:20:00
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1970-01-11T08:00:00
+1970-01-14T18:40:00
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1970-01-18T05:20:00
+1970-01-21T16:00:00
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1970-01-25T02:40:00
+1970-01-28T13:20:00
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1970-02-01T00:00:00
+</pre></div>
+</div>
 </div>
 </div>
 </section>
 <section id="plotting">
-<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading">#</a></h2>
+<h2>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">#</a></h2>
 <p>First we extract the longitude and latitude from the <code class="docutils literal notranslate"><span class="pre">raw</span></code> object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1292,13 +1318,13 @@ Attributes: (12/42)
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/7db7d04e83c37f806f4ed558468988919034ba1691ec29ad53b745675ccf92dc.png" src="../_images/7db7d04e83c37f806f4ed558468988919034ba1691ec29ad53b745675ccf92dc.png" />
+<img alt="../_images/f80e93b2f01f94cadb0f8848fcc3f85c1aa02bb399a52a90f3ec181ca16cae80.png" src="../_images/f80e93b2f01f94cadb0f8848fcc3f85c1aa02bb399a52a90f3ec181ca16cae80.png" />
 </div>
 </div>
 <p><strong>Fig.2</strong> The trajectories of particles advected by AVISO-derived surface velocity field.</p>
 </section>
 <section id="advanced-use-of-particle">
-<h2>Advanced use of <code class="docutils literal notranslate"><span class="pre">Particle</span></code><a class="headerlink" href="#advanced-use-of-particle" title="Permalink to this heading">#</a></h2>
+<h2>Advanced use of <code class="docutils literal notranslate"><span class="pre">Particle</span></code><a class="headerlink" href="#advanced-use-of-particle" title="Link to this heading">#</a></h2>
 <p>In this subsection, we are going to demonstrate how to access the analytical trajectories of particles. We are also going to demonstrate the flexibility of Particle release.</p>
 <p>Most of the notebooks release particles at the same time. We are going to do it differently this time. They are going to be released at 64W and 55S and 64S. Crucially, all of the particles are released at a different time.</p>
 <div class="cell tag_hide-input docutils container">
@@ -1346,7 +1372,7 @@ Attributes: (12/42)
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/d076109789e7a57d7fe17e830dcb99959bdb24234d8c2bbdde165ba94170643b.png" src="../_images/d076109789e7a57d7fe17e830dcb99959bdb24234d8c2bbdde165ba94170643b.png" />
+<img alt="../_images/8c1cb463e7b29d6301142f59603bf4c2e1d8bbd463c7e3b32d1f7e45a272dbf9.png" src="../_images/8c1cb463e7b29d6301142f59603bf4c2e1d8bbd463c7e3b32d1f7e45a272dbf9.png" />
 </div>
 </div>
 <p><strong>Fig.3</strong> Pattern of particle release. Time is relative to the final time.</p>
@@ -1378,8 +1404,8 @@ Attributes: (12/42)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.16 s, sys: 16.1 ms, total: 1.18 s
-Wall time: 1.18 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.19 s, sys: 16 ms, total: 1.21 s
+Wall time: 1.2 s
 </pre></div>
 </div>
 </div>
@@ -1405,7 +1431,7 @@ Wall time: 1.18 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/5bb200ae5dc1c8de5acfbab516f56e9c62ead5b7b1596ff9d64ef976fb09806b.png" src="../_images/5bb200ae5dc1c8de5acfbab516f56e9c62ead5b7b1596ff9d64ef976fb09806b.png" />
+<img alt="../_images/1a4abdb420840df545bbdd07d99457fbb22439d77fd48ada1ff600788a6adc56.png" src="../_images/1a4abdb420840df545bbdd07d99457fbb22439d77fd48ada1ff600788a6adc56.png" />
 </div>
 </div>
 <p><strong>Fig.4</strong> Trajectory of particles released at different time. Warm color are particles released after the final time, and cold colors are those released before the final time.</p>
@@ -1505,7 +1531,7 @@ By Wenrui Jiang
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

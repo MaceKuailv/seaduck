@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>OceInterp interpolation in the ECCO global state estimate. &#8212; Seaduck Tutorial</title>
   
@@ -29,39 +28,35 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'sciserver_notebooks/ECCO_plot_stations';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="nav bd-sidenav">
@@ -386,7 +392,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="oceinterp-interpolation-in-the-ecco-global-state-estimate">
-<h1><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.<a class="headerlink" href="#oceinterp-interpolation-in-the-ecco-global-state-estimate" title="Permalink to this heading">#</a></h1>
+<h1><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.<a class="headerlink" href="#oceinterp-interpolation-in-the-ecco-global-state-estimate" title="Link to this heading">#</a></h1>
 <p>Extract temperature/salinity profiles at specified longitudes, latitudes, and times. This process mimics hydrographic stations from in-situ measurements (like a ship CTD station, or Argo float profile).</p>
 <p>This notebook uses <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/">Oceanspy</a> and demonstrates the interface to the Poseidon-viewer on SciServer.</p>
 <p>Author: Tom Haine &amp; Wenrui Jiang, Jun ‘23</p>
@@ -458,7 +464,7 @@ document.write(`
 </div>
 </div>
 <section id="seaduck-oceinterp-interpolates-the-temperature-and-salinity-to-the-specified-coordinates">
-<h2><code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> interpolates the temperature and salinity to the specified coordinates.<a class="headerlink" href="#seaduck-oceinterp-interpolates-the-temperature-and-salinity-to-the-specified-coordinates" title="Permalink to this heading">#</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> interpolates the temperature and salinity to the specified coordinates.<a class="headerlink" href="#seaduck-oceinterp-interpolates-the-temperature-and-salinity-to-the-specified-coordinates" title="Link to this heading">#</a></h2>
 <p>This process makes synthetic hydrographic profiles from ECCO. Compute the potential density anomaly from the T/S data too.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -490,7 +496,7 @@ document.write(`
 </div>
 </section>
 <section id="plot-station-locations">
-<h2>Plot station locations:<a class="headerlink" href="#plot-station-locations" title="Permalink to this heading">#</a></h2>
+<h2>Plot station locations:<a class="headerlink" href="#plot-station-locations" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cut_od</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">subsample</span><span class="o">.</span><span class="n">cutout</span><span class="p">(</span>
@@ -529,7 +535,7 @@ document.write(`
 <p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations_files/ECCO_plot_stations_9_1.png?raw=true" /></p>
 </section>
 <section id="plot-vertical-t-s-station-profiles">
-<h2>Plot vertical T/S station profiles:<a class="headerlink" href="#plot-vertical-t-s-station-profiles" title="Permalink to this heading">#</a></h2>
+<h2>Plot vertical T/S station profiles:<a class="headerlink" href="#plot-vertical-t-s-station-profiles" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nstations</span><span class="p">):</span>
@@ -589,7 +595,7 @@ document.write(`
 <p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/ECCO_plot_stations_files/ECCO_plot_stations_11_0.png?raw=true" /></p>
 </section>
 <section id="plot-t-s-diagram">
-<h2>Plot T/S diagram.<a class="headerlink" href="#plot-t-s-diagram" title="Permalink to this heading">#</a></h2>
+<h2>Plot T/S diagram.<a class="headerlink" href="#plot-t-s-diagram" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nstations</span><span class="p">):</span>
@@ -705,7 +711,7 @@ By Wenrui Jiang
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

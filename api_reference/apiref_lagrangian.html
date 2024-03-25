@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>seaduck.lagrangian &#8212; Seaduck Tutorial</title>
   
@@ -29,39 +28,35 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_lagrangian';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current nav bd-sidenav">
@@ -347,7 +353,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -363,6 +371,28 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle"><code class="docutils literal notranslate"><span class="pre">Particle</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.analytical_step"><code class="docutils literal notranslate"><span class="pre">Particle.analytical_step()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.cross_cell_wall"><code class="docutils literal notranslate"><span class="pre">Particle.cross_cell_wall()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.deepcopy"><code class="docutils literal notranslate"><span class="pre">Particle.deepcopy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.empty_lists"><code class="docutils literal notranslate"><span class="pre">Particle.empty_lists()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.fillna"><code class="docutils literal notranslate"><span class="pre">Particle.fillna()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.get_u_du"><code class="docutils literal notranslate"><span class="pre">Particle.get_u_du()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.get_vol"><code class="docutils literal notranslate"><span class="pre">Particle.get_vol()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.note_taking"><code class="docutils literal notranslate"><span class="pre">Particle.note_taking()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.to_list_of_time"><code class="docutils literal notranslate"><span class="pre">Particle.to_list_of_time()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.to_next_stop"><code class="docutils literal notranslate"><span class="pre">Particle.to_next_stop()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.trim"><code class="docutils literal notranslate"><span class="pre">Particle.trim()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.update_uvw_array"><code class="docutils literal notranslate"><span class="pre">Particle.update_uvw_array()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -373,16 +403,16 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="module-seaduck.lagrangian">
-<span id="seaduck-lagrangian"></span><h1>seaduck.lagrangian<a class="headerlink" href="#module-seaduck.lagrangian" title="Permalink to this heading">#</a></h1>
+<span id="seaduck-lagrangian"></span><h1>seaduck.lagrangian<a class="headerlink" href="#module-seaduck.lagrangian" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">Particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.lagrangian.</span></span><span class="sig-name descname"><span class="pre">Particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="apiref_eulerian.html#seaduck.eulerian.Position" title="seaduck.eulerian.Position"><code class="xref py py-class docutils literal notranslate"><span class="pre">Position</span></code></a></p>
 <p>Lagrangian particle object.</p>
 <p>The Lagrangian particle object. Simply a eulerian Position object
 that know how to move itself.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kwarg</strong> (<em>dict</em>) – The keyword argument that feed into Position.from_latlon method</p></li>
 <li><p><strong>uname</strong> (<em>str</em>) – The variable names for the velocity/mass-transport components.
@@ -415,7 +445,7 @@ method.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.analytical_step">
-<span class="sig-name descname"><span class="pre">analytical_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.analytical_step" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">analytical_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.analytical_step" title="Link to this definition">#</a></dt>
 <dd><p>Integrate the particle with velocity.</p>
 <p>The core method.
 A set of particles trying to integrate for time tf
@@ -425,7 +455,7 @@ at the end of the call, every particle are either:
 2. ended up on a cell wall before
 (if tf is negative, then “after”) tf.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tf</strong> (<em>float</em><em>, </em><em>numpy.ndarray</em>) – The longest duration of the simulation for each particle.</p>
 </dd>
 </dl>
@@ -433,15 +463,15 @@ at the end of the call, every particle are either:
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.cross_cell_wall">
-<span class="sig-name descname"><span class="pre">cross_cell_wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tend</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.cross_cell_wall" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">cross_cell_wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tend</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.cross_cell_wall" title="Link to this definition">#</a></dt>
 <dd><p>Update properties after particles cross wall.</p>
 <p>This function is called when particle reached the wall.
 The nearest grid points change as well as the way the package
 describe the location of particles. This method handles the
 handover of particles between grid points.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tend</strong> (<em>numpy.ndarray of</em><em> [</em><em>0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3</em><em>,</em><em>4</em><em>,</em><em>5</em><em>,</em><em>6</em><em>]</em>) – Which neighboring cell to move into.
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tend</strong> (<em>numpy.ndarray</em><em> of </em><em>[</em><em>0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3</em><em>,</em><em>4</em><em>,</em><em>5</em><em>,</em><em>6</em><em>]</em>) – Which neighboring cell to move into.
 0-6 means left, right, down, up, deep, shallow,
 and stay in the current cell, respectively.</p>
 </dd>
@@ -450,13 +480,13 @@ and stay in the current cell, respectively.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.deepcopy">
-<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.deepcopy" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.deepcopy" title="Link to this definition">#</a></dt>
 <dd><p>Return a clone of the object.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.empty_lists">
-<span class="sig-name descname"><span class="pre">empty_lists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.empty_lists" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">empty_lists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.empty_lists" title="Link to this definition">#</a></dt>
 <dd><p>Empty/Create the lists.</p>
 <p>Some times the raw-data list get too long,
 It would be necessary to dump the data,
@@ -466,14 +496,14 @@ This method does the latter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.fillna">
-<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.fillna" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fillna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.fillna" title="Link to this definition">#</a></dt>
 <dd><p>Fill the np.nan values to nan.</p>
 <p>This is just to let those in rock stay in rock.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.get_u_du">
-<span class="sig-name descname"><span class="pre">get_u_du</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.get_u_du" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_u_du</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.get_u_du" title="Link to this definition">#</a></dt>
 <dd><p>Read the velocity at particle position.</p>
 <p>Read the velocity and velocity derivatives in all three dimensions
 using the interpolate method with the default kernel.
@@ -482,7 +512,7 @@ Read eulerian.Position.interpolate for more detail.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.get_vol">
-<span class="sig-name descname"><span class="pre">get_vol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.get_vol" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_vol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.get_vol" title="Link to this definition">#</a></dt>
 <dd><p>Read in the volume of the cell.</p>
 <p>For particles that has transport = True,
 volume of the cell is needed for the integration.
@@ -491,7 +521,7 @@ This method read the volume that is calculated at __init__.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.note_taking">
-<span class="sig-name descname"><span class="pre">note_taking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subset_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.note_taking" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">note_taking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subset_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.note_taking" title="Link to this definition">#</a></dt>
 <dd><p>Record raw data into list of lists.</p>
 <p>This method is only called in save_raw = True particles.
 This method will note done the raw info of the particle
@@ -499,8 +529,8 @@ trajectories.
 With those info, one could reconstruct the analytical
 trajectories to arbitrary position.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>subset_index</strong> (<em>iterable of int</em><em> or </em><em>None</em>) – if not None, assume this method is called from a subset of the full
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subset_index</strong> (<em>iterable</em><em> of </em><em>int</em><em> or </em><em>None</em>) – if not None, assume this method is called from a subset of the full
 particle object, and subset_index is the indices the subset occupy
 in the original object.</p>
 </dd>
@@ -509,10 +539,10 @@ in the original object.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.to_list_of_time">
-<span class="sig-name descname"><span class="pre">to_list_of_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_stops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.to_list_of_time" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">to_list_of_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal_stops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_stops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_in_between</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_kwarg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.to_list_of_time" title="Link to this definition">#</a></dt>
 <dd><p>Integrate the particles to a list of time.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>normal_stops</strong> (<em>iterable</em>) – The time steps that user request a output</p></li>
 <li><p><strong>update_stops</strong> (<em>iterable</em><em>, or </em><em>'default'</em>) – The time steps that uvw array changes in the model.
@@ -524,7 +554,7 @@ the output.In that case, it that case, set it to be False,
 and the output will all be at normal_stops.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>stops</strong> (<em>list</em>) – The list of stops.
 It is the combination of normal_stops and output_stops by
@@ -541,14 +571,14 @@ as well as velocity and coords info.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.to_next_stop">
-<span class="sig-name descname"><span class="pre">to_next_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.to_next_stop" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">to_next_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.to_next_stop" title="Link to this definition">#</a></dt>
 <dd><p>Integrate all particles towards time tl.</p>
 <p>This is done by repeatedly calling analytical step.
 Or at least try to do so before maximum_iteration is reached.
 If the maximum time is reached,
 we also force all particle’s internal clock to be tl.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>t_stop</strong> (<em>float</em>) – The final time relative to 1970-01-01 in seconds.</p>
 </dd>
 </dl>
@@ -556,12 +586,12 @@ we also force all particle’s internal clock to be tl.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.trim">
-<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.trim" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">trim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.trim" title="Link to this definition">#</a></dt>
 <dd><p>Move the particles from outside the cell into the cell.</p>
 <p>At the same time change the velocity accordingly.
 In the mean time, creating some negiligible error in time.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tol</strong> (<em>float</em>) – The relative tolerance when particles is significantly
 close to the cell.</p>
 </dd>
@@ -570,7 +600,7 @@ close to the cell.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.lagrangian.Particle.update_uvw_array">
-<span class="sig-name descname"><span class="pre">update_uvw_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.update_uvw_array" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">update_uvw_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.lagrangian.Particle.update_uvw_array" title="Link to this definition">#</a></dt>
 <dd><p>Update the prefetched velocity arrays.</p>
 <p>The way to do it is slightly different for dataset with time
 dimensions and those without.</p>
@@ -635,7 +665,34 @@ dimensions and those without.</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"></div>
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle"><code class="docutils literal notranslate"><span class="pre">Particle</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.analytical_step"><code class="docutils literal notranslate"><span class="pre">Particle.analytical_step()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.cross_cell_wall"><code class="docutils literal notranslate"><span class="pre">Particle.cross_cell_wall()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.deepcopy"><code class="docutils literal notranslate"><span class="pre">Particle.deepcopy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.empty_lists"><code class="docutils literal notranslate"><span class="pre">Particle.empty_lists()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.fillna"><code class="docutils literal notranslate"><span class="pre">Particle.fillna()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.get_u_du"><code class="docutils literal notranslate"><span class="pre">Particle.get_u_du()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.get_vol"><code class="docutils literal notranslate"><span class="pre">Particle.get_vol()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.note_taking"><code class="docutils literal notranslate"><span class="pre">Particle.note_taking()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.to_list_of_time"><code class="docutils literal notranslate"><span class="pre">Particle.to_list_of_time()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.to_next_stop"><code class="docutils literal notranslate"><span class="pre">Particle.to_next_stop()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.trim"><code class="docutils literal notranslate"><span class="pre">Particle.trim()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.lagrangian.Particle.update_uvw_array"><code class="docutils literal notranslate"><span class="pre">Particle.update_uvw_array()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -656,7 +713,7 @@ By Wenrui Jiang
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

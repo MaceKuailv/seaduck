@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>seaduck.topology &#8212; Seaduck Tutorial</title>
   
@@ -29,39 +28,35 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_topology';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current nav bd-sidenav">
@@ -347,7 +353,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -363,6 +371,24 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology"><code class="docutils literal notranslate"><span class="pre">Topology</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.check_illegal"><code class="docutils literal notranslate"><span class="pre">Topology.check_illegal()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.four_matrix_for_uv"><code class="docutils literal notranslate"><span class="pre">Topology.four_matrix_for_uv()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.get_the_other_edge"><code class="docutils literal notranslate"><span class="pre">Topology.get_the_other_edge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.get_uv_mask_from_face"><code class="docutils literal notranslate"><span class="pre">Topology.get_uv_mask_from_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.ind_moves"><code class="docutils literal notranslate"><span class="pre">Topology.ind_moves()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.ind_tend"><code class="docutils literal notranslate"><span class="pre">Topology.ind_tend()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.ind_tend_vec"><code class="docutils literal notranslate"><span class="pre">Topology.ind_tend_vec()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.mutual_direction"><code class="docutils literal notranslate"><span class="pre">Topology.mutual_direction()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -373,10 +399,10 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="module-seaduck.topology">
-<span id="seaduck-topology"></span><h1>seaduck.topology<a class="headerlink" href="#module-seaduck.topology" title="Permalink to this heading">#</a></h1>
+<span id="seaduck-topology"></span><h1>seaduck.topology<a class="headerlink" href="#module-seaduck.topology" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="seaduck.topology.Topology">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">Topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">Topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Topology object.</p>
 <p>A light weight object that remembers the structure of the grid,
@@ -384,7 +410,7 @@ what is connected, what is not. The core method is simply move the index to a di
 In the movie kill Bill, the bride sat in a car and said “wiggle your big toe”.
 After the toe moved, “the hard part is over”. You get the idea.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>od</strong> (<em>xarray.Dataset</em>) – The dataset to record topological info from.</p></li>
 <li><p><strong>typ</strong> (<em>None</em><em>, or </em><em>str</em>) – Type of the grid.
@@ -399,13 +425,13 @@ so that the type is figured out automatically.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.check_illegal">
-<span class="sig-name descname"><span class="pre">check_illegal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.check_illegal" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">check_illegal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.check_illegal" title="Link to this definition">#</a></dt>
 <dd><p>Check if the index is legal.</p>
 <p>A vectorized check to see whether the index is legal,
 index can be a tuple of numpy ndarrays.
 no negative index is permitted for sanity reason.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ind</strong> (<em>tuple</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p></li>
 <li><p><strong>cuvwg</strong> (<em>'C'</em><em> or </em><em>'G'</em>) – Whether use the center grid or the corner grid.</p></li>
@@ -416,25 +442,25 @@ no negative index is permitted for sanity reason.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.four_matrix_for_uv">
-<span class="sig-name descname"><span class="pre">four_matrix_for_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fface</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.four_matrix_for_uv" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">four_matrix_for_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fface</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.four_matrix_for_uv" title="Link to this definition">#</a></dt>
 <dd><p>Expand get_uv_mask_from_face to 2D array of faces.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.get_the_other_edge">
-<span class="sig-name descname"><span class="pre">get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_the_other_edge" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_the_other_edge" title="Link to this definition">#</a></dt>
 <dd><p>See what is adjacent to the face by this edge.</p>
 <p>The (edge) side of the (face) is connected to
 the (new_edge) side of the (new_face).
 0,1,2,3 stands for up, down, left, right.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>face</strong> (<em>int</em>) – The face of interst</p></li>
 <li><p><strong>edge</strong> (<em>0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3</em>) – which direction of the face we are looking for</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>new_face</strong> (<em>int</em>) – The face adjacent to face in the edge direction.</p></li>
 <li><p><strong>new_edge</strong> (<em>0,1,2,3</em>) – The face is connected to new_face in which direction.</p></li>
@@ -446,7 +472,7 @@ the (new_edge) side of the (new_face).
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.get_uv_mask_from_face">
-<span class="sig-name descname"><span class="pre">get_uv_mask_from_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_uv_mask_from_face" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_uv_mask_from_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_uv_mask_from_face" title="Link to this definition">#</a></dt>
 <dd><p>Get the masking of UV points.</p>
 <p>The background is as following:
 For a dataset with face connection,
@@ -455,7 +481,7 @@ the fact that faces can be rotated against each other can create
 local inconsistency in vector definition near face connections.
 This method corrects that.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>faces</strong> (<em>iterable</em>) – 1D iterable of faces, the first one is assumed to be the reference.</p>
 </dd>
 </dl>
@@ -463,13 +489,13 @@ This method corrects that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.ind_moves">
-<span class="sig-name descname"><span class="pre">ind_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moves</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_moves" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ind_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moves</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_moves" title="Link to this definition">#</a></dt>
 <dd><p>Move an index in a serie of directions.</p>
 <p>moves being a list of directions (0,1,2,3),
 ind being the starting index,
 return the index after moving in the directions in the list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ind</strong> (<em>tuple</em>) – Index of the starting position</p></li>
 <li><p><strong>moves</strong> (<em>iterable</em>) – A sequence of steps to “walk” from the original position.</p></li>
@@ -481,13 +507,13 @@ return the index after moving in the directions in the list.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.ind_tend">
-<span class="sig-name descname"><span class="pre">ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend" title="Link to this definition">#</a></dt>
 <dd><p>Move an index in a direction.</p>
 <p>ind is a tuple that is face,iy,ix,
 tendency again is up, down, left, right represented by 0,1,2,3
 return the next cell.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ind</strong> (<em>tuple</em>) – The index to find the neighbor of</p></li>
 <li><p><strong>tend</strong> (<em>int</em>) – Which direction to move from the original index.</p></li>
@@ -500,13 +526,13 @@ return the next cell.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.ind_tend_vec">
-<span class="sig-name descname"><span class="pre">ind_tend_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend_vec" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ind_tend_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend_vec" title="Link to this definition">#</a></dt>
 <dd><p>Move many indices in a list of directions.</p>
 <p>Vectorized version for ind_tend method.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inds</strong> (<em>tuple of numpy.array</em><em> or </em><em>numpy.array</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p></li>
+<li><p><strong>inds</strong> (<em>tuple</em><em> of </em><em>numpy.array</em><em> or </em><em>numpy.array</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p></li>
 <li><p><strong>tend</strong> (<em>iterable</em>) – Which direction should each index take.</p></li>
 <li><p><strong>kwarg</strong> (<em>dict</em><em>,</em><em>optional</em>) – Keyword argument that feeds into ind_tend.</p></li>
 </ul>
@@ -516,7 +542,7 @@ return the next cell.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="seaduck.topology.Topology.mutual_direction">
-<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_face</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.mutual_direction" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_face</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.mutual_direction" title="Link to this definition">#</a></dt>
 <dd><p>Find the relative orientation of two faces.</p>
 <p>0,1,2,3 stands for up, down, left, right
 given 2 faces, the returns are
@@ -583,7 +609,30 @@ given 2 faces, the returns are
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"></div>
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology"><code class="docutils literal notranslate"><span class="pre">Topology</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.check_illegal"><code class="docutils literal notranslate"><span class="pre">Topology.check_illegal()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.four_matrix_for_uv"><code class="docutils literal notranslate"><span class="pre">Topology.four_matrix_for_uv()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.get_the_other_edge"><code class="docutils literal notranslate"><span class="pre">Topology.get_the_other_edge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.get_uv_mask_from_face"><code class="docutils literal notranslate"><span class="pre">Topology.get_uv_mask_from_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.ind_moves"><code class="docutils literal notranslate"><span class="pre">Topology.ind_moves()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.ind_tend"><code class="docutils literal notranslate"><span class="pre">Topology.ind_tend()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.ind_tend_vec"><code class="docutils literal notranslate"><span class="pre">Topology.ind_tend_vec()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaduck.topology.Topology.mutual_direction"><code class="docutils literal notranslate"><span class="pre">Topology.mutual_direction()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -604,7 +653,7 @@ By Wenrui Jiang
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>
