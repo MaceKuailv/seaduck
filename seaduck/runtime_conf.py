@@ -17,3 +17,11 @@ def compileable(func):  # pragma: no cover
         return njit(func)
     else:
         return func
+
+
+def compileable_parallel(func):  # pragma: no cover
+    """Decorate function to compile them (parallel) using numba when available."""
+    if rcParam["compilable"]:
+        return njit(func, parallel=True)
+    else:
+        return func

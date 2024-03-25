@@ -6,134 +6,20 @@ import numpy as np
 
 from seaduck.eulerian import Position
 from seaduck.kernel_weight import KnW
+from seaduck.lagrangian_budget import store_lists
 from seaduck.ocedata import RelCoord
-from seaduck.runtime_conf import compileable
-from seaduck.utils import find_rel, find_rx_ry_oceanparcel, rel2latlon, to_180
+from seaduck.utils import (
+    _stationary,
+    _stationary_time,
+    _time2wall,
+    _which_early,
+    find_rel,
+    find_rx_ry_oceanparcel,
+    rel2latlon,
+    to_180,
+)
 
 DEG2M = 6271e3 * np.pi / 180
-
-
-@compileable
-def _increment(t, u, du):
-    """Find how far it will travel in duration t.
-
-    For a one dimensional particle with speed u and speed derivative du,
-    find how far it will travel in duration t.
-
-    Parameters
-    ----------
-    t: float, numpy.ndarray
-        The time duration
-    u: float, numpy.ndarray
-        The velocity defined at the starting point.
-    du: float, numpy.ndarray
-        The velocity gradient. Assumed to be constant.
-    """
-    incr = u / du * (np.exp(du * t) - 1)
-    no_gradient = np.abs(du) < 1e-12
-    incr[no_gradient] = (u * t)[no_gradient]
-    return incr
-
-
-def _stationary(t, u, du, x0):
-    """Find the final position after time t.
-
-    For a one dimensional Particle with speed u and speed derivative du
-    starting at x0, find the final position after time t.
-    "Stationary" means that we are assuming there is no time dependency.
-
-    Parameters
-    ----------
-    t: float, numpy.ndarray
-        The time duration
-    u: float, numpy.ndarray
-        The velocity defined at the starting point.
-    du: float, numpy.ndarray
-        The velocity gradient. Assumed to be constant.
-    x0: float, numpy.ndarray
-        The starting position.
-    """
-    incr = _increment(t, u, du)
-    return incr + x0
-
-
-@compileable
-def _stationary_time(u, du, x0):
-    """Find the amount of time to leave the cell.
-
-    Find the amount of time it needs for a Particle to hit x = -0.5 and 0.5.
-    The time could be negative.
-
-    Parameters
-    ----------
-    u: numpy.ndarray
-        The velocity defined at the starting point.
-    du: numpy.ndarray
-        The velocity gradient. Assumed to be constant.
-    x0: numpy.ndarray
-        The starting position.
-
-    Returns
-    -------
-    tl: numpy.ndarray
-        The time it takes to hit -0.5.
-    tr: numpy.ndarray
-        The time it takes to hit 0.5
-    """
-    tl = np.log(1 - du / u * (0.5 + x0)) / du
-    tr = np.log(1 + du / u * (0.5 - x0)) / du
-    no_gradient = np.abs(du) < 1e-12
-    tl[no_gradient] = (-x0[no_gradient] - 0.5) / u[no_gradient]
-    tr[no_gradient] = (0.5 - x0[no_gradient]) / u[no_gradient]
-    return tl, tr
-
-
-@compileable
-def _uleftright_from_udu(u, du, x0):
-    """Calculate the velocity at -0.5 and 0.5."""
-    u_left = u - (x0 + 0.5) * du
-    u_right = u + (0.5 - x0) * du
-    return u_left, u_right
-
-
-def _time2wall(pos_list, u_list, du_list, tf):
-    """Apply stationary_time three times for all three dimensions."""
-    ts = []
-    for i in range(3):
-        tl, tr = _stationary_time(u_list[i], du_list[i], pos_list[i])
-        ul, ur = _uleftright_from_udu(u_list[i], du_list[i], pos_list[i])
-        sign = np.sign(tf)
-        cannot_left = -ul * sign <= 1e-12  # aroung 30000 years
-        tl[cannot_left] = -sign[cannot_left]
-        cannot_right = ur * sign <= 1e-12
-        tr[cannot_right] = -sign[cannot_right]
-        ts.append(tl)
-        ts.append(tr)
-    return ts
-
-
-def _which_early(tf, ts):
-    """Find out which event happens first.
-
-    We are trying to integrate the Particle to time tf.
-    The first event is either:
-    1. tf is reached before reaching a wall
-    2. ts[i] is reached, and a Particle hit a wall. ts[i]*tf>0.
-
-    Parameters
-    ----------
-    tf: float, numpy.ndarray
-        The final time
-    ts: list
-        The list of events calculated using _time2wall
-    """
-    ts.append(np.ones(len(ts[0])) * tf)  # float or array both ok
-    t_directed = np.array(ts) * np.sign(tf)
-    t_directed[np.isnan(t_directed)] = np.inf
-    t_directed[t_directed < 0] = np.inf
-    tend = t_directed.argmin(axis=0)
-    t_event = np.array([ts[te][i] for i, te in enumerate(tend)])
-    return tend, t_event
 
 
 uvkernel = np.array([[0, 0], [1, 0], [0, 1]])
@@ -255,12 +141,7 @@ class Particle(Position):
             try:
                 self.ocedata["Vol"]
             except KeyError:
-                if self.ocedata.readiness["Zl"]:
-                    self.ocedata["Vol"] = np.array(
-                        self.ocedata._ds["drF"] * self.ocedata._ds["rA"]
-                    )
-                else:
-                    self.ocedata["Vol"] = np.array(self.ocedata._ds["rA"])
+                self.ocedata._add_missing_vol(as_numpy=True)
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
@@ -912,7 +793,12 @@ class Particle(Position):
             self.it[~before_first] += 1
 
     def to_list_of_time(
-        self, normal_stops, update_stops="default", return_in_between=True
+        self,
+        normal_stops,
+        update_stops="default",
+        return_in_between=True,
+        dump_filename=False,
+        store_kwarg={},
     ):
         """Integrate the particles to a list of time.
 
@@ -944,6 +830,8 @@ class Particle(Position):
         """
         t_min = np.minimum(np.min(normal_stops), self.t[0])
         t_max = np.maximum(np.max(normal_stops), self.t[0])
+        if not self.save_raw and dump_filename:
+            raise ValueError("saving to file only available if save_raw = True")
 
         if "time" not in self.ocedata[self.uname].dims:
             pass
@@ -978,7 +866,9 @@ class Particle(Position):
         self.get_u_du()
         to_return = []
         for i, tl in enumerate(stops):
-            logging.info(np.datetime64(round(tl), "s"))
+            timestr = str(np.datetime64(round(tl), "s"))
+            # logging.info(timestr)
+            print(timestr)
             if self.save_raw:
                 # save the very start of everything.
                 self.note_taking(stamp=15)
@@ -992,9 +882,16 @@ class Particle(Position):
                     self.update_uvw_array()
                     self.get_u_du()
                 if return_in_between:
-                    to_return.append(self.deepcopy())
+                    if dump_filename:
+                        store_lists(self, dump_filename + timestr, **store_kwarg)
+                    else:
+                        to_return.append(self.deepcopy())
             else:
-                to_return.append(self.deepcopy())
+                if dump_filename:
+                    store_lists(self, dump_filename + timestr, **store_kwarg)
+                else:
+                    to_return.append(self.deepcopy())
             if self.save_raw:
                 self.empty_lists()
-        return stops, to_return
+        if not dump_filename:
+            return stops, to_return
