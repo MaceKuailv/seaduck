@@ -205,10 +205,6 @@ def _left90(array):
     return array[..., ::-1, :].transpose([0, 2, 1])
 
 
-def superbee_fluxlimiter(cr):
-    return np.maximum(0.0, np.maximum(np.minimum(1.0, 2 * cr), np.minimum(2.0, cr)))
-
-
 def buffer_x_withface(s, face, lm, rm, tp):
     """Create buffer zone in x direction for one face of an array.
 
@@ -340,11 +336,78 @@ def buffer_z_nearest_withoutface(s, lm, rm):
     return zbuffer
 
 
+def _slope_ratio(Rjm, Rj, Rjp, u_sign):
+    """Calculate slope ratio for flux limiter."""
+    cr_max = 1e6  # doesn't matter
+    cr = np.zeros_like(u_sign)
+    pos = u_sign > 0
+    neg = u_sign <= 0
+    cr[pos] = Rjm[pos]
+    cr[neg] = Rjp[neg]
+    zero_divide = np.abs(Rj) * cr_max <= np.abs(cr)
+    cr[zero_divide] = np.sign(cr[zero_divide]) * np.sign(u_sign[zero_divide]) * cr_max
+    cr[~zero_divide] = cr[~zero_divide] / Rj[~zero_divide]
+    return cr
+
+
+def superbee_fluxlimiter(cr):
+    return np.maximum(0.0, np.maximum(np.minimum(1.0, 2 * cr), np.minimum(2.0, cr)))
+
+
+def second_order_flux_limiter_x(s_center, u_cfl):
+    xbuffer = buffer_x_periodic(s_center, 2, 2)
+    deltas = np.nan_to_num(np.diff(xbuffer, axis=-1), 0)
+    Rjp = deltas[..., 2:]
+    Rj = deltas[..., 1:-1]
+    Rjm = deltas[..., :-2]
+
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
+    limiter = superbee_fluxlimiter(cr)
+    swall = (
+        np.nan_to_num(xbuffer[..., 1:-2] + xbuffer[..., 2:-1]) * 0.5
+        - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+    )
+    return swall
+
+
+def second_order_flux_limiter_y(s_center, u_cfl):
+    ybuffer = buffer_y_periodic(s_center, 2, 2)
+    deltas = np.nan_to_num(np.diff(ybuffer, axis=-2), 0)
+    Rjp = deltas[..., 2:, :]
+    Rj = deltas[..., 1:-1, :]
+    Rjm = deltas[..., :-2, :]
+
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
+    limiter = superbee_fluxlimiter(cr)
+    swall = (
+        np.nan_to_num(ybuffer[..., 1:-2, :] + ybuffer[..., 2:-1, :]) * 0.5
+        - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+    )
+    return swall
+
+
+def second_order_flux_limiter_z_withoutface(s_center, u_cfl):
+    zbuffer = buffer_z_nearest_withoutface(s_center, 2, 1)
+    deltas = np.nan_to_num(np.diff(zbuffer, axis=-3), 0)
+    Rjp = deltas[..., 2:, :, :]
+    Rj = deltas[..., 1:-1, :, :]
+    Rjm = deltas[..., :-2, :, :]
+
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
+    limiter = superbee_fluxlimiter(cr)
+    swall = (
+        np.nan_to_num(zbuffer[..., 1:-2, :, :] + zbuffer[..., 2:-1, :, :]) * 0.5
+        - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+    )
+    return swall
+
+
 def third_order_upwind_z(s, w):
     """Get interpolated salinity in the vertical.
 
     for more info, see
     https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#third-order-upwind-bias-advection
+    This function currently only work when there is no through surface flux.
 
     Parameters
     ----------
