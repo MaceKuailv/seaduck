@@ -20,6 +20,7 @@ def _raise_if_no_xgcm():
 
 
 def create_ecco_grid(ds):
+    _raise_if_no_xgcm()  # pragma: no cover
     face_connections = {
         "face": {
             0: {"X": ((12, "Y", False), (3, "X", False)), "Y": (None, (1, "Y", False))},
@@ -68,7 +69,7 @@ def create_ecco_grid(ds):
         }
     }
 
-    grid = xgcm.Grid(
+    xgcmgrd = xgcm.Grid(
         ds,
         periodic=False,
         face_connections=face_connections,
@@ -79,17 +80,32 @@ def create_ecco_grid(ds):
             "time": {"center": "time", "inner": "time_midp"},
         },
     )
-    return grid
+    return xgcmgrd
 
 
-def hor_div(tub, grid, xfluxname, yfluxname):
+def create_periodic_grid(ds):
+    _raise_if_no_xgcm()  # pragma: no cover
+    xgcmgrd = xgcm.Grid(
+        ds,
+        periodic=["X"],
+        coords={
+            "X": {"center": "X", "outer": "Xp1"},
+            "Y": {"center": "Y", "outer": "Yp1"},
+            "Z": {"center": "Z", "left": "Zl"},
+            "time": {"center": "time", "outer": "time_outer"},
+        },
+    )
+    return xgcmgrd
+
+
+def hor_div(tub, xgcmgrd, xfluxname, yfluxname):
     """Calculate horizontal divergence using xgcm.
 
     Parameters
     ----------
     tub: sd.OceData or xr.Dataset
         The dataset to calculate data from
-    grid: xgcm.Grid
+    xgcmgrd: xgcm.Grid
         The Grid of the dataset
     xfluxname, yfluxname: string
         The name of the variables corresponding to the horizontal fluxes
@@ -99,7 +115,7 @@ def hor_div(tub, grid, xfluxname, yfluxname):
         tub["Vol"]
     except KeyError:
         tub._add_missing_vol()
-    xy_diff = grid.diff_2d_vector(
+    xy_diff = xgcmgrd.diff_2d_vector(
         {"X": tub[xfluxname].fillna(0), "Y": tub[yfluxname].fillna(0)},
         boundary="fill",
         fill_value=0.0,
@@ -110,14 +126,14 @@ def hor_div(tub, grid, xfluxname, yfluxname):
     return hConv
 
 
-def ver_div(tub, grid, zfluxname):
+def ver_div(tub, xgcmgrd, zfluxname):
     """Calculate horizontal divergence using xgcm.
 
     Parameters
     ----------
     tub: sd.OceData or xr.Dataset
         The dataset to calculate data from
-    grid: xgcm.Grid
+    xgcmgrd: xgcm.Grid
         The Grid of the dataset
     xfluxname, yfluxname, zfluxname: string
         The name of the variables corresponding to the fluxes
@@ -128,28 +144,49 @@ def ver_div(tub, grid, zfluxname):
     except KeyError:
         tub._add_missing_vol()
     vConv = (
-        grid.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
+        xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
         / tub["Vol"]
     )
     return vConv
 
 
-def total_div(tub, grid, xfluxname, yfluxname, zfluxname):
+def total_div(tub, xgcmgrd, xfluxname, yfluxname, zfluxname):
     """Calculate 3D divergence using xgcm.
 
     Parameters
     ----------
     tub: sd.OceData or xr.Dataset
         The dataset to calculate data from
-    grid: xgcm.Grid
+    xgcmgrd: xgcm.Grid
         The Grid of the dataset
     zfluxname: string
         The name of the variables corresponding to the vertical flux
         in concentration m^3/s
     """
-    hConv = hor_div(tub, grid, xfluxname, yfluxname)
-    vConv = ver_div(tub, grid, zfluxname)
+    hConv = hor_div(tub, xgcmgrd, xfluxname, yfluxname)
+    vConv = ver_div(tub, xgcmgrd, zfluxname)
     return hConv + vConv
+
+
+def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):
+    strmx = tub[psixname].fillna(0)
+    strmy = tub[psiyname].fillna(0)
+
+    u = xgcmgrd.diff(strmx, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
+    v = xgcmgrd.diff(strmy, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
+
+    vstrmx = strmx * tub["dyG"]
+    vstrmy = strmy * tub["dxG"]
+
+    xy_diff = xgcmgrd.diff_2d_vector(
+        {"X": vstrmx, "Y": vstrmy}, boundary="fill", fill_value=0.0
+    )
+    x_diff = xy_diff["X"]
+    y_diff = xy_diff["Y"]
+    hDiv = x_diff + y_diff
+
+    w = hDiv / tub["rA"]
+    return u, v, w
 
 
 def _slice_corner(array, fc, iy1, iy2, ix1, ix2):
@@ -166,6 +203,10 @@ def _right90(array):
 
 def _left90(array):
     return array[..., ::-1, :].transpose([0, 2, 1])
+
+
+def superbee_fluxlimiter(cr):
+    return np.maximum(0.0, np.maximum(np.minimum(1.0, 2 * cr), np.minimum(2.0, cr)))
 
 
 def buffer_x_withface(s, face, lm, rm, tp):
@@ -261,6 +302,42 @@ def buffer_y_withface(s, face, lm, rm, tp):
     except ValueError:
         ybuffer[..., -rm:, :] = _left90(righ)
     return ybuffer
+
+
+def buffer_x_periodic(s, lm, rm):
+    shape = list(s.shape)
+    shape[-1] += lm + rm
+    xbuffer = np.zeros(shape)
+    xbuffer[..., lm : shape[-1] - rm] = s
+    if lm > 0:
+        xbuffer[..., :lm] = s[..., -lm:]
+    if rm > 0:
+        xbuffer[..., -rm:] = s[..., :rm]
+    return xbuffer
+
+
+def buffer_y_periodic(s, lm, rm):
+    shape = list(s.shape)
+    shape[-2] += lm + rm
+    ybuffer = np.zeros(shape)
+    ybuffer[..., lm : shape[-2] - rm, :] = s
+    if lm > 0:
+        ybuffer[..., :lm, :] = s[..., -lm:, :]
+    if rm > 0:
+        ybuffer[..., -rm:, :] = s[..., :rm, :]
+    return ybuffer
+
+
+def buffer_z_nearest_withoutface(s, lm, rm):
+    shape = list(s.shape)
+    shape[-3] += lm + rm
+    zbuffer = np.zeros(shape)
+    zbuffer[..., lm : shape[-3] - rm, :, :] = s
+    if lm > 0:
+        zbuffer[..., :lm, :, :] = s[..., :1, :, :]
+    if rm > 0:
+        zbuffer[..., -rm:, :, :] = s[..., -1:, :, :]
+    return zbuffer
 
 
 def third_order_upwind_z(s, w):
