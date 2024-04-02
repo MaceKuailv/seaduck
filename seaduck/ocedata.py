@@ -282,9 +282,11 @@ class OceData:
     def _add_missing_vol(self, as_numpy=False):
         if self.readiness["Zl"]:
             vol = self._ds["drF"] * self._ds["rA"]
+            if "HFacC" in self._ds.data_vars:
+                vol *= self._ds["HFacC"]
         else:
             vol = self._ds["rA"]
-
+        vol = vol.fillna(0)
         if as_numpy:
             self["Vol"] = np.array(vol)
         else:
@@ -373,7 +375,8 @@ class OceData:
         """Extract the temporal grid data into numpy arrays."""
         self.t_base = 0
         self.ts = np.array(self["time"])
-        self.ts = (self.ts).astype(float) / 1e9
+        if self["time"].dtype != "float":
+            self.ts = (self.ts).astype(float) / 1e9
         try:
             self.time_midp = np.array(self["time_midp"])
             self.time_midp = (self.time_midp).astype(float) / 1e9
