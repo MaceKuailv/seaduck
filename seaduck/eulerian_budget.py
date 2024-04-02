@@ -336,12 +336,12 @@ def buffer_z_nearest_withoutface(s, lm, rm):
     return zbuffer
 
 
-def _slope_ratio(Rjm, Rj, Rjp, u_sign):
+def _slope_ratio(Rjm, Rj, Rjp, u_sign, not_z=1):
     """Calculate slope ratio for flux limiter."""
     cr_max = 1e6  # doesn't matter
     cr = np.zeros_like(u_sign)
-    pos = u_sign > 0
-    neg = u_sign <= 0
+    pos = not_z * u_sign > 0
+    neg = not_z * u_sign <= 0
     cr[pos] = Rjm[pos]
     cr[neg] = Rjp[neg]
     zero_divide = np.abs(Rj) * cr_max <= np.abs(cr)
@@ -393,11 +393,12 @@ def second_order_flux_limiter_z_withoutface(s_center, u_cfl):
     Rj = deltas[..., 1:-1, :, :]
     Rjm = deltas[..., :-2, :, :]
 
-    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl, not_z=-1)
     limiter = superbee_fluxlimiter(cr)
+    # swall = np.nan_to_num(zbuffer[...,1:-2,:,:]+zbuffer[...,2:-1,:,:])*0.5- np.sign(u_cfl)**Rj*0.5
     swall = (
         np.nan_to_num(zbuffer[..., 1:-2, :, :] + zbuffer[..., 2:-1, :, :]) * 0.5
-        - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+        + np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
     )
     return swall
 
