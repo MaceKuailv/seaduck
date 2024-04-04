@@ -102,7 +102,7 @@ class Particle(Position):
     ):
         Position.__init__(self)
         if "bool_array" in kwarg.keys():
-            self.from_bool_array(kwarg)
+            self.from_bool_array(**kwarg)
         else:
             self.from_latlon(**kwarg)
 
@@ -866,7 +866,7 @@ class Particle(Position):
         for i, tl in enumerate(stops):
             timestr = str(np.datetime64(round(tl), "s"))
             logging.info(timestr)
-            # print(timestr)
+            print(timestr)
             if self.save_raw:
                 # save the very start of everything.
                 self.note_taking(stamp=15)

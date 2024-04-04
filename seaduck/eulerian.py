@@ -2,7 +2,6 @@ import copy
 import logging
 
 import numpy as np
-import xarray as xr
 
 from seaduck.get_masks import get_masked
 from seaduck.kernel_weight import KnW, _find_pk_4d, _translate_to_tendency
@@ -257,6 +256,7 @@ class Position:
             self.ocedata["Vol"]
         except KeyError:
             self.ocedata._add_missing_vol()
+        self.tp = self.ocedata.tp
 
         inds = np.where(bool_array)
         try:
@@ -305,7 +305,7 @@ class Position:
         if isinstance(t, (int, float, np.floating)):
             t = np.ones(self.N, float) * t
         elif isinstance(t, np.ndarray):
-            if len(t)!=self.N:
+            if len(t) != self.N:
                 raise ValueError("Mismatch between input t and final particle number")
         if t is not None:
             self.t = copy.deepcopy(t)
