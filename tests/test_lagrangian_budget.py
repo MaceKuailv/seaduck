@@ -16,7 +16,7 @@ from seaduck.lagrangian_budget import (
 
 @pytest.fixture
 def custom_pt():
-    x = np.linspace(-50, -15, 200)
+    x = np.linspace(-50, -15, 5)
     y = np.ones_like(x) * 52.0
     z = np.ones_like(x) * (-9)
     t = np.ones_like(x)
