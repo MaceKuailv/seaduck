@@ -258,6 +258,13 @@ class Position:
             self.ocedata._add_missing_vol()
 
         inds = (xr.DataArray(i, dim="dummy") for i in np.where(bool_array))
+        try:
+            assert isinstance(data["Vol"], xr.DataArray)
+            xr_vol = data["Vol"]
+        except (KeyError, AssertionError):
+            xr_vol = data._ds["drF"] * data._ds["rA"]
+            if "HFacC" in data._ds.data_vars:
+                xr_vol *= data._ds["HFacC"]
         vols = np.array(data._ds["Vol"][inds])
         num_each = np.round(vols * num / np.sum(vols)).astype(int)
         num = np.sum(num_each)
@@ -498,7 +505,7 @@ class Position:
             return copy.deepcopy(self.it)
         elif knw.tkernel in ["dt", "linear"]:
             try:
-                self.izl_lin
+                self.it_lin
             except AttributeError:
                 self.rel.update(self.ocedata._find_rel_t_lin(self.t))
             return np.vstack([self.it_lin, self.it_lin + 1]).T

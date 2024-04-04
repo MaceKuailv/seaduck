@@ -287,9 +287,10 @@ class OceData:
         else:
             vol = self._ds["rA"]
         vol = vol.fillna(0)
-        self["Vol"] = vol
         if as_numpy:
             self["Vol"] = np.array(vol)
+        else:
+            self["Vol"] = vol
 
     def _hgrid2array(self):
         """Extract the horizontal grid data into numpy arrays.
