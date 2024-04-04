@@ -101,7 +101,10 @@ class Particle(Position):
         **kwarg,
     ):
         Position.__init__(self)
-        self.from_latlon(**kwarg)
+        if "bool_array" in kwarg.keys():
+            self.from_bool_array(kwarg)
+        else:
+            self.from_latlon(**kwarg)
 
         try:
             self.px, self.py = self.get_px_py()
