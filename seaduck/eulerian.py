@@ -198,6 +198,7 @@ class Position:
                 self.rel.update(self.ocedata._find_rel_vl_lin(z))
             else:
                 self.rel.update(VlRel._make(None for i in range(4)))
+                self.rel.update(VlLinRel._make(None for i in range(4)))
         else:
             self.rel.update(VRel._make(None for i in range(4)))
             self.rel.update(VlRel._make(None for i in range(4)))
