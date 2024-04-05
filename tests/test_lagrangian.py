@@ -129,11 +129,10 @@ def test_multidim_uvw_array(ecco_p):
     assert ecco_p.uarray.shape[0] == 2
 
 
-@pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_update_w_array(ecco_p, od):
-    od["u0"] = od["UVELMASS"].isel(time=0)
-    od["v0"] = od["VVELMASS"].isel(time=0)
-    od["w0"] = od["WVELMASS"].isel(time=0)
+def test_update_w_array(ecco_p):
+    ecco_p.ocedata._ds["u0"] = ecco_p.ocedata["UVELMASS"].isel(time=0)
+    ecco_p.ocedata._ds["v0"] = ecco_p.ocedata["VVELMASS"].isel(time=0)
+    ecco_p.ocedata._ds["w0"] = ecco_p.ocedata["WVELMASS"].isel(time=0)
     delattr(ecco_p, "warray")
     ecco_p.uname = "u0"
     ecco_p.vname = "v0"

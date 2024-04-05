@@ -184,6 +184,20 @@ class OceData:
                 f"use add_missing_variables or set_alias to create {missing},"
                 "then call OceData.grid2array."
             )
+        if self.readiness["Zl"]:
+            # make a more consistent vector definition
+            with_zl = [i for i in data.data_vars if "Zl" in data[i].dims]
+            if len(with_zl) > 0:
+                without_zl = [i for i in data.data_vars if i not in with_zl]
+                bottom_buffer = xr.zeros_like(data[with_zl].isel(Zl=slice(1)))
+                bottom_buffer["Zl"] = [self.Zl[-1]]
+                neods = xr.merge(
+                    [
+                        xr.concat([data[with_zl], bottom_buffer], dim="Zl"),
+                        data[without_zl],
+                    ]
+                )
+                self._ds = neods
 
     def __setitem__(self, key, item):
         if isinstance(item, xr.DataArray):
@@ -357,15 +371,16 @@ class OceData:
 
     def _vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
-        self.Zl = np.array(self["Zl"], dtype="float32")
+        if "Zp1" in self._ds.variables:
+            self.Zl = np.array(self["Zp1"], dtype="float32")
+        else:
+            self.Zl = np.zeros(len(self["Zl"]) + 1)
+            self.Zl[:-1] = np.array(self._ds["Zl"])
+            self.Zl[-1] = 2 * self.Zl[-2] - self.Zl[-3]
         try:
             self.dZl = np.array(self["dZl"], dtype="float32")
         except KeyError:
-            if "Zp1" in self._ds.variables:
-                self.dZl = np.diff(np.array(self["Zp1"]))
-            else:
-                self.dZl = np.diff(self.Zl)
-                self.dZl = np.append(self.dZl, self.dZl[-1])
+            self.dZl = np.diff(self.Zl)
 
         # special treatment for dZl
         # self.dZl = np.roll(self.dZl,1)

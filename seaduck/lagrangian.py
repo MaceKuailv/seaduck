@@ -149,7 +149,7 @@ class Particle(Position):
                 logging.warning(
                     "Setting the surface velocity to zero. " "Dataset modified. "
                 )
-                self.ocedata[wname].loc[{"Zl": 0}] = 0
+                self.ocedata[self.wname].loc[{"Zl": 0}] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
 
