@@ -34,8 +34,9 @@ def read_from_ds(particle_ds, oce):
     temp.tp = temp.ocedata.tp
 
     # it = np.array(particle_ds.it)
+    if oce.tp.typ in ["LLC"]:
+        temp.face = np.array(particle_ds.fc).astype(int)
     izl = np.array(particle_ds.iz)
-    fc = np.array(particle_ds.fc)
     iy = np.array(particle_ds.iy)
     ix = np.array(particle_ds.ix)
     rzl = np.array(particle_ds.rz)
@@ -45,7 +46,6 @@ def read_from_ds(particle_ds, oce):
     # temp.it  = it .astype(int)
     temp.izl_lin = izl.astype(int)
     temp.iz = (izl - 1).astype(int)
-    temp.face = fc.astype(int)
     temp.iy = iy.astype(int)
     temp.ix = ix.astype(int)
     temp.rzl_lin = rzl
@@ -148,8 +148,6 @@ def tres_update(tres0, temp, first, last, fraction_first, fraction_last):
     tres = tres0 * fracs
 
     tres[temp.vs > 6] = 0.0
-    # mask = np.logical_and(tres==0, temp.vs<7)
-    # assert (tres[temp.vs<7]>0).all(), (tres0[mask],fracs[mask], fracs_a[mask], np.where(mask))
 
     return tres
 
@@ -182,9 +180,11 @@ def deepcopy_inds(temp):
     iz = copy.deepcopy(temp.izl_lin)
     iy = copy.deepcopy(temp.iy)
     ix = copy.deepcopy(temp.ix)
-    face = copy.deepcopy(temp.face)
-    # assert (iz>=1).all(),iz
-    return iz, face, iy, ix
+    if temp.face is not None:
+        face = copy.deepcopy(temp.face)
+        return iz, face, iy, ix
+    else:
+        return iz, iy, ix
 
 
 def wall_index(inds, iwall, tp):
@@ -217,10 +217,7 @@ def wall_index(inds, iwall, tp):
 
 
 def redo_index(pt):
-    # assert (pt.izl_lin>=1).all()
     inds = deepcopy_inds(pt)
-    iz, face, iy, ix = inds
-    # assert (iz>=1).all(),iz
     tendf, tf, tendb, tb = pseudo_motion(pt)
 
     funderflow = np.where(tendf == 6)
@@ -229,8 +226,6 @@ def redo_index(pt):
     tendb[bunderflow] = 0
     vf = wall_index(inds, tendf, pt.ocedata.tp)
     vb = wall_index(inds, tendb, pt.ocedata.tp)
-    # vf[:,funderflow] = vb[:,funderflow]
-    # vb[:,bunderflow] = vf[:,bunderflow]
     tim = tf - tb
     frac = -tb / tim
     assert (~np.isnan(tim)).any(), [
@@ -290,7 +285,8 @@ def flatten(lstoflst, shapes=None):
 def particle2xarray(p):
     shapes = [len(i) for i in p.xxlist]
     # it = flatten(p.itlist,shapes = shapes)
-    fc = flatten(p.fclist, shapes=shapes)
+    if p.face is not None:
+        fc = flatten(p.fclist, shapes=shapes)
     iy = flatten(p.iylist, shapes=shapes)
     iz = flatten(p.izlist, shapes=shapes)
     ix = flatten(p.ixlist, shapes=shapes)
@@ -313,7 +309,6 @@ def particle2xarray(p):
         coords=dict(shapes=(["shapes"], shapes), nprof=(["nprof"], np.arange(len(xx)))),
         data_vars=dict(
             # it = (['nprof'],it),
-            fc=(["nprof"], fc),
             iy=(["nprof"], iy),
             iz=(["nprof"], iz),
             ix=(["nprof"], ix),
@@ -333,6 +328,8 @@ def particle2xarray(p):
             vs=(["nprof"], vs),
         ),
     )
+    if p.face is not None:
+        ds["fc"] = xr.DataArray(fc, dims="nprof")
     return ds
 
 
@@ -344,7 +341,11 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
     else:
         ind1, ind2, frac, tres, last, first = find_ind_frac_tres(neo, oce)
 
-    neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
+    if oce.tp.typ in ["LLC"]:
+        neo["face"] = neo["fc"].astype("int16")
+        neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
+    else:
+        neo["five"] = xr.DataArray(["iw", "iz", "iy", "ix"], dims="five")
     if region_names:
         for ir, reg in enumerate(region_names):
             neo[reg] = xr.DataArray(masks[ir].astype(bool), dims="nprof")
@@ -365,13 +366,14 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
     # neo['last'] = xr.DataArray(last.astype('int64'), dims = 'shapes')
     # neo['first'] = xr.DataArray(first.astype('int64'), dims = 'shapes')
 
-    neo["face"] = neo["fc"].astype("int16")
     neo["ix"] = neo["ix"].astype("int16")
     neo["iy"] = neo["iy"].astype("int16")
     neo["iz"] = neo["iz"].astype("int16")
     neo["vs"] = neo["vs"].astype("int16")
 
-    neo = neo.drop_vars(["rx", "ry", "rz", "uu", "vv", "ww", "du", "dv", "dw", "fc"])
+    neo = neo.drop_vars(["rx", "ry", "rz", "uu", "vv", "ww", "du", "dv", "dw"])
+    if "fc" in neo.data_vars:
+        neo = neo.drop_vars(["fc"])
 
     neo.to_zarr(filename, mode="w")
     zarr.consolidate_metadata(filename)

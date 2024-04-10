@@ -367,7 +367,7 @@ class OceData:
             self.dZ = np.array(self["dZ"], dtype="float32")
         except KeyError:
             self.dZ = np.diff(self.Z)
-            self.dZ = np.append(self.dZ, self.dZ[-1])
+            self.dZ = np.append(self.dZ, self.dZ[-1]).astype("float32")
 
     def _vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
@@ -377,10 +377,11 @@ class OceData:
             self.Zl = np.zeros(len(self["Zl"]) + 1)
             self.Zl[:-1] = np.array(self._ds["Zl"])
             self.Zl[-1] = 2 * self.Zl[-2] - self.Zl[-3]
+            self.Zl = self.Zl.astype("float32")
         try:
             self.dZl = np.array(self["dZl"], dtype="float32")
         except KeyError:
-            self.dZl = np.diff(self.Zl)
+            self.dZl = np.diff(self.Zl).astype("float32")
 
         # special treatment for dZl
         # self.dZl = np.roll(self.dZl,1)
