@@ -36,6 +36,8 @@ def read_from_ds(particle_ds, oce):
     # it = np.array(particle_ds.it)
     if oce.tp.typ in ["LLC"]:
         temp.face = np.array(particle_ds.fc).astype(int)
+    else:
+        temp.face = None
     izl = np.array(particle_ds.iz)
     iy = np.array(particle_ds.iy)
     ix = np.array(particle_ds.ix)
@@ -248,8 +250,13 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
             masks.append(mask)
     first, last, neither = first_last_neither(np.array(temp.shapes))
 
-    ind1 = np.zeros((5, temp.N), "int16")
-    ind2 = np.ones((5, temp.N), "int16")
+    if temp.face is not None:
+        num_ind = 5
+    else:
+        num_ind = 4
+
+    ind1 = np.zeros((num_ind, temp.N), "int16")
+    ind2 = np.ones((num_ind, temp.N), "int16")
     frac = np.ones(temp.N)
 
     # ind1[:, wrong_ind] = lookup[:, lookup_ind]
