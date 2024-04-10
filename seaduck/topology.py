@@ -486,8 +486,7 @@ class Topology:
                     result = True
             return result
         else:  # for numpy ndarray
-            result = np.zeros_like(ind[0])
-            result = False  # make it cleaner
+            result = False
             for i, z in enumerate(ind):
                 max_pos = the_shape[i]
                 result = np.logical_or(

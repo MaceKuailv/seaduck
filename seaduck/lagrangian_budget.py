@@ -189,26 +189,31 @@ def deepcopy_inds(temp):
 
 def wall_index(inds, iwall, tp):
     iw = iwall // 2
-    iz, face, iy, ix = copy.deepcopy(inds)
-    # assert (iz>=1).all(),iz
+    iz = copy.deepcopy(inds[0])
+    iy = copy.deepcopy(inds[-2])
+    ix = copy.deepcopy(inds[-1])
 
-    ind = copy.deepcopy(np.array([face, iy, ix]))
+    ind = np.array(inds[1:])
     old_ind = copy.deepcopy(ind)
     naive_move = np.array([MOVE_DIC[i] for i in iwall], dtype=int).T
-    iy += naive_move[0]
-    ix += naive_move[1]
-    ind = np.array([face, iy, ix])
-    illegal = tp.check_illegal(ind, cuvwg="C")
-    redo = np.array(np.where(illegal)).T
-    for num, loc in enumerate(redo):
-        j = loc[0]
-        ind = (iw[j],) + tuple(old_ind[:, j])
-        new_ind = ind_tend_uv(ind, tp)
-        iw[j], face[j], iy[j], ix[j] = new_ind
+    ind[-2] += naive_move[0]  # iy
+    ind[-1] += naive_move[1]  # ix
 
     iz[iwall == 4] += 1
     iz -= 1
-    return np.array([iw, iz, face, iy, ix]).astype(int)
+    if tp.typ in ["LLC"]:
+        face = copy.deepcopy(inds[-3])
+        illegal = tp.check_illegal(ind, cuvwg="G")
+        redo = np.array(np.where(illegal)).T
+        for num, loc in enumerate(redo):
+            j = loc[0]
+            ind = (iw[j],) + tuple(old_ind[:, j])
+            new_ind = ind_tend_uv(ind, tp)
+            iw[j], face[j], iy[j], ix[j] = new_ind
+
+        return np.array([iw, iz, face, iy, ix]).astype(int)
+    else:
+        return np.array([iw, iz, ind[-2], ind[-1]]).astype(int)
 
 
 def redo_index(pt):
