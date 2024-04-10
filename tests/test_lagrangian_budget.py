@@ -33,8 +33,9 @@ def custom_pt():
         transport=True,
         save_raw=True,
     )
-    pt.to_next_stop(t[0] + 1e6)
+    pt.to_next_stop(t[0] + 1e7)
     return pt
+
 
 @pytest.fixture
 def curv_pt():
@@ -50,7 +51,7 @@ def curv_pt():
         wname="W",
         save_raw=True,
     )
-    curv_p.to_next_stop(t[0] + 1e6)
+    curv_p.to_next_stop(od.ts[0] + 1e4)
     return curv_p
 
 
@@ -126,8 +127,9 @@ def test_ind_frac_find(custom_pt, od):
     assert (frac != 1).any()
     assert (tres >= 0).all()
 
+
 @pytest.mark.parametrize("od", ["curv"], indirect=True)
-def test_ind_frac_find(curv_pt, od):
+def test_ind_frac_find_noface(curv_pt, od):
     particle_datasets = particle2xarray(curv_pt)
     tub = od
     ind1, ind2, frac, tres, last, first = find_ind_frac_tres(particle_datasets, tub)

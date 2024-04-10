@@ -162,8 +162,22 @@ class OceData:
     """
 
     def __init__(self, data, alias=None, memory_limit=1e7):
-        self._ds = data
-        self.tp = Topology(data)
+        self._ds = data.transpose(
+            "time",
+            "time_midp",
+            "time_outer",
+            "Z",
+            "Zl",
+            "Zp1",
+            "face",
+            "Y",
+            "Yp1",
+            "X",
+            "Xp1",
+            ...,
+            missing_dims="ignore",
+        )
+        self.tp = Topology(self._ds)
         if alias is None:
             self.alias = NO_ALIAS
         elif alias == "auto":
@@ -186,15 +200,15 @@ class OceData:
             )
         if self.readiness["Zl"]:
             # make a more consistent vector definition
-            with_zl = [i for i in data.data_vars if "Zl" in data[i].dims]
+            with_zl = [i for i in self._ds.data_vars if "Zl" in self._ds[i].dims]
             if len(with_zl) > 0:
-                without_zl = [i for i in data.data_vars if i not in with_zl]
-                bottom_buffer = xr.zeros_like(data[with_zl].isel(Zl=slice(1)))
+                without_zl = [i for i in self._ds.data_vars if i not in with_zl]
+                bottom_buffer = xr.zeros_like(self._ds[with_zl].isel(Zl=slice(1)))
                 bottom_buffer["Zl"] = [self.Zl[-1]]
                 neods = xr.merge(
                     [
-                        xr.concat([data[with_zl], bottom_buffer], dim="Zl"),
-                        data[without_zl],
+                        xr.concat([self._ds[with_zl], bottom_buffer], dim="Zl"),
+                        self._ds[without_zl],
                     ]
                 )
                 self._ds = neods
@@ -289,7 +303,7 @@ class OceData:
             assert self["SN"] is not None
             assert self["CS"] is not None
         except (AttributeError, AssertionError):
-            cs, sn = missing_cs_sn(self)
+            cs, sn = missing_cs_sn(self._ds)
             self["CS"] = cs
             self["SN"] = sn
 
