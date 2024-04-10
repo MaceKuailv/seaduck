@@ -33,10 +33,10 @@ def custom_pt():
         transport=True,
         save_raw=True,
     )
-    pt.to_next_stop(t[0] + 1e7)
+    pt.to_next_stop(t[0] + 1e6)
     return pt
 
-
+@pytest.fixture
 def curv_pt():
     od = sd.OceData(utils.get_dataset("curv"))
     curv_p = sd.Particle(
@@ -50,6 +50,7 @@ def curv_pt():
         wname="W",
         save_raw=True,
     )
+    curv_p.to_next_stop(t[0] + 1e6)
     return curv_p
 
 
@@ -122,6 +123,15 @@ def test_ind_frac_find(custom_pt, od):
     tub = od
     ind1, ind2, frac, tres, last, first = find_ind_frac_tres(particle_datasets, tub)
     assert ind1.shape[0] == 5
+    assert (frac != 1).any()
+    assert (tres >= 0).all()
+
+@pytest.mark.parametrize("od", ["curv"], indirect=True)
+def test_ind_frac_find(curv_pt, od):
+    particle_datasets = particle2xarray(curv_pt)
+    tub = od
+    ind1, ind2, frac, tres, last, first = find_ind_frac_tres(particle_datasets, tub)
+    assert ind1.shape[0] == 4
     assert (frac != 1).any()
     assert (tres >= 0).all()
 
