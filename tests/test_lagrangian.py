@@ -52,6 +52,16 @@ def ecco_p():
     return sd.Particle(x=x, y=y, z=zz, t=t, data=od, transport=True)
 
 
+@pytest.fixture
+def kick_back_p():
+    x = np.array([-38.594593, -37.512672, -36.42936, -34.08329, -35.06443])
+    y = np.array([-77.95619, -77.97306, -77.98856, -77.25903, -76.86412])
+    z = np.ones_like(x) * (-0.01)
+    t = utils.convert_time(start_time) * np.ones_like(x)
+    od = sd.OceData(utils.get_dataset("ecco"))
+    return sd.Particle(x=x, y=y, z=z, t=t, data=od, free_surface="kick_back")
+
+
 normal_stops = np.linspace(t[0], tf, 5)
 
 
@@ -260,3 +270,9 @@ def test_get_u_du_quant(seed, od):
     assert np.allclose(ushould, u, atol=1e-18)
     assert np.allclose(vshould, v, atol=1e-18)
     assert np.allclose(wshould, w, atol=1e-18)
+
+
+def test_kick_back(kick_back_p):
+    tend = kick_back_p.analytical_step(-1e10)
+    kick_back_p.cross_cell_wall(tend)
+    assert np.isclose(kick_back_p.rzl_lin, 0.5).any()
