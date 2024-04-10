@@ -37,6 +37,22 @@ def custom_pt():
     return pt
 
 
+def curv_pt():
+    od = sd.OceData(utils.get_dataset("curv"))
+    curv_p = sd.Particle(
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([od.ts[0]]),
+        data=od,
+        uname="U",
+        vname="V",
+        wname="W",
+        save_raw=True,
+    )
+    return curv_p
+
+
 @pytest.fixture
 def region_info():
     GULF = np.array(
