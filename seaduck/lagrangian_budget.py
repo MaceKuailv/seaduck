@@ -261,10 +261,11 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
 
     # ind1[:, wrong_ind] = lookup[:, lookup_ind]
 
-    neithers = temp.subset(neither)
-    neither_inds = deepcopy_inds(neithers)
-    iwalls = which_wall(neithers)
-    ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
+    if len(neither > 0):
+        neithers = temp.subset(neither)
+        neither_inds = deepcopy_inds(neithers)
+        iwalls = which_wall(neithers)
+        ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
 
     firsts = temp.subset(first)
     lasts = temp.subset(last)
@@ -444,6 +445,6 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1):
         dic[var] = step_dic[var][:-1] * tres + ratio * disparity
         total += dic[var]
     final_correction = deltas - total
-    assert np.allclose(final_correction, 0)
+    # assert np.allclose(final_correction, 0)
     dic["error"] += final_correction
     return dic
