@@ -402,8 +402,20 @@ def prefetch_scalar(ds_slc, scalar_names):
     return prefetch
 
 
-def prefetch_vector(ds_slc, xname="sxprime", yname="syprime", zname="szprime"):
-    return np.array(tuple(np.array(ds_slc[i]) for i in [xname, yname, zname]))
+def prefetch_vector(ds_slc, xname="sxprime", yname="syprime", zname="szprime", same_size = True):
+    if same_size:
+        return np.array(tuple(np.array(ds_slc[i]) for i in [xname, yname, zname]))
+    else:
+        xx = np.array(ds_slc[xname])
+        yy = np.array(ds_slc[yname])
+        zz = np.array(ds_slc[zname])
+        shape = (3,)+tuple(int(np.max([ar.shape[j] for ar in [xx,yy,zz]])) for j in range(len(xx.shape)))
+        larger = np.empty(shape)
+        larger[(0,)+tuple(slice(i) for i in xx.shape)] = xx
+        larger[(1,)+tuple(slice(i) for i in yy.shape)] = yy
+        larger[(2,)+tuple(slice(i) for i in zz.shape)] = zz
+        return larger
+        
 
 
 def read_prefetched_scalar(ind, scalar_names, prefetch):
