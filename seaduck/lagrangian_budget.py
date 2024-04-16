@@ -239,7 +239,7 @@ def redo_index(pt):
     return vf, vb, frac
 
 
-def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
+def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None,by_type = False):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
     if region_names:
@@ -248,29 +248,33 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
             mask = parallelpointinpolygon(temp.lon, temp.lat, reg)
             # mask = np.where(mask)[0]
             masks.append(mask)
-    first, last, neither = first_last_neither(np.array(temp.shapes))
 
+    first, last, neither = first_last_neither(np.array(temp.shapes))
     if temp.face is not None:
         num_ind = 5
     else:
         num_ind = 4
 
-    ind1 = np.zeros((num_ind, temp.N), "int16")
-    ind2 = np.ones((num_ind, temp.N), "int16")
-    frac = np.ones(temp.N)
+    if by_type:
 
-    # ind1[:, wrong_ind] = lookup[:, lookup_ind]
-
-    if len(neither > 0):
-        neithers = temp.subset(neither)
-        neither_inds = deepcopy_inds(neithers)
-        iwalls = which_wall(neithers)
-        ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
-
-    firsts = temp.subset(first)
-    lasts = temp.subset(last)
-    ind1[:, first], ind2[:, first], frac[first] = redo_index(firsts)
-    ind1[:, last], ind2[:, last], frac[last] = redo_index(lasts)
+        ind1 = np.zeros((num_ind, temp.N), "int16")
+        ind2 = np.ones((num_ind, temp.N), "int16")
+        frac = np.ones(temp.N)
+    
+        # ind1[:, wrong_ind] = lookup[:, lookup_ind]
+    
+        if len(neither > 0):
+            neithers = temp.subset(neither)
+            neither_inds = deepcopy_inds(neithers)
+            iwalls = which_wall(neithers)
+            ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
+    
+        firsts = temp.subset(first)
+        lasts = temp.subset(last)
+        ind1[:, first], ind2[:, first], frac[first] = redo_index(firsts)
+        ind1[:, last], ind2[:, last], frac[last] = redo_index(lasts)
+    else:
+        ind1, ind2, frac = redo_index(temp)
 
     tres = tres_fraction(temp, first, last, frac[first], frac[last])
     if region_names:
@@ -433,12 +437,12 @@ def lhs_contribution(t, scalar_dic, last, lhs_name="lhs"):
     return correction
 
 
-def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1):
+def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1,error_prefix = ''):
     nds = len(deltas)
     # if len(wrong_ind)>0:
     #     if wrong_ind[-1] == len(deltas):
     #         wrong_ind = wrong_ind[:-1]
-    dic = {"error": np.zeros(nds)}
+    dic = {error_prefix+"error": np.zeros(nds)}
     # dic['error'][wrong_ind] = deltas[wrong_ind]
     # deltas[wrong_ind] = 0
     # tres[wrong_ind] = 0
@@ -458,5 +462,5 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1):
         total += dic[var]
     final_correction = deltas - total
     # assert np.allclose(final_correction, 0)
-    dic["error"] += final_correction
+    dic[error_prefix+"error"] += final_correction
     return dic
