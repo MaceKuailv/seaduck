@@ -239,7 +239,7 @@ def redo_index(pt):
     return vf, vb, frac
 
 
-def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None,by_type = False):
+def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=False):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
     if region_names:
@@ -256,19 +256,18 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None,by_type =
         num_ind = 4
 
     if by_type:
-
         ind1 = np.zeros((num_ind, temp.N), "int16")
         ind2 = np.ones((num_ind, temp.N), "int16")
         frac = np.ones(temp.N)
-    
+
         # ind1[:, wrong_ind] = lookup[:, lookup_ind]
-    
+
         if len(neither > 0):
             neithers = temp.subset(neither)
             neither_inds = deepcopy_inds(neithers)
             iwalls = which_wall(neithers)
             ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
-    
+
         firsts = temp.subset(first)
         lasts = temp.subset(last)
         ind1[:, first], ind2[:, first], frac[first] = redo_index(firsts)
@@ -406,20 +405,24 @@ def prefetch_scalar(ds_slc, scalar_names):
     return prefetch
 
 
-def prefetch_vector(ds_slc, xname="sxprime", yname="syprime", zname="szprime", same_size = True):
+def prefetch_vector(
+    ds_slc, xname="sxprime", yname="syprime", zname="szprime", same_size=True
+):
     if same_size:
         return np.array(tuple(np.array(ds_slc[i]) for i in [xname, yname, zname]))
     else:
         xx = np.array(ds_slc[xname])
         yy = np.array(ds_slc[yname])
         zz = np.array(ds_slc[zname])
-        shape = (3,)+tuple(int(np.max([ar.shape[j] for ar in [xx,yy,zz]])) for j in range(len(xx.shape)))
+        shape = (3,) + tuple(
+            int(np.max([ar.shape[j] for ar in [xx, yy, zz]]))
+            for j in range(len(xx.shape))
+        )
         larger = np.empty(shape)
-        larger[(0,)+tuple(slice(i) for i in xx.shape)] = xx
-        larger[(1,)+tuple(slice(i) for i in yy.shape)] = yy
-        larger[(2,)+tuple(slice(i) for i in zz.shape)] = zz
+        larger[(0,) + tuple(slice(i) for i in xx.shape)] = xx
+        larger[(1,) + tuple(slice(i) for i in yy.shape)] = yy
+        larger[(2,) + tuple(slice(i) for i in zz.shape)] = zz
         return larger
-        
 
 
 def read_prefetched_scalar(ind, scalar_names, prefetch):
@@ -437,12 +440,12 @@ def lhs_contribution(t, scalar_dic, last, lhs_name="lhs"):
     return correction
 
 
-def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1,error_prefix = ''):
+def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1, error_prefix=""):
     nds = len(deltas)
     # if len(wrong_ind)>0:
     #     if wrong_ind[-1] == len(deltas):
     #         wrong_ind = wrong_ind[:-1]
-    dic = {error_prefix+"error": np.zeros(nds)}
+    dic = {error_prefix + "error": np.zeros(nds)}
     # dic['error'][wrong_ind] = deltas[wrong_ind]
     # deltas[wrong_ind] = 0
     # tres[wrong_ind] = 0
@@ -462,5 +465,5 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1,error_prefix = ''):
         total += dic[var]
     final_correction = deltas - total
     # assert np.allclose(final_correction, 0)
-    dic[error_prefix+"error"] += final_correction
+    dic[error_prefix + "error"] += final_correction
     return dic

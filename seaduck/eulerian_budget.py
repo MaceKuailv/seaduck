@@ -19,7 +19,7 @@ def _raise_if_no_xgcm():
         )
 
 
-def create_ecco_grid(ds,for_outer = False):
+def create_ecco_grid(ds, for_outer=False):
     _raise_if_no_xgcm()  # pragma: no cover
     face_connections = {
         "face": {
@@ -68,19 +68,16 @@ def create_ecco_grid(ds,for_outer = False):
             },
         }
     }
-    coords={
-                "X": {"center": "X", "left": "Xp1"},
-                "Y": {"center": "Y", "left": "Yp1"},
-                "Z": {"center": "Z", "left": "Zl"},
-                "time": {"center": "time", "inner": "time_midp"},
-            }
+    coords = {
+        "X": {"center": "X", "left": "Xp1"},
+        "Y": {"center": "Y", "left": "Yp1"},
+        "Z": {"center": "Z", "left": "Zl"},
+        "time": {"center": "time", "inner": "time_midp"},
+    }
     if for_outer:
-        coords['Z'] = {"center": "Z", "outer": "Zl"}
+        coords["Z"] = {"center": "Z", "outer": "Zl"}
     xgcmgrd = xgcm.Grid(
-        ds,
-        periodic=False,
-        face_connections=face_connections,
-        coords=coords
+        ds, periodic=False, face_connections=face_connections, coords=coords
     )
     return xgcmgrd
 
