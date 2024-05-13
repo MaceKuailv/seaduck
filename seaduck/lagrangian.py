@@ -139,8 +139,8 @@ class Particle(Position):
         self.transport = transport
         if self.transport:
             try:
-                assert isinstance(self.ocedata["Vol"],np.ndarray)
-            except (AssertionError,KeyError):
+                assert isinstance(self.ocedata["Vol"], np.ndarray)
+            except (AssertionError, KeyError):
                 self.ocedata._add_missing_vol(as_numpy=True)
 
         # whether or not setting the w at the surface

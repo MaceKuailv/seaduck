@@ -236,7 +236,7 @@ def redo_index(pt):
     # assert (tim != 0).all(), [i[tim == 0] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]]
     # at_corner = np.where(tim == 0)
     # frac[at_corner] = 1
-    frac = np.nan_to_num(frac,nan = 1)
+    frac = np.nan_to_num(frac, nan=1)
     return vf, vb, frac
 
 
@@ -345,7 +345,9 @@ def particle2xarray(p):
     return ds
 
 
-def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None,preserve_checks = False):
+def dump_to_zarr(
+    neo, oce, filename, region_names=False, region_polys=None, preserve_checks=False
+):
     if region_names:
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
             neo, oce, region_names=region_names, region_polys=region_polys
@@ -392,10 +394,15 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None,prese
     zarr.consolidate_metadata(filename)
 
 
-def store_lists(pt, name, region_names=False, region_polys=None,**kwarg):
+def store_lists(pt, name, region_names=False, region_polys=None, **kwarg):
     neo = particle2xarray(pt)
     dump_to_zarr(
-        neo, pt.ocedata, name, region_names=region_names, region_polys=region_polys,**kwarg
+        neo,
+        pt.ocedata,
+        name,
+        region_names=region_names,
+        region_polys=region_polys,
+        **kwarg
     )
 
 
