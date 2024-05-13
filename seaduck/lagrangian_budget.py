@@ -233,9 +233,10 @@ def redo_index(pt):
     assert (~np.isnan(tim)).any(), [
         i[np.isnan(tim)] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]
     ]
-    assert (tim != 0).all(), [i[tim == 0] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]]
-    at_corner = np.where(tim == 0)
-    frac[at_corner] = 1
+    # assert (tim != 0).all(), [i[tim == 0] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]]
+    # at_corner = np.where(tim == 0)
+    # frac[at_corner] = 1
+    frac = np.nan_to_num(frac,nan = 1)
     return vf, vb, frac
 
 
@@ -344,7 +345,7 @@ def particle2xarray(p):
     return ds
 
 
-def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
+def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None,preserve_checks = False):
     if region_names:
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
             neo, oce, region_names=region_names, region_polys=region_polys
@@ -382,7 +383,8 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
     neo["iz"] = neo["iz"].astype("int16")
     neo["vs"] = neo["vs"].astype("int16")
 
-    neo = neo.drop_vars(["rx", "ry", "rz", "uu", "vv", "ww", "du", "dv", "dw"])
+    if not preserve_checks:
+        neo = neo.drop_vars(["rx", "ry", "rz", "uu", "vv", "ww", "du", "dv", "dw"])
     if "fc" in neo.data_vars:
         neo = neo.drop_vars(["fc"])
 
@@ -390,10 +392,10 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
     zarr.consolidate_metadata(filename)
 
 
-def store_lists(pt, name, region_names=False, region_polys=None):
+def store_lists(pt, name, region_names=False, region_polys=None,**kwarg):
     neo = particle2xarray(pt)
     dump_to_zarr(
-        neo, pt.ocedata, name, region_names=region_names, region_polys=region_polys
+        neo, pt.ocedata, name, region_names=region_names, region_polys=region_polys,**kwarg
     )
 
 
