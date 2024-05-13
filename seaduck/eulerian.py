@@ -273,8 +273,8 @@ class Position:
             iz, iy, ix = inds
             ind = (iy, ix)
             face = None
-        elif len(inds == 4):
-            face, iz, iy, ix = inds
+        elif len(inds) == 4:
+            iz, face, iy, ix = inds
             ind = (face, iy, ix)
         else:
             raise ValueError("bool_array must be 3 or 4 dimensional")
