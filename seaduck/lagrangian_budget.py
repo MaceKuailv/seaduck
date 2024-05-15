@@ -199,7 +199,9 @@ def wall_index(inds, iwall, tp):
     old_ind = copy.deepcopy(ind)
     naive_move = np.array([MOVE_DIC[i] for i in iwall], dtype=int).T
     ind[-2] += naive_move[0]  # iy
+    iy += naive_move[0]
     ind[-1] += naive_move[1]  # ix
+    ix += naive_move[1]
 
     iz[iwall == 4] += 1
     iz -= 1
@@ -240,7 +242,7 @@ def redo_index(pt):
     return vf, vb, frac
 
 
-def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=False):
+def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=True):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
     if region_names:
