@@ -423,10 +423,11 @@ class Position:
             x_disp, y_disp = node
             n_iys[:, i] = self.iy + y_disp
             n_ixs[:, i] = self.ix + x_disp
+        cuvwg = ind_moves_kwarg.get("cuvwg", "C")
         if self.face is not None:
-            illegal = tp.check_illegal((n_faces, n_iys, n_ixs))
+            illegal = tp.check_illegal((n_faces, n_iys, n_ixs),cuvwg = cuvwg)
         else:
-            illegal = tp.check_illegal((n_iys, n_ixs))
+            illegal = tp.check_illegal((n_iys, n_ixs),cuvwg = cuvwg)
 
         redo = np.array(np.where(illegal)).T
         for loc in redo:
@@ -854,9 +855,9 @@ class Position:
             main_key = get_key_by_value(hash_index, hs)
             var_name, dims, knw = main_dict[main_key]
             if isinstance(var_name, str):
-                old_dims = dims
+                old_dims = copy.deepcopy(dims)
             elif isinstance(var_name, tuple):
-                old_dims = dims[0]
+                old_dims = copy.deepcopy(dims[0])
             dims = []
             for i in old_dims:
                 if i in ["Xp1", "Yp1"]:
@@ -864,11 +865,11 @@ class Position:
                 else:
                     dims.append(i)
             dims = tuple(dims)
+            if "Xp1" in old_dims or "Yp1" in old_dims:
+                cuvwg = "G"
+            else:
+                cuvwg = "C"
             if isinstance(var_name, str):
-                if "Xp1" in old_dims and "Yp1" in old_dims:
-                    cuvwg = "G"
-                else:
-                    cuvwg = "C"
                 ind = self.fatten(
                     knw, required=dims, four_d=True, ind_moves_kwarg={"cuvwg": cuvwg}
                 )
