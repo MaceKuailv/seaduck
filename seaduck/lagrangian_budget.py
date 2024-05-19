@@ -415,77 +415,113 @@ def prefetch_scalar(ds_slc, scalar_names):
         prefetch[var] = np.array(ds_slc[var])
     return prefetch
 
-def read_wall_list(neo,tp, prefetch = None, scalar = True):
-    if 'face' not in neo.data_vars:
-        ind = (neo.iz-1, neo.iy, neo. ix)
-        deep_ind = (neo.iz, neo.iy, neo. ix)
-        right_ind = tuple([neo.iz-1]+ list(tp.ind_tend_vec((neo.iy, neo. ix), np.ones(len(neo.nprof))*3,cuvwg = 'G')))
-        up_ind = tuple([neo.iz-1]+ list(tp.ind_tend_vec((neo.iy, neo. ix), np.ones(len(neo.nprof))*0)))
+
+def read_wall_list(neo, tp, prefetch=None, scalar=True):
+    if "face" not in neo.data_vars:
+        ind = (neo.iz - 1, neo.iy, neo.ix)
+        deep_ind = (neo.iz, neo.iy, neo.ix)
+        right_ind = tuple(
+            [neo.iz - 1]
+            + list(
+                tp.ind_tend_vec(
+                    (neo.iy, neo.ix), np.ones(len(neo.nprof)) * 3, cuvwg="G"
+                )
+            )
+        )
+        up_ind = tuple(
+            [neo.iz - 1]
+            + list(tp.ind_tend_vec((neo.iy, neo.ix), np.ones(len(neo.nprof)) * 0))
+        )
         uarray, varray, warray = prefetch
         ur = uarray[right_ind]
         vr = varray[up_ind]
     else:
-        ind = (neo.iz-1, neo.face, neo.iy, neo. ix)
-        deep_ind = (neo.iz, neo.face, neo.iy, neo. ix)
-        right_ind = tuple([neo.iz-1]+ list(tp.ind_tend_vec((neo.face, neo.iy, neo. ix), np.ones(len(neo.nprof))*3)))
-        up_ind = tuple([neo.iz-1]+ list(tp.ind_tend_vec((neo.face, neo.iy, neo. ix), np.ones(len(neo.nprof))*0)))
+        ind = (neo.iz - 1, neo.face, neo.iy, neo.ix)
+        deep_ind = (neo.iz, neo.face, neo.iy, neo.ix)
+        right_ind = tuple(
+            [neo.iz - 1]
+            + list(
+                tp.ind_tend_vec((neo.face, neo.iy, neo.ix), np.ones(len(neo.nprof)) * 3)
+            )
+        )
+        up_ind = tuple(
+            [neo.iz - 1]
+            + list(
+                tp.ind_tend_vec((neo.face, neo.iy, neo.ix), np.ones(len(neo.nprof)) * 0)
+            )
+        )
         uarray, varray, warray = prefetch
-    
+
         ur_temp = np.nan_to_num(uarray[right_ind])
         vr_temp = np.nan_to_num(varray[right_ind])
         uu_temp = np.nan_to_num(uarray[up_ind])
         vu_temp = np.nan_to_num(varray[up_ind])
-        right_faces = np.vstack([ind[1],right_ind[1]]).T
-        up_faces = np.vstack([ind[1],up_ind[1]]).T
-        ufromu,ufromv,_,_ = tp.four_matrix_for_uv(right_faces)
-        _,_,vfromu,vfromv = tp.four_matrix_for_uv(up_faces)
+        right_faces = np.vstack([ind[1], right_ind[1]]).T
+        up_faces = np.vstack([ind[1], up_ind[1]]).T
+        ufromu, ufromv, _, _ = tp.four_matrix_for_uv(right_faces)
+        _, _, vfromu, vfromv = tp.four_matrix_for_uv(up_faces)
         if scalar:
-            ufromu,ufromv,vfromu,vfromv = [np.abs(i) for i in [ufromu,ufromv,vfromu,vfromv]]
-    
-        ur = ur_temp*ufromu[:,1]+vr_temp*ufromv[:,1]
-        vr = uu_temp*vfromu[:,1]+vu_temp*vfromv[:,1]
+            ufromu, ufromv, vfromu, vfromv = (
+                np.abs(i) for i in [ufromu, ufromv, vfromu, vfromv]
+            )
+
+        ur = ur_temp * ufromu[:, 1] + vr_temp * ufromv[:, 1]
+        vr = uu_temp * vfromu[:, 1] + vu_temp * vfromv[:, 1]
     ul = uarray[ind]
     vl = varray[ind]
     wr = warray[ind]
     wl = warray[deep_ind]
-    return np.array([np.nan_to_num(i) for i in (ul,ur,vl,vr, wl,wr)])
+    return np.array([np.nan_to_num(i) for i in (ul, ur, vl, vr, wl, wr)])
+
 
 def crude_convergence(u_list):
-    conv = np.array(u_list).T*np.array([1,-1,1,-1,1,-1])
-    conv = np.sum(conv, axis = -1)
+    conv = np.array(u_list).T * np.array([1, -1, 1, -1, 1, -1])
+    conv = np.sum(conv, axis=-1)
     return conv
 
-def check_particle_data_compat(xrpt,xrslc,tp,use_tracer_name=None,wall_names=('sx','sy','sz'),conv_name = 'divus',debug = False):
-    if 'iz' not in xrpt.data_vars:
-        raise NotImplementedError('This functionality only support 3D simulation at the moment.')
-    if isinstance(use_tracer_name,str):
-        wall_names = tuple(use_tracer_name+i for i in ['x','y','z'])
-        conv_name = 'divu'+use_tracer_name
+
+def check_particle_data_compat(
+    xrpt,
+    xrslc,
+    tp,
+    use_tracer_name=None,
+    wall_names=("sx", "sy", "sz"),
+    conv_name="divus",
+    debug=False,
+):
+    if "iz" not in xrpt.data_vars:
+        raise NotImplementedError(
+            "This functionality only support 3D simulation at the moment."
+        )
+    if isinstance(use_tracer_name, str):
+        wall_names = tuple(use_tracer_name + i for i in ["x", "y", "z"])
+        conv_name = "divu" + use_tracer_name
     elif use_tracer_name is not None:
-        raise ValueError('use_tracer_name has to be a string.')
+        raise ValueError("use_tracer_name has to be a string.")
     prefetch = []
     for var in wall_names:
         prefetch.append(np.array(xrslc[var]))
-    c_list = read_wall_list(xrpt,tp,prefetch)
-    
-    ul,ur = _uleftright_from_udu(xrpt.uu,xrpt.du,xrpt.rx)
-    vl,vr = _uleftright_from_udu(xrpt.vv,xrpt.dv,xrpt.ry)
-    wl,wr = _uleftright_from_udu(xrpt.ww,xrpt.dw,xrpt.rz-0.5)
-    u_list = np.array([np.array(i) for i in [ul,ur,vl,vr,wl,wr]])
-    
-    flux_list = c_list*u_list
+    c_list = read_wall_list(xrpt, tp, prefetch)
+
+    ul, ur = _uleftright_from_udu(xrpt.uu, xrpt.du, xrpt.rx)
+    vl, vr = _uleftright_from_udu(xrpt.vv, xrpt.dv, xrpt.ry)
+    wl, wr = _uleftright_from_udu(xrpt.ww, xrpt.dw, xrpt.rz - 0.5)
+    u_list = np.array([np.array(i) for i in [ul, ur, vl, vr, wl, wr]])
+
+    flux_list = c_list * u_list
     lagrangian_conv = crude_convergence(flux_list)
 
-    if 'face' in xrpt.data_vars:
-        ind = (xrpt.iz-1, xrpt.face, xrpt.iy, xrpt. ix)
+    if "face" in xrpt.data_vars:
+        ind = (xrpt.iz - 1, xrpt.face, xrpt.iy, xrpt.ix)
     else:
-        ind = (xrpt.iz-1, xrpt.iy, xrpt. ix)
+        ind = (xrpt.iz - 1, xrpt.iy, xrpt.ix)
     eulerian_conv = np.array(xrslc[conv_name])[ind]
     if debug:
-        extra = (u_list,c_list,lagrangian_conv,eulerian_conv)
+        extra = (u_list, c_list, lagrangian_conv, eulerian_conv)
     else:
         extra = None
-    return np.allclose(lagrangian_conv,eulerian_conv),extra
+    return np.allclose(lagrangian_conv, eulerian_conv), extra
+
 
 def prefetch_vector(
     ds_slc, xname="sxprime", yname="syprime", zname="szprime", same_size=True
