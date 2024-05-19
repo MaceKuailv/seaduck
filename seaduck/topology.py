@@ -279,7 +279,7 @@ class Topology:
         if "XG" in od.variables:
             self.g_shape = od["XG"].shape
         else:
-            self.g_shape = None
+            self.g_shape = self.h_shape
         try:
             self.itmax = len(od["time"]) - 1
         except (KeyError, TypeError):
