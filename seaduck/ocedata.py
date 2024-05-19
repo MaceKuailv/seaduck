@@ -162,8 +162,22 @@ class OceData:
     """
 
     def __init__(self, data, alias=None, memory_limit=1e7):
-        self._ds = data
-        self.tp = Topology(data)
+        self._ds = data.transpose(
+            "time",
+            "time_midp",
+            "time_outer",
+            "Z",
+            "Zl",
+            "Zp1",
+            "face",
+            "Y",
+            "Yp1",
+            "X",
+            "Xp1",
+            ...,
+            missing_dims="ignore",
+        )
+        self.tp = Topology(self._ds)
         if alias is None:
             self.alias = NO_ALIAS
         elif alias == "auto":
@@ -184,6 +198,20 @@ class OceData:
                 f"use add_missing_variables or set_alias to create {missing},"
                 "then call OceData.grid2array."
             )
+        if self.readiness["Zl"]:
+            # make a more consistent vector definition
+            with_zl = [i for i in self._ds.data_vars if "Zl" in self._ds[i].dims]
+            if len(with_zl) > 0:
+                without_zl = [i for i in self._ds.data_vars if i not in with_zl]
+                bottom_buffer = xr.zeros_like(self._ds[with_zl].isel(Zl=slice(1)))
+                bottom_buffer["Zl"] = [self.Zl[-1]]
+                neods = xr.merge(
+                    [
+                        xr.concat([self._ds[with_zl], bottom_buffer], dim="Zl"),
+                        self._ds[without_zl],
+                    ]
+                )
+                self._ds = neods
 
     def __setitem__(self, key, item):
         if isinstance(item, xr.DataArray):
@@ -275,16 +303,18 @@ class OceData:
             assert self["SN"] is not None
             assert self["CS"] is not None
         except (AttributeError, AssertionError):
-            cs, sn = missing_cs_sn(self)
+            cs, sn = missing_cs_sn(self._ds)
             self["CS"] = cs
             self["SN"] = sn
 
     def _add_missing_vol(self, as_numpy=False):
         if self.readiness["Zl"]:
             vol = self._ds["drF"] * self._ds["rA"]
+            if "HFacC" in self._ds.data_vars:
+                vol *= self._ds["HFacC"]
         else:
             vol = self._ds["rA"]
-
+        vol = vol.fillna(0)
         if as_numpy:
             self["Vol"] = np.array(vol)
         else:
@@ -351,19 +381,21 @@ class OceData:
             self.dZ = np.array(self["dZ"], dtype="float32")
         except KeyError:
             self.dZ = np.diff(self.Z)
-            self.dZ = np.append(self.dZ, self.dZ[-1])
+            self.dZ = np.append(self.dZ, self.dZ[-1]).astype("float32")
 
     def _vlgrid2array(self):
         """Extract the vertical staggered point grid data into numpy arrays."""
-        self.Zl = np.array(self["Zl"], dtype="float32")
+        if "Zp1" in self._ds.variables:
+            self.Zl = np.array(self["Zp1"], dtype="float32")
+        else:
+            self.Zl = np.zeros(len(self["Zl"]) + 1)
+            self.Zl[:-1] = np.array(self._ds["Zl"])
+            self.Zl[-1] = 2 * self.Zl[-2] - self.Zl[-3]
+            self.Zl = self.Zl.astype("float32")
         try:
             self.dZl = np.array(self["dZl"], dtype="float32")
         except KeyError:
-            if "Zp1" in self._ds.variables:
-                self.dZl = np.diff(np.array(self["Zp1"]))
-            else:
-                self.dZl = np.diff(self.Zl)
-                self.dZl = np.append(self.dZl, self.dZl[-1])
+            self.dZl = np.diff(self.Zl).astype("float32")
 
         # special treatment for dZl
         # self.dZl = np.roll(self.dZl,1)
@@ -373,7 +405,8 @@ class OceData:
         """Extract the temporal grid data into numpy arrays."""
         self.t_base = 0
         self.ts = np.array(self["time"])
-        self.ts = (self.ts).astype(float) / 1e9
+        if self["time"].dtype != "float":
+            self.ts = (self.ts).astype(float) / 1e9
         try:
             self.time_midp = np.array(self["time_midp"])
             self.time_midp = (self.time_midp).astype(float) / 1e9

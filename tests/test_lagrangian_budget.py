@@ -16,7 +16,7 @@ from seaduck.lagrangian_budget import (
 
 @pytest.fixture
 def custom_pt():
-    x = np.linspace(-50, -15, 200)
+    x = np.linspace(-50, -15, 5)
     y = np.ones_like(x) * 52.0
     z = np.ones_like(x) * (-9)
     t = np.ones_like(x)
@@ -35,6 +35,24 @@ def custom_pt():
     )
     pt.to_next_stop(t[0] + 1e7)
     return pt
+
+
+@pytest.fixture
+def curv_pt():
+    od = sd.OceData(utils.get_dataset("curv"))
+    curv_p = sd.Particle(
+        y=np.array([70.5]),
+        x=np.array([-14.0]),
+        z=np.array([-10.0]),
+        t=np.array([od.ts[0]]),
+        data=od,
+        uname="U",
+        vname="V",
+        wname="W",
+        save_raw=True,
+    )
+    curv_p.to_next_stop(od.ts[0] + 1e4)
+    return curv_p
 
 
 @pytest.fixture
@@ -106,6 +124,16 @@ def test_ind_frac_find(custom_pt, od):
     tub = od
     ind1, ind2, frac, tres, last, first = find_ind_frac_tres(particle_datasets, tub)
     assert ind1.shape[0] == 5
+    assert (frac != 1).any()
+    assert (tres >= 0).all()
+
+
+@pytest.mark.parametrize("od", ["curv"], indirect=True)
+def test_ind_frac_find_noface(curv_pt, od):
+    particle_datasets = particle2xarray(curv_pt)
+    tub = od
+    ind1, ind2, frac, tres, last, first = find_ind_frac_tres(particle_datasets, tub)
+    assert ind1.shape[0] == 4
     assert (frac != 1).any()
     assert (tres >= 0).all()
 

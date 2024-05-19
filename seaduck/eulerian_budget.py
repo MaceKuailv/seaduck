@@ -19,7 +19,8 @@ def _raise_if_no_xgcm():
         )
 
 
-def create_ecco_grid(ds):
+def create_ecco_grid(ds, for_outer=False):
+    _raise_if_no_xgcm()  # pragma: no cover
     face_connections = {
         "face": {
             0: {"X": ((12, "Y", False), (3, "X", False)), "Y": (None, (1, "Y", False))},
@@ -67,29 +68,43 @@ def create_ecco_grid(ds):
             },
         }
     }
+    coords = {
+        "X": {"center": "X", "left": "Xp1"},
+        "Y": {"center": "Y", "left": "Yp1"},
+        "Z": {"center": "Z", "left": "Zl"},
+        "time": {"center": "time", "inner": "time_midp"},
+    }
+    if for_outer:
+        coords["Z"] = {"center": "Z", "outer": "Zl"}
+    xgcmgrd = xgcm.Grid(
+        ds, periodic=False, face_connections=face_connections, coords=coords
+    )
+    return xgcmgrd
 
-    grid = xgcm.Grid(
+
+def create_periodic_grid(ds):
+    _raise_if_no_xgcm()  # pragma: no cover
+    xgcmgrd = xgcm.Grid(
         ds,
-        periodic=False,
-        face_connections=face_connections,
+        periodic=["X"],
         coords={
-            "X": {"center": "X", "left": "Xp1"},
-            "Y": {"center": "Y", "left": "Yp1"},
+            "X": {"center": "X", "outer": "Xp1"},
+            "Y": {"center": "Y", "outer": "Yp1"},
             "Z": {"center": "Z", "left": "Zl"},
-            "time": {"center": "time", "inner": "time_midp"},
+            "time": {"center": "time", "outer": "time_outer"},
         },
     )
-    return grid
+    return xgcmgrd
 
 
-def hor_div(tub, grid, xfluxname, yfluxname):
+def hor_div(tub, xgcmgrd, xfluxname, yfluxname):
     """Calculate horizontal divergence using xgcm.
 
     Parameters
     ----------
     tub: sd.OceData or xr.Dataset
         The dataset to calculate data from
-    grid: xgcm.Grid
+    xgcmgrd: xgcm.Grid
         The Grid of the dataset
     xfluxname, yfluxname: string
         The name of the variables corresponding to the horizontal fluxes
@@ -99,7 +114,7 @@ def hor_div(tub, grid, xfluxname, yfluxname):
         tub["Vol"]
     except KeyError:
         tub._add_missing_vol()
-    xy_diff = grid.diff_2d_vector(
+    xy_diff = xgcmgrd.diff_2d_vector(
         {"X": tub[xfluxname].fillna(0), "Y": tub[yfluxname].fillna(0)},
         boundary="fill",
         fill_value=0.0,
@@ -110,14 +125,14 @@ def hor_div(tub, grid, xfluxname, yfluxname):
     return hConv
 
 
-def ver_div(tub, grid, zfluxname):
+def ver_div(tub, xgcmgrd, zfluxname):
     """Calculate horizontal divergence using xgcm.
 
     Parameters
     ----------
     tub: sd.OceData or xr.Dataset
         The dataset to calculate data from
-    grid: xgcm.Grid
+    xgcmgrd: xgcm.Grid
         The Grid of the dataset
     xfluxname, yfluxname, zfluxname: string
         The name of the variables corresponding to the fluxes
@@ -128,28 +143,49 @@ def ver_div(tub, grid, zfluxname):
     except KeyError:
         tub._add_missing_vol()
     vConv = (
-        grid.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
+        xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
         / tub["Vol"]
     )
     return vConv
 
 
-def total_div(tub, grid, xfluxname, yfluxname, zfluxname):
+def total_div(tub, xgcmgrd, xfluxname, yfluxname, zfluxname):
     """Calculate 3D divergence using xgcm.
 
     Parameters
     ----------
     tub: sd.OceData or xr.Dataset
         The dataset to calculate data from
-    grid: xgcm.Grid
+    xgcmgrd: xgcm.Grid
         The Grid of the dataset
     zfluxname: string
         The name of the variables corresponding to the vertical flux
         in concentration m^3/s
     """
-    hConv = hor_div(tub, grid, xfluxname, yfluxname)
-    vConv = ver_div(tub, grid, zfluxname)
+    hConv = hor_div(tub, xgcmgrd, xfluxname, yfluxname)
+    vConv = ver_div(tub, xgcmgrd, zfluxname)
     return hConv + vConv
+
+
+def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):
+    strmx = tub[psixname].fillna(0)
+    strmy = tub[psiyname].fillna(0)
+
+    u = xgcmgrd.diff(strmx, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
+    v = xgcmgrd.diff(strmy, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
+
+    vstrmx = strmx * tub["dyG"]
+    vstrmy = strmy * tub["dxG"]
+
+    xy_diff = xgcmgrd.diff_2d_vector(
+        {"X": vstrmx, "Y": vstrmy}, boundary="fill", fill_value=0.0
+    )
+    x_diff = xy_diff["X"]
+    y_diff = xy_diff["Y"]
+    hDiv = x_diff + y_diff
+
+    w = hDiv / tub["rA"]
+    return u, v, w
 
 
 def _slice_corner(array, fc, iy1, iy2, ix1, ix2):
@@ -263,11 +299,115 @@ def buffer_y_withface(s, face, lm, rm, tp):
     return ybuffer
 
 
+def buffer_x_periodic(s, lm, rm):
+    shape = list(s.shape)
+    shape[-1] += lm + rm
+    xbuffer = np.zeros(shape)
+    xbuffer[..., lm : shape[-1] - rm] = s
+    if lm > 0:
+        xbuffer[..., :lm] = s[..., -lm:]
+    if rm > 0:
+        xbuffer[..., -rm:] = s[..., :rm]
+    return xbuffer
+
+
+def buffer_y_periodic(s, lm, rm):
+    shape = list(s.shape)
+    shape[-2] += lm + rm
+    ybuffer = np.zeros(shape)
+    ybuffer[..., lm : shape[-2] - rm, :] = s
+    if lm > 0:
+        ybuffer[..., :lm, :] = s[..., -lm:, :]
+    if rm > 0:
+        ybuffer[..., -rm:, :] = s[..., :rm, :]
+    return ybuffer
+
+
+def buffer_z_nearest_withoutface(s, lm, rm):
+    shape = list(s.shape)
+    shape[-3] += lm + rm
+    zbuffer = np.zeros(shape)
+    zbuffer[..., lm : shape[-3] - rm, :, :] = s
+    if lm > 0:
+        zbuffer[..., :lm, :, :] = s[..., :1, :, :]
+    if rm > 0:
+        zbuffer[..., -rm:, :, :] = s[..., -1:, :, :]
+    return zbuffer
+
+
+def _slope_ratio(Rjm, Rj, Rjp, u_sign, not_z=1):
+    """Calculate slope ratio for flux limiter."""
+    cr_max = 1e6  # doesn't matter
+    cr = np.zeros_like(u_sign)
+    pos = not_z * u_sign > 0
+    neg = not_z * u_sign <= 0
+    cr[pos] = Rjm[pos]
+    cr[neg] = Rjp[neg]
+    zero_divide = np.abs(Rj) * cr_max <= np.abs(cr)
+    cr[zero_divide] = np.sign(cr[zero_divide]) * np.sign(u_sign[zero_divide]) * cr_max
+    cr[~zero_divide] = cr[~zero_divide] / Rj[~zero_divide]
+    return cr
+
+
+def superbee_fluxlimiter(cr):
+    return np.maximum(0.0, np.maximum(np.minimum(1.0, 2 * cr), np.minimum(2.0, cr)))
+
+
+def second_order_flux_limiter_x(s_center, u_cfl):
+    xbuffer = buffer_x_periodic(s_center, 2, 2)
+    deltas = np.nan_to_num(np.diff(xbuffer, axis=-1), 0)
+    Rjp = deltas[..., 2:]
+    Rj = deltas[..., 1:-1]
+    Rjm = deltas[..., :-2]
+
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
+    limiter = superbee_fluxlimiter(cr)
+    swall = (
+        np.nan_to_num(xbuffer[..., 1:-2] + xbuffer[..., 2:-1]) * 0.5
+        - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+    )
+    return swall
+
+
+def second_order_flux_limiter_y(s_center, u_cfl):
+    ybuffer = buffer_y_periodic(s_center, 2, 2)
+    deltas = np.nan_to_num(np.diff(ybuffer, axis=-2), 0)
+    Rjp = deltas[..., 2:, :]
+    Rj = deltas[..., 1:-1, :]
+    Rjm = deltas[..., :-2, :]
+
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
+    limiter = superbee_fluxlimiter(cr)
+    swall = (
+        np.nan_to_num(ybuffer[..., 1:-2, :] + ybuffer[..., 2:-1, :]) * 0.5
+        - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+    )
+    return swall
+
+
+def second_order_flux_limiter_z_withoutface(s_center, u_cfl):
+    zbuffer = buffer_z_nearest_withoutface(s_center, 2, 1)
+    deltas = np.nan_to_num(np.diff(zbuffer, axis=-3), 0)
+    Rjp = deltas[..., 2:, :, :]
+    Rj = deltas[..., 1:-1, :, :]
+    Rjm = deltas[..., :-2, :, :]
+
+    cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl, not_z=-1)
+    limiter = superbee_fluxlimiter(cr)
+    # swall = np.nan_to_num(zbuffer[...,1:-2,:,:]+zbuffer[...,2:-1,:,:])*0.5- np.sign(u_cfl)**Rj*0.5
+    swall = (
+        np.nan_to_num(zbuffer[..., 1:-2, :, :] + zbuffer[..., 2:-1, :, :]) * 0.5
+        + np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
+    )
+    return swall
+
+
 def third_order_upwind_z(s, w):
     """Get interpolated salinity in the vertical.
 
     for more info, see
     https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#third-order-upwind-bias-advection
+    This function currently only work when there is no through surface flux.
 
     Parameters
     ----------
