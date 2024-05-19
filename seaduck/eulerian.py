@@ -425,9 +425,9 @@ class Position:
             n_ixs[:, i] = self.ix + x_disp
         cuvwg = ind_moves_kwarg.get("cuvwg", "C")
         if self.face is not None:
-            illegal = tp.check_illegal((n_faces, n_iys, n_ixs),cuvwg = cuvwg)
+            illegal = tp.check_illegal((n_faces, n_iys, n_ixs), cuvwg=cuvwg)
         else:
-            illegal = tp.check_illegal((n_iys, n_ixs),cuvwg = cuvwg)
+            illegal = tp.check_illegal((n_iys, n_ixs), cuvwg=cuvwg)
 
         redo = np.array(np.where(illegal)).T
         for loc in redo:
