@@ -67,7 +67,7 @@ def old_smart_read(da, ind, memory_chunk=3, dask_more_efficient=100):
         for i, k in enumerate(ckus):
             ind_str = []
             pre = []
-            which = inverse == i
+            which = (inverse == i).ravel()
             for j, p in enumerate(k):
                 sf = new_dic[j][p]  # the upperbound of index
                 pr = sf - cksz[keys[j]][p]  # the lower bound of index
