@@ -430,9 +430,10 @@ class Topology:
         if not set(moves).issubset({0, 1, 2, 3}):
             raise ValueError("Illegal move. Must be 0,1,2,3")
         if self.typ in ["LLC", "cubed_sphere"]:
-            face, iy, ix = ind
-            for k in range(len(moves)):
-                move = moves[k]
+            face, iy, ix = copy.deepcopy(ind)
+            movess = copy.deepcopy(moves)
+            for k in range(len(movess)):
+                move = movess[k]
                 ind = self.ind_tend(ind, move, **kwarg)
                 if ind[0] != face:  # if the face has changed
                     # there are times where the the kernel lies between
@@ -448,9 +449,13 @@ class Topology:
                     if np.isclose(rot, 0):
                         pass
                     elif np.isclose(rot, np.pi / 2):
-                        moves[k + 1 :] = [[2, 3, 1, 0][move] for move in moves[k + 1 :]]
+                        movess[k + 1 :] = [
+                            [2, 3, 1, 0][move] for move in movess[k + 1 :]
+                        ]
                     elif np.isclose(rot, 3 * np.pi / 2):
-                        moves[k + 1 :] = [[3, 2, 0, 1][move] for move in moves[k + 1 :]]
+                        movess[k + 1 :] = [
+                            [3, 2, 0, 1][move] for move in movess[k + 1 :]
+                        ]
                     face = ind[0]
                     # if the old face is on the left of the new face,
                     # the particle should be heading right
@@ -561,7 +566,9 @@ class Topology:
             elif iyr > iyo:
                 return "V", to_return
             else:
-                raise IndexError("there is no wall between a cell and itself")
+                raise IndexError(
+                    f"there is no wall between a cell and itself,{ind1},{ind2}"
+                )
                 # This error can be raised when there is three instead of four points in a corner
         else:
             d1to2, d2to1 = self.mutual_direction(fc1, fc2)
@@ -596,8 +603,10 @@ class Topology:
             return "U", first
         else:
             alter = self.ind_moves(ind, [2, tend])
-            # TODO: Add the case of alter == first for three-way join of faces.Low priority
-            return self._find_wall_between(first, alter)
+            if alter == first:
+                return "U", alter
+            else:
+                return self._find_wall_between(first, alter)
 
     def _ind_tend_V(self, ind, tend):
         """Move a V-index in a direction.
