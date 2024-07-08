@@ -222,9 +222,8 @@ def test_partial_flatten():
     assert flattened[0].shape == (3, 1)
 
 
-@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_wvel_quant_deepest(ds, od):
+def test_wvel_quant_deepest(od):
     ind = (11, 75, 73)
     face, iy, ix = ind
 
@@ -238,16 +237,15 @@ def test_wvel_quant_deepest(ds, od):
     assert vert_p.iy[0] == iy, "horizontal index does not match"
     seaduck_ans = vert_p.interpolate("WVELMASS1", sd.lagrangian.wknw)
 
-    wvel = interp1d(od.Zl, ds.WVELMASS1[:, face, iy, ix])
+    wvel = interp1d(od.Zl, od._ds.WVELMASS1[:, face, iy, ix])
     scipy_ans = wvel(z)
 
     assert np.allclose(scipy_ans, seaduck_ans)
 
 
-@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
 @pytest.mark.parametrize("seed", list(range(5)))
-def test_wvel_quant_random_place(ds, od, seed):
+def test_wvel_quant_random_place(od, seed):
     np.random.seed(seed)
     z = np.random.uniform(od.Zl[-1], 0, 50)
     x = np.random.uniform(-180, 180, 1) * np.ones_like(z)
@@ -260,15 +258,14 @@ def test_wvel_quant_random_place(ds, od, seed):
     iy = vert_p.iy[0]
     ix = vert_p.ix[0]
 
-    wvel = interp1d(od.Zl, ds.WVELMASS1[:, face, iy, ix])
+    wvel = interp1d(od.Zl, od._ds.WVELMASS1[:, face, iy, ix])
     scipy_ans = wvel(z)
 
     assert np.allclose(scipy_ans, seaduck_ans)
 
 
-@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
-def test_dw_quant_deepest(ds, od):
+def test_dw_quant_deepest(od):
     ind = (11, 75, 73)
     face, iy, ix = ind
 
@@ -284,7 +281,7 @@ def test_dw_quant_deepest(ds, od):
 
     # dw is a stepwise function.
     small_offset = 1e-12
-    dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
+    dw = -np.diff(np.array(od._ds.WVELMASS1[:, face, iy, ix]))
     zinterp = [0]
     dwinterp = [dw[0]]
     for i, zl in enumerate(od.Zl[1:-1]):
@@ -300,10 +297,9 @@ def test_dw_quant_deepest(ds, od):
     assert np.allclose(scipy_ans, seaduck_ans)
 
 
-@pytest.mark.parametrize("ds", ["ecco"], indirect=True)
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
 @pytest.mark.parametrize("seed", list(range(7, 12)))
-def test_dw_quant_random(ds, od, seed):
+def test_dw_quant_random(od, seed):
     np.random.seed(seed)
     z = np.random.uniform(od.Zl[-1], 0, 50)
     x = np.random.uniform(-180, 180, 1) * np.ones_like(z)
@@ -318,7 +314,7 @@ def test_dw_quant_random(ds, od, seed):
 
     # dw is a stepwise function.
     small_offset = 1e-12
-    dw = -np.diff(np.array(ds.WVELMASS1[:, face, iy, ix]))
+    dw = -np.diff(np.array(od._ds.WVELMASS1[:, face, iy, ix]))
     zinterp = [0]
     dwinterp = [dw[0]]
     for i, zl in enumerate(od.Zl[1:-1]):
