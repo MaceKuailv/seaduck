@@ -282,14 +282,14 @@ def test_dw_quant_deepest(od):
     # dw is a stepwise function.
     small_offset = 1e-12
     dw = -np.diff(np.array(od._ds.WVELMASS1[:, face, iy, ix]))
-    zinterp = [0]
+    zinterp = [0.0]
     dwinterp = [dw[0]]
     for i, zl in enumerate(od.Zl[1:-1]):
-        zinterp.append(zl + small_offset)
+        zinterp.append(float(zl) + small_offset)
         dwinterp.append(dw[i])
-        zinterp.append(zl)
+        zinterp.append(float(zl))
         dwinterp.append(dw[i + 1])
-    zinterp.append(od.Zl[-1])
+    zinterp.append(float(od.Zl[-1]))
     dwinterp.append(dw[-1])
     dwvel = interp1d(zinterp, dwinterp)
     scipy_ans = dwvel(z)
@@ -315,14 +315,14 @@ def test_dw_quant_random(od, seed):
     # dw is a stepwise function.
     small_offset = 1e-12
     dw = -np.diff(np.array(od._ds.WVELMASS1[:, face, iy, ix]))
-    zinterp = [0]
+    zinterp = [0.0]
     dwinterp = [dw[0]]
     for i, zl in enumerate(od.Zl[1:-1]):
-        zinterp.append(zl + small_offset)
+        zinterp.append(float(zl) + small_offset)
         dwinterp.append(dw[i])
-        zinterp.append(zl)
+        zinterp.append(float(zl))
         dwinterp.append(dw[i + 1])
-    zinterp.append(od.Zl[-1])
+    zinterp.append(float(od.Zl[-1]))
     dwinterp.append(dw[-1])
     dwvel = interp1d(zinterp, dwinterp)
     scipy_ans = dwvel(z)
