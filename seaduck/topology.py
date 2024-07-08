@@ -449,9 +449,13 @@ class Topology:
                     if np.isclose(rot, 0):
                         pass
                     elif np.isclose(rot, np.pi / 2):
-                        movess[k + 1 :] = [[2, 3, 1, 0][move] for move in movess[k + 1 :]]
+                        movess[k + 1 :] = [
+                            [2, 3, 1, 0][move] for move in movess[k + 1 :]
+                        ]
                     elif np.isclose(rot, 3 * np.pi / 2):
-                        movess[k + 1 :] = [[3, 2, 0, 1][move] for move in movess[k + 1 :]]
+                        movess[k + 1 :] = [
+                            [3, 2, 0, 1][move] for move in movess[k + 1 :]
+                        ]
                     face = ind[0]
                     # if the old face is on the left of the new face,
                     # the particle should be heading right
@@ -526,12 +530,11 @@ class Topology:
         for num, loc in enumerate(redo):
             j = loc[0]
             ind = tuple(old_inds[:, j])
-            n_ind = self.ind_tend(ind, int(tend[j]), **kwarg)
-            # try:
-            #     n_ind = self.ind_tend(ind, int(tend[j]), **kwarg)
-            # except IndexError:
-            #     particle_on_edge = True
-            #     n_ind = ind
+            try:
+                n_ind = self.ind_tend(ind, int(tend[j]), **kwarg)
+            except IndexError:
+                particle_on_edge = True
+                n_ind = ind
             inds[:, j] = np.array(n_ind).ravel()
         if particle_on_edge:
             logging.warning("Some points are on the edge")
@@ -563,7 +566,9 @@ class Topology:
             elif iyr > iyo:
                 return "V", to_return
             else:
-                raise IndexError(f"there is no wall between a cell and itself,{ind1},{ind2}")
+                raise IndexError(
+                    f"there is no wall between a cell and itself,{ind1},{ind2}"
+                )
                 # This error can be raised when there is three instead of four points in a corner
         else:
             d1to2, d2to1 = self.mutual_direction(fc1, fc2)
@@ -598,8 +603,10 @@ class Topology:
             return "U", first
         else:
             alter = self.ind_moves(ind, [2, tend])
-            # TODO: Add the case of alter == first for three-way join of faces.Low priority
-            return self._find_wall_between(first, alter)
+            if alter == first:
+                return "U", alter
+            else:
+                return self._find_wall_between(first, alter)
 
     def _ind_tend_V(self, ind, tend):
         """Move a V-index in a direction.
