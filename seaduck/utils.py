@@ -671,13 +671,10 @@ def missing_cs_sn(ds, return_xr=False):
     cs[-1], sn[-1] = find_cs_sn(yc[-2], xc[-2], yc[-1], xc[-1])
     cs[1:-1], sn[1:-1] = find_cs_sn(yc[:-2], xc[:-2], yc[2:], xc[2:])
     if return_xr:
-        ds["CS"] = ds["XC"]
-        ds["CS"].values = cs
+        cs = xr.DataArray(cs, dims=ds["XC"].dims)
+        sn = xr.DataArray(sn, dims=ds["XC"].dims)
 
-        ds["SN"] = ds["XC"]
-        ds["SN"].values = sn
-
-        return ds
+        return cs, sn
     else:
         return cs, sn
 

@@ -11,10 +11,10 @@ def incomplete_data(request):
     ds = utils.get_dataset("curv")
     if request.param == "drop_YG":
         od = sd.OceData(ds)
-        ds_out = ds.drop_vars(["YG"])
+        ds_out = od._ds.drop_vars(["YG"])
         od._add_missing_cs_sn()
-        ds_out["CS"] = xr.DataArray(od["CS"], dims=ds["XC"].dims)
-        ds_out["SN"] = xr.DataArray(od["SN"], dims=ds["XC"].dims)
+        ds_out["CS"] = xr.DataArray(od["CS"], dims=od._ds["XC"].dims)
+        ds_out["SN"] = xr.DataArray(od["SN"], dims=od._ds["XC"].dims)
         return ds_out
     elif request.param == "drop_dyG":
         return ds.drop_vars(["dyG"])

@@ -34,8 +34,11 @@ def read_from_ds(particle_ds, oce):
     temp.tp = temp.ocedata.tp
 
     # it = np.array(particle_ds.it)
+    if oce.tp.typ in ["LLC"]:
+        temp.face = np.array(particle_ds.fc).astype(int)
+    else:
+        temp.face = None
     izl = np.array(particle_ds.iz)
-    fc = np.array(particle_ds.fc)
     iy = np.array(particle_ds.iy)
     ix = np.array(particle_ds.ix)
     rzl = np.array(particle_ds.rz)
@@ -45,7 +48,6 @@ def read_from_ds(particle_ds, oce):
     # temp.it  = it .astype(int)
     temp.izl_lin = izl.astype(int)
     temp.iz = (izl - 1).astype(int)
-    temp.face = fc.astype(int)
     temp.iy = iy.astype(int)
     temp.ix = ix.astype(int)
     temp.rzl_lin = rzl
@@ -148,8 +150,6 @@ def tres_update(tres0, temp, first, last, fraction_first, fraction_last):
     tres = tres0 * fracs
 
     tres[temp.vs > 6] = 0.0
-    # mask = np.logical_and(tres==0, temp.vs<7)
-    # assert (tres[temp.vs<7]>0).all(), (tres0[mask],fracs[mask], fracs_a[mask], np.where(mask))
 
     return tres
 
@@ -182,40 +182,46 @@ def deepcopy_inds(temp):
     iz = copy.deepcopy(temp.izl_lin)
     iy = copy.deepcopy(temp.iy)
     ix = copy.deepcopy(temp.ix)
-    face = copy.deepcopy(temp.face)
-    # assert (iz>=1).all(),iz
-    return iz, face, iy, ix
+    if temp.face is not None:
+        face = copy.deepcopy(temp.face)
+        return iz, face, iy, ix
+    else:
+        return iz, iy, ix
 
 
 def wall_index(inds, iwall, tp):
     iw = iwall // 2
-    iz, face, iy, ix = copy.deepcopy(inds)
-    # assert (iz>=1).all(),iz
+    iz = copy.deepcopy(inds[0])
+    iy = copy.deepcopy(inds[-2])
+    ix = copy.deepcopy(inds[-1])
 
-    ind = copy.deepcopy(np.array([face, iy, ix]))
+    ind = np.array(inds[1:])
     old_ind = copy.deepcopy(ind)
     naive_move = np.array([MOVE_DIC[i] for i in iwall], dtype=int).T
+    ind[-2] += naive_move[0]  # iy
     iy += naive_move[0]
+    ind[-1] += naive_move[1]  # ix
     ix += naive_move[1]
-    ind = np.array([face, iy, ix])
-    illegal = tp.check_illegal(ind, cuvwg="C")
-    redo = np.array(np.where(illegal)).T
-    for num, loc in enumerate(redo):
-        j = loc[0]
-        ind = (iw[j],) + tuple(old_ind[:, j])
-        new_ind = ind_tend_uv(ind, tp)
-        iw[j], face[j], iy[j], ix[j] = new_ind
 
     iz[iwall == 4] += 1
     iz -= 1
-    return np.array([iw, iz, face, iy, ix]).astype(int)
+    if tp.typ in ["LLC"]:
+        face = copy.deepcopy(inds[-3])
+        illegal = tp.check_illegal(ind, cuvwg="G")
+        redo = np.array(np.where(illegal)).T
+        for num, loc in enumerate(redo):
+            j = loc[0]
+            ind = (iw[j],) + tuple(old_ind[:, j])
+            new_ind = ind_tend_uv(ind, tp)
+            iw[j], face[j], iy[j], ix[j] = new_ind
+
+        return np.array([iw, iz, face, iy, ix]).astype(int)
+    else:
+        return np.array([iw, iz, ind[-2], ind[-1]]).astype(int)
 
 
 def redo_index(pt):
-    # assert (pt.izl_lin>=1).all()
     inds = deepcopy_inds(pt)
-    iz, face, iy, ix = inds
-    # assert (iz>=1).all(),iz
     tendf, tf, tendb, tb = pseudo_motion(pt)
 
     funderflow = np.where(tendf == 6)
@@ -224,20 +230,19 @@ def redo_index(pt):
     tendb[bunderflow] = 0
     vf = wall_index(inds, tendf, pt.ocedata.tp)
     vb = wall_index(inds, tendb, pt.ocedata.tp)
-    # vf[:,funderflow] = vb[:,funderflow]
-    # vb[:,bunderflow] = vf[:,bunderflow]
     tim = tf - tb
     frac = -tb / tim
     assert (~np.isnan(tim)).any(), [
         i[np.isnan(tim)] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]
     ]
-    assert (tim != 0).all(), [i[tim == 0] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]]
-    at_corner = np.where(tim == 0)
-    frac[at_corner] = 1
+    # assert (tim != 0).all(), [i[tim == 0] for i in [pt.rx, pt.ry, pt.rzl_lin - 1 / 2]]
+    # at_corner = np.where(tim == 0)
+    # frac[at_corner] = 1
+    frac = np.nan_to_num(frac, nan=1)
     return vf, vb, frac
 
 
-def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
+def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=True):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
     if region_names:
@@ -246,23 +251,32 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None):
             mask = parallelpointinpolygon(temp.lon, temp.lat, reg)
             # mask = np.where(mask)[0]
             masks.append(mask)
+
     first, last, neither = first_last_neither(np.array(temp.shapes))
+    if temp.face is not None:
+        num_ind = 5
+    else:
+        num_ind = 4
 
-    ind1 = np.zeros((5, temp.N), "int16")
-    ind2 = np.ones((5, temp.N), "int16")
-    frac = np.ones(temp.N)
+    if by_type:
+        ind1 = np.zeros((num_ind, temp.N), "int16")
+        ind2 = np.ones((num_ind, temp.N), "int16")
+        frac = np.ones(temp.N)
 
-    # ind1[:, wrong_ind] = lookup[:, lookup_ind]
+        # ind1[:, wrong_ind] = lookup[:, lookup_ind]
 
-    neithers = temp.subset(neither)
-    neither_inds = deepcopy_inds(neithers)
-    iwalls = which_wall(neithers)
-    ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
+        if len(neither > 0):
+            neithers = temp.subset(neither)
+            neither_inds = deepcopy_inds(neithers)
+            iwalls = which_wall(neithers)
+            ind1[:, neither] = wall_index(neither_inds, iwalls, temp.ocedata.tp)
 
-    firsts = temp.subset(first)
-    lasts = temp.subset(last)
-    ind1[:, first], ind2[:, first], frac[first] = redo_index(firsts)
-    ind1[:, last], ind2[:, last], frac[last] = redo_index(lasts)
+        firsts = temp.subset(first)
+        lasts = temp.subset(last)
+        ind1[:, first], ind2[:, first], frac[first] = redo_index(firsts)
+        ind1[:, last], ind2[:, last], frac[last] = redo_index(lasts)
+    else:
+        ind1, ind2, frac = redo_index(temp)
 
     tres = tres_fraction(temp, first, last, frac[first], frac[last])
     if region_names:
@@ -285,7 +299,8 @@ def flatten(lstoflst, shapes=None):
 def particle2xarray(p):
     shapes = [len(i) for i in p.xxlist]
     # it = flatten(p.itlist,shapes = shapes)
-    fc = flatten(p.fclist, shapes=shapes)
+    if p.face is not None:
+        fc = flatten(p.fclist, shapes=shapes)
     iy = flatten(p.iylist, shapes=shapes)
     iz = flatten(p.izlist, shapes=shapes)
     ix = flatten(p.ixlist, shapes=shapes)
@@ -308,7 +323,6 @@ def particle2xarray(p):
         coords=dict(shapes=(["shapes"], shapes), nprof=(["nprof"], np.arange(len(xx)))),
         data_vars=dict(
             # it = (['nprof'],it),
-            fc=(["nprof"], fc),
             iy=(["nprof"], iy),
             iz=(["nprof"], iz),
             ix=(["nprof"], ix),
@@ -328,10 +342,14 @@ def particle2xarray(p):
             vs=(["nprof"], vs),
         ),
     )
+    if p.face is not None:
+        ds["fc"] = xr.DataArray(fc, dims="nprof")
     return ds
 
 
-def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
+def dump_to_zarr(
+    neo, oce, filename, region_names=False, region_polys=None, preserve_checks=False
+):
     if region_names:
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
             neo, oce, region_names=region_names, region_polys=region_polys
@@ -339,7 +357,11 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
     else:
         ind1, ind2, frac, tres, last, first = find_ind_frac_tres(neo, oce)
 
-    neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
+    if oce.tp.typ in ["LLC"]:
+        neo["face"] = neo["fc"].astype("int16")
+        neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
+    else:
+        neo["five"] = xr.DataArray(["iw", "iz", "iy", "ix"], dims="five")
     if region_names:
         for ir, reg in enumerate(region_names):
             neo[reg] = xr.DataArray(masks[ir].astype(bool), dims="nprof")
@@ -360,22 +382,29 @@ def dump_to_zarr(neo, oce, filename, region_names=False, region_polys=None):
     # neo['last'] = xr.DataArray(last.astype('int64'), dims = 'shapes')
     # neo['first'] = xr.DataArray(first.astype('int64'), dims = 'shapes')
 
-    neo["face"] = neo["fc"].astype("int16")
     neo["ix"] = neo["ix"].astype("int16")
     neo["iy"] = neo["iy"].astype("int16")
     neo["iz"] = neo["iz"].astype("int16")
     neo["vs"] = neo["vs"].astype("int16")
 
-    neo = neo.drop_vars(["rx", "ry", "rz", "uu", "vv", "ww", "du", "dv", "dw", "fc"])
+    if not preserve_checks:
+        neo = neo.drop_vars(["rx", "ry", "rz", "uu", "vv", "ww", "du", "dv", "dw"])
+    if "fc" in neo.data_vars:
+        neo = neo.drop_vars(["fc"])
 
     neo.to_zarr(filename, mode="w")
     zarr.consolidate_metadata(filename)
 
 
-def store_lists(pt, name, region_names=False, region_polys=None):
+def store_lists(pt, name, region_names=False, region_polys=None, **kwarg):
     neo = particle2xarray(pt)
     dump_to_zarr(
-        neo, pt.ocedata, name, region_names=region_names, region_polys=region_polys
+        neo,
+        pt.ocedata,
+        name,
+        region_names=region_names,
+        region_polys=region_polys,
+        **kwarg
     )
 
 
@@ -387,8 +416,131 @@ def prefetch_scalar(ds_slc, scalar_names):
     return prefetch
 
 
-def prefetch_vector(ds_slc, xname="sxprime", yname="syprime", zname="szprime"):
-    return np.array(tuple(np.array(ds_slc[i]) for i in [xname, yname, zname]))
+def read_wall_list(neo, tp, prefetch=None, scalar=True):
+    if "face" not in neo.data_vars:
+        ind = (neo.iz - 1, neo.iy, neo.ix)
+        deep_ind = (neo.iz, neo.iy, neo.ix)
+        right_ind = tuple(
+            [neo.iz - 1]
+            + list(
+                tp.ind_tend_vec(
+                    (neo.iy, neo.ix), np.ones(len(neo.nprof)) * 3, cuvwg="G"
+                )
+            )
+        )
+        up_ind = tuple(
+            [neo.iz - 1]
+            + list(tp.ind_tend_vec((neo.iy, neo.ix), np.ones(len(neo.nprof)) * 0))
+        )
+        uarray, varray, warray = prefetch
+        ur = uarray[right_ind]
+        vr = varray[up_ind]
+    else:
+        ind = (neo.iz - 1, neo.face, neo.iy, neo.ix)
+        deep_ind = (neo.iz, neo.face, neo.iy, neo.ix)
+        right_ind = tuple(
+            [neo.iz - 1]
+            + list(
+                tp.ind_tend_vec((neo.face, neo.iy, neo.ix), np.ones(len(neo.nprof)) * 3)
+            )
+        )
+        up_ind = tuple(
+            [neo.iz - 1]
+            + list(
+                tp.ind_tend_vec((neo.face, neo.iy, neo.ix), np.ones(len(neo.nprof)) * 0)
+            )
+        )
+        uarray, varray, warray = prefetch
+
+        ur_temp = np.nan_to_num(uarray[right_ind])
+        vr_temp = np.nan_to_num(varray[right_ind])
+        uu_temp = np.nan_to_num(uarray[up_ind])
+        vu_temp = np.nan_to_num(varray[up_ind])
+        right_faces = np.vstack([ind[1], right_ind[1]]).T
+        up_faces = np.vstack([ind[1], up_ind[1]]).T
+        ufromu, ufromv, _, _ = tp.four_matrix_for_uv(right_faces)
+        _, _, vfromu, vfromv = tp.four_matrix_for_uv(up_faces)
+        if scalar:
+            ufromu, ufromv, vfromu, vfromv = (
+                np.abs(i) for i in [ufromu, ufromv, vfromu, vfromv]
+            )
+
+        ur = ur_temp * ufromu[:, 1] + vr_temp * ufromv[:, 1]
+        vr = uu_temp * vfromu[:, 1] + vu_temp * vfromv[:, 1]
+    ul = uarray[ind]
+    vl = varray[ind]
+    wr = warray[ind]
+    wl = warray[deep_ind]
+    return np.array([np.nan_to_num(i) for i in (ul, ur, vl, vr, wl, wr)])
+
+
+def crude_convergence(u_list):
+    conv = np.array(u_list).T * np.array([1, -1, 1, -1, 1, -1])
+    conv = np.sum(conv, axis=-1)
+    return conv
+
+
+def check_particle_data_compat(
+    xrpt,
+    xrslc,
+    tp,
+    use_tracer_name=None,
+    wall_names=("sx", "sy", "sz"),
+    conv_name="divus",
+    debug=False,
+):
+    if "iz" not in xrpt.data_vars:
+        raise NotImplementedError(
+            "This functionality only support 3D simulation at the moment."
+        )
+    if isinstance(use_tracer_name, str):
+        wall_names = tuple(use_tracer_name + i for i in ["x", "y", "z"])
+        conv_name = "divu" + use_tracer_name
+    elif use_tracer_name is not None:
+        raise ValueError("use_tracer_name has to be a string.")
+    prefetch = []
+    for var in wall_names:
+        prefetch.append(np.array(xrslc[var]))
+    c_list = read_wall_list(xrpt, tp, prefetch)
+
+    ul, ur = _uleftright_from_udu(xrpt.uu, xrpt.du, xrpt.rx)
+    vl, vr = _uleftright_from_udu(xrpt.vv, xrpt.dv, xrpt.ry)
+    wl, wr = _uleftright_from_udu(xrpt.ww, xrpt.dw, xrpt.rz - 0.5)
+    u_list = np.array([np.array(i) for i in [ul, ur, vl, vr, wl, wr]])
+
+    flux_list = c_list * u_list
+    lagrangian_conv = crude_convergence(flux_list)
+
+    if "face" in xrpt.data_vars:
+        ind = (xrpt.iz - 1, xrpt.face, xrpt.iy, xrpt.ix)
+    else:
+        ind = (xrpt.iz - 1, xrpt.iy, xrpt.ix)
+    eulerian_conv = np.array(xrslc[conv_name])[ind]
+    if debug:
+        extra = (u_list, c_list, lagrangian_conv, eulerian_conv)
+    else:
+        extra = None
+    return np.allclose(lagrangian_conv, eulerian_conv), extra
+
+
+def prefetch_vector(
+    ds_slc, xname="sxprime", yname="syprime", zname="szprime", same_size=True
+):
+    if same_size:
+        return np.array(tuple(np.array(ds_slc[i]) for i in [xname, yname, zname]))
+    else:
+        xx = np.array(ds_slc[xname])
+        yy = np.array(ds_slc[yname])
+        zz = np.array(ds_slc[zname])
+        shape = (3,) + tuple(
+            int(np.max([ar.shape[j] for ar in [xx, yy, zz]]))
+            for j in range(len(xx.shape))
+        )
+        larger = np.empty(shape)
+        larger[(0,) + tuple(slice(i) for i in xx.shape)] = xx
+        larger[(1,) + tuple(slice(i) for i in yy.shape)] = yy
+        larger[(2,) + tuple(slice(i) for i in zz.shape)] = zz
+        return larger
 
 
 def read_prefetched_scalar(ind, scalar_names, prefetch):
@@ -406,12 +558,12 @@ def lhs_contribution(t, scalar_dic, last, lhs_name="lhs"):
     return correction
 
 
-def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1):
+def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1, error_prefix=""):
     nds = len(deltas)
     # if len(wrong_ind)>0:
     #     if wrong_ind[-1] == len(deltas):
     #         wrong_ind = wrong_ind[:-1]
-    dic = {"error": np.zeros(nds)}
+    dic = {error_prefix + "error": np.zeros(nds)}
     # dic['error'][wrong_ind] = deltas[wrong_ind]
     # deltas[wrong_ind] = 0
     # tres[wrong_ind] = 0
@@ -430,6 +582,6 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1):
         dic[var] = step_dic[var][:-1] * tres + ratio * disparity
         total += dic[var]
     final_correction = deltas - total
-    assert np.allclose(final_correction, 0)
-    dic["error"] += final_correction
+    # assert np.allclose(final_correction, 0)
+    dic[error_prefix + "error"] += final_correction
     return dic

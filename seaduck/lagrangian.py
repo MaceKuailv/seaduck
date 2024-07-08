@@ -68,10 +68,12 @@ class Particle(Position):
         If transport is true, pass in names of the volume/mass transport
         across cell wall in m^3/3
         else,  just pass something that is in m/s
-    dont_fly: Boolean
+    free_surface: string
         Sometimes there is non-zero vertical velocity at sea surface.
-        dont_fly = True set that to zero.
-        An error may occur depends on the situation if set otherwise.
+        free_surface = "noflux" set that to zero.
+        free_surface = "kick_back" move particles trying to cross back
+        to the middle of the cell.
+        There could be errors if neither is used.
     save_raw: Boolean
         Whether to record the analytical history of all particles in an
         unstructured list.
@@ -93,7 +95,7 @@ class Particle(Position):
         uname="UVELMASS",
         vname="VVELMASS",
         wname="WVELMASS",
-        dont_fly=True,
+        free_surface="noflux",
         save_raw=False,
         transport=False,
         callback=None,
@@ -101,13 +103,11 @@ class Particle(Position):
         **kwarg,
     ):
         Position.__init__(self)
-        self.from_latlon(**kwarg)
-        if self.ocedata.readiness["Zl"] and kwarg.get("z") is not None:
-            self.rel.update(self.ocedata._find_rel_vl_lin(self.dep))
+        if "bool_array" in kwarg.keys():
+            self.from_bool_array(**kwarg)
         else:
-            (self.izl_lin, self.rzl_lin, self.dzl_lin, self.bzl_lin) = (
-                None for i in range(4)
-            )
+            self.from_latlon(**kwarg)
+
         try:
             self.px, self.py = self.get_px_py()
         except AttributeError:
@@ -139,19 +139,20 @@ class Particle(Position):
         self.transport = transport
         if self.transport:
             try:
-                self.ocedata["Vol"]
-            except KeyError:
+                assert isinstance(self.ocedata["Vol"], np.ndarray)
+            except (AssertionError, KeyError):
                 self.ocedata._add_missing_vol(as_numpy=True)
 
         # whether or not setting the w at the surface
         # just to prevent particles taking off
-        self.dont_fly = dont_fly
-        if dont_fly:
+        self.free_surface = free_surface
+        if free_surface == "noflux":
             if wname is not None:
                 logging.warning(
-                    "Setting the surface velocity to zero. " "Dataset modified. "
+                    "Setting the surface velocity to zero. "
+                    "Dataset might be modified. "
                 )
-                self.ocedata[wname].loc[{"Zl": 0}] = 0
+                self.ocedata[self.wname].loc[{"Zl": 0}] = 0
         self.too_large = self.ocedata.too_large
         self.max_iteration = max_iteration
 
@@ -625,7 +626,15 @@ class Particle(Position):
             type2 = tend == 4
             tiz[type2] += 1
             type3 = tend == 5
-            tiz[type3] -= 1
+            if self.free_surface != "kick_back":
+                tiz[type3] -= 1
+            else:
+                going2fly = self.izl_lin == 1
+                type3a = np.logical_and(going2fly, type3)
+                type3b = np.logical_and(~going2fly, type3)
+                tiz[type3b] -= 1
+                self.dep[type3a] = self.bzl_lin[type3a] + self.dzl_lin[type3a] / 2
+
             self.izl_lin = tiz
 
     def _cross_cell_wall_read(self):
@@ -867,7 +876,7 @@ class Particle(Position):
         to_return = []
         for i, tl in enumerate(stops):
             timestr = str(np.datetime64(round(tl), "s"))
-            # logging.info(timestr)
+            logging.info(timestr)
             print(timestr)
             if self.save_raw:
                 # save the very start of everything.

@@ -279,7 +279,7 @@ class Topology:
         if "XG" in od.variables:
             self.g_shape = od["XG"].shape
         else:
-            self.g_shape = None
+            self.g_shape = self.h_shape
         try:
             self.itmax = len(od["time"]) - 1
         except (KeyError, TypeError):
@@ -402,7 +402,7 @@ class Topology:
             else:
                 raise ValueError("The type of grid point should be among C,U,V,G")
         elif self.typ == "x_periodic":
-            to_return = _box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+            to_return = _x_per_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         elif self.typ == "box":
             to_return = _box_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
         else:
@@ -486,8 +486,7 @@ class Topology:
                     result = True
             return result
         else:  # for numpy ndarray
-            result = np.zeros_like(ind[0])
-            result = False  # make it cleaner
+            result = False
             for i, z in enumerate(ind):
                 max_pos = the_shape[i]
                 result = np.logical_or(
