@@ -193,7 +193,7 @@ class OceData:
         self.readiness = readiness
         if readiness:
             self._grid2array()
-        
+
         if self.readiness["Zl"]:
             # make a more consistent vector definition
             with_zl = [i for i in self._ds.data_vars if "Zl" in self._ds[i].dims]
@@ -267,7 +267,7 @@ class OceData:
                 {XC,YC,XG,YG} or {XC,YC,dxG,dyG,CS,SN} for curvilinear grid;
                 or {lon, lat} for rectilinear grid.
 
-                See add_missing variable or set_alias. 
+                See add_missing variable or set_alias.
                 """
             )
         for _ in ["time", "Z", "Zl"]:
