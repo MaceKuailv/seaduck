@@ -189,15 +189,11 @@ class OceData:
             self.too_large = self._ds["XC"].nbytes > memory_limit
         except KeyError:
             self.too_large = False
-        readiness, missing = self.check_readiness()
+        readiness = self.check_readiness()
         self.readiness = readiness
         if readiness:
             self._grid2array()
-        else:
-            raise ValueError(
-                f"use add_missing_variables or set_alias to create {missing},"
-                "then call OceData.grid2array."
-            )
+        
         if self.readiness["Zl"]:
             # make a more consistent vector definition
             with_zl = [i for i in self._ds.data_vars if "Zl" in self._ds[i].dims]
@@ -246,13 +242,10 @@ class OceData:
             3. Zl: Whether the dataset has a vertical dimension at
                staggered points (vertical velocity).
             4. time: Whether the dataset has a temporal dimension.
-        missing: list
-            The missing variable names.
         """
         # TODO: make the check more detailed
         varnames = list(self._ds.data_vars) + list(self._ds.coords)
         readiness = {}
-        missing = []
         if all(i in varnames for i in ["XC", "YC", "XG", "YG"]):
             readiness["h"] = "oceanparcel"
             # could be a curvilinear grid that can use oceanparcel style
@@ -268,18 +261,18 @@ class OceData:
         else:
             readiness["h"] = False
             # readiness['overall'] = False
-            missing.append(
+            raise ValueError(
                 """
-            For the most basic use case,
-            {XC,YC,XG,YG} or {XC,YC,dxG,dyG,CS,SN} for curvilinear grid;
-            or {lon, lat} for rectilinear grid.
-            """
+                Need a full set of the following to create the object:
+                {XC,YC,XG,YG} or {XC,YC,dxG,dyG,CS,SN} for curvilinear grid;
+                or {lon, lat} for rectilinear grid.
+
+                See add_missing variable or set_alias. 
+                """
             )
-            return False, missing
         for _ in ["time", "Z", "Zl"]:
             readiness[_] = (_ in varnames) and (_general_len(self[_]) > 1)
-
-        return readiness, missing
+        return readiness
 
     def _add_missing_grid(self):
         # TODO:
