@@ -15,12 +15,12 @@ def _raise_if_no_xgcm():
         raise ImportError(
             "The python package xgcm is needed."
             "You can install it with:"
-            "conda install -c xgcm"
+            "conda install -c conda-forge xgcm"
         )
 
 
 def create_ecco_grid(ds, for_outer=False):
-    _raise_if_no_xgcm()  # pragma: no cover
+    _raise_if_no_xgcm()
     face_connections = {
         "face": {
             0: {"X": ((12, "Y", False), (3, "X", False)), "Y": (None, (1, "Y", False))},
@@ -83,7 +83,7 @@ def create_ecco_grid(ds, for_outer=False):
 
 
 def create_periodic_grid(ds):
-    _raise_if_no_xgcm()  # pragma: no cover
+    _raise_if_no_xgcm()
     xgcmgrd = xgcm.Grid(
         ds,
         periodic=["X"],
@@ -174,8 +174,9 @@ def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):
     u = xgcmgrd.diff(strmx, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
     v = xgcmgrd.diff(strmy, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
 
-    vstrmx = strmx * tub["dyG"]
-    vstrmy = strmy * tub["dxG"]
+    vstrmx = strmx * np.array(tub["dyG"])  # there is some fucking problem with xgcm
+    vstrmy = strmy * np.array(tub["dxG"])
+    print(vstrmy.dims, vstrmx.dims)
 
     xy_diff = xgcmgrd.diff_2d_vector(
         {"X": vstrmx, "Y": vstrmy}, boundary="fill", fill_value=0.0
