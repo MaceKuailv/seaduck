@@ -259,10 +259,6 @@ class Position:
         self.tp = self.ocedata.tp
 
         inds = np.where(bool_array)
-        try:
-            data["Vol"]
-        except KeyError:
-            data._add_missing_vol()
         np_vol = np.array(data["Vol"])
         vols = np.array(np_vol[inds])
         num_each = np.round(vols * num / np.sum(vols)).astype(int)
