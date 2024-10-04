@@ -16,3 +16,4 @@ dependencies:
 - tqdm
 - zarr
 - cartopy
+- xgcm
