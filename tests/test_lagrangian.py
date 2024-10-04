@@ -123,9 +123,12 @@ def test_note_taking_error(p):
         p.note_taking()
 
 
-def test_no_time_midp_error(p):
+def test_no_time_midp_error():
+    od = sd.OceData(utils.get_dataset("ecco").drop_vars("time_midp"))
+    p = sd.Particle(x=x, y=y, z=zz, t=t, data=od, transport=True)
+    delattr(od, "time_midp")
     with pytest.raises(AttributeError):
-        p.to_list_of_time(normal_stops=[0.0, 1.0])
+        p.to_list_of_time(normal_stops=[t[0] + 1])
 
 
 def test_time_out_of_bound_error(ecco_p):

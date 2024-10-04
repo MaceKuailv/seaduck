@@ -852,20 +852,24 @@ class Particle(Position):
                     "time range not within bound" + f"({data_tmin},{data_tmax})"
                 )
         if update_stops == "default":
-            try:
-                update_stops = self.ocedata.time_midp[
-                    np.logical_and(
-                        t_min < self.ocedata.time_midp, self.ocedata.time_midp < t_max
-                    )
-                ]
-            except AttributeError as exc:
-                raise AttributeError(
-                    "time_midp is required for "
-                    "update_stops = default,"
-                    " but it is not in the dataset, "
-                    "either create it or "
-                    "specify the update stops."
-                ) from exc
+            if "time" not in self.ocedata[self.uname].dims:
+                update_stops = []
+            else:
+                try:
+                    update_stops = self.ocedata.time_midp[
+                        np.logical_and(
+                            t_min < self.ocedata.time_midp,
+                            self.ocedata.time_midp < t_max,
+                        )
+                    ]
+                except AttributeError as exc:
+                    raise AttributeError(
+                        "time_midp is required for "
+                        "update_stops = default,"
+                        " but it is not in the dataset, "
+                        "either create it or "
+                        "specify the update stops."
+                    ) from exc
         temp = list(zip(normal_stops, np.zeros_like(normal_stops))) + list(
             zip(update_stops, np.ones_like(update_stops))
         )
