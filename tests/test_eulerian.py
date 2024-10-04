@@ -34,6 +34,39 @@ def ep():
     return sd.Particle(x=-37.5, y=10.4586420059204, z=-9.0, t=698155200.0, data=od)
 
 
+@pytest.mark.parametrize("seed", [None, 0])
+def test_from_bool_array(seed):
+    od = sd.OceData(utils.get_dataset("ecco"))
+    mask = od["SALT"].isel(time=0) < 33
+    t = 698155200.0
+    sd.Position().from_bool_array(
+        t=t, data=od, bool_array=mask, num=100, random_seed=seed
+    )
+
+
+@pytest.mark.parametrize("set_false", ["h", "Z"])
+def test_from_bool_array_not_implement_error(set_false):
+    od = sd.OceData(utils.get_dataset("ecco"))
+    od.readiness[set_false] = False
+    mask = od["SALT"].isel(time=0) < 33
+    t = 698155200.0
+    with pytest.raises(NotImplementedError):
+        sd.Position().from_bool_array(t=t, data=od, bool_array=mask, num=100)
+
+
+@pytest.mark.parametrize("case", ["wrong od", "wrong bool"])
+def test_from_bool_array_value_error(case):
+    od = sd.OceData(utils.get_dataset("ecco"))
+    if case == "wrong od":
+        mask = od["SALT"].isel(time=0) < 33
+        od = np
+    else:
+        mask = od["SALT"].isel(time=0, Z=0) < 33
+    t = 698155200.0
+    with pytest.raises(ValueError):
+        sd.Position().from_bool_array(t=t, data=od, bool_array=mask, num=100)
+
+
 @pytest.mark.parametrize("od", ["aviso"], indirect=True)
 def test_tz_not_None(od):
     ap = sd.Position()
