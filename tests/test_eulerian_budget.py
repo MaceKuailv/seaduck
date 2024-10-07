@@ -14,6 +14,7 @@ from seaduck.eulerian_budget import (
     second_order_flux_limiter_z_withoutface,
     superbee_fluxlimiter,
     third_order_DST_x,
+    third_order_DST_y,
     third_order_upwind_z,
     total_div,
 )
@@ -21,7 +22,7 @@ from seaduck.eulerian_budget import (
 
 @pytest.fixture
 def random_4d():
-    np.random.seed(401)
+    np.random.seed(41)
     return np.random.random((3, 4, 5, 4))
 
 
@@ -109,18 +110,18 @@ def test_second_order_flux_limiter_z_withoutface(random_4d):
 
 def test_third_order_DST_x(random_4d):
     np.random.seed(401)
-    u_cfl = np.random.random((3, 4, 5, 5)) * 2 - 1
-    ans = third_order_DST_x(random_4d, u_cfl)
-    assert ans.shape == u_cfl.shape
+    buffered = np.random.random((3, 4, 5, 7)) * 2 - 1
+    ans = third_order_DST_x(buffered, random_4d)
+    assert ans.shape == random_4d.shape
     assert ans.dtype == "float64"
 
 
-# def test_third_order_DST_y(random_4d):
-#     np.random.seed(401)
-#     v_cfl = np.random.random((3, 4, 6, 4)) * 2 - 1
-#     ans = third_order_DST_y(random_4d, v_cfl)
-#     assert ans.shape == v_cfl.shape
-#     assert ans.dtype == "float64"
+def test_third_order_DST_y(random_4d):
+    np.random.seed(401)
+    buffered = np.random.random((3, 4, 8, 4)) * 2 - 1
+    ans = third_order_DST_y(buffered, random_4d)
+    assert ans.shape == random_4d.shape
+    assert ans.dtype == "float64"
 
 
 def test_third_order_upwind_z(random_4d):
