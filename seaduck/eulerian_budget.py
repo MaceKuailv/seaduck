@@ -11,7 +11,7 @@ def _raise_if_no_xgcm():
         import xgcm
 
         xgcm
-    except ImportError:
+    except ImportError:  # pragma: no cover
         raise ImportError(
             "The python package xgcm is needed."
             "You can install it with:"
@@ -82,7 +82,7 @@ def create_ecco_grid(ds, for_outer=False):
     return xgcmgrd
 
 
-def create_periodic_grid(ds):
+def create_periodic_grid(ds):  # pragma: no cover
     _raise_if_no_xgcm()
     xgcmgrd = xgcm.Grid(
         ds,
@@ -198,11 +198,11 @@ def _slice_corner(array, fc, iy1, iy2, ix1, ix2):
 
 
 def _right90(array):
-    return array[..., ::-1].transpose([0, 2, 1])
+    return np.swapaxes(array[..., ::-1], -2, -1)
 
 
 def _left90(array):
-    return array[..., ::-1, :].transpose([0, 2, 1])
+    return np.swapaxes(array[..., ::-1, :], -2, -1)
 
 
 def buffer_x_withface(s, face, lm, rm, tp):
@@ -212,7 +212,7 @@ def buffer_x_withface(s, face, lm, rm, tp):
     ----------
     s: numpy.ndarray
         the center field, the last dimension being X,
-        the second dimension being face.
+        the third last dimension being face.
     face: int
         which face to create buffer for.
     lm: int
@@ -223,10 +223,10 @@ def buffer_x_withface(s, face, lm, rm, tp):
         the topology object of the
     """
     shape = list(s.shape)
-    shape.pop(1)
+    shape.pop(-3)
     shape[-1] += lm + rm
     xbuffer = np.zeros(shape)
-    xbuffer[..., lm:-rm] = s[:, face]
+    xbuffer[..., lm:-rm] = s[..., face, :, :]
     try:
         fc1, iy1, ix1 = tp.ind_moves((face, tp.iymax, 0), [2 for i in range(lm)])
         fc2, iy2, ix2 = tp.ind_moves((face, 0, 0), [2])
@@ -260,7 +260,7 @@ def buffer_y_withface(s, face, lm, rm, tp):
     ----------
     s: numpy.ndarray
         the center field, the last dimension being X,
-        the second dimension being face.
+        the third last dimension being face.
     face: int
         which face to create buffer for.
     lm: int
@@ -271,10 +271,10 @@ def buffer_y_withface(s, face, lm, rm, tp):
         the topology object of the
     """
     shape = list(s.shape)
-    shape.pop(1)
+    shape.pop(-3)
     shape[-2] += lm + rm
     ybuffer = np.zeros(shape)
-    ybuffer[..., lm:-rm, :] = s[:, face]
+    ybuffer[..., lm:-rm, :] = s[..., face, :, :]
     try:
         fc1, iy1, ix1 = tp.ind_moves((face, 0, tp.ixmax), [1 for i in range(lm)])
         fc2, iy2, ix2 = tp.ind_moves((face, 0, 0), [1])
