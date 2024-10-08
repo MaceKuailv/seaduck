@@ -6,7 +6,9 @@ import seaduck as sd
 from seaduck.eulerian_budget import (
     bolus_vel_from_psi,
     buffer_x_periodic,
+    buffer_x_withface,
     buffer_y_periodic,
+    buffer_y_withface,
     buffer_z_nearest_withoutface,
     create_ecco_grid,
     second_order_flux_limiter_x,
@@ -24,6 +26,12 @@ from seaduck.eulerian_budget import (
 def random_4d():
     np.random.seed(41)
     return np.random.random((3, 4, 5, 4))
+
+
+@pytest.fixture
+def random_5d():
+    np.random.seed(41)
+    return np.random.random((2, 3, 13, 90, 90))
 
 
 @pytest.fixture
@@ -130,3 +138,19 @@ def test_third_order_upwind_z(random_4d):
     ans = third_order_upwind_z(random_4d, w_cfl)
     assert ans.shape == w_cfl.shape
     assert ans.dtype == "float64"
+
+
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("face", [0, 2, 6, 12])
+def test_buffer_zone_with_face_x(od, random_5d, face):
+    tp = od.tp
+    ans = buffer_x_withface(random_5d, face, 2, 2, tp)
+    assert ans.shape == (2, 3, 90, 94)
+
+
+@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("face", [0, 2, 6, 12])
+def test_buffer_zone_with_face_y(od, random_5d, face):
+    tp = od.tp
+    ans = buffer_y_withface(random_5d, face, 2, 2, tp)
+    assert ans.shape == (2, 3, 94, 90)
