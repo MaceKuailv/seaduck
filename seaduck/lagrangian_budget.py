@@ -245,7 +245,7 @@ def redo_index(pt):
 def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=True):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
-    if region_names:# pragma: no cover
+    if region_names:  # pragma: no cover
         masks = []
         for reg in region_polys:
             mask = parallelpointinpolygon(temp.lon, temp.lat, reg)
@@ -262,8 +262,6 @@ def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=
         ind1 = np.zeros((num_ind, temp.N), "int16")
         ind2 = np.ones((num_ind, temp.N), "int16")
         frac = np.ones(temp.N)
-
-        # ind1[:, wrong_ind] = lookup[:, lookup_ind]
 
         if len(neither > 0):
             neithers = temp.subset(neither)
@@ -323,9 +321,9 @@ def particle2xarray(p):
         coords=dict(shapes=(["shapes"], shapes), nprof=(["nprof"], np.arange(len(xx)))),
         data_vars=dict(
             # it = (['nprof'],it),
-            iy=(["nprof"], iy),
-            iz=(["nprof"], iz),
-            ix=(["nprof"], ix),
+            iy=(["nprof"], iy.astype(int)),
+            iz=(["nprof"], iz.astype(int)),
+            ix=(["nprof"], ix.astype(int)),
             rx=(["nprof"], rx),
             ry=(["nprof"], ry),
             rz=(["nprof"], rz),
@@ -339,18 +337,18 @@ def particle2xarray(p):
             xx=(["nprof"], xx),
             yy=(["nprof"], yy),
             zz=(["nprof"], zz),
-            vs=(["nprof"], vs),
+            vs=(["nprof"], vs.astype(int)),
         ),
     )
     if p.face is not None:
-        ds["fc"] = xr.DataArray(fc, dims="nprof")
+        ds["fc"] = xr.DataArray(fc.astype(int), dims="nprof")
     return ds
 
 
 def dump_to_zarr(
     neo, oce, filename, region_names=False, region_polys=None, preserve_checks=False
 ):
-    if region_names: # pragma: no cover
+    if region_names:  # pragma: no cover
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
             neo, oce, region_names=region_names, region_polys=region_polys
         )
@@ -362,7 +360,7 @@ def dump_to_zarr(
         neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
     else:
         neo["five"] = xr.DataArray(["iw", "iz", "iy", "ix"], dims="five")
-    if region_names:# pragma: no cover
+    if region_names:  # pragma: no cover
         for ir, reg in enumerate(region_names):
             neo[reg] = xr.DataArray(masks[ir].astype(bool), dims="nprof")
 
@@ -406,7 +404,7 @@ def prefetch_scalar(ds_slc, scalar_names):
 
 
 def read_wall_list(neo, tp, prefetch=None, scalar=True):
-    if "face" not in neo.data_vars:
+    if "face" not in neo.data_vars and "fc" not in neo.data_vars:
         ind = (neo.iz - 1, neo.iy, neo.ix)
         deep_ind = (neo.iz, neo.iy, neo.ix)
         right_ind = tuple(
@@ -477,8 +475,9 @@ def check_particle_data_compat(
     wall_names=("sx", "sy", "sz"),
     conv_name="divus",
     debug=False,
+    allclose_kwarg={},
 ):
-    if "iz" not in xrpt.data_vars:
+    if "iz" not in xrpt.data_vars:  # pragma: no cover
         raise NotImplementedError(
             "This functionality only support 3D simulation at the moment."
         )
@@ -509,7 +508,7 @@ def check_particle_data_compat(
         extra = (u_list, c_list, lagrangian_conv, eulerian_conv)
     else:
         extra = None
-    return np.allclose(lagrangian_conv, eulerian_conv), extra
+    return np.allclose(lagrangian_conv, eulerian_conv, **allclose_kwarg), extra
 
 
 def prefetch_vector(
@@ -549,13 +548,7 @@ def lhs_contribution(t, scalar_dic, last, lhs_name="lhs"):
 
 def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1, error_prefix=""):
     nds = len(deltas)
-    # if len(wrong_ind)>0:
-    #     if wrong_ind[-1] == len(deltas):
-    #         wrong_ind = wrong_ind[:-1]
     dic = {error_prefix + "error": np.zeros(nds)}
-    # dic['error'][wrong_ind] = deltas[wrong_ind]
-    # deltas[wrong_ind] = 0
-    # tres[wrong_ind] = 0
 
     deno = np.zeros(nds)
     sums = np.zeros(nds)
@@ -564,13 +557,10 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1, error_prefix=""):
         sums += step_dic[var][:-1]
     disparity = deltas - sums * tres
     total = np.zeros(nds)
-    # dic['quality'] = np.nan_to_num(np.abs((disparity/tres)**(p+1)/deno))
-    # mask = (dic['quality']<=1).astype(int)
     for var in termlist:
         ratio = step_dic[var][:-1] ** (p + 1) / deno
         dic[var] = step_dic[var][:-1] * tres + ratio * disparity
         total += dic[var]
     final_correction = deltas - total
-    # assert np.allclose(final_correction, 0)
     dic[error_prefix + "error"] += final_correction
     return dic
