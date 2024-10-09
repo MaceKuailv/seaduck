@@ -3,6 +3,14 @@ import pytest
 import xarray as xr
 from scipy import spatial
 
+try:
+    import numba
+
+    HAS_NUMBA = True
+    _ = numba
+except ImportError:
+    HAS_NUMBA = False
+
 import seaduck as sd
 
 
@@ -156,3 +164,12 @@ def test_find_rel(value, array, darray, ascending, above, peri, dx_right, ans):
 def test_create_tree_cartesian(ds):
     tree = sd.utils.create_tree(ds["XC"], ds["YC"], R=None)
     assert isinstance(tree, spatial.cKDTree)
+
+
+@pytest.mark.skipif(not HAS_NUMBA, reason="numba not installed")
+def test_ray_trace():
+    poly = np.array([[0, 0], [0.5, 1], [0.5, 2], [1, 1], [0.5, 0]])
+    xs = np.array([0.1, 0.49, 10, 0.6])
+    ys = np.array([0.1, 1, 10, 0.6])
+    ans = np.array([True, False, False, True])
+    assert np.allclose(sd.utils.parallelpointinpolygon(xs, ys, poly), ans)

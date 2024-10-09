@@ -721,7 +721,10 @@ def easy_3d_cube(lon, lat, dep, tim, print_total_number=False):
 
 
 @compileable
-def pointinpolygon(x, y, poly):
+def pointinpolygon(x, y, poly):  # pragma: no cover
+    """Check if x,y is in the polygon."""
+    # There is test for this function,
+    # but numba does not show it.
     n = len(poly)
     inside = False
     p2x = 0.0
@@ -743,11 +746,24 @@ def pointinpolygon(x, y, poly):
 
 
 @compileable_parallel
-def parallelpointinpolygon(xs, ys, poly):
-    D = np.empty(len(xs), dtype=numba.boolean)
-    for i in numba.prange(0, len(D)):
-        D[i] = pointinpolygon(xs[i], ys[i], poly)
-    return D
+def parallelpointinpolygon(xs, ys, poly):  # pragma: no cover
+    """
+    Check if xs,ys is in the polygon, return same size boolean array.
+
+    Parameters
+    ----------
+    xs,ys: 1D np.array
+        the x,y locations
+    poly: 2D np.array
+        the location of the edge of polygon,
+        the order matters.
+    """
+    # There is test for this function,
+    # but numba does not show it.
+    res = np.empty(len(xs), dtype=numba.boolean)
+    for i in numba.prange(0, len(res)):
+        res[i] = pointinpolygon(xs[i], ys[i], poly)
+    return res
 
 
 # functions used in Lagrangian models to avoid cyclic import
