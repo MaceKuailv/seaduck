@@ -12,6 +12,9 @@ from seaduck.lagrangian_budget import (
     flatten,
     ind_tend_uv,
     particle2xarray,
+    prefetch_scalar,
+    prefetch_vector,
+    read_prefetched_scalar,
     redo_index,
     store_lists,
 )
@@ -70,7 +73,7 @@ def xrslc(grid):
     tub["advz"] = (tub["wtrans"]).compute()
     tub["advz"][:, 0] = 0
     tub["divus"] = total_div(tub, grid, "advx", "advy", "advz")
-    return tub._ds.isel(time=0)
+    return tub._ds.isel(time=0, Zl=slice(50))
 
 
 @pytest.fixture
@@ -204,3 +207,18 @@ def test_check_particle_data_compat(
         debug=False,
         allclose_kwarg={"atol": 1e-11},
     )
+
+
+def test_prefetch_scalar_and_read(xrslc):
+    scalar_name = ["divus", "SALT"]
+    prefetch = prefetch_scalar(xrslc, scalar_name)
+    res = read_prefetched_scalar((49, 12, 89, 89), scalar_name, prefetch)
+    assert isinstance(res, dict)
+
+
+@pytest.mark.parametrize("same_size", [True, False])
+def test_prefetch_vector(xrslc, same_size):
+    larger = prefetch_vector(
+        xrslc, xname="sx", yname="sy", zname="sz", same_size=same_size
+    )
+    assert isinstance(larger, np.ndarray)
