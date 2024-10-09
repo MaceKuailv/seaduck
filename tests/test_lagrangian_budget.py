@@ -7,10 +7,12 @@ from seaduck import utils
 from seaduck.eulerian_budget import total_div
 from seaduck.lagrangian_budget import (
     check_particle_data_compat,
+    contr_p_relaxed,
     find_ind_frac_tres,
     first_last_neither,
     flatten,
     ind_tend_uv,
+    lhs_contribution,
     particle2xarray,
     prefetch_scalar,
     prefetch_vector,
@@ -222,3 +224,23 @@ def test_prefetch_vector(xrslc, same_size):
         xrslc, xname="sx", yname="sy", zname="sz", same_size=same_size
     )
     assert isinstance(larger, np.ndarray)
+
+
+def test_lhs_contribution():
+    lhs = np.random.random(10)
+    scalar_dic = {"lhs": lhs}
+    last = np.array([8, 10])
+    t = np.arange(10)
+    ans = lhs_contribution(t, scalar_dic, last)
+    assert np.allclose(ans[:3], lhs[:3])
+    assert ans[8] == 0
+
+
+def test_p_relax():
+    deltas = np.ones(3) * 3
+    tres = np.ones(3)
+    step_dic = {"term1": np.array([1, 2, 3, 4]), "term2": np.array([3, 2, 1, 0])}
+    termlist = ["term1", "term2"]
+    res = contr_p_relaxed(deltas, tres, step_dic, termlist)
+    assert np.allclose(0, res["error"])
+    assert res["term1"][1] == res["term2"][1]

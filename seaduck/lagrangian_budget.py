@@ -404,7 +404,7 @@ def prefetch_scalar(ds_slc, scalar_names):
 
 
 def read_wall_list(neo, tp, prefetch=None, scalar=True):
-    if "face" not in neo.data_vars and "fc" not in neo.data_vars: # pragma: no cover
+    if "face" not in neo.data_vars and "fc" not in neo.data_vars:  # pragma: no cover
         ind = (neo.iz - 1, neo.iy, neo.ix)
         deep_ind = (neo.iz, neo.iy, neo.ix)
         right_ind = tuple(
