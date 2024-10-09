@@ -491,9 +491,15 @@ def check_particle_data_compat(
         prefetch.append(np.array(xrslc[var]))
     c_list = read_wall_list(xrpt, tp, prefetch)
 
-    ul, ur = _uleftright_from_udu(xrpt.uu, xrpt.du, xrpt.rx)
-    vl, vr = _uleftright_from_udu(xrpt.vv, xrpt.dv, xrpt.ry)
-    wl, wr = _uleftright_from_udu(xrpt.ww, xrpt.dw, xrpt.rz - 0.5)
+    ul, ur = _uleftright_from_udu(
+        np.array(xrpt.uu), np.array(xrpt.du), np.array(xrpt.rx)
+    )
+    vl, vr = _uleftright_from_udu(
+        np.array(xrpt.vv), np.array(xrpt.dv), np.array(xrpt.ry)
+    )
+    wl, wr = _uleftright_from_udu(
+        np.array(xrpt.ww), np.array(xrpt.dw), np.array(xrpt.rz) - 0.5
+    )
     u_list = np.array([np.array(i) for i in [ul, ur, vl, vr, wl, wr]])
 
     flux_list = c_list * u_list
