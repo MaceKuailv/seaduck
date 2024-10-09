@@ -1,9 +1,12 @@
 import numpy as np
 import pytest
+import xarray as xr
 
 import seaduck as sd
 from seaduck import utils
+from seaduck.eulerian_budget import total_div
 from seaduck.lagrangian_budget import (
+    check_particle_data_compat,
     find_ind_frac_tres,
     first_last_neither,
     flatten,
@@ -53,6 +56,21 @@ def curv_pt():
     )
     curv_p.to_next_stop(od.ts[0] + 1e4)
     return curv_p
+
+
+@pytest.fixture
+def xrslc(grid):
+    ds = utils.get_dataset("ecco")
+    ds["sx"] = xr.ones_like(ds["utrans"])
+    ds["sy"] = xr.ones_like(ds["vtrans"])
+    ds["sz"] = xr.ones_like(ds["wtrans"])
+    tub = sd.OceData(ds)
+    tub["advx"] = (tub["utrans"]).compute()
+    tub["advy"] = (tub["vtrans"]).compute()
+    tub["advz"] = (tub["wtrans"]).compute()
+    tub["advz"][:, 0] = 0
+    tub["divus"] = total_div(tub, grid, "advx", "advy", "advz")
+    return tub._ds.isel(time=0)
 
 
 @pytest.fixture
@@ -156,8 +174,33 @@ def test_store_lists_with_region(custom_pt, region_info):
 def test_first_last_neither():
     shapes = np.random.randint(2, 5, 10)
     first, last, neither = first_last_neither(shapes)
-    first1,last1 = first_last_neither(shapes,return_neither = False)
-    assert np.allclose(first,first1)
+    first1, last1 = first_last_neither(shapes, return_neither=False)
+    assert np.allclose(first, first1)
     merged = np.sort(np.concatenate([first, last, neither]))
     sums = np.sum(shapes)
     assert np.allclose(np.arange(sums), merged)
+
+
+@pytest.mark.parametrize(
+    "use_tracer_name,wall_names,conv_name",
+    [
+        (None, ("sx", "sy", "sz"), "divus"),
+        ("s", None, None),
+    ],
+)
+def test_check_particle_data_compat(
+    custom_pt, use_tracer_name, wall_names, conv_name, xrslc
+):
+    xrpt = particle2xarray(custom_pt)
+    xrpt["face"] = xrpt["fc"]
+    tp = sd.Topology(utils.get_dataset("ecco"))
+    assert check_particle_data_compat(
+        xrpt,
+        xrslc,
+        tp,
+        use_tracer_name=use_tracer_name,
+        wall_names=("sx", "sy", "sz"),
+        conv_name="divus",
+        debug=False,
+        allclose_kwarg={"atol": 1e-11},
+    )

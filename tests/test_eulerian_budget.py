@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 import xarray as xr
 
-import seaduck as sd
 from seaduck.eulerian_budget import (
     bolus_vel_from_psi,
     buffer_x_periodic,
@@ -10,7 +9,6 @@ from seaduck.eulerian_budget import (
     buffer_y_periodic,
     buffer_y_withface,
     buffer_z_nearest_withoutface,
-    create_ecco_grid,
     second_order_flux_limiter_x,
     second_order_flux_limiter_y,
     second_order_flux_limiter_z_withoutface,
@@ -32,12 +30,6 @@ def random_4d():
 def random_5d():
     np.random.seed(41)
     return np.random.random((2, 3, 13, 90, 90))
-
-
-@pytest.fixture
-def grid():
-    od = sd.OceData(sd.utils.get_dataset("ecco"))
-    return create_ecco_grid(od._ds, for_outer=True)
 
 
 @pytest.mark.parametrize("od", ["ecco"], indirect=True)
