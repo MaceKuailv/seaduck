@@ -1,14 +1,22 @@
 import numpy as np
 import pytest
+import xarray as xr
 
 import seaduck as sd
 from seaduck import utils
+from seaduck.eulerian_budget import total_div
 from seaduck.lagrangian_budget import (
+    check_particle_data_compat,
+    contr_p_relaxed,
     find_ind_frac_tres,
     first_last_neither,
     flatten,
     ind_tend_uv,
+    lhs_contribution,
     particle2xarray,
+    prefetch_scalar,
+    prefetch_vector,
+    read_prefetched_scalar,
     redo_index,
     store_lists,
 )
@@ -53,6 +61,21 @@ def curv_pt():
     )
     curv_p.to_next_stop(od.ts[0] + 1e4)
     return curv_p
+
+
+@pytest.fixture
+def xrslc(grid):
+    ds = utils.get_dataset("ecco")
+    ds["sx"] = xr.ones_like(ds["utrans"])
+    ds["sy"] = xr.ones_like(ds["vtrans"])
+    ds["sz"] = xr.ones_like(ds["wtrans"])
+    tub = sd.OceData(ds)
+    tub["advx"] = (tub["utrans"]).compute()
+    tub["advy"] = (tub["vtrans"]).compute()
+    tub["advz"] = (tub["wtrans"]).compute()
+    tub["advz"][:, 0] = 0
+    tub["divus"] = total_div(tub, grid, "advx", "advy", "advz")
+    return tub._ds.isel(time=0, Zl=slice(50))
 
 
 @pytest.fixture
@@ -156,6 +179,68 @@ def test_store_lists_with_region(custom_pt, region_info):
 def test_first_last_neither():
     shapes = np.random.randint(2, 5, 10)
     first, last, neither = first_last_neither(shapes)
+    first1, last1 = first_last_neither(shapes, return_neither=False)
+    assert np.allclose(first, first1)
     merged = np.sort(np.concatenate([first, last, neither]))
     sums = np.sum(shapes)
     assert np.allclose(np.arange(sums), merged)
+
+
+@pytest.mark.parametrize(
+    "use_tracer_name,wall_names,conv_name",
+    [
+        (None, ("sx", "sy", "sz"), "divus"),
+        ("s", None, None),
+    ],
+)
+def test_check_particle_data_compat(
+    custom_pt, use_tracer_name, wall_names, conv_name, xrslc
+):
+    xrpt = particle2xarray(custom_pt)
+    xrpt["face"] = xrpt["fc"]
+    tp = sd.Topology(utils.get_dataset("ecco"))
+    assert check_particle_data_compat(
+        xrpt,
+        xrslc,
+        tp,
+        use_tracer_name=use_tracer_name,
+        wall_names=("sx", "sy", "sz"),
+        conv_name="divus",
+        debug=False,
+        allclose_kwarg={"atol": 1e-11},
+    )
+
+
+def test_prefetch_scalar_and_read(xrslc):
+    scalar_name = ["divus", "SALT"]
+    prefetch = prefetch_scalar(xrslc, scalar_name)
+    res = read_prefetched_scalar((49, 12, 89, 89), scalar_name, prefetch)
+    assert isinstance(res, dict)
+
+
+@pytest.mark.parametrize("same_size", [True, False])
+def test_prefetch_vector(xrslc, same_size):
+    larger = prefetch_vector(
+        xrslc, xname="sx", yname="sy", zname="sz", same_size=same_size
+    )
+    assert isinstance(larger, np.ndarray)
+
+
+def test_lhs_contribution():
+    lhs = np.random.random(10)
+    scalar_dic = {"lhs": lhs}
+    last = np.array([8, 10])
+    t = np.arange(10)
+    ans = lhs_contribution(t, scalar_dic, last)
+    assert np.allclose(ans[:3], lhs[:3])
+    assert ans[8] == 0
+
+
+def test_p_relax():
+    deltas = np.ones(3) * 3
+    tres = np.ones(3)
+    step_dic = {"term1": np.array([1, 2, 3, 4]), "term2": np.array([3, 2, 1, 0])}
+    termlist = ["term1", "term2"]
+    res = contr_p_relaxed(deltas, tres, step_dic, termlist)
+    assert np.allclose(0, res["error"])
+    assert res["term1"][1] == res["term2"][1]
