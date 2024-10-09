@@ -245,7 +245,7 @@ def redo_index(pt):
 def find_ind_frac_tres(neo, oce, region_names=False, region_polys=None, by_type=True):
     temp = read_from_ds(neo, oce)
     temp.shapes = list(temp.shapes)
-    if region_names:
+    if region_names:# pragma: no cover
         masks = []
         for reg in region_polys:
             mask = parallelpointinpolygon(temp.lon, temp.lat, reg)
@@ -350,7 +350,7 @@ def particle2xarray(p):
 def dump_to_zarr(
     neo, oce, filename, region_names=False, region_polys=None, preserve_checks=False
 ):
-    if region_names:
+    if region_names: # pragma: no cover
         (ind1, ind2, frac, masks, tres, last, first) = find_ind_frac_tres(
             neo, oce, region_names=region_names, region_polys=region_polys
         )
@@ -362,25 +362,14 @@ def dump_to_zarr(
         neo["five"] = xr.DataArray(["iw", "iz", "face", "iy", "ix"], dims="five")
     else:
         neo["five"] = xr.DataArray(["iw", "iz", "iy", "ix"], dims="five")
-    if region_names:
+    if region_names:# pragma: no cover
         for ir, reg in enumerate(region_names):
             neo[reg] = xr.DataArray(masks[ir].astype(bool), dims="nprof")
-        # neo['gulf'] = xr.DataArray(gulf_ind.astype(bool),dims = 'nprof')
-        # neo['labr'] = xr.DataArray(labr_ind.astype(bool),dims = 'nprof')
-        # neo['gdbk'] = xr.DataArray(gdbk_ind.astype(bool),dims = 'nprof')
-        # neo['nace'] = xr.DataArray(nace_ind.astype(bool),dims = 'nprof')
-        # neo['egrl'] = xr.DataArray(egrl_ind.astype(bool),dims = 'nprof')
-        # region_ind = np.concatenate([gulf_ind,labr_ind,gdbk_ind,nace_ind,egrl_ind]).astype('int32')
-        # neo.attrs['region_shape'] = [len(i) for i in [gulf_ind,labr_ind,gdbk_ind,nace_ind,egrl_ind]]
-        # if len(region_ind)>0:
-        #     neo = neo.assign_coords(region_ind = xr.DataArray(region_ind,dims = 'region_ind'))
 
     neo["ind1"] = xr.DataArray(ind1.astype("int16"), dims=["five", "nprof"])
     neo["ind2"] = xr.DataArray(ind2.astype("int16"), dims=["five", "nprof"])
     neo["frac"] = xr.DataArray(frac, dims="nprof")
     neo["tres"] = xr.DataArray(tres, dims="nprof")
-    # neo['last'] = xr.DataArray(last.astype('int64'), dims = 'shapes')
-    # neo['first'] = xr.DataArray(first.astype('int64'), dims = 'shapes')
 
     neo["ix"] = neo["ix"].astype("int16")
     neo["iy"] = neo["iy"].astype("int16")

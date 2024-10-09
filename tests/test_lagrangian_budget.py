@@ -156,6 +156,8 @@ def test_store_lists_with_region(custom_pt, region_info):
 def test_first_last_neither():
     shapes = np.random.randint(2, 5, 10)
     first, last, neither = first_last_neither(shapes)
+    first1,last1 = first_last_neither(shapes,return_neither = False)
+    assert np.allclose(first,first1)
     merged = np.sort(np.concatenate([first, last, neither]))
     sums = np.sum(shapes)
     assert np.allclose(np.arange(sums), merged)
