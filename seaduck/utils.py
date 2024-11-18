@@ -888,3 +888,11 @@ def _which_early(tf, ts):
     tend = t_directed.argmin(axis=0)
     t_event = np.array([ts[te][i] for i, te in enumerate(tend)])
     return tend, t_event
+
+
+def _right90(array):
+    return np.swapaxes(array[..., ::-1], -2, -1)
+
+
+def _left90(array):
+    return np.swapaxes(array[..., ::-1, :], -2, -1)
