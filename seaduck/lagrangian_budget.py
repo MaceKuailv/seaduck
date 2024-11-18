@@ -477,7 +477,7 @@ def check_particle_data_compat(
     debug=False,
     allclose_kwarg={},
 ):
-    """Check if you could use Lagrangian budget functionality. 
+    """Check if you could use Lagrangian budget functionality.
 
     Parameters
     ----------
@@ -490,20 +490,20 @@ def check_particle_data_compat(
     use_tracer_name: string
         if specified, use cx,cy,cz as wall name
     wall_names: tuple of string
-        Name of variables if use_tracer_name is not defined. 
+        Name of variables if use_tracer_name is not defined.
     conv_name: string
         The variable from xrslc to be compared against.
     debug: bool
         Whether to return additional debug information.
     allclose_kwarg:
-        Keyword arguments for np.allclose. 
+        Keyword arguments for np.allclose.
 
     Returns
     -------
     OK_or_not: bool
         Is it OK to preceed?
     extra: None or tuple
-        Extra information to help with debugging. 
+        Extra information to help with debugging.
     """
     if "iz" not in xrpt.data_vars:  # pragma: no cover
         raise NotImplementedError(
