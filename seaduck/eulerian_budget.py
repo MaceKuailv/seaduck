@@ -22,6 +22,7 @@ def _raise_if_no_xgcm():
 
 
 def create_ecco_grid(ds, for_outer=False):
+    """Create xgcm object for an ECCO dataset."""
     _raise_if_no_xgcm()
     face_connections = {
         "face": {
@@ -170,6 +171,7 @@ def total_div(tub, xgcmgrd, xfluxname, yfluxname, zfluxname):
 
 
 def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):
+    """Calculate bolus velocity based on its streamfunction."""
     strmx = tub[psixname].fillna(0)
     strmy = tub[psiyname].fillna(0)
 
@@ -318,7 +320,7 @@ def buffer_y_periodic(s, lm, rm):
     return ybuffer
 
 
-def buffer_z_nearest_withoutface(s, lm, rm):
+def buffer_z_nearest(s, lm, rm):
     shape = list(s.shape)
     shape[-3] += lm + rm
     zbuffer = np.zeros(shape)
@@ -344,11 +346,23 @@ def _slope_ratio(Rjm, Rj, Rjp, u_sign, not_z=1):
     return cr
 
 
-def superbee_fluxlimiter(cr):
+def _superbee_fluxlimiter(cr):
     return np.maximum(0.0, np.maximum(np.minimum(1.0, 2 * cr), np.minimum(2.0, cr)))
 
 
 def second_order_flux_limiter_x(s_center, u_cfl):
+    """Get interpolated tracer concentration in X.
+
+    for more info, see
+    https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#second-order-flux-limiters
+
+    Parameters
+    ----------
+    s_center: numpy.ndarray
+        the tracer field with buffer zone added (lm=2,rm=1), the last dimension being X
+    u_cfl: numpy.ndarray
+        the u velocity normalized by grid size in X, in s^-1.
+    """
     xbuffer = buffer_x_periodic(s_center, 2, 2)
     deltas = np.nan_to_num(np.diff(xbuffer, axis=-1), 0)
     Rjp = deltas[..., 2:]
@@ -356,7 +370,7 @@ def second_order_flux_limiter_x(s_center, u_cfl):
     Rjm = deltas[..., :-2]
 
     cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
-    limiter = superbee_fluxlimiter(cr)
+    limiter = _superbee_fluxlimiter(cr)
     swall = (
         np.nan_to_num(xbuffer[..., 1:-2] + xbuffer[..., 2:-1]) * 0.5
         - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
@@ -365,6 +379,18 @@ def second_order_flux_limiter_x(s_center, u_cfl):
 
 
 def second_order_flux_limiter_y(s_center, u_cfl):
+    """Get interpolated tracer concentration in Y.
+
+    for more info, see
+    https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#second-order-flux-limiters
+
+    Parameters
+    ----------
+    s_center: numpy.ndarray
+        the tracer field with buffer zone added (lm=2,rm=1), the last dimension being X
+    u_cfl: numpy.ndarray
+        the u velocity normalized by grid size in y, in s^-1.
+    """
     ybuffer = buffer_y_periodic(s_center, 2, 2)
     deltas = np.nan_to_num(np.diff(ybuffer, axis=-2), 0)
     Rjp = deltas[..., 2:, :]
@@ -372,7 +398,7 @@ def second_order_flux_limiter_y(s_center, u_cfl):
     Rjm = deltas[..., :-2, :]
 
     cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl)
-    limiter = superbee_fluxlimiter(cr)
+    limiter = _superbee_fluxlimiter(cr)
     swall = (
         np.nan_to_num(ybuffer[..., 1:-2, :] + ybuffer[..., 2:-1, :]) * 0.5
         - np.sign(u_cfl) * ((1 - limiter) + u_cfl * limiter) * Rj * 0.5
@@ -380,15 +406,27 @@ def second_order_flux_limiter_y(s_center, u_cfl):
     return swall
 
 
-def second_order_flux_limiter_z_withoutface(s_center, u_cfl):
-    zbuffer = buffer_z_nearest_withoutface(s_center, 2, 1)
+def second_order_flux_limiter_z(s_center, u_cfl):
+    """Get interpolated tracer concentration in Z.
+
+    for more info, see
+    https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#second-order-flux-limiters
+
+    Parameters
+    ----------
+    s_center: numpy.ndarray
+        the tracer field with buffer zone added (lm=2,rm=1), the last dimension being X
+    u_cfl: numpy.ndarray
+        the u velocity normalized by grid size in z, in s^-1.
+    """
+    zbuffer = buffer_z_nearest(s_center, 2, 1)
     deltas = np.nan_to_num(np.diff(zbuffer, axis=-3), 0)
     Rjp = deltas[..., 2:, :, :]
     Rj = deltas[..., 1:-1, :, :]
     Rjm = deltas[..., :-2, :, :]
 
     cr = _slope_ratio(Rjm, Rj, Rjp, u_cfl, not_z=-1)
-    limiter = superbee_fluxlimiter(cr)
+    limiter = _superbee_fluxlimiter(cr)
     # swall = np.nan_to_num(zbuffer[...,1:-2,:,:]+zbuffer[...,2:-1,:,:])*0.5- np.sign(u_cfl)**Rj*0.5
     swall = (
         np.nan_to_num(zbuffer[..., 1:-2, :, :] + zbuffer[..., 2:-1, :, :]) * 0.5
@@ -398,7 +436,7 @@ def second_order_flux_limiter_z_withoutface(s_center, u_cfl):
 
 
 def third_order_upwind_z(s, w):
-    """Get interpolated salinity in the vertical.
+    """Get interpolated tracer concentration in the vertical.
 
     for more info, see
     https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#third-order-upwind-bias-advection
@@ -427,7 +465,7 @@ def third_order_upwind_z(s, w):
 
 
 def third_order_DST_x(xbuffer, u_cfl):
-    """Get interpolated salinity in X.
+    """Get interpolated tracer concentration in X.
 
     for more info, see
     https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#third-order-direct-space-time
@@ -456,7 +494,7 @@ def third_order_DST_x(xbuffer, u_cfl):
 
 
 def third_order_DST_y(ybuffer, u_cfl):
-    """Get interpolated salinity in Y.
+    """Get interpolated tracer concentration in Y.
 
     for more info, see
     https://mitgcm.readthedocs.io/en/latest/algorithm/adv-schemes.html#third-order-direct-space-time
