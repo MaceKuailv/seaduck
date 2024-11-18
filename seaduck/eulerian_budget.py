@@ -1,5 +1,7 @@
 import numpy as np
 
+from seaduck.utils import _left90, _right90
+
 try:  # pragma: no cover
     import xgcm
 except ImportError:  # pragma: no cover
@@ -195,14 +197,6 @@ def _slice_corner(array, fc, iy1, iy2, ix1, ix2):
     down = np.minimum(iy1, iy2)
     uppp = np.maximum(iy1, iy2)
     return array[..., fc, down : uppp + 1, left : righ + 1]
-
-
-def _right90(array):
-    return np.swapaxes(array[..., ::-1], -2, -1)
-
-
-def _left90(array):
-    return np.swapaxes(array[..., ::-1, :], -2, -1)
 
 
 def buffer_x_withface(s, face, lm, rm, tp):
