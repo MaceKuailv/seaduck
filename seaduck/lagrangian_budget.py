@@ -601,7 +601,12 @@ def contr_p_relaxed(deltas, tres, step_dic, termlist, p=1, error_prefix=""):
 
 
 def calculate_budget(
-    particle_array, data_slice, rhs_list, prefetch_vector_kwarg=dict(), lhs_name="lhs"
+    particle_array,
+    data_slice,
+    rhs_list,
+    prefetch_vector_kwarg=dict(),
+    lhs_name="lhs",
+    dir_of_time=-1,
 ):  # pragma: no cover
     """Calculate Lagrangian budget.
 
@@ -617,6 +622,8 @@ def calculate_budget(
         Keyword arguments for reading wall concentration
     lhs_name: String
         The name of variable that stands for eulerian tendency
+    dir_of_time: number
+        -1 for backward, and 1 for forward.
 
     Returns
     -------
@@ -656,7 +663,7 @@ def calculate_budget(
     trc_conc = s1 * frac + (1 - frac) * s2
     deltas = np.nan_to_num(np.diff(trc_conc))
     deltas[last[:-1]] = 0
-    tres_used = -tres[1:]
+    tres_used = dir_of_time * tres[1:]
     tres_used[last[:-1]] = 0
 
     correction = lhs_contribution(tact, step_dic, last, lhs_name=lhs_name)
