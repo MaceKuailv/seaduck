@@ -17,3 +17,8 @@
 ## Kernel object
 
 [Kernal_and_Weight](api_reference/apiref_kernelNweight.rst)
+
+## Calculate budget
+
+[Eulerian budget](api_reference/apiref_eulerian_budget.rst)
+[Lagrangian budget](api_reference/apiref_lagrangian_budget.rst)
