@@ -17,6 +17,8 @@ parts:
     - file: api_reference/apiref_lagrangian.rst
     - file: api_reference/apiref_OceInterp.rst
     - file: api_reference/apiref_kernelNweight.rst
+    - file: api_reference/apiref_eulerian_budget.rst
+    - file: api_reference/apiref_lagrangian_budget.rst
   - file: internal_api_reference
     sections:
     - file: api_reference/apiref_smartread.rst
