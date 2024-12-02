@@ -10,12 +10,12 @@ We are using [Jupyter Book](https://jupyterbook.org/en/stable/intro.html#)📙 t
 
 ## Text files
 
-Adding  files (markdown, reStructuredText, etc) are not very different from contributing code.
+Adding files (markdown, reStructuredText, etc) are not very different from contributing code.
 
 1. [Clone the git repository to your local machine](./use_git)
 1. [Build the environment](prep_env.md). If you do not run this step, the API references and notebooks can not be properly build.
 1. Add or change the files. A useful cheat sheet can be found here: [markdown/MyST](https://jupyterbook.org/en/stable/reference/cheatsheet.html#tags), [reStructuredText](https://docutils.sourceforge.io/docs/user/rst/cheatsheet.html). [Commit](use_git.md) the changes you did along the way.
-1. If you added a new file,  in `docs/_toc.yml`, add the name of your new file in the corresponding location. This [tutorial](https://jupyterbook.org/en/stable/structure/toc.html) will be helpful, if the file structure is not self-explanatory.
+1. If you added a new file, in `docs/_toc.yml`, add the name of your new file in the corresponding location. This [tutorial](https://jupyterbook.org/en/stable/structure/toc.html) will be helpful, if the file structure is not self-explanatory.
 1. Change directory to seaduck, and run
 
 ```none
