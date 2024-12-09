@@ -17,11 +17,11 @@ yy = np.linspace(63, 57, sqrtN)
 xxx, yyy = np.meshgrid(xx, yy)
 x = xxx.ravel()
 y = yyy.ravel()
-x, z = np.meshgrid(x, levels)
-y, z = np.meshgrid(y, levels)
-x = x.ravel()
-y = y.ravel()
-z = z.ravel()
+x_, z_ = np.meshgrid(x, levels)
+y_, z_ = np.meshgrid(y, levels)
+x = x_.ravel()
+y = y_.ravel()
+z = z_.ravel()
 
 # Change the times here
 start_time = "1992-01-17"
