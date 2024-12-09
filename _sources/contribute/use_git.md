@@ -2,7 +2,7 @@
 
 It's essential for developers to use [Git](https://git-scm.com), especially for open source development. [GitHub](https://github.com) is a website based on the idea of git.
 
-[GitHub](https://github.com) not only hosts the source code, but also the documentation, tests, past issues, solutions, and the entire history of changes to the directory. Therefore, you need to have a [GitHub](https://github.com)  account.
+[GitHub](https://github.com) not only hosts the source code, but also the documentation, tests, past issues, solutions, and the entire history of changes to the directory. Therefore, you need to have a [GitHub](https://github.com) account.
 
 Sign into the account, go to [seaduck](https://github.com/MaceKuailv/seaduck) and [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the directory by clicking around.
 
