@@ -232,6 +232,7 @@ class Position:
             The field where the Positions are defined on.
         bool_array: numpy.ndarray, or xr.DataArray
             Points are generated where it is True.
+            It could be an array of tracer concentration as well.
         num: int
             Total number of particles to seed (approximately).
         random_seed: int optional
@@ -259,7 +260,7 @@ class Position:
         self.tp = self.ocedata.tp
 
         inds = np.where(bool_array)
-        np_vol = np.array(data["Vol"])
+        np_vol = np.array(data["Vol"] * bool_array)
         vols = np.array(np_vol[inds])
         num_each = np.round(vols * num / np.sum(vols)).astype(int)
         num = np.sum(num_each)
