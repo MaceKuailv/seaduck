@@ -19,7 +19,7 @@ repos:
   - id: nbstripout
     args: [--drop-empty-cells, --extra-keys "metadata.kernelspec"]
 - repo: https://github.com/psf/black
-  rev: 24.10.0
+  rev: 25.1.0
   hooks:
   - id: black
 - repo: https://github.com/keewis/blackdoc
@@ -28,12 +28,12 @@ repos:
   - id: blackdoc
     additional_dependencies: [black==22.3.0]
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.8.1
+  rev: v0.9.9
   hooks:
   - id: ruff
     args: [--fix]
 - repo: https://github.com/executablebooks/mdformat
-  rev: 0.7.19
+  rev: 0.7.22
   hooks:
   - id: mdformat
     exclude: ^(docs/sciserver_notebooks/\w+.md|paper/paper.md)$
