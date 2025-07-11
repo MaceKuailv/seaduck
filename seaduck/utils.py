@@ -657,7 +657,7 @@ def find_cs_sn(thetaA, phiA, thetaB, phiB):
     sin_AB = np.sqrt(1 - cos_AB**2)
     # spherical law of sine on triangle AOB
     SN = np.sin(BO) * np.sin(dphi) / sin_AB
-    CS = np.sign(thetaB - thetaA) * np.sqrt(1 - SN**2)
+    CS = np.sign(phiB - phiA) * np.sqrt(1 - SN**2)
     return CS, SN
 
 
