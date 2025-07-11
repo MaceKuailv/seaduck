@@ -309,6 +309,10 @@ class Topology:
                 self.ixmax -= 1
                 if self.num_face == 13:
                     self.typ = "LLC"
+                    self.face_connect = LLC_FACE_CONNECT
+                elif self.num_face == 4:  # Assuming ASTE unless
+                    self.typ = "LLC"
+                    self.face_connect = ASTE_FACE_CONNECT
                     # we can potentially generate the face connection in runtime
                     # say, put the csv file on cloud
                 else:
@@ -355,7 +359,7 @@ class Topology:
             The face is connected to new_face in which direction.
         """
         if self.typ == "LLC":
-            return _llc_get_the_other_edge(face, edge)
+            return _llc_get_the_other_edge(face, edge, face_connect=self.face_connect)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -372,7 +376,9 @@ class Topology:
         2. the 1st face is to which direction of the 2nd face.
         """
         if self.typ == "LLC":
-            return _llc_mutual_direction(face, new_face, **kwarg)
+            return _llc_mutual_direction(
+                face, new_face, face_connect=self.face_connect, **kwarg
+            )
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -403,7 +409,14 @@ class Topology:
             return tuple(-1 for i in ind)
         if self.typ == "LLC":
             if cuvwg == "C":
-                to_return = _llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+                to_return = _llc_ind_tend(
+                    ind,
+                    tend,
+                    self.iymax,
+                    self.ixmax,
+                    face_connect=self.face_connect,
+                    **kwarg,
+                )
             elif cuvwg == "U":
                 _, to_return = self._ind_tend_U(ind, tend)
             elif cuvwg == "V":
@@ -665,7 +678,7 @@ class Topology:
             1D iterable of faces, the first one is assumed to be the reference.
         """
         if self.typ == "LLC":
-            return _llc_get_uv_mask_from_face(faces)
+            return _llc_get_uv_mask_from_face(faces, face_connect=self.face_connect)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
