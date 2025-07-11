@@ -146,7 +146,7 @@ def _x_per_ind_tend(ind, tend, iymax, ixmax):
 
 
 @compileable
-def _llc_ind_tend(ind, tendency, iymax, ixmax):
+def _llc_ind_tend(ind, tendency, iymax, ixmax, face_connect=LLC_FACE_CONNECT):
     """Move an index in a direction.
 
     The compileable version of ind_tend for llc grid.
@@ -159,7 +159,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != ixmax:
             ix += 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 3)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 3, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ixmax - iy]
             elif new_edge == 0:
@@ -172,7 +174,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != 0:
             ix -= 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 2)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 2, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, iy]
             elif new_edge == 0:
@@ -185,7 +189,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if iy != iymax:
             iy += 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 0)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 0, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ix]
             elif new_edge == 0:
@@ -198,7 +204,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if iy != 0:
             iy -= 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 1)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 1, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ixmax - ix]
             elif new_edge == 0:
@@ -211,7 +219,7 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
 
 
 @compileable
-def _llc_get_uv_mask_from_face(faces):
+def _llc_get_uv_mask_from_face(faces, face_connect=LLC_FACE_CONNECT):
     """Get the masking of UV points.
 
     The compileable version of get_uv_mask_from_face for llc grid.
@@ -235,7 +243,7 @@ def _llc_get_uv_mask_from_face(faces):
             else:
                 # get how much the new face is rotated from the old face
                 edge, new_edge = _llc_mutual_direction(
-                    faces[0], faces[i], transitive=True
+                    faces[0], faces[i], transitive=True, face_connect=face_connect
                 )
                 rot = np.pi - DIRECTIONS[edge] + DIRECTIONS[new_edge]
                 # you can think of this as a rotation matrix
@@ -263,7 +271,7 @@ class Topology:
         Currently we support
         'box' for regional dataset,
         'x-periodic' for zonally periodic ones,
-        'llc' for lat-lon-cap dataset.
+        'LLC' for lat-lon-cap dataset.
         We recommend that users put None here,
         so that the type is figured out automatically.
     """
