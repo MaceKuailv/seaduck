@@ -110,7 +110,7 @@ class Particle(Position):
 
         try:
             self.px, self.py = self.get_px_py()
-        except (AttributeError,TypeError):
+        except (AttributeError, TypeError):
             pass
         self.uname = uname
         self.vname = vname
