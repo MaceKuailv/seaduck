@@ -5,38 +5,42 @@ import numpy as np
 
 from seaduck.runtime_conf import compileable
 
-# legal_tends = [0, 1, 2, 3]  # up,down,left,right #list(LLC_FACE_CONNECT.columns)
-
 LLC_FACE_CONNECT = np.array(
     [
-        [1, 42, 12, 3],
+        [1, 999, 12, 3],
         [2, 0, 11, 4],
         [6, 1, 10, 5],
-        [4, 42, 0, 9],
+        [4, 999, 0, 9],
         [5, 3, 1, 8],
         [6, 4, 2, 7],
         [10, 5, 2, 7],
         [10, 5, 6, 8],
         [11, 4, 7, 9],
-        [12, 3, 8, 42],
+        [12, 3, 8, 999],
         [2, 7, 6, 11],
         [1, 8, 10, 12],
-        [0, 9, 11, 42],
+        [0, 9, 11, 999],
     ]
+)
+
+ASTE_FACE_CONNECT = np.array(
+    [[1, 999, 3, 999], [3, 999, 0, 2], [3, 999, 1, 999], [0, 2, 1, 999]]
 )
 
 DIRECTIONS = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @compileable
-def _llc_mutual_direction(face, neighbor_face, transitive=False):
+def _llc_mutual_direction(
+    face, neighbor_face, transitive=False, face_connect=LLC_FACE_CONNECT
+):
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
     See Topology.mutual direction for more detail.
     """
-    connected_to_face = np.where(LLC_FACE_CONNECT[face] == neighbor_face)
-    connected_to_neigh = np.where(LLC_FACE_CONNECT[neighbor_face] == face)
+    connected_to_face = np.where(face_connect[face] == neighbor_face)
+    connected_to_neigh = np.where(face_connect[neighbor_face] == face)
     if len(connected_to_face[0]) == 0:
         found = False
     else:
@@ -47,8 +51,8 @@ def _llc_mutual_direction(face, neighbor_face, transitive=False):
         return connected_to_face[0][0], connected_to_neigh[0][0]
     elif transitive:
         common = -1
-        for i in LLC_FACE_CONNECT[face]:
-            if i in LLC_FACE_CONNECT[neighbor_face]:
+        for i in face_connect[face]:
+            if i in face_connect[neighbor_face]:
                 common = i
                 break
         if common < 0:
@@ -56,10 +60,10 @@ def _llc_mutual_direction(face, neighbor_face, transitive=False):
                 "The two faces does not share common face, transitive did not help"
             )
         else:
-            edge_1 = np.where(LLC_FACE_CONNECT[face] == common)[0][0]
-            new_edge_1 = np.where(LLC_FACE_CONNECT[common] == face)[0][0]
-            edge_2 = np.where(LLC_FACE_CONNECT[common] == neighbor_face)[0][0]
-            new_edge_2 = np.where(LLC_FACE_CONNECT[neighbor_face] == common)[0][0]
+            edge_1 = np.where(face_connect[face] == common)[0][0]
+            new_edge_1 = np.where(face_connect[common] == face)[0][0]
+            edge_2 = np.where(face_connect[common] == neighbor_face)[0][0]
+            new_edge_2 = np.where(face_connect[neighbor_face] == common)[0][0]
             if (edge_1 in [0, 1] and new_edge_1 in [0, 1]) or (
                 edge_1 in [2, 3] and new_edge_1 in [2, 3]
             ):
@@ -77,15 +81,14 @@ def _llc_mutual_direction(face, neighbor_face, transitive=False):
 
 
 @compileable
-def _llc_get_the_other_edge(face, edge):
+def _llc_get_the_other_edge(face, edge, face_connect=LLC_FACE_CONNECT):
     """See what is adjacent to the face by this edge.
 
     The compileable version of get_the_other_edge for llc grid.
     See Topology.get_the_other_edge for more detail.
     """
-    face_connect = LLC_FACE_CONNECT
     neighbor_face = face_connect[face, edge]
-    if neighbor_face == 42:
+    if neighbor_face == 999:
         raise IndexError(
             "Reaching the edge where the face is not connected to any other face"
         )
