@@ -25,7 +25,7 @@ def pooch_prepare():
     """Prepare for loading datasets using pooch."""
     pooch_testdata = pooch.create(
         path=pooch.os_cache("seaduck"),
-        base_url="doi:10.5281/zenodo.7949168",
+        base_url="doi:10.5281/zenodo.15884732",
         registry=None,
     )
     pooch_testdata.load_registry_from_doi()  # Automatically populate the registry
@@ -657,7 +657,7 @@ def find_cs_sn(thetaA, phiA, thetaB, phiB):
     sin_AB = np.sqrt(1 - cos_AB**2)
     # spherical law of sine on triangle AOB
     SN = np.sin(BO) * np.sin(dphi) / sin_AB
-    CS = np.sign(thetaB - thetaA) * np.sqrt(1 - SN**2)
+    CS = np.sign(phiB - phiA) * np.sqrt(1 - SN**2)
     return CS, SN
 
 

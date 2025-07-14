@@ -75,7 +75,7 @@ def test_tz_not_None(od):
 
 
 @pytest.mark.parametrize("y,t", [(10.4586420059204, None), (None, 698155200.0)])
-@pytest.mark.parametrize("od", ["ecco"], indirect=True)
+@pytest.mark.parametrize("od", ["ecco", "aste"], indirect=True)
 def test_xyt_is_None(od, y, t):
     ap = sd.Position()
     ap.from_latlon(x=-37.5, y=y, z=-9.0, t=t, data=od)

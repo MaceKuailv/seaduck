@@ -5,38 +5,42 @@ import numpy as np
 
 from seaduck.runtime_conf import compileable
 
-# legal_tends = [0, 1, 2, 3]  # up,down,left,right #list(LLC_FACE_CONNECT.columns)
-
 LLC_FACE_CONNECT = np.array(
     [
-        [1, 42, 12, 3],
+        [1, 999, 12, 3],
         [2, 0, 11, 4],
         [6, 1, 10, 5],
-        [4, 42, 0, 9],
+        [4, 999, 0, 9],
         [5, 3, 1, 8],
         [6, 4, 2, 7],
         [10, 5, 2, 7],
         [10, 5, 6, 8],
         [11, 4, 7, 9],
-        [12, 3, 8, 42],
+        [12, 3, 8, 999],
         [2, 7, 6, 11],
         [1, 8, 10, 12],
-        [0, 9, 11, 42],
+        [0, 9, 11, 999],
     ]
+)
+
+ASTE_FACE_CONNECT = np.array(
+    [[1, 999, 3, 999], [3, 999, 0, 2], [3, 999, 1, 999], [0, 2, 1, 999]]
 )
 
 DIRECTIONS = np.array([np.pi / 2, -np.pi / 2, np.pi, 0])
 
 
 @compileable
-def _llc_mutual_direction(face, neighbor_face, transitive=False):
+def _llc_mutual_direction(
+    face, neighbor_face, transitive=False, face_connect=LLC_FACE_CONNECT
+):
     """Find the relative orientation of two faces.
 
     The compileable version of mutual direction for llc grid.
     See Topology.mutual direction for more detail.
     """
-    connected_to_face = np.where(LLC_FACE_CONNECT[face] == neighbor_face)
-    connected_to_neigh = np.where(LLC_FACE_CONNECT[neighbor_face] == face)
+    connected_to_face = np.where(face_connect[face] == neighbor_face)
+    connected_to_neigh = np.where(face_connect[neighbor_face] == face)
     if len(connected_to_face[0]) == 0:
         found = False
     else:
@@ -47,8 +51,8 @@ def _llc_mutual_direction(face, neighbor_face, transitive=False):
         return connected_to_face[0][0], connected_to_neigh[0][0]
     elif transitive:
         common = -1
-        for i in LLC_FACE_CONNECT[face]:
-            if i in LLC_FACE_CONNECT[neighbor_face]:
+        for i in face_connect[face]:
+            if i in face_connect[neighbor_face]:
                 common = i
                 break
         if common < 0:
@@ -56,10 +60,10 @@ def _llc_mutual_direction(face, neighbor_face, transitive=False):
                 "The two faces does not share common face, transitive did not help"
             )
         else:
-            edge_1 = np.where(LLC_FACE_CONNECT[face] == common)[0][0]
-            new_edge_1 = np.where(LLC_FACE_CONNECT[common] == face)[0][0]
-            edge_2 = np.where(LLC_FACE_CONNECT[common] == neighbor_face)[0][0]
-            new_edge_2 = np.where(LLC_FACE_CONNECT[neighbor_face] == common)[0][0]
+            edge_1 = np.where(face_connect[face] == common)[0][0]
+            new_edge_1 = np.where(face_connect[common] == face)[0][0]
+            edge_2 = np.where(face_connect[common] == neighbor_face)[0][0]
+            new_edge_2 = np.where(face_connect[neighbor_face] == common)[0][0]
             if (edge_1 in [0, 1] and new_edge_1 in [0, 1]) or (
                 edge_1 in [2, 3] and new_edge_1 in [2, 3]
             ):
@@ -77,15 +81,14 @@ def _llc_mutual_direction(face, neighbor_face, transitive=False):
 
 
 @compileable
-def _llc_get_the_other_edge(face, edge):
+def _llc_get_the_other_edge(face, edge, face_connect=LLC_FACE_CONNECT):
     """See what is adjacent to the face by this edge.
 
     The compileable version of get_the_other_edge for llc grid.
     See Topology.get_the_other_edge for more detail.
     """
-    face_connect = LLC_FACE_CONNECT
     neighbor_face = face_connect[face, edge]
-    if neighbor_face == 42:
+    if neighbor_face == 999:
         raise IndexError(
             "Reaching the edge where the face is not connected to any other face"
         )
@@ -143,7 +146,7 @@ def _x_per_ind_tend(ind, tend, iymax, ixmax):
 
 
 @compileable
-def _llc_ind_tend(ind, tendency, iymax, ixmax):
+def _llc_ind_tend(ind, tendency, iymax, ixmax, face_connect=LLC_FACE_CONNECT):
     """Move an index in a direction.
 
     The compileable version of ind_tend for llc grid.
@@ -156,7 +159,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != ixmax:
             ix += 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 3)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 3, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ixmax - iy]
             elif new_edge == 0:
@@ -169,7 +174,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if ix != 0:
             ix -= 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 2)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 2, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, iy]
             elif new_edge == 0:
@@ -182,7 +189,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if iy != iymax:
             iy += 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 0)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 0, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ix]
             elif new_edge == 0:
@@ -195,7 +204,9 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
         if iy != 0:
             iy -= 1
         else:
-            neighbor_face, new_edge = _llc_get_the_other_edge(face, 1)
+            neighbor_face, new_edge = _llc_get_the_other_edge(
+                face, 1, face_connect=face_connect
+            )
             if new_edge == 1:
                 face, iy, ix = [neighbor_face, 0, ixmax - ix]
             elif new_edge == 0:
@@ -208,7 +219,7 @@ def _llc_ind_tend(ind, tendency, iymax, ixmax):
 
 
 @compileable
-def _llc_get_uv_mask_from_face(faces):
+def _llc_get_uv_mask_from_face(faces, face_connect=LLC_FACE_CONNECT):
     """Get the masking of UV points.
 
     The compileable version of get_uv_mask_from_face for llc grid.
@@ -232,7 +243,7 @@ def _llc_get_uv_mask_from_face(faces):
             else:
                 # get how much the new face is rotated from the old face
                 edge, new_edge = _llc_mutual_direction(
-                    faces[0], faces[i], transitive=True
+                    faces[0], faces[i], transitive=True, face_connect=face_connect
                 )
                 rot = np.pi - DIRECTIONS[edge] + DIRECTIONS[new_edge]
                 # you can think of this as a rotation matrix
@@ -260,7 +271,7 @@ class Topology:
         Currently we support
         'box' for regional dataset,
         'x-periodic' for zonally periodic ones,
-        'llc' for lat-lon-cap dataset.
+        'LLC' for lat-lon-cap dataset.
         We recommend that users put None here,
         so that the type is figured out automatically.
     """
@@ -298,6 +309,10 @@ class Topology:
                 self.ixmax -= 1
                 if self.num_face == 13:
                     self.typ = "LLC"
+                    self.face_connect = LLC_FACE_CONNECT
+                elif self.num_face == 4:  # Assuming ASTE unless
+                    self.typ = "LLC"
+                    self.face_connect = ASTE_FACE_CONNECT
                     # we can potentially generate the face connection in runtime
                     # say, put the csv file on cloud
                 else:
@@ -344,7 +359,7 @@ class Topology:
             The face is connected to new_face in which direction.
         """
         if self.typ == "LLC":
-            return _llc_get_the_other_edge(face, edge)
+            return _llc_get_the_other_edge(face, edge, face_connect=self.face_connect)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -361,7 +376,9 @@ class Topology:
         2. the 1st face is to which direction of the 2nd face.
         """
         if self.typ == "LLC":
-            return _llc_mutual_direction(face, new_face, **kwarg)
+            return _llc_mutual_direction(
+                face, new_face, face_connect=self.face_connect, **kwarg
+            )
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
@@ -392,7 +409,14 @@ class Topology:
             return tuple(-1 for i in ind)
         if self.typ == "LLC":
             if cuvwg == "C":
-                to_return = _llc_ind_tend(ind, tend, self.iymax, self.ixmax, **kwarg)
+                to_return = _llc_ind_tend(
+                    ind,
+                    tend,
+                    self.iymax,
+                    self.ixmax,
+                    face_connect=self.face_connect,
+                    **kwarg,
+                )
             elif cuvwg == "U":
                 _, to_return = self._ind_tend_U(ind, tend)
             elif cuvwg == "V":
@@ -654,7 +678,7 @@ class Topology:
             1D iterable of faces, the first one is assumed to be the reference.
         """
         if self.typ == "LLC":
-            return _llc_get_uv_mask_from_face(faces)
+            return _llc_get_uv_mask_from_face(faces, face_connect=self.face_connect)
         elif self.typ in ["x_periodic", "box"]:
             raise ValueError(
                 "It makes no sense to tinker with face_connection when there is only one face"
