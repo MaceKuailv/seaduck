@@ -22,6 +22,18 @@ def test_get_the_neighbor_face(tp, face, edge):
     assert ne in range(4)
 
 
+@pytest.mark.parametrize("face", [0, 1, 2, 3])
+@pytest.mark.parametrize("edge", [0, 1, 2, 3])
+@pytest.mark.parametrize("tp", ["aste"], indirect=True)
+def test_get_the_neighbor_face_aste(tp, face, edge):
+    try:
+        nf, ne = tp.get_the_other_edge(face, edge)
+        assert nf in range(4)
+        assert ne in range(4)
+    except IndexError:
+        pass
+
+
 @pytest.mark.parametrize(
     "typ,error",
     [
@@ -77,6 +89,25 @@ def test_llc_ind_tend(tp, ind, tend, result):
     assert res == result
 
 
+@pytest.mark.parametrize(
+    "ind,tend,result",
+    [
+        ((1, 45, 45), 0, (1, 46, 45)),
+        ((1, 45, 45), 1, (1, 44, 45)),
+        ((1, 45, 45), 2, (1, 45, 44)),
+        ((1, 45, 45), 3, (1, 45, 46)),
+        ((0, 269, 269), 0, (1, 0, 0)),
+        ((1, 0, 0), 2, (0, 269, 269)),
+        ((1, 269, 0), 0, (3, 269, 0)),
+        ((1, 269, 269), 3, (2, 269, 0)),
+    ],
+)
+@pytest.mark.parametrize("tp", ["aste"], indirect=True)
+def test_llc_ind_tend_aste(tp, ind, tend, result):
+    res = tp.ind_tend(ind, tend)
+    assert res == result
+
+
 @pytest.mark.parametrize("tend", [0, 1, 2, 3])
 @pytest.mark.parametrize("tp", ["aviso", "rect"], indirect=True)
 def test_boxish_ind_tend(tp, tend):
@@ -109,6 +140,25 @@ mundane = np.array([[[1.0, 1.0]], [[0.0, 0.0]], [[0.0, -0.0]], [[1.0, 1.0]]])
 )
 @pytest.mark.parametrize("tp", ["ecco"], indirect=True)
 def test_4_matrix(tp, fface, cis):
+    ans = np.array(tp.four_matrix_for_uv(fface))
+    if cis:
+        assert np.allclose(ans, mundane)
+    else:
+        assert not np.allclose(ans, mundane)
+
+
+@pytest.mark.parametrize(
+    "fface,cis",
+    [
+        (np.array([[1, 1]]), True),
+        (np.array([[1, 2]]), True),
+        (np.array([[1, 3]]), False),
+        (np.array([[0, 3]]), False),
+        (np.array([[2, 3]]), True),
+    ],
+)
+@pytest.mark.parametrize("tp", ["aste"], indirect=True)
+def test_4_matrix_aste(tp, fface, cis):
     ans = np.array(tp.four_matrix_for_uv(fface))
     if cis:
         assert np.allclose(ans, mundane)
