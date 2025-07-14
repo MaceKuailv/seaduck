@@ -57,7 +57,8 @@ You can use [Sciserver](https://sciserver.org/)! (Am I too dramatic?). Sciserver
 
 ```python
 import ocenspy as ospy
-od = ospy.open_oceandataset.from_catalog('NameOfDataset')
+
+od = ospy.open_oceandataset.from_catalog("NameOfDataset")
 ds = od._ds
 ```
 

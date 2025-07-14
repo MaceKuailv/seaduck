@@ -447,7 +447,8 @@ document.write(`
 Say you have something really cool you want to demonstrate, but the dataset it is based on is to large to distribute or it simply takes too long to run. Wouldn’t it be nice if we could have a cloud platform that host a bunch of ocean dataset that is free for everyone to use? It would be even better if the packages I need as an oceanographer is readily installed and I don’t have to worry about a thing.
 You can use <a class="reference external" href="https://sciserver.org/">Sciserver</a>! (Am I too dramatic?). Sciserver is also the home base of <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/">oceanspy</a>, a package that will make your life so much easier as a oceanographer. After registering on sciserver (you can follow this youtube tutorial <a class="reference external" href="https://www.youtube.com/channel/UCpYkjUrm2a_ANY86Fb4uyvg">here</a>), you can simply call this oceanspy function</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ocenspy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ospy</span>
-<span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s1">&#39;NameOfDataset&#39;</span><span class="p">)</span>
+
+<span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;NameOfDataset&quot;</span><span class="p">)</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span>
 </pre></div>
 </div>
