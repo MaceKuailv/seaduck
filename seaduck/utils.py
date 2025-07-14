@@ -25,7 +25,7 @@ def pooch_prepare():
     """Prepare for loading datasets using pooch."""
     pooch_testdata = pooch.create(
         path=pooch.os_cache("seaduck"),
-        base_url="doi:10.5281/zenodo.7949168",
+        base_url="doi:10.5281/zenodo.15884732",
         registry=None,
     )
     pooch_testdata.load_registry_from_doi()  # Automatically populate the registry
