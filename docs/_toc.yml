@@ -36,6 +36,7 @@ parts:
     sections:
     - file: notebook/global_ECCO
     - file: notebook/AVISO
+    - file: notebook/ASTE_sd.Particle_example
     - file: notebook/topology_tutorial
   - file: sciserver_example
     sections:
