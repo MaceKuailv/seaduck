@@ -110,7 +110,7 @@ def get_dataset(name):
     Parameters
     ----------
     name: string
-        The name of dataset, now support "ecco", "aviso", "curv", "rect"
+        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste"
     """
     pooch_testdata, pooch_fetch_kwargs = pooch_prepare()
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
