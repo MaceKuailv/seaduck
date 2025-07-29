@@ -8,7 +8,7 @@ logo: logo.png
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  timeout: 300
+  timeout: 600
   execute_notebooks: 'auto'
   stderr_output: "remove"
   exclude_patterns:
