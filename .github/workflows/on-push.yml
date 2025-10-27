@@ -48,7 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Download combined environments
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         name: combined-environments
         path: ci
@@ -77,7 +77,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Download combined environments
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         name: combined-environments
         path: ci
@@ -103,7 +103,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Download combined environments
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         name: combined-environments
         path: ci
