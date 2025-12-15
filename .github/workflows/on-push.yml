@@ -31,7 +31,7 @@ jobs:
       run: |
         $CONDA/bin/conda-merge ci/environment-ci.yml environment.yml > ci/combined-environment-ci.yml
     - name: Archive combined environments
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: combined-environments
         path: ci/combined-environment-*.yml
