@@ -1,5 +1,6 @@
 import copy
 import logging
+import warnings
 
 import numpy as np
 
@@ -987,7 +988,7 @@ class Position:
         try:
             z_in_maskc_dims = "Z" in self.ocedata["maskC"].dims
         except (AttributeError, KeyError):
-            logging.warning("No maskC in dataset. Perhaps set ds['maskC'] = ds.HFacC")
+            warnings.warn("No maskC in dataset. Perhaps set ds['maskC'] = ds.HFacC")
             for hs in hsh:
                 mask_lookup[hs] = None
             return mask_lookup
