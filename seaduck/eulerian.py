@@ -984,6 +984,13 @@ class Position:
         """
         hsh = np.unique(list(hash_mask.values()))
         mask_lookup = {}
+        try:
+            z_in_maskc_dims = "Z" in self.ocedata["maskC"].dims
+        except (AttributeError, KeyError):
+            logging.warning("No maskC in dataset. Perhaps set ds['maskC'] = ds.HFacC")
+            for hs in hsh:
+                mask_lookup[hs] = None
+            return mask_lookup
         for hs in hsh:
             main_key = get_key_by_value(hash_mask, hs)
             var_name, dims, knw = main_dict[main_key]
@@ -998,7 +1005,10 @@ class Position:
                 mask_lookup[hs] = None
             elif isinstance(var_name, str):
                 ind = index_lookup[hsind]
-                ind_for_mask = _ind_for_mask(ind, dims)
+                if z_in_maskc_dims:
+                    ind_for_mask = _ind_for_mask(ind, dims)
+                else:
+                    ind_for_mask = ind
                 if "Zl" in dims:
                     cuvw = "Wvel"
                 elif "Z" in dims:
