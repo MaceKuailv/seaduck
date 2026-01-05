@@ -1,4 +1,5 @@
 import numpy as np
+from packaging.version import parse
 
 from seaduck.utils import _left90, _right90
 
@@ -79,9 +80,19 @@ def create_ecco_grid(ds, for_outer=False):
     }
     if for_outer:
         coords["Z"] = {"center": "Z", "outer": "Zl"}
-    xgcmgrd = xgcm.Grid(
-        ds, periodic=False, face_connections=face_connections, coords=coords
-    )
+    if parse(xgcm.__version__) >= parse("0.9.0"):
+        # xgcm trying to be smart.
+        xgcmgrd = xgcm.Grid(
+            ds,
+            periodic=False,
+            face_connections=face_connections,
+            coords=coords,
+            autoparse_metadata=False,
+        )
+    else:
+        xgcmgrd = xgcm.Grid(
+            ds, periodic=False, face_connections=face_connections, coords=coords
+        )
     return xgcmgrd
 
 
