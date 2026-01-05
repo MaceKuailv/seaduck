@@ -19,10 +19,10 @@ conda-env-update:
 	$(CONDA) env update $(CONDAFLAGS) -f environment.yml
 
 docs-build:
-	jupyter-book build docs/ -W --keep-going
+	jupyter-book build docs/ --warningiserror --keep-going
 
 link-check:
-	jupyter-book build docs/ -W --keep-going --builder linkcheck
+	jupyter-book build docs/ --warningiserror --keep-going --builder linkcheck
 
 joss:
 	pandoc paper/paper.md --bibliography paper/paper.bib -o paper/paper_local.pdf
