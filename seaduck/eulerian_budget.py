@@ -80,7 +80,7 @@ def create_ecco_grid(ds, for_outer=False):
     }
     if for_outer:
         coords["Z"] = {"center": "Z", "outer": "Zl"}
-    if parse(xgcm.__version__) > parse("0.9.0"):
+    if parse(xgcm.__version__) >= parse("0.9.0"):
         # xgcm trying to be smart.
         xgcmgrd = xgcm.Grid(
             ds,
