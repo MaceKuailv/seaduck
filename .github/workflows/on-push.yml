@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Install conda-merge
       run: |
         $CONDA/bin/python -m pip install conda-merge
@@ -46,7 +46,7 @@ jobs:
         optional-dependencies: ["", "numba"]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Download combined environments
       uses: actions/download-artifact@v7
       with:
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Download combined environments
       uses: actions/download-artifact@v7
       with:
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Download combined environments
       uses: actions/download-artifact@v7
       with:
