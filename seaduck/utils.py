@@ -27,6 +27,7 @@ def pooch_prepare():
         path=pooch.os_cache("seaduck"),
         base_url="doi:10.5281/zenodo.15884732",
         registry=None,
+        retry_if_failed=5,
     )
     pooch_testdata.load_registry_from_doi()  # Automatically populate the registry
     pooch_fetch_kwargs = {"progressbar": True}
