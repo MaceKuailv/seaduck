@@ -11,6 +11,7 @@ execute:
   timeout: 600
   execute_notebooks: 'auto'
   stderr_output: "remove"
+  raise_on_error: true
   exclude_patterns:
   - '*.md'
 
@@ -25,6 +26,7 @@ sphinx:
   - 'sphinx.ext.autodoc'
   - 'sphinx.ext.napoleon'
   config:
+    warningiserror: true
     html_theme: sphinx_book_theme
     autodoc_member_order: groupwise
     html_theme_options:
