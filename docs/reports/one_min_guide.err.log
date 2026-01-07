@@ -1,0 +1,179 @@
+Traceback (most recent call last):
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/home/wjiang33/miniconda3/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/wjiang33/miniconda3/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import seaduck as sd
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mValueError[0m                                Traceback (most recent call last)
+Cell [0;32mIn[1], line 1[0m
+[0;32m----> 1[0m [38;5;28;01mimport[39;00m [38;5;21;01mseaduck[39;00m [38;5;28;01mas[39;00m [38;5;21;01msd[39;00m
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/seaduck/__init__.py:23[0m
+[1;32m     19[0m [38;5;28;01mexcept[39;00m [38;5;167;01mImportError[39;00m:  [38;5;66;03m# pragma: no cover[39;00m
+[1;32m     20[0m     [38;5;66;03m# Local copy or not installed with setuptools[39;00m
+[1;32m     21[0m     __version__ [38;5;241m=[39m [38;5;124m"[39m[38;5;124m999[39m[38;5;124m"[39m
+[0;32m---> 23[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01meulerian[39;00m [38;5;28;01mimport[39;00m Position
+[1;32m     24[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01mkernel_weight[39;00m [38;5;28;01mimport[39;00m KnW
+[1;32m     25[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01mlagrangian[39;00m [38;5;28;01mimport[39;00m Particle
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/seaduck/eulerian.py:6[0m
+[1;32m      2[0m [38;5;28;01mimport[39;00m [38;5;21;01mlogging[39;00m
+[1;32m      4[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m----> 6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01mget_masks[39;00m [38;5;28;01mimport[39;00m get_masked
+[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01mkernel_weight[39;00m [38;5;28;01mimport[39;00m KnW, _find_pk_4d, _translate_to_tendency
+[1;32m      8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01mocedata[39;00m [38;5;28;01mimport[39;00m HRel, OceData, RelCoord, TRel, VlLinRel, VlRel, VRel
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/seaduck/get_masks.py:6[0m
+[1;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01mwarnings[39;00m
+[1;32m      5[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m----> 6[0m [38;5;28;01mimport[39;00m [38;5;21;01mxarray[39;00m [38;5;28;01mas[39;00m [38;5;21;01mxr[39;00m
+[1;32m      8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01mocedata[39;00m [38;5;28;01mimport[39;00m RelCoord
+[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mseaduck[39;00m[38;5;21;01m.[39;00m[38;5;21;01msmart_read[39;00m [38;5;28;01mimport[39;00m smart_read
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/xarray/__init__.py:1[0m
+[0;32m----> 1[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m [38;5;28;01mimport[39;00m testing, tutorial, ufuncs
+[1;32m      2[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mbackends[39;00m[38;5;21;01m.[39;00m[38;5;21;01mapi[39;00m [38;5;28;01mimport[39;00m (
+[1;32m      3[0m     load_dataarray,
+[1;32m      4[0m     load_dataset,
+[0;32m   (...)[0m
+[1;32m      8[0m     save_mfdataset,
+[1;32m      9[0m )
+[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mbackends[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrasterio_[39;00m [38;5;28;01mimport[39;00m open_rasterio
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/xarray/testing.py:8[0m
+[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mtyping[39;00m [38;5;28;01mimport[39;00m Hashable, Set, Union
+[1;32m      6[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mxarray[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcore[39;00m [38;5;28;01mimport[39;00m duck_array_ops, formatting, utils
+[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mxarray[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcore[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdataarray[39;00m [38;5;28;01mimport[39;00m DataArray
+[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01mxarray[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcore[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdataset[39;00m [38;5;28;01mimport[39;00m Dataset
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/xarray/core/duck_array_ops.py:24[0m
+[1;32m     21[0m [38;5;28;01mfrom[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mimport[39;00m take, tensordot, transpose, unravel_index  [38;5;66;03m# noqa[39;00m
+[1;32m     22[0m [38;5;28;01mfrom[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mimport[39;00m where [38;5;28;01mas[39;00m _where
+[0;32m---> 24[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m [38;5;28;01mimport[39;00m dask_array_compat, dask_array_ops, dtypes, npcompat, nputils
+[1;32m     25[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mnputils[39;00m [38;5;28;01mimport[39;00m nanfirst, nanlast
+[1;32m     26[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mpycompat[39;00m [38;5;28;01mimport[39;00m (
+[1;32m     27[0m     cupy_array_type,
+[1;32m     28[0m     dask_array_type,
+[0;32m   (...)[0m
+[1;32m     31[0m     sparse_version,
+[1;32m     32[0m )
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/xarray/core/dask_array_compat.py:5[0m
+[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01mwarnings[39;00m
+[1;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mpycompat[39;00m [38;5;28;01mimport[39;00m dask_version
+[1;32m      7[0m [38;5;28;01mtry[39;00m:
+[1;32m      8[0m     [38;5;28;01mimport[39;00m [38;5;21;01mdask[39;00m[38;5;21;01m.[39;00m[38;5;21;01marray[39;00m [38;5;28;01mas[39;00m [38;5;21;01mda[39;00m
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/xarray/core/pycompat.py:55[0m
+[1;32m     51[0m     [38;5;28;01melse[39;00m:
+[1;32m     52[0m         [38;5;28;01mreturn[39;00m [38;5;28;01mFalse[39;00m
+[0;32m---> 55[0m dsk [38;5;241m=[39m [43mDuckArrayModule[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mdask[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m     56[0m dask_version [38;5;241m=[39m dsk[38;5;241m.[39mversion
+[1;32m     57[0m dask_array_type [38;5;241m=[39m dsk[38;5;241m.[39mtype
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/xarray/core/pycompat.py:25[0m, in [0;36mDuckArrayModule.__init__[0;34m(self, mod)[0m
+[1;32m     22[0m duck_array_version [38;5;241m=[39m LooseVersion(duck_array_module[38;5;241m.[39m__version__)
+[1;32m     24[0m [38;5;28;01mif[39;00m mod [38;5;241m==[39m [38;5;124m"[39m[38;5;124mdask[39m[38;5;124m"[39m:
+[0;32m---> 25[0m     duck_array_type [38;5;241m=[39m ([43mimport_module[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mdask.array[39;49m[38;5;124;43m"[39;49m[43m)[49m[38;5;241m.[39mArray,)
+[1;32m     26[0m [38;5;28;01melif[39;00m mod [38;5;241m==[39m [38;5;124m"[39m[38;5;124mpint[39m[38;5;124m"[39m:
+[1;32m     27[0m     duck_array_type [38;5;241m=[39m (duck_array_module[38;5;241m.[39mQuantity,)
+
+File [0;32m~/miniconda3/lib/python3.9/importlib/__init__.py:127[0m, in [0;36mimport_module[0;34m(name, package)[0m
+[1;32m    125[0m             [38;5;28;01mbreak[39;00m
+[1;32m    126[0m         level [38;5;241m+[39m[38;5;241m=[39m [38;5;241m1[39m
+[0;32m--> 127[0m [38;5;28;01mreturn[39;00m [43m_bootstrap[49m[38;5;241;43m.[39;49m[43m_gcd_import[49m[43m([49m[43mname[49m[43m[[49m[43mlevel[49m[43m:[49m[43m][49m[43m,[49m[43m [49m[43mpackage[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/dask/array/__init__.py:2[0m
+[1;32m      1[0m [38;5;28;01mtry[39;00m:
+[0;32m----> 2[0m     [38;5;28;01mfrom[39;00m [38;5;21;01mdask[39;00m[38;5;21;01m.[39;00m[38;5;21;01marray[39;00m [38;5;28;01mimport[39;00m backends, fft, lib, linalg, ma, overlap, random
+[1;32m      3[0m     [38;5;28;01mfrom[39;00m [38;5;21;01mdask[39;00m[38;5;21;01m.[39;00m[38;5;21;01marray[39;00m[38;5;21;01m.[39;00m[38;5;21;01mblockwise[39;00m [38;5;28;01mimport[39;00m atop, blockwise
+[1;32m      4[0m     [38;5;28;01mfrom[39;00m [38;5;21;01mdask[39;00m[38;5;21;01m.[39;00m[38;5;21;01marray[39;00m[38;5;21;01m.[39;00m[38;5;21;01mchunk_types[39;00m [38;5;28;01mimport[39;00m register_chunk_type
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/dask/array/fft.py:8[0m
+[1;32m      6[0m [38;5;28;01mtry[39;00m:
+[1;32m      7[0m     [38;5;28;01mimport[39;00m [38;5;21;01mscipy[39;00m
+[0;32m----> 8[0m     [38;5;28;01mimport[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mfftpack[39;00m
+[1;32m      9[0m [38;5;28;01mexcept[39;00m [38;5;167;01mImportError[39;00m:
+[1;32m     10[0m     scipy [38;5;241m=[39m [38;5;28;01mNone[39;00m
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/scipy/fftpack/__init__.py:94[0m
+[1;32m      1[0m [38;5;124;03m"""[39;00m
+[1;32m      2[0m [38;5;124;03m=========================================================[39;00m
+[1;32m      3[0m [38;5;124;03mLegacy discrete Fourier transforms (:mod:`scipy.fftpack`)[39;00m
+[0;32m   (...)[0m
+[1;32m     78[0m 
+[1;32m     79[0m [38;5;124;03m"""[39;00m
+[1;32m     82[0m __all__ [38;5;241m=[39m [[38;5;124m'[39m[38;5;124mfft[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mifft[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mfftn[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mifftn[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mrfft[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mirfft[39m[38;5;124m'[39m,
+[1;32m     83[0m            [38;5;124m'[39m[38;5;124mfft2[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mifft2[39m[38;5;124m'[39m,
+[1;32m     84[0m            [38;5;124m'[39m[38;5;124mdiff[39m[38;5;124m'[39m,
+[0;32m   (...)[0m
+[1;32m     91[0m            [38;5;124m'[39m[38;5;124mdct[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124midct[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mdst[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124midst[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mdctn[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124midctn[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mdstn[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124midstn[39m[38;5;124m'[39m
+[1;32m     92[0m            ]
+[0;32m---> 94[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_basic[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
+[1;32m     95[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_pseudo_diffs[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
+[1;32m     96[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_helper[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/scipy/fftpack/_basic.py:8[0m
+[1;32m      4[0m [38;5;66;03m# Created by Pearu Peterson, August,September 2002[39;00m
+[1;32m      5[0m __all__ [38;5;241m=[39m [[38;5;124m'[39m[38;5;124mfft[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mifft[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mfftn[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mifftn[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mrfft[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mirfft[39m[38;5;124m'[39m,
+[1;32m      6[0m            [38;5;124m'[39m[38;5;124mfft2[39m[38;5;124m'[39m,[38;5;124m'[39m[38;5;124mifft2[39m[38;5;124m'[39m]
+[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mfft[39;00m [38;5;28;01mimport[39;00m _pocketfft
+[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_helper[39;00m [38;5;28;01mimport[39;00m _good_shape
+[1;32m     12[0m [38;5;28;01mdef[39;00m [38;5;21mfft[39m(x, n[38;5;241m=[39m[38;5;28;01mNone[39;00m, axis[38;5;241m=[39m[38;5;241m-[39m[38;5;241m1[39m, overwrite_x[38;5;241m=[39m[38;5;28;01mFalse[39;00m):
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/scipy/fft/__init__.py:90[0m
+[1;32m     85[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_basic[39;00m [38;5;28;01mimport[39;00m (
+[1;32m     86[0m     fft, ifft, fft2, ifft2, fftn, ifftn,
+[1;32m     87[0m     rfft, irfft, rfft2, irfft2, rfftn, irfftn,
+[1;32m     88[0m     hfft, ihfft, hfft2, ihfft2, hfftn, ihfftn)
+[1;32m     89[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_realtransforms[39;00m [38;5;28;01mimport[39;00m dct, idct, dst, idst, dctn, idctn, dstn, idstn
+[0;32m---> 90[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_fftlog[39;00m [38;5;28;01mimport[39;00m fhtoffset
+[1;32m     91[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_fftlog_multimethods[39;00m [38;5;28;01mimport[39;00m fht, ifht
+[1;32m     92[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_helper[39;00m [38;5;28;01mimport[39;00m next_fast_len
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/scipy/fft/_fftlog.py:11[0m
+[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mwarnings[39;00m [38;5;28;01mimport[39;00m warn
+[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_basic[39;00m [38;5;28;01mimport[39;00m rfft, irfft
+[0;32m---> 11[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m.[39;00m[38;5;21;01mspecial[39;00m [38;5;28;01mimport[39;00m loggamma, poch
+[1;32m     13[0m __all__ [38;5;241m=[39m [
+[1;32m     14[0m     [38;5;124m'[39m[38;5;124mfht[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mifht[39m[38;5;124m'[39m,
+[1;32m     15[0m     [38;5;124m'[39m[38;5;124mfhtoffset[39m[38;5;124m'[39m,
+[1;32m     16[0m ]
+[1;32m     19[0m [38;5;66;03m# constants[39;00m
+
+File [0;32m~/miniconda3/lib/python3.9/site-packages/scipy/special/__init__.py:663[0m
+[1;32m      1[0m [38;5;124;03m"""[39;00m
+[1;32m      2[0m [38;5;124;03m========================================[39;00m
+[1;32m      3[0m [38;5;124;03mSpecial functions (:mod:`scipy.special`)[39;00m
+[0;32m   (...)[0m
+[1;32m    658[0m 
+[1;32m    659[0m [38;5;124;03m"""[39;00m
+[1;32m    661[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_sf_error[39;00m [38;5;28;01mimport[39;00m SpecialFunctionWarning, SpecialFunctionError
+[0;32m--> 663[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m [38;5;28;01mimport[39;00m _ufuncs
+[1;32m    664[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m_ufuncs[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
+[1;32m    666[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m [38;5;28;01mimport[39;00m _basic
+
+File [0;32m_ufuncs.pyx:1[0m, in [0;36minit scipy.special._ufuncs[0;34m()[0m
+
+[0;31mValueError[0m: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+
