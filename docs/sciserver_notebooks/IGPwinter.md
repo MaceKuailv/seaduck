@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.6
+    jupytext_version: 1.18.1
 kernelspec:
   display_name: Oceanography
   language: python
@@ -14,7 +14,7 @@ kernelspec:
 # `Particle` in an East Greenland regional simulation
 
 Author: Wenrui Jiang, Tom Haine Feb '23
-> **Warning**⚠️ : the notebook was last ran on **2023-11-22** with **seaduck 1.0.0**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
+> **Warning**⚠️ : the notebook was last ran on **2026-01-07** with **seaduck 1.0.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb. 
 ```{code-cell} ipython3
 :tags: [hide-input]
 
@@ -26,7 +26,7 @@ import seaduck as sd
 ```
 
 ```{admonition} Access IGPwinter
-The regional MITgcm run is the IGPwinter simulation [( Renfrew et al., 2019)](https://journals.ametsoc.org/view/journals/bams/100/9/bams-d-18-0217.1.xml) and is publicly available on [SciServer](https://sciserver.org/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html) method.
+The regional MITgcm run is the IGPwinter simulation [( Renfrew et al., 2019)](https://journals.ametsoc.org/view/journals/bams/100/9/bams-d-18-0217.1.xml) and is publicly available on [SciServer](https://sciserver.org/) (from the Oceanography container). The simulation output can be opened using the [OceanSpy](https://github.com/hainegroup/oceanspy) package using the [`from_catalog`](https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html) method. 
 
 `ecco = ospy.open_oceandataset.from_catalog("IGPwinter")`
 
