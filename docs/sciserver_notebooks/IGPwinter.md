@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.6
+    jupytext_version: 1.18.1
 kernelspec:
   display_name: Oceanography
   language: python
@@ -14,7 +14,7 @@ kernelspec:
 # `Particle` in an East Greenland regional simulation
 
 Author: Wenrui Jiang, Tom Haine Feb '23
-> **Warning**⚠️ : the notebook was last ran on **2023-11-22** with **seaduck 1.0.0**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
+> **Warning**⚠️ : the notebook was last ran on **2026-01-07** with **seaduck 1.0.3**. You can find the executable version at https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/IGPwinter.ipynb.
 ```{code-cell} ipython3
 :tags: [hide-input]
 
