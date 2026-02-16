@@ -135,7 +135,7 @@ def hor_div(tub, xgcmgrd, xfluxname, yfluxname):
     )
     x_diff = xy_diff["X"]
     y_diff = xy_diff["Y"]
-    hConv = -(x_diff + y_diff) / tub["Vol"]
+    hConv = (x_diff + y_diff) / tub["Vol"]
     return hConv
 
 
@@ -160,7 +160,7 @@ def ver_div(tub, xgcmgrd, zfluxname):
         xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
         / tub["Vol"]
     )
-    return vConv
+    return -vConv
 
 
 def total_div(tub, xgcmgrd, xfluxname, yfluxname, zfluxname):
@@ -176,9 +176,9 @@ def total_div(tub, xgcmgrd, xfluxname, yfluxname, zfluxname):
         The name of the variables corresponding to the vertical flux
         in concentration m^3/s
     """
-    hConv = hor_div(tub, xgcmgrd, xfluxname, yfluxname)
-    vConv = ver_div(tub, xgcmgrd, zfluxname)
-    return hConv + vConv
+    hDiv = hor_div(tub, xgcmgrd, xfluxname, yfluxname)
+    vDiv = ver_div(tub, xgcmgrd, zfluxname)
+    return hDiv + vDiv
 
 
 def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):

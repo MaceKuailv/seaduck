@@ -244,7 +244,7 @@ class OceData:
             4. time: Whether the dataset has a temporal dimension.
         """
         # TODO: make the check more detailed
-        varnames = list(self._ds.data_vars) + list(self._ds.coords)
+        varnames = list(self._ds.variables)
         readiness = {}
         if all(i in varnames for i in ["XC", "YC", "XG", "YG"]):
             readiness["h"] = "oceanparcel"
@@ -303,7 +303,7 @@ class OceData:
     def _add_missing_vol(self, as_numpy=False):
         if self.readiness["Zl"]:
             vol = self._ds["drF"] * self._ds["rA"]
-            if "HFacC" in self._ds.data_vars:
+            if "HFacC" in self._ds.variables:
                 vol *= self._ds["HFacC"]
         else:
             vol = self._ds["rA"]
