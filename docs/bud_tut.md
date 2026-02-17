@@ -4,7 +4,6 @@
 
 ```
 
-
 ::::{grid} 1 1 1 2
 :class-container: text-center
 :gutter: 2
