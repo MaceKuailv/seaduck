@@ -74,12 +74,14 @@ def create_ecco_grid(ds, for_outer=False):
     }
     coords = {
         "X": {"center": "X", "left": "Xp1"},
-        "Y": {"center": "Y", "left": "Yp1"},
-        "Z": {"center": "Z", "left": "Zl"},
-        "time": {"center": "time", "inner": "time_midp"},
+        "Y": {"center": "Y", "left": "Yp1"}
     }
-    if for_outer:
-        coords["Z"] = {"center": "Z", "outer": "Zl"}
+    if 'Z' in ds.dims:
+        coords["Z"] = {"center": "Z", "left": "Zl"}
+        if for_outer:
+            coords["Z"] = {"center": "Z", "outer": "Zl"}
+    if 'time' in ds.dims:
+        coords["time"] = {"center": "time", "inner": "time_midp"}
     if parse(xgcm.__version__) >= parse("0.9.0"):
         # xgcm trying to be smart.
         xgcmgrd = xgcm.Grid(
