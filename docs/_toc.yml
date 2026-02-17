@@ -47,7 +47,7 @@ parts:
   - file: bud_tut
     sections:
     - file: budget_tutorial/mean_eul_budg
-    - file: budget_tutorial/lag_bud_tut
+    - file: budget_tutorial/particle_bud_tut
 - caption: Contributing
   chapters:
   - file: guide_for_developer
