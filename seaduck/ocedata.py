@@ -305,6 +305,8 @@ class OceData:
             vol = self._ds["drF"] * self._ds["rA"]
             if "HFacC" in self._ds.variables:
                 vol *= self._ds["HFacC"]
+            elif "hFacC" in self._ds.variables:
+                vol *= self._ds["hFacC"]
         else:
             vol = self._ds["rA"]
         vol = vol.fillna(0)
