@@ -1,0 +1,42 @@
+Traceback (most recent call last):
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+ds['utrans'] = ds.u_bar*ds.dyG*ds.drF
+ds['vtrans'] = ds.v_bar*ds.dxG*ds.drF
+ds['wtrans'] = ds.w_bar*ds.rA
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mAttributeError[39m                            Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[4][39m[32m, line 1[39m
+[32m----> [39m[32m1[39m ds[[33m'[39m[33mutrans[39m[33m'[39m] = [43mds[49m[43m.[49m[43mu_bar[49m*ds.dyG*ds.drF
+[32m      2[39m ds[[33m'[39m[33mvtrans[39m[33m'[39m] = ds.v_bar*ds.dxG*ds.drF
+[32m      3[39m ds[[33m'[39m[33mwtrans[39m[33m'[39m] = ds.w_bar*ds.rA
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/core/common.py:306[39m, in [36mAttrAccessMixin.__getattr__[39m[34m(self, name)[39m
+[32m    304[39m         [38;5;28;01mwith[39;00m suppress([38;5;167;01mKeyError[39;00m):
+[32m    305[39m             [38;5;28;01mreturn[39;00m source[name]
+[32m--> [39m[32m306[39m [38;5;28;01mraise[39;00m [38;5;167;01mAttributeError[39;00m(
+[32m    307[39m     [33mf[39m[33m"[39m[38;5;132;01m{[39;00m[38;5;28mtype[39m([38;5;28mself[39m).[34m__name__[39m[38;5;132;01m!r}[39;00m[33m object has no attribute [39m[38;5;132;01m{[39;00mname[38;5;132;01m!r}[39;00m[33m"[39m
+[32m    308[39m )
+
+[31mAttributeError[39m: 'Dataset' object has no attribute 'u_bar'
+

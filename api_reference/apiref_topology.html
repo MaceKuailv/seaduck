@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>seaduck.topology &#8212; Seaduck Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_reference/apiref_topology';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="seaduck.eulerian" href="apiref_eulerian.html" />
+    <link rel="prev" title="seaduck.OceData" href="apiref_OceData.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Seaduck Tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Seaduck Tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_cite.html">How to cite</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../public_api_reference.html">Public API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_kernelNweight.html">seaduck.kernel_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_eulerian_budget.html">seaduck.eulerian_budget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_lagrangian_budget.html">seaduck.lagrangian_budget</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal_api_reference.html">Internal API reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_utils.html">seaduck.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/tilted_stream.html">Tilted solid-body rotation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/ASTE_sd.Particle_example.html">Using <code>seaduck.Particle</code> with ASTE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sciserver_example.html">Examples using SciServer ocean datasets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/IGPwinter.html"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in an East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/KangerFjord.html">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/LLC4320.html">Plot surface streamlines on LLC4320</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/ECCO_plot_stations.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bud_tut.html">Tutorials for Lagrangian tracer budget</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../budget_tutorial/mean_eul_budg.html">Calculating the mean Eulerian salinity budget in ECCOv4r4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../budget_tutorial/particle_bud_tut.html">Tracking Labrador Sea Water’s with Lagrangian budget</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/use_git.html">Using Git and Github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentation🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/report_iss.html">Report Issues on GitHub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/api_reference/apiref_topology.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>seaduck.topology</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-seaduck.topology">
+<span id="seaduck-topology"></span><h1>seaduck.topology<a class="headerlink" href="#module-seaduck.topology" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="seaduck.topology.Topology">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seaduck.topology.</span></span><span class="sig-name descname"><span class="pre">Topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">od</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Topology object.</p>
+<p>A light weight object that remembers the structure of the grid,
+what is connected, what is not. The core method is simply move the index to a direction.
+In the movie kill Bill, the bride sat in a car and said “wiggle your big toe”.
+After the toe moved, “the hard part is over”. You get the idea.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>od</strong> (<em>xarray.Dataset</em>) – The dataset to record topological info from.</p></li>
+<li><p><strong>typ</strong> (<em>None</em><em>, or </em><em>str</em>) – Type of the grid.
+Currently we support
+‘box’ for regional dataset,
+‘x-periodic’ for zonally periodic ones,
+‘LLC’ for lat-lon-cap dataset.
+We recommend that users put None here,
+so that the type is figured out automatically.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.check_illegal">
+<span class="sig-name descname"><span class="pre">check_illegal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.check_illegal" title="Permalink to this definition">#</a></dt>
+<dd><p>Check if the index is legal.</p>
+<p>A vectorized check to see whether the index is legal,
+index can be a tuple of numpy ndarrays.
+no negative index is permitted for sanity reason.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ind</strong> (<em>tuple</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p></li>
+<li><p><strong>cuvwg</strong> (<em>'C'</em><em> or </em><em>'G'</em>) – Whether use the center grid or the corner grid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.four_matrix_for_uv">
+<span class="sig-name descname"><span class="pre">four_matrix_for_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fface</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.four_matrix_for_uv" title="Permalink to this definition">#</a></dt>
+<dd><p>Expand get_uv_mask_from_face to 2D array of faces.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.get_the_other_edge">
+<span class="sig-name descname"><span class="pre">get_the_other_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_the_other_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>See what is adjacent to the face by this edge.</p>
+<p>The (edge) side of the (face) is connected to
+the (new_edge) side of the (new_face).
+0,1,2,3 stands for up, down, left, right.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>face</strong> (<em>int</em>) – The face of interst</p></li>
+<li><p><strong>edge</strong> (<em>0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3</em>) – which direction of the face we are looking for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>new_face</strong> (<em>int</em>) – The face adjacent to face in the edge direction.</p></li>
+<li><p><strong>new_edge</strong> (<em>0,1,2,3</em>) – The face is connected to new_face in which direction.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.get_uv_mask_from_face">
+<span class="sig-name descname"><span class="pre">get_uv_mask_from_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.get_uv_mask_from_face" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the masking of UV points.</p>
+<p>The background is as following:
+For a dataset with face connection,
+when one is finding the neighboring cells for vector interpolation,
+the fact that faces can be rotated against each other can create
+local inconsistency in vector definition near face connections.
+This method corrects that.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>faces</strong> (<em>iterable</em>) – 1D iterable of faces, the first one is assumed to be the reference.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.ind_moves">
+<span class="sig-name descname"><span class="pre">ind_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moves</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_moves" title="Permalink to this definition">#</a></dt>
+<dd><p>Move an index in a serie of directions.</p>
+<p>moves being a list of directions (0,1,2,3),
+ind being the starting index,
+return the index after moving in the directions in the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ind</strong> (<em>tuple</em>) – Index of the starting position</p></li>
+<li><p><strong>moves</strong> (<em>iterable</em>) – A sequence of steps to “walk” from the original position.</p></li>
+<li><p><strong>kwarg</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments that pass into ind_tend.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.ind_tend">
+<span class="sig-name descname"><span class="pre">ind_tend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuvwg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend" title="Permalink to this definition">#</a></dt>
+<dd><p>Move an index in a direction.</p>
+<p>ind is a tuple that is face,iy,ix,
+tendency again is up, down, left, right represented by 0,1,2,3
+return the next cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ind</strong> (<em>tuple</em>) – The index to find the neighbor of</p></li>
+<li><p><strong>tend</strong> (<em>int</em>) – Which direction to move from the original index.</p></li>
+<li><p><strong>cuvwg</strong> (<em>str</em><em>, </em><em>default &quot;C&quot;</em>) – Whether we are moving from C grid, U grid, V grid, or G grid.</p></li>
+<li><p><strong>kwarg</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword argument that currently only apply for the llc case.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.ind_tend_vec">
+<span class="sig-name descname"><span class="pre">ind_tend_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.ind_tend_vec" title="Permalink to this definition">#</a></dt>
+<dd><p>Move many indices in a list of directions.</p>
+<p>Vectorized version for ind_tend method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inds</strong> (<em>tuple of numpy.array</em><em> or </em><em>numpy.array</em>) – Each element of the tuple is iterable of one dimension of the indexes.</p></li>
+<li><p><strong>tend</strong> (<em>iterable</em>) – Which direction should each index take.</p></li>
+<li><p><strong>kwarg</strong> (<em>dict</em><em>,</em><em>optional</em>) – Keyword argument that feeds into ind_tend.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seaduck.topology.Topology.mutual_direction">
+<span class="sig-name descname"><span class="pre">mutual_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_face</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwarg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seaduck.topology.Topology.mutual_direction" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the relative orientation of two faces.</p>
+<p>0,1,2,3 stands for up, down, left, right
+given 2 faces, the returns are
+1. the 2nd face is to which direction of the 1st face
+2. the 1st face is to which direction of the 2nd face.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./api_reference"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="apiref_OceData.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">seaduck.OceData</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="apiref_eulerian.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">seaduck.eulerian</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Wenrui Jiang
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

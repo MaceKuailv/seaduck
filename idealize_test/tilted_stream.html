@@ -1,0 +1,1616 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Tilted solid-body rotation &#8212; Seaduck Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'idealize_test/tilted_stream';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples using ocean datasets" href="../ocean_example.html" />
+    <link rel="prev" title="Vertical stream function conservation" href="ver_stream.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Seaduck Tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Seaduck Tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_cite.html">How to cite</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../public_api_reference.html">Public API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_kernelNweight.html">seaduck.kernel_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian_budget.html">seaduck.eulerian_budget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_lagrangian_budget.html">seaduck.lagrangian_budget</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal_api_reference.html">Internal API reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_utils.html">seaduck.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Tilted solid-body rotation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/ASTE_sd.Particle_example.html">Using <code>seaduck.Particle</code> with ASTE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sciserver_example.html">Examples using SciServer ocean datasets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/IGPwinter.html"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in an East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/KangerFjord.html">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/LLC4320.html">Plot surface streamlines on LLC4320</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sciserver_notebooks/ECCO_plot_stations.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bud_tut.html">Tutorials for Lagrangian tracer budget</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../budget_tutorial/mean_eul_budg.html">Calculating the mean Eulerian salinity budget in ECCOv4r4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../budget_tutorial/particle_bud_tut.html">Tracking Labrador Sea Water’s with Lagrangian budget</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/use_git.html">Using Git and Github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentation🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/report_iss.html">Report Issues on GitHub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/idealize_test/tilted_stream.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Tilted solid-body rotation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-test">Prepare the test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-test">Run the test</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="tilted-solid-body-rotation">
+<h1>Tilted solid-body rotation<a class="headerlink" href="#tilted-solid-body-rotation" title="Permalink to this heading">#</a></h1>
+<p>If you’ve already looked at the stream function conservation examples in the <a class="reference internal" href="hor_stream.html"><span class="doc std std-doc">horizontal</span></a> and <a class="reference internal" href="ver_stream.html"><span class="doc std std-doc">vertical</span></a> examples, you may still have the following doubts:</p>
+<ol class="arabic simple">
+<li><p>What if the flow is not 2D/not aligned with the grid direction?</p></li>
+<li><p>If the velocity components are all scaled by a factor, the streamlines will still be the same.</p></li>
+</ol>
+<p>This notebook is designed to address those doubts. We use a tilted solid body rotation with known orbit frequency for demonstration. As far as the package is concerned, tilted 2D flow is not different from fully 3D flow.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaduck</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sd</span>
+
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">300</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+</div>
+</div>
+<section id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this heading">#</a></h2>
+<p>First, we prepare the grid of the dataset</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">xg</span><span class="p">,</span> <span class="n">yg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">xv</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xg</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">xg</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">yv</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yg</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">yg</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">xu</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xg</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">xg</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">yu</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yg</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">yg</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">xc</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">xv</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">yc</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">yv</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">zp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">zp1</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">zp1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">zl</span> <span class="o">=</span> <span class="n">zp1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">drf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">zp1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>Calculate the solid-body velocity in the horizontal directions:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">solid_body</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">r</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="n">y</span> <span class="o">/</span> <span class="n">r</span> <span class="o">*</span> <span class="n">speed</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">r</span> <span class="o">*</span> <span class="n">speed</span>
+    <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">solid_body</span><span class="p">(</span><span class="n">xu</span><span class="p">,</span> <span class="n">yu</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">solid_body</span><span class="p">(</span><span class="n">xv</span><span class="p">,</span> <span class="n">yv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We define the angle of the tilt of the velocity field:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">6</span>
+<span class="n">tan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The vertical velocity is proportional to the <span class="math notranslate nohighlight">\(v\)</span> velocity by the tangent of the angle we just defined:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vc</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">zygrid</span> <span class="o">=</span> <span class="n">drf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">dy</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">tan</span> <span class="o">*</span> <span class="n">vc</span> <span class="o">/</span> <span class="n">zygrid</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can assemble the parts to create the <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code>:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
+    <span class="n">coords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">XC</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span> <span class="n">xc</span><span class="p">),</span>
+        <span class="n">YC</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span> <span class="n">yc</span><span class="p">),</span>
+        <span class="n">XG</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Yp1&quot;</span><span class="p">,</span> <span class="s2">&quot;Xp1&quot;</span><span class="p">],</span> <span class="n">xg</span><span class="p">),</span>
+        <span class="n">YG</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Yp1&quot;</span><span class="p">,</span> <span class="s2">&quot;Xp1&quot;</span><span class="p">],</span> <span class="n">yg</span><span class="p">),</span>
+        <span class="n">rA</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="nb">float</span><span class="p">)),</span>
+        <span class="n">Zp1</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Zp1&quot;</span><span class="p">],</span> <span class="n">zp1</span><span class="p">),</span>
+        <span class="n">Zl</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Zl&quot;</span><span class="p">],</span> <span class="n">zl</span><span class="p">),</span>
+        <span class="n">Z</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span> <span class="n">z</span><span class="p">),</span>
+        <span class="n">drF</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span> <span class="n">drf</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">data_vars</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">UVELMASS</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Xp1&quot;</span><span class="p">],</span> <span class="n">u</span><span class="p">),</span>
+        <span class="n">VVELMASS</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;Yp1&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span> <span class="n">v</span><span class="p">),</span>
+        <span class="n">WVELMASS</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;Zl&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">],</span> <span class="n">w</span><span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="n">ds</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewBox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewBox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in notebooks */
+
+:root {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base rgba(0, 0, 0, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, white)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 15))
+  );
+}
+
+html[theme="dark"],
+html[data-theme="dark"],
+body[data-theme="dark"],
+body.vscode-dark {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base, rgba(255, 255, 255, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, #111111)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 15))
+  );
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+  line-height: 1.6;
+  padding-bottom: 4px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.xr-header {
+  border-bottom: solid 1px var(--xr-border-color);
+  margin-bottom: 4px;
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-obj-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type,
+.xr-group-box-contents > label {
+  color: var(--xr-font-color2);
+  display: block;
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 0 20px 0 20px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item > input,
+.xr-group-box-contents > input,
+.xr-array-wrap > input {
+  display: block;
+  opacity: 0;
+  height: 0;
+  margin: 0;
+}
+
+.xr-section-item > input + label,
+.xr-var-item > input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item > input:enabled + label,
+.xr-var-item > input:enabled + label,
+.xr-array-wrap > input:enabled + label,
+.xr-group-box-contents > input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item > input:focus-visible + label,
+.xr-var-item > input:focus-visible + label,
+.xr-array-wrap > input:focus-visible + label,
+.xr-group-box-contents > input:focus-visible + label {
+  outline: auto;
+}
+
+.xr-section-item > input:enabled + label:hover,
+.xr-var-item > input:enabled + label:hover,
+.xr-array-wrap > input:enabled + label:hover,
+.xr-group-box-contents > input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.xr-section-summary > em {
+  font-weight: normal;
+}
+
+.xr-span-grid {
+  grid-column-end: -1;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.3em;
+}
+
+.xr-group-box-contents > input:checked + label > span {
+  display: inline-block;
+  padding-left: 0.6em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: "►";
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: "▼";
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details,
+.xr-group-box-contents > label {
+  padding-top: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in ~ .xr-section-details {
+  display: none;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-children {
+  display: inline-grid;
+  grid-template-columns: 100%;
+  grid-column: 1 / -1;
+  padding-top: 4px;
+}
+
+.xr-group-box {
+  display: inline-grid;
+  grid-template-columns: 0px 30px auto;
+}
+
+.xr-group-box-vline {
+  grid-column-start: 1;
+  border-right: 0.2em solid;
+  border-color: var(--xr-border-color);
+  width: 0px;
+}
+
+.xr-group-box-hline {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  height: 1em;
+  width: 26px;
+  border-bottom: 0.2em solid;
+  border-color: var(--xr-border-color);
+}
+
+.xr-group-box-contents {
+  grid-column-start: 3;
+  padding-bottom: 4px;
+}
+
+.xr-group-box-contents > label::before {
+  content: "📂";
+  padding-right: 0.3em;
+}
+
+.xr-group-box-contents > input:checked + label::before {
+  content: "📁";
+}
+
+.xr-group-box-contents > input:checked + label {
+  padding-bottom: 0px;
+}
+
+.xr-group-box-contents > input:checked ~ .xr-sections {
+  display: none;
+}
+
+.xr-group-box-contents > input + label > span {
+  display: none;
+}
+
+.xr-group-box-ellipsis {
+  font-size: 1.4em;
+  font-weight: 900;
+  color: var(--xr-font-color2);
+  letter-spacing: 0.15em;
+  cursor: default;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: "(";
+}
+
+.xr-dim-list:after {
+  content: ")";
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ",";
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  border-color: var(--xr-background-color-row-odd);
+  margin-bottom: 0;
+  padding-top: 2px;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+  border-color: var(--xr-background-color-row-even);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  border-top: 2px dotted var(--xr-background-color);
+  padding-bottom: 20px !important;
+  padding-top: 10px !important;
+}
+
+.xr-var-attrs-in + label,
+.xr-var-data-in + label,
+.xr-index-data-in + label {
+  padding: 0 1px;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-data > pre,
+.xr-index-data > pre,
+.xr-var-data > table > tbody > tr {
+  background-color: transparent !important;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.xr-var-attrs-in:checked + label > .xr-icon-file-text2,
+.xr-var-data-in:checked + label > .xr-icon-database,
+.xr-index-data-in:checked + label > .xr-icon-database {
+  color: var(--xr-font-color0);
+  filter: drop-shadow(1px 1px 5px var(--xr-font-color2));
+  stroke-width: 0.8px;
+}
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 25MB
+Dimensions:   (Z: 100, Y: 100, Xp1: 101, Yp1: 101, X: 100, Zl: 100, Zp1: 101)
+Coordinates:
+  * Z         (Z) float64 800B -0.02 -0.06 -0.1 -0.14 ... -3.86 -3.9 -3.94 -3.98
+    drF       (Z) float64 800B 0.04 0.04 0.04 0.04 0.04 ... 0.04 0.04 0.04 0.04
+    XG        (Yp1, Xp1) float64 82kB -1.0 -0.98 -0.96 -0.94 ... 0.96 0.98 1.0
+    YG        (Yp1, Xp1) float64 82kB -1.0 -1.0 -1.0 -1.0 ... 1.0 1.0 1.0 1.0
+    XC        (Y, X) float64 80kB -0.99 -0.97 -0.95 -0.93 ... 0.95 0.97 0.99
+    YC        (Y, X) float64 80kB -0.99 -0.99 -0.99 -0.99 ... 0.99 0.99 0.99
+    rA        (Y, X) float64 80kB 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0
+  * Zl        (Zl) float64 800B 0.0 -0.04 -0.08 -0.12 ... -3.88 -3.92 -3.96
+  * Zp1       (Zp1) float64 808B 0.0 -0.04 -0.08 -0.12 ... -3.92 -3.96 -4.0
+Dimensions without coordinates: Y, Xp1, Yp1, X
+Data variables:
+    UVELMASS  (Z, Y, Xp1) float64 8MB 0.99 0.99 0.99 0.99 ... -0.99 -0.99 -0.99
+    VVELMASS  (Z, Yp1, X) float64 8MB -0.99 -0.97 -0.95 -0.93 ... 0.95 0.97 0.99
+    WVELMASS  (Zl, Y, X) float64 8MB -0.2858 -0.28 -0.2742 ... 0.28 0.2858</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-76cf346b-9286-47cd-93ab-4f0ae67dec03' class='xr-section-summary-in' type='checkbox' disabled /><label for='section-76cf346b-9286-47cd-93ab-4f0ae67dec03' class='xr-section-summary'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>Z</span>: 100</li><li><span>Y</span>: 100</li><li><span>Xp1</span>: 101</li><li><span>Yp1</span>: 101</li><li><span>X</span>: 100</li><li><span class='xr-has-index'>Zl</span>: 100</li><li><span class='xr-has-index'>Zp1</span>: 101</li></ul></div></li><li class='xr-section-item'><input id='section-03b9e33a-cf93-4001-9f48-bf7657802a56' class='xr-section-summary-in' type='checkbox' checked /><label for='section-03b9e33a-cf93-4001-9f48-bf7657802a56' class='xr-section-summary' title='Expand/collapse section'>Coordinates: <span>(9)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Z</span></div><div class='xr-var-dims'>(Z)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-0.02 -0.06 -0.1 ... -3.94 -3.98</div><input id='attrs-b0476d6b-ba40-4bc7-9ed8-e4f915553ea5' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b0476d6b-ba40-4bc7-9ed8-e4f915553ea5' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-89ba7f1e-41fb-4494-ac49-df26e7e632c5' class='xr-var-data-in' type='checkbox'><label for='data-89ba7f1e-41fb-4494-ac49-df26e7e632c5' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-0.02, -0.06, -0.1 , -0.14, -0.18, -0.22, -0.26, -0.3 , -0.34, -0.38,
+       -0.42, -0.46, -0.5 , -0.54, -0.58, -0.62, -0.66, -0.7 , -0.74, -0.78,
+       -0.82, -0.86, -0.9 , -0.94, -0.98, -1.02, -1.06, -1.1 , -1.14, -1.18,
+       -1.22, -1.26, -1.3 , -1.34, -1.38, -1.42, -1.46, -1.5 , -1.54, -1.58,
+       -1.62, -1.66, -1.7 , -1.74, -1.78, -1.82, -1.86, -1.9 , -1.94, -1.98,
+       -2.02, -2.06, -2.1 , -2.14, -2.18, -2.22, -2.26, -2.3 , -2.34, -2.38,
+       -2.42, -2.46, -2.5 , -2.54, -2.58, -2.62, -2.66, -2.7 , -2.74, -2.78,
+       -2.82, -2.86, -2.9 , -2.94, -2.98, -3.02, -3.06, -3.1 , -3.14, -3.18,
+       -3.22, -3.26, -3.3 , -3.34, -3.38, -3.42, -3.46, -3.5 , -3.54, -3.58,
+       -3.62, -3.66, -3.7 , -3.74, -3.78, -3.82, -3.86, -3.9 , -3.94, -3.98])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>drF</span></div><div class='xr-var-dims'>(Z)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.04 0.04 0.04 ... 0.04 0.04 0.04</div><input id='attrs-de43ce1c-29dc-4b11-9a56-686318f8ee49' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-de43ce1c-29dc-4b11-9a56-686318f8ee49' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b2107d0d-76f8-4f48-a83a-b7d6ff8577be' class='xr-var-data-in' type='checkbox'><label for='data-b2107d0d-76f8-4f48-a83a-b7d6ff8577be' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04,
+       0.04])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>XG</span></div><div class='xr-var-dims'>(Yp1, Xp1)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-1.0 -0.98 -0.96 ... 0.96 0.98 1.0</div><input id='attrs-afe72188-c0d7-4b93-8d33-dbff032c5cb0' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-afe72188-c0d7-4b93-8d33-dbff032c5cb0' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-e8a66132-e4aa-4355-b24e-05506b49865f' class='xr-var-data-in' type='checkbox'><label for='data-e8a66132-e4aa-4355-b24e-05506b49865f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[-1.  , -0.98, -0.96, ...,  0.96,  0.98,  1.  ],
+       [-1.  , -0.98, -0.96, ...,  0.96,  0.98,  1.  ],
+       [-1.  , -0.98, -0.96, ...,  0.96,  0.98,  1.  ],
+       ...,
+       [-1.  , -0.98, -0.96, ...,  0.96,  0.98,  1.  ],
+       [-1.  , -0.98, -0.96, ...,  0.96,  0.98,  1.  ],
+       [-1.  , -0.98, -0.96, ...,  0.96,  0.98,  1.  ]], shape=(101, 101))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>YG</span></div><div class='xr-var-dims'>(Yp1, Xp1)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-1.0 -1.0 -1.0 -1.0 ... 1.0 1.0 1.0</div><input id='attrs-494c1bb2-bab6-432f-9dcb-b81325d314d4' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-494c1bb2-bab6-432f-9dcb-b81325d314d4' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d25892e2-672c-4fdd-bff0-580c8989fe62' class='xr-var-data-in' type='checkbox'><label for='data-d25892e2-672c-4fdd-bff0-580c8989fe62' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[-1.  , -1.  , -1.  , ..., -1.  , -1.  , -1.  ],
+       [-0.98, -0.98, -0.98, ..., -0.98, -0.98, -0.98],
+       [-0.96, -0.96, -0.96, ..., -0.96, -0.96, -0.96],
+       ...,
+       [ 0.96,  0.96,  0.96, ...,  0.96,  0.96,  0.96],
+       [ 0.98,  0.98,  0.98, ...,  0.98,  0.98,  0.98],
+       [ 1.  ,  1.  ,  1.  , ...,  1.  ,  1.  ,  1.  ]], shape=(101, 101))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>XC</span></div><div class='xr-var-dims'>(Y, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-0.99 -0.97 -0.95 ... 0.97 0.99</div><input id='attrs-b9bd4dc1-c2c5-409c-932b-c48f21501b21' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b9bd4dc1-c2c5-409c-932b-c48f21501b21' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-4c904547-41c7-4196-99e5-d8fefa4f41b0' class='xr-var-data-in' type='checkbox'><label for='data-4c904547-41c7-4196-99e5-d8fefa4f41b0' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+       [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+       [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+       ...,
+       [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+       [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+       [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99]], shape=(100, 100))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>YC</span></div><div class='xr-var-dims'>(Y, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-0.99 -0.99 -0.99 ... 0.99 0.99</div><input id='attrs-fc93dbdf-bbcb-4093-90dc-fbfcbf34c88e' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-fc93dbdf-bbcb-4093-90dc-fbfcbf34c88e' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-245fbbe5-0a19-414d-b8a9-5d269fe0d5c1' class='xr-var-data-in' type='checkbox'><label for='data-245fbbe5-0a19-414d-b8a9-5d269fe0d5c1' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[-0.99, -0.99, -0.99, ..., -0.99, -0.99, -0.99],
+       [-0.97, -0.97, -0.97, ..., -0.97, -0.97, -0.97],
+       [-0.95, -0.95, -0.95, ..., -0.95, -0.95, -0.95],
+       ...,
+       [ 0.95,  0.95,  0.95, ...,  0.95,  0.95,  0.95],
+       [ 0.97,  0.97,  0.97, ...,  0.97,  0.97,  0.97],
+       [ 0.99,  0.99,  0.99, ...,  0.99,  0.99,  0.99]], shape=(100, 100))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>rA</span></div><div class='xr-var-dims'>(Y, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0</div><input id='attrs-24e5ca2f-048c-4f70-9f09-b4ac4f11fcae' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-24e5ca2f-048c-4f70-9f09-b4ac4f11fcae' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-1efba0db-1d99-491c-9f96-0dab1177e2f7' class='xr-var-data-in' type='checkbox'><label for='data-1efba0db-1d99-491c-9f96-0dab1177e2f7' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[1., 1., 1., ..., 1., 1., 1.],
+       [1., 1., 1., ..., 1., 1., 1.],
+       [1., 1., 1., ..., 1., 1., 1.],
+       ...,
+       [1., 1., 1., ..., 1., 1., 1.],
+       [1., 1., 1., ..., 1., 1., 1.],
+       [1., 1., 1., ..., 1., 1., 1.]], shape=(100, 100))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Zl</span></div><div class='xr-var-dims'>(Zl)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 -0.04 -0.08 ... -3.92 -3.96</div><input id='attrs-6121bb6c-7258-4872-8782-79a653a859e9' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-6121bb6c-7258-4872-8782-79a653a859e9' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-cb776b17-decc-40f1-8079-014ef158df77' class='xr-var-data-in' type='checkbox'><label for='data-cb776b17-decc-40f1-8079-014ef158df77' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([ 0.  , -0.04, -0.08, -0.12, -0.16, -0.2 , -0.24, -0.28, -0.32, -0.36,
+       -0.4 , -0.44, -0.48, -0.52, -0.56, -0.6 , -0.64, -0.68, -0.72, -0.76,
+       -0.8 , -0.84, -0.88, -0.92, -0.96, -1.  , -1.04, -1.08, -1.12, -1.16,
+       -1.2 , -1.24, -1.28, -1.32, -1.36, -1.4 , -1.44, -1.48, -1.52, -1.56,
+       -1.6 , -1.64, -1.68, -1.72, -1.76, -1.8 , -1.84, -1.88, -1.92, -1.96,
+       -2.  , -2.04, -2.08, -2.12, -2.16, -2.2 , -2.24, -2.28, -2.32, -2.36,
+       -2.4 , -2.44, -2.48, -2.52, -2.56, -2.6 , -2.64, -2.68, -2.72, -2.76,
+       -2.8 , -2.84, -2.88, -2.92, -2.96, -3.  , -3.04, -3.08, -3.12, -3.16,
+       -3.2 , -3.24, -3.28, -3.32, -3.36, -3.4 , -3.44, -3.48, -3.52, -3.56,
+       -3.6 , -3.64, -3.68, -3.72, -3.76, -3.8 , -3.84, -3.88, -3.92, -3.96])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>Zp1</span></div><div class='xr-var-dims'>(Zp1)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 -0.04 -0.08 ... -3.96 -4.0</div><input id='attrs-3758580d-24b6-4d7e-920c-4e52a777c289' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-3758580d-24b6-4d7e-920c-4e52a777c289' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b4d97ac6-025d-444c-ae04-70679ae612fd' class='xr-var-data-in' type='checkbox'><label for='data-b4d97ac6-025d-444c-ae04-70679ae612fd' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([ 0.  , -0.04, -0.08, -0.12, -0.16, -0.2 , -0.24, -0.28, -0.32, -0.36,
+       -0.4 , -0.44, -0.48, -0.52, -0.56, -0.6 , -0.64, -0.68, -0.72, -0.76,
+       -0.8 , -0.84, -0.88, -0.92, -0.96, -1.  , -1.04, -1.08, -1.12, -1.16,
+       -1.2 , -1.24, -1.28, -1.32, -1.36, -1.4 , -1.44, -1.48, -1.52, -1.56,
+       -1.6 , -1.64, -1.68, -1.72, -1.76, -1.8 , -1.84, -1.88, -1.92, -1.96,
+       -2.  , -2.04, -2.08, -2.12, -2.16, -2.2 , -2.24, -2.28, -2.32, -2.36,
+       -2.4 , -2.44, -2.48, -2.52, -2.56, -2.6 , -2.64, -2.68, -2.72, -2.76,
+       -2.8 , -2.84, -2.88, -2.92, -2.96, -3.  , -3.04, -3.08, -3.12, -3.16,
+       -3.2 , -3.24, -3.28, -3.32, -3.36, -3.4 , -3.44, -3.48, -3.52, -3.56,
+       -3.6 , -3.64, -3.68, -3.72, -3.76, -3.8 , -3.84, -3.88, -3.92, -3.96,
+       -4.  ])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-4d87e71a-f147-4ebd-801a-93d8f0a80f7a' class='xr-section-summary-in' type='checkbox' checked /><label for='section-4d87e71a-f147-4ebd-801a-93d8f0a80f7a' class='xr-section-summary' title='Expand/collapse section'>Data variables: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>UVELMASS</span></div><div class='xr-var-dims'>(Z, Y, Xp1)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.99 0.99 0.99 ... -0.99 -0.99</div><input id='attrs-3d087c07-a464-43e1-9ca5-ea44ecc29233' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-3d087c07-a464-43e1-9ca5-ea44ecc29233' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-e7a86ad1-9a69-42cb-8c75-dde7f1895b94' class='xr-var-data-in' type='checkbox'><label for='data-e7a86ad1-9a69-42cb-8c75-dde7f1895b94' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[ 0.99,  0.99,  0.99, ...,  0.99,  0.99,  0.99],
+        [ 0.97,  0.97,  0.97, ...,  0.97,  0.97,  0.97],
+        [ 0.95,  0.95,  0.95, ...,  0.95,  0.95,  0.95],
+        ...,
+        [-0.95, -0.95, -0.95, ..., -0.95, -0.95, -0.95],
+        [-0.97, -0.97, -0.97, ..., -0.97, -0.97, -0.97],
+        [-0.99, -0.99, -0.99, ..., -0.99, -0.99, -0.99]],
+
+       [[ 0.99,  0.99,  0.99, ...,  0.99,  0.99,  0.99],
+        [ 0.97,  0.97,  0.97, ...,  0.97,  0.97,  0.97],
+        [ 0.95,  0.95,  0.95, ...,  0.95,  0.95,  0.95],
+        ...,
+        [-0.95, -0.95, -0.95, ..., -0.95, -0.95, -0.95],
+        [-0.97, -0.97, -0.97, ..., -0.97, -0.97, -0.97],
+        [-0.99, -0.99, -0.99, ..., -0.99, -0.99, -0.99]],
+
+       [[ 0.99,  0.99,  0.99, ...,  0.99,  0.99,  0.99],
+        [ 0.97,  0.97,  0.97, ...,  0.97,  0.97,  0.97],
+        [ 0.95,  0.95,  0.95, ...,  0.95,  0.95,  0.95],
+        ...,
+...
+        [-0.95, -0.95, -0.95, ..., -0.95, -0.95, -0.95],
+        [-0.97, -0.97, -0.97, ..., -0.97, -0.97, -0.97],
+        [-0.99, -0.99, -0.99, ..., -0.99, -0.99, -0.99]],
+
+       [[ 0.99,  0.99,  0.99, ...,  0.99,  0.99,  0.99],
+        [ 0.97,  0.97,  0.97, ...,  0.97,  0.97,  0.97],
+        [ 0.95,  0.95,  0.95, ...,  0.95,  0.95,  0.95],
+        ...,
+        [-0.95, -0.95, -0.95, ..., -0.95, -0.95, -0.95],
+        [-0.97, -0.97, -0.97, ..., -0.97, -0.97, -0.97],
+        [-0.99, -0.99, -0.99, ..., -0.99, -0.99, -0.99]],
+
+       [[ 0.99,  0.99,  0.99, ...,  0.99,  0.99,  0.99],
+        [ 0.97,  0.97,  0.97, ...,  0.97,  0.97,  0.97],
+        [ 0.95,  0.95,  0.95, ...,  0.95,  0.95,  0.95],
+        ...,
+        [-0.95, -0.95, -0.95, ..., -0.95, -0.95, -0.95],
+        [-0.97, -0.97, -0.97, ..., -0.97, -0.97, -0.97],
+        [-0.99, -0.99, -0.99, ..., -0.99, -0.99, -0.99]]],
+      shape=(100, 100, 101))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>VVELMASS</span></div><div class='xr-var-dims'>(Z, Yp1, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-0.99 -0.97 -0.95 ... 0.97 0.99</div><input id='attrs-b312de6c-17d0-41dd-8d51-6b2321d728f0' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b312de6c-17d0-41dd-8d51-6b2321d728f0' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ed6ae911-2cc4-4eb2-abe6-5c47a2e6ce3e' class='xr-var-data-in' type='checkbox'><label for='data-ed6ae911-2cc4-4eb2-abe6-5c47a2e6ce3e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        ...,
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99]],
+
+       [[-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        ...,
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99]],
+
+       [[-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        ...,
+...
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99]],
+
+       [[-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        ...,
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99]],
+
+       [[-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        ...,
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99],
+        [-0.99, -0.97, -0.95, ...,  0.95,  0.97,  0.99]]],
+      shape=(100, 101, 100))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>WVELMASS</span></div><div class='xr-var-dims'>(Zl, Y, X)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-0.2858 -0.28 ... 0.28 0.2858</div><input id='attrs-c9a00638-b1e1-4569-99d2-09aec0ccf050' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-c9a00638-b1e1-4569-99d2-09aec0ccf050' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d80bca45-00dc-49ca-a636-45e9accc3a33' class='xr-var-data-in' type='checkbox'><label for='data-d80bca45-00dc-49ca-a636-45e9accc3a33' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        ...,
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838]],
+
+       [[-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+...
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838]],
+
+       [[-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        ...,
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838],
+        [-0.28578838, -0.28001488, -0.27424138, ...,  0.27424138,
+          0.28001488,  0.28578838]]], shape=(100, 100, 100))</pre></div></li></ul></div></li></ul></div></div></div></div>
+</div>
+</section>
+<section id="prepare-the-test">
+<h2>Prepare the test<a class="headerlink" href="#prepare-the-test" title="Permalink to this heading">#</a></h2>
+<p>As always, convert <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> to <code class="docutils literal notranslate"><span class="pre">seaduck.OceData</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tub</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we define the initial position. For reasons that will be clear in a minute, we define the particle on a plane that is parallel to the velocity field.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">edge</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">edge</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">edge</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">+</span> <span class="n">tan</span> <span class="o">*</span> <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A coloring scheme is defined here to help human eyes to identify the patterns. We also define a function here that allows us to look at the particles along the <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>, and <span class="math notranslate nohighlight">\(z\)</span> axes.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_path</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://github.com/MaceKuailv/seaduck/blob/main/docs/logo.png?raw=true&quot;</span><span class="p">,</span>
+    <span class="n">known_hash</span><span class="o">=</span><span class="s2">&quot;bed53271c0356006eb02751040b7a10536b853872de1c728106ee56227b7c0f8&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+<span class="n">rgb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">//</span> <span class="n">n</span>
+<span class="n">particle_color</span> <span class="o">=</span> <span class="n">rgb</span><span class="p">[::</span><span class="o">-</span><span class="n">bins</span><span class="p">,</span> <span class="p">::</span><span class="n">bins</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_particle3d</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">particle_color</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">dep</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Y-Z plane&quot;</span><span class="p">)</span>
+
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">dep</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;X-Z plane&quot;</span><span class="p">)</span>
+
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;X-Y plane&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+</div>
+</div>
+</section>
+<section id="run-the-test">
+<h2>Run the test<a class="headerlink" href="#run-the-test" title="Permalink to this heading">#</a></h2>
+<p>Let’s take a look at the initial condition:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">Particle</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">tub</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_particle3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/93888ed580e7aeee388d0549409f51f02fc76f76be4e1ba23d0d2fa39669bcff.png" src="../_images/93888ed580e7aeee388d0549409f51f02fc76f76be4e1ba23d0d2fa39669bcff.png" />
+</div>
+</div>
+<p>Note that on the <span class="math notranslate nohighlight">\(y\)</span>-<span class="math notranslate nohighlight">\(z\)</span> plane, the particles are aligned on a single straight line.</p>
+<p>Now see what happens when we try to run the particles to turn them exactly 180 <span class="math notranslate nohighlight">\(^{\circ}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">to_next_stop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_particle3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7d821c3745ff2ddc5fb2ab50ca822609f97cbd5148ba92049c3b6a81dd601693.png" src="../_images/7d821c3745ff2ddc5fb2ab50ca822609f97cbd5148ba92049c3b6a81dd601693.png" />
+</div>
+</div>
+<p>It turns exactly 180 <span class="math notranslate nohighlight">\(^{\circ}\)</span>! And from the <span class="math notranslate nohighlight">\(y\)</span>-<span class="math notranslate nohighlight">\(z\)</span> plane, it stays a straight line!</p>
+<p>You may noticed that the relative position of particles has changed a little. This is because the motion defined by the finite resolution gridded dataset is not a perfect solid-body rotation. However, it is pretty close!</p>
+<p>Can you turn it backward a little to get a golden ratio?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">to_next_stop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">1.618</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_particle3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cc590700025e953e8f547ceaa1d01ace0272538c4b1bb324d77a395f6a79bc9e.png" src="../_images/cc590700025e953e8f547ceaa1d01ace0272538c4b1bb324d77a395f6a79bc9e.png" />
+</div>
+</div>
+<p>Yes!</p>
+<p>What is more impressive is that we can run it back to the initial time. Look what happens:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">to_next_stop</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_particle3d</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5793913ca04c1d595435e173ca6754cdfa04fcff0602684b5035729224d850ae.png" src="../_images/5793913ca04c1d595435e173ca6754cdfa04fcff0602684b5035729224d850ae.png" />
+</div>
+</div>
+<p>It looks identical to the initial condition!</p>
+<p>You have to take my words for it: we <strong>did not</strong> cache the positions (no cheating!).</p>
+<p>Some small errors are introduced during our handling of the particles, so it’s not completely reversible. Let’s check:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lon</span> <span class="o">-</span> <span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">dep</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(3.2837760975541526e-08),
+ np.float64(3.276458147604584e-08),
+ np.float64(1.8906243580904905e-08))
+</pre></div>
+</div>
+</div>
+</div>
+<p>But these are pretty small errors!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./idealize_test"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ver_stream.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Vertical stream function conservation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../ocean_example.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Examples using ocean datasets</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-test">Prepare the test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-test">Run the test</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Wenrui Jiang
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
