@@ -21,11 +21,14 @@ except ImportError:
 
 
 @functools.cache
-def pooch_prepare():
+def pooch_prepare(run_budget=False):
     """Prepare for loading datasets using pooch."""
+    doi = "10.5281/zenodo.15884732"
+    if run_budget:
+        doi = "10.5281/zenodo.18675196"
     pooch_testdata = pooch.create(
         path=pooch.os_cache("seaduck"),
-        base_url="doi:10.5281/zenodo.15884732",
+        base_url=f"doi:{doi}",
         registry=None,
         retry_if_failed=5,
     )
@@ -111,9 +114,11 @@ def get_dataset(name):
     Parameters
     ----------
     name: string
-        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste"
+        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste", "eul_bud_mean"
     """
-    pooch_testdata, pooch_fetch_kwargs = pooch_prepare()
+    pooch_testdata, pooch_fetch_kwargs = pooch_prepare(
+        run_budget=(name == "eul_bud_mean")
+    )
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
     ds = xr.open_zarr(os.path.commonpath(fnames))
     if name == "ecco":

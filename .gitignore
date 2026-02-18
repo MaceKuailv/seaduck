@@ -357,5 +357,11 @@ assets/
 *.nc
 seaduck/version.py
 paper/*.pdf
+*.zar*
+*ls_mode*
+*myst*
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,vim,visualstudiocode,pycharm
+
+# MyST build outputs
+_build
