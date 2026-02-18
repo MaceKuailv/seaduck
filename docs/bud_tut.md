@@ -1,8 +1,6 @@
 # Tutorials for Lagrangian tracer budget
 
-```{tableofcontents}
-
-```
+The following notebooks shows how you can close a tracer budget with Lagrangian particles. They focuses on how this method is implemented in `seaduck`'s `eulerian_budget` and `lagrangian_budget` modules, rather than the rigorous derivation. Interested readers should refer to [our paper "Tracer budgets on Lagrangian Trajectories" published on JAMES](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2024MS004848).
 
 ::::{grid} 1 1 1 2
 :class-container: text-center
