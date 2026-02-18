@@ -1,0 +1,311 @@
+Traceback (most recent call last):
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/micromamba/envs/DEVELOP/lib/python3.11/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+out = ds[['sx_bar','sy_bar','sz_bar','u_bar','v_bar','w_bar','S_bar','T_bar','dxG','dyG']]
+out['neg_upgradsp_bar'] = neg_upgradsp_bar
+out['forc_s'] = forc
+out['dif_h'] = dif_h
+out['dif_v'] = dif_v
+out['conv_us'] = -divus
+out['tend_s'] = ds_bar.tendSln_bar
+out.to_zarr('lag_budg.zarr',mode = 'w')
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mTypeError[39m                                 Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[25][39m[32m, line 8[39m
+[32m      6[39m out[[33m'[39m[33mconv_us[39m[33m'[39m] = -divus
+[32m      7[39m out[[33m'[39m[33mtend_s[39m[33m'[39m] = ds_bar.tendSln_bar
+[32m----> [39m[32m8[39m [43mout[49m[43m.[49m[43mto_zarr[49m[43m([49m[33;43m'[39;49m[33;43mlag_budg.zarr[39;49m[33;43m'[39;49m[43m,[49m[43mmode[49m[43m [49m[43m=[49m[43m [49m[33;43m'[39;49m[33;43mw[39;49m[33;43m'[39;49m[43m)[49m
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/core/dataset.py:2390[39m, in [36mDataset.to_zarr[39m[34m(self, store, chunk_store, mode, synchronizer, group, encoding, compute, consolidated, append_dim, region, safe_chunks, align_chunks, storage_options, zarr_version, zarr_format, write_empty_chunks, chunkmanager_store_kwargs)[39m
+[32m   2207[39m [38;5;250m[39m[33;03m"""Write dataset contents to a zarr group.[39;00m
+[32m   2208[39m 
+[32m   2209[39m [33;03mZarr chunks are determined in the following way:[39;00m
+[32m   (...)[39m[32m   2386[39m [33;03m    The I/O user guide, with more details and examples.[39;00m
+[32m   2387[39m [33;03m"""[39;00m
+[32m   2388[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mxarray[39;00m[34;01m.[39;00m[34;01mbackends[39;00m[34;01m.[39;00m[34;01mwriters[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m to_zarr
+[32m-> [39m[32m2390[39m [38;5;28;01mreturn[39;00m [43mto_zarr[49m[43m([49m[43m  [49m[38;5;66;43;03m# type: ignore[call-overload,misc][39;49;00m
+[32m   2391[39m [43m    [49m[38;5;28;43mself[39;49m[43m,[49m
+[32m   2392[39m [43m    [49m[43mstore[49m[43m=[49m[43mstore[49m[43m,[49m
+[32m   2393[39m [43m    [49m[43mchunk_store[49m[43m=[49m[43mchunk_store[49m[43m,[49m
+[32m   2394[39m [43m    [49m[43mstorage_options[49m[43m=[49m[43mstorage_options[49m[43m,[49m
+[32m   2395[39m [43m    [49m[43mmode[49m[43m=[49m[43mmode[49m[43m,[49m
+[32m   2396[39m [43m    [49m[43msynchronizer[49m[43m=[49m[43msynchronizer[49m[43m,[49m
+[32m   2397[39m [43m    [49m[43mgroup[49m[43m=[49m[43mgroup[49m[43m,[49m
+[32m   2398[39m [43m    [49m[43mencoding[49m[43m=[49m[43mencoding[49m[43m,[49m
+[32m   2399[39m [43m    [49m[43mcompute[49m[43m=[49m[43mcompute[49m[43m,[49m
+[32m   2400[39m [43m    [49m[43mconsolidated[49m[43m=[49m[43mconsolidated[49m[43m,[49m
+[32m   2401[39m [43m    [49m[43mappend_dim[49m[43m=[49m[43mappend_dim[49m[43m,[49m
+[32m   2402[39m [43m    [49m[43mregion[49m[43m=[49m[43mregion[49m[43m,[49m
+[32m   2403[39m [43m    [49m[43msafe_chunks[49m[43m=[49m[43msafe_chunks[49m[43m,[49m
+[32m   2404[39m [43m    [49m[43malign_chunks[49m[43m=[49m[43malign_chunks[49m[43m,[49m
+[32m   2405[39m [43m    [49m[43mzarr_version[49m[43m=[49m[43mzarr_version[49m[43m,[49m
+[32m   2406[39m [43m    [49m[43mzarr_format[49m[43m=[49m[43mzarr_format[49m[43m,[49m
+[32m   2407[39m [43m    [49m[43mwrite_empty_chunks[49m[43m=[49m[43mwrite_empty_chunks[49m[43m,[49m
+[32m   2408[39m [43m    [49m[43mchunkmanager_store_kwargs[49m[43m=[49m[43mchunkmanager_store_kwargs[49m[43m,[49m
+[32m   2409[39m [43m[49m[43m)[49m
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/backends/writers.py:797[39m, in [36mto_zarr[39m[34m(dataset, store, chunk_store, mode, synchronizer, group, encoding, compute, consolidated, append_dim, region, safe_chunks, align_chunks, storage_options, zarr_version, zarr_format, write_empty_chunks, chunkmanager_store_kwargs)[39m
+[32m    795[39m [38;5;66;03m# TODO: figure out how to properly handle unlimited_dims[39;00m
+[32m    796[39m [38;5;28;01mtry[39;00m:
+[32m--> [39m[32m797[39m     [43mdump_to_store[49m[43m([49m[43mdataset[49m[43m,[49m[43m [49m[43mzstore[49m[43m,[49m[43m [49m[43mwriter[49m[43m,[49m[43m [49m[43mencoding[49m[43m=[49m[43mencoding[49m[43m)[49m
+[32m    798[39m     writes = writer.sync(
+[32m    799[39m         compute=compute, chunkmanager_store_kwargs=chunkmanager_store_kwargs
+[32m    800[39m     )
+[32m    801[39m [38;5;28;01mfinally[39;00m:
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/backends/writers.py:491[39m, in [36mdump_to_store[39m[34m(dataset, store, writer, encoder, encoding, unlimited_dims)[39m
+[32m    488[39m [38;5;28;01mif[39;00m encoder:
+[32m    489[39m     variables, attrs = encoder(variables, attrs)
+[32m--> [39m[32m491[39m [43mstore[49m[43m.[49m[43mstore[49m[43m([49m[43mvariables[49m[43m,[49m[43m [49m[43mattrs[49m[43m,[49m[43m [49m[43mcheck_encoding[49m[43m,[49m[43m [49m[43mwriter[49m[43m,[49m[43m [49m[43munlimited_dims[49m[43m=[49m[43munlimited_dims[49m[43m)[49m
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/backends/zarr.py:1064[39m, in [36mZarrStore.store[39m[34m(self, variables, attributes, check_encoding_set, writer, unlimited_dims)[39m
+[32m   1061[39m [38;5;28;01melse[39;00m:
+[32m   1062[39m     variables_to_set = variables_encoded
+[32m-> [39m[32m1064[39m [38;5;28;43mself[39;49m[43m.[49m[43mset_variables[49m[43m([49m
+[32m   1065[39m [43m    [49m[43mvariables_to_set[49m[43m,[49m[43m [49m[43mcheck_encoding_set[49m[43m,[49m[43m [49m[43mwriter[49m[43m,[49m[43m [49m[43munlimited_dims[49m[43m=[49m[43munlimited_dims[49m
+[32m   1066[39m [43m[49m[43m)[49m
+[32m   1067[39m [38;5;28;01mif[39;00m [38;5;28mself[39m._consolidate_on_close:
+[32m   1068[39m     kwargs = {}
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/backends/zarr.py:1290[39m, in [36mZarrStore.set_variables[39m[34m(self, variables, check_encoding_set, writer, unlimited_dims)[39m
+[32m   1286[39m         encoded_attrs[DIMENSION_KEY] = dims
+[32m   1288[39m     encoding[[33m"[39m[33moverwrite[39m[33m"[39m] = [38;5;28mself[39m._mode == [33m"[39m[33mw[39m[33m"[39m
+[32m-> [39m[32m1290[39m     zarr_array = [38;5;28;43mself[39;49m[43m.[49m[43m_create_new_array[49m[43m([49m
+[32m   1291[39m [43m        [49m[43mname[49m[43m=[49m[43mname[49m[43m,[49m
+[32m   1292[39m [43m        [49m[43mdtype[49m[43m=[49m[43mdtype[49m[43m,[49m
+[32m   1293[39m [43m        [49m[43mshape[49m[43m=[49m[43mshape[49m[43m,[49m
+[32m   1294[39m [43m        [49m[43mfill_value[49m[43m=[49m[43mfill_value[49m[43m,[49m
+[32m   1295[39m [43m        [49m[43mencoding[49m[43m=[49m[43mencoding[49m[43m,[49m
+[32m   1296[39m [43m        [49m[43mattrs[49m[43m=[49m[43mencoded_attrs[49m[43m,[49m
+[32m   1297[39m [43m    [49m[43m)[49m
+[32m   1299[39m writer.add(v.data, zarr_array, region)
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/xarray/backends/zarr.py:1141[39m, in [36mZarrStore._create_new_array[39m[34m(self, name, shape, dtype, fill_value, encoding, attrs)[39m
+[32m   1138[39m         [38;5;28;01mif[39;00m c [38;5;129;01min[39;00m encoding:
+[32m   1139[39m             encoding[[33m"[39m[33mconfig[39m[33m"[39m][c] = encoding.pop(c)
+[32m-> [39m[32m1141[39m zarr_array = [38;5;28;43mself[39;49m[43m.[49m[43mzarr_group[49m[43m.[49m[43mcreate[49m[43m([49m
+[32m   1142[39m [43m    [49m[43mname[49m[43m,[49m
+[32m   1143[39m [43m    [49m[43mshape[49m[43m=[49m[43mshape[49m[43m,[49m
+[32m   1144[39m [43m    [49m[43mdtype[49m[43m=[49m[43mdtype[49m[43m,[49m
+[32m   1145[39m [43m    [49m[43mfill_value[49m[43m=[49m[43mfill_value[49m[43m,[49m
+[32m   1146[39m [43m    [49m[43m*[49m[43m*[49m[43mencoding[49m[43m,[49m
+[32m   1147[39m [43m[49m[43m)[49m
+[32m   1148[39m zarr_array = _put_attrs(zarr_array, attrs)
+[32m   1149[39m [38;5;28;01mreturn[39;00m zarr_array
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/group.py:2567[39m, in [36mGroup.create[39m[34m(self, name, shape, dtype, data, chunks, shards, filters, compressors, compressor, serializer, fill_value, order, attributes, chunk_key_encoding, dimension_names, storage_options, overwrite, config, write_data)[39m
+[32m   2445[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mcreate[39m(
+[32m   2446[39m     [38;5;28mself[39m,
+[32m   2447[39m     name: [38;5;28mstr[39m,
+[32m   (...)[39m[32m   2466[39m     write_data: [38;5;28mbool[39m = [38;5;28;01mTrue[39;00m,
+[32m   2467[39m ) -> AnyArray:
+[32m   2468[39m [38;5;250m    [39m[33;03m"""Create an array within this group.[39;00m
+[32m   2469[39m 
+[32m   2470[39m [33;03m    This method lightly wraps [`zarr.core.array.create_array`][].[39;00m
+[32m   (...)[39m[32m   2565[39m [33;03m    AsyncArray[39;00m
+[32m   2566[39m [33;03m    """[39;00m
+[32m-> [39m[32m2567[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43mcreate_array[49m[43m([49m
+[32m   2568[39m [43m        [49m[43mname[49m[43m,[49m
+[32m   2569[39m [43m        [49m[43mshape[49m[43m=[49m[43mshape[49m[43m,[49m
+[32m   2570[39m [43m        [49m[43mdtype[49m[43m=[49m[43mdtype[49m[43m,[49m
+[32m   2571[39m [43m        [49m[43mdata[49m[43m=[49m[43mdata[49m[43m,[49m
+[32m   2572[39m [43m        [49m[43mchunks[49m[43m=[49m[43mchunks[49m[43m,[49m
+[32m   2573[39m [43m        [49m[43mshards[49m[43m=[49m[43mshards[49m[43m,[49m
+[32m   2574[39m [43m        [49m[43mfilters[49m[43m=[49m[43mfilters[49m[43m,[49m
+[32m   2575[39m [43m        [49m[43mcompressors[49m[43m=[49m[43mcompressors[49m[43m,[49m
+[32m   2576[39m [43m        [49m[43mcompressor[49m[43m=[49m[43mcompressor[49m[43m,[49m
+[32m   2577[39m [43m        [49m[43mserializer[49m[43m=[49m[43mserializer[49m[43m,[49m
+[32m   2578[39m [43m        [49m[43mfill_value[49m[43m=[49m[43mfill_value[49m[43m,[49m
+[32m   2579[39m [43m        [49m[43morder[49m[43m=[49m[43morder[49m[43m,[49m
+[32m   2580[39m [43m        [49m[43mattributes[49m[43m=[49m[43mattributes[49m[43m,[49m
+[32m   2581[39m [43m        [49m[43mchunk_key_encoding[49m[43m=[49m[43mchunk_key_encoding[49m[43m,[49m
+[32m   2582[39m [43m        [49m[43mdimension_names[49m[43m=[49m[43mdimension_names[49m[43m,[49m
+[32m   2583[39m [43m        [49m[43mstorage_options[49m[43m=[49m[43mstorage_options[49m[43m,[49m
+[32m   2584[39m [43m        [49m[43moverwrite[49m[43m=[49m[43moverwrite[49m[43m,[49m
+[32m   2585[39m [43m        [49m[43mconfig[49m[43m=[49m[43mconfig[49m[43m,[49m
+[32m   2586[39m [43m        [49m[43mwrite_data[49m[43m=[49m[43mwrite_data[49m[43m,[49m
+[32m   2587[39m [43m    [49m[43m)[49m
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/group.py:2715[39m, in [36mGroup.create_array[39m[34m(self, name, shape, dtype, data, chunks, shards, filters, compressors, compressor, serializer, fill_value, order, attributes, chunk_key_encoding, dimension_names, storage_options, overwrite, config, write_data)[39m
+[32m   2612[39m [38;5;250m[39m[33;03m"""Create an array within this group.[39;00m
+[32m   2613[39m 
+[32m   2614[39m [33;03mThis method lightly wraps [zarr.core.array.create_array][].[39;00m
+[32m   (...)[39m[32m   2709[39m [33;03mAsyncArray[39;00m
+[32m   2710[39m [33;03m"""[39;00m
+[32m   2711[39m compressors = _parse_deprecated_compressor(
+[32m   2712[39m     compressor, compressors, zarr_format=[38;5;28mself[39m.metadata.zarr_format
+[32m   2713[39m )
+[32m   2714[39m [38;5;28;01mreturn[39;00m Array(
+[32m-> [39m[32m2715[39m     [38;5;28;43mself[39;49m[43m.[49m[43m_sync[49m[43m([49m
+[32m   2716[39m [43m        [49m[38;5;28;43mself[39;49m[43m.[49m[43m_async_group[49m[43m.[49m[43mcreate_array[49m[43m([49m
+[32m   2717[39m [43m            [49m[43mname[49m[43m=[49m[43mname[49m[43m,[49m
+[32m   2718[39m [43m            [49m[43mshape[49m[43m=[49m[43mshape[49m[43m,[49m
+[32m   2719[39m [43m            [49m[43mdtype[49m[43m=[49m[43mdtype[49m[43m,[49m
+[32m   2720[39m [43m            [49m[43mdata[49m[43m=[49m[43mdata[49m[43m,[49m
+[32m   2721[39m [43m            [49m[43mchunks[49m[43m=[49m[43mchunks[49m[43m,[49m
+[32m   2722[39m [43m            [49m[43mshards[49m[43m=[49m[43mshards[49m[43m,[49m
+[32m   2723[39m [43m            [49m[43mfill_value[49m[43m=[49m[43mfill_value[49m[43m,[49m
+[32m   2724[39m [43m            [49m[43mattributes[49m[43m=[49m[43mattributes[49m[43m,[49m
+[32m   2725[39m [43m            [49m[43mchunk_key_encoding[49m[43m=[49m[43mchunk_key_encoding[49m[43m,[49m
+[32m   2726[39m [43m            [49m[43mcompressors[49m[43m=[49m[43mcompressors[49m[43m,[49m
+[32m   2727[39m [43m            [49m[43mserializer[49m[43m=[49m[43mserializer[49m[43m,[49m
+[32m   2728[39m [43m            [49m[43mdimension_names[49m[43m=[49m[43mdimension_names[49m[43m,[49m
+[32m   2729[39m [43m            [49m[43morder[49m[43m=[49m[43morder[49m[43m,[49m
+[32m   2730[39m [43m            [49m[43mfilters[49m[43m=[49m[43mfilters[49m[43m,[49m
+[32m   2731[39m [43m            [49m[43moverwrite[49m[43m=[49m[43moverwrite[49m[43m,[49m
+[32m   2732[39m [43m            [49m[43mstorage_options[49m[43m=[49m[43mstorage_options[49m[43m,[49m
+[32m   2733[39m [43m            [49m[43mconfig[49m[43m=[49m[43mconfig[49m[43m,[49m
+[32m   2734[39m [43m            [49m[43mwrite_data[49m[43m=[49m[43mwrite_data[49m[43m,[49m
+[32m   2735[39m [43m        [49m[43m)[49m
+[32m   2736[39m [43m    [49m[43m)[49m
+[32m   2737[39m )
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/sync.py:204[39m, in [36mSyncMixin._sync[39m[34m(self, coroutine)[39m
+[32m    201[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34m_sync[39m([38;5;28mself[39m, coroutine: Coroutine[Any, Any, T]) -> T:
+[32m    202[39m     [38;5;66;03m# TODO: refactor this to to take *args and **kwargs and pass those to the method[39;00m
+[32m    203[39m     [38;5;66;03m# this should allow us to better type the sync wrapper[39;00m
+[32m--> [39m[32m204[39m     [38;5;28;01mreturn[39;00m [43msync[49m[43m([49m
+[32m    205[39m [43m        [49m[43mcoroutine[49m[43m,[49m
+[32m    206[39m [43m        [49m[43mtimeout[49m[43m=[49m[43mconfig[49m[43m.[49m[43mget[49m[43m([49m[33;43m"[39;49m[33;43masync.timeout[39;49m[33;43m"[39;49m[43m)[49m[43m,[49m
+[32m    207[39m [43m    [49m[43m)[49m
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/sync.py:159[39m, in [36msync[39m[34m(coro, loop, timeout)[39m
+[32m    156[39m return_result = [38;5;28mnext[39m([38;5;28miter[39m(finished)).result()
+[32m    158[39m [38;5;28;01mif[39;00m [38;5;28misinstance[39m(return_result, [38;5;167;01mBaseException[39;00m):
+[32m--> [39m[32m159[39m     [38;5;28;01mraise[39;00m return_result
+[32m    160[39m [38;5;28;01melse[39;00m:
+[32m    161[39m     [38;5;28;01mreturn[39;00m return_result
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/sync.py:119[39m, in [36m_runner[39m[34m(coro)[39m
+[32m    114[39m [38;5;250m[39m[33;03m"""[39;00m
+[32m    115[39m [33;03mAwait a coroutine and return the result of running it. If awaiting the coroutine raises an[39;00m
+[32m    116[39m [33;03mexception, the exception will be returned.[39;00m
+[32m    117[39m [33;03m"""[39;00m
+[32m    118[39m [38;5;28;01mtry[39;00m:
+[32m--> [39m[32m119[39m     [38;5;28;01mreturn[39;00m [38;5;28;01mawait[39;00m coro
+[32m    120[39m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m [38;5;28;01mas[39;00m ex:
+[32m    121[39m     [38;5;28;01mreturn[39;00m ex
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/group.py:1142[39m, in [36mAsyncGroup.create_array[39m[34m(self, name, shape, dtype, data, chunks, shards, filters, compressors, compressor, serializer, fill_value, order, attributes, chunk_key_encoding, dimension_names, storage_options, overwrite, config, write_data)[39m
+[32m   1041[39m [38;5;250m[39m[33;03m"""Create an array within this group.[39;00m
+[32m   1042[39m 
+[32m   1043[39m [33;03mThis method lightly wraps [zarr.core.array.create_array][].[39;00m
+[32m   (...)[39m[32m   1137[39m 
+[32m   1138[39m [33;03m"""[39;00m
+[32m   1139[39m compressors = _parse_deprecated_compressor(
+[32m   1140[39m     compressor, compressors, zarr_format=[38;5;28mself[39m.metadata.zarr_format
+[32m   1141[39m )
+[32m-> [39m[32m1142[39m [38;5;28;01mreturn[39;00m [38;5;28;01mawait[39;00m create_array(
+[32m   1143[39m     store=[38;5;28mself[39m.store_path,
+[32m   1144[39m     name=name,
+[32m   1145[39m     shape=shape,
+[32m   1146[39m     dtype=dtype,
+[32m   1147[39m     data=data,
+[32m   1148[39m     chunks=chunks,
+[32m   1149[39m     shards=shards,
+[32m   1150[39m     filters=filters,
+[32m   1151[39m     compressors=compressors,
+[32m   1152[39m     serializer=serializer,
+[32m   1153[39m     fill_value=fill_value,
+[32m   1154[39m     order=order,
+[32m   1155[39m     zarr_format=[38;5;28mself[39m.metadata.zarr_format,
+[32m   1156[39m     attributes=attributes,
+[32m   1157[39m     chunk_key_encoding=chunk_key_encoding,
+[32m   1158[39m     dimension_names=dimension_names,
+[32m   1159[39m     storage_options=storage_options,
+[32m   1160[39m     overwrite=overwrite,
+[32m   1161[39m     config=config,
+[32m   1162[39m     write_data=write_data,
+[32m   1163[39m )
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/array.py:4941[39m, in [36mcreate_array[39m[34m(store, name, shape, dtype, data, chunks, shards, filters, compressors, serializer, fill_value, order, zarr_format, attributes, chunk_key_encoding, dimension_names, storage_options, overwrite, config, write_data)[39m
+[32m   4936[39m mode: Literal[[33m"[39m[33ma[39m[33m"[39m] = [33m"[39m[33ma[39m[33m"[39m
+[32m   4938[39m store_path = [38;5;28;01mawait[39;00m make_store_path(
+[32m   4939[39m     store, path=name, mode=mode, storage_options=storage_options
+[32m   4940[39m )
+[32m-> [39m[32m4941[39m [38;5;28;01mreturn[39;00m [38;5;28;01mawait[39;00m init_array(
+[32m   4942[39m     store_path=store_path,
+[32m   4943[39m     shape=shape_parsed,
+[32m   4944[39m     dtype=dtype_parsed,
+[32m   4945[39m     chunks=chunks,
+[32m   4946[39m     shards=shards,
+[32m   4947[39m     filters=filters,
+[32m   4948[39m     compressors=compressors,
+[32m   4949[39m     serializer=serializer,
+[32m   4950[39m     fill_value=fill_value,
+[32m   4951[39m     order=order,
+[32m   4952[39m     zarr_format=zarr_format,
+[32m   4953[39m     attributes=attributes,
+[32m   4954[39m     chunk_key_encoding=chunk_key_encoding,
+[32m   4955[39m     dimension_names=dimension_names,
+[32m   4956[39m     overwrite=overwrite,
+[32m   4957[39m     config=config,
+[32m   4958[39m )
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/array.py:4724[39m, in [36minit_array[39m[34m(store_path, shape, dtype, chunks, shards, filters, compressors, serializer, fill_value, order, zarr_format, attributes, chunk_key_encoding, dimension_names, overwrite, config)[39m
+[32m   4712[39m     meta = AsyncArray._create_metadata_v2(
+[32m   4713[39m         shape=shape_parsed,
+[32m   4714[39m         dtype=zdtype,
+[32m   (...)[39m[32m   4721[39m         attributes=attributes,
+[32m   4722[39m     )
+[32m   4723[39m [38;5;28;01melse[39;00m:
+[32m-> [39m[32m4724[39m     array_array, array_bytes, bytes_bytes = [43m_parse_chunk_encoding_v3[49m[43m([49m
+[32m   4725[39m [43m        [49m[43mcompressors[49m[43m=[49m[43mcompressors[49m[43m,[49m
+[32m   4726[39m [43m        [49m[43mfilters[49m[43m=[49m[43mfilters[49m[43m,[49m
+[32m   4727[39m [43m        [49m[43mserializer[49m[43m=[49m[43mserializer[49m[43m,[49m
+[32m   4728[39m [43m        [49m[43mdtype[49m[43m=[49m[43mzdtype[49m[43m,[49m
+[32m   4729[39m [43m    [49m[43m)[49m
+[32m   4730[39m     sub_codecs = cast([33m"[39m[33mtuple[Codec, ...][39m[33m"[39m, (*array_array, array_bytes, *bytes_bytes))
+[32m   4731[39m     codecs_out: [38;5;28mtuple[39m[Codec, ...]
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/array.py:5263[39m, in [36m_parse_chunk_encoding_v3[39m[34m(compressors, filters, serializer, dtype)[39m
+[32m   5260[39m     [38;5;28;01melse[39;00m:
+[32m   5261[39m         maybe_bytes_bytes = cast([33m"[39m[33mIterable[Codec | dict[str, JSON]][39m[33m"[39m, compressors)
+[32m-> [39m[32m5263[39m     out_bytes_bytes = [38;5;28;43mtuple[39;49m[43m([49m[43m_parse_bytes_bytes_codec[49m[43m([49m[43mc[49m[43m)[49m[43m [49m[38;5;28;43;01mfor[39;49;00m[43m [49m[43mc[49m[43m [49m[38;5;129;43;01min[39;49;00m[43m [49m[43mmaybe_bytes_bytes[49m[43m)[49m
+[32m   5265[39m [38;5;66;03m# TODO: ensure that the serializer is compatible with the ndarray produced by the[39;00m
+[32m   5266[39m [38;5;66;03m# array-array codecs. For example, if a sequence of array-array codecs produces an[39;00m
+[32m   5267[39m [38;5;66;03m# array with a single-byte data type, then the serializer should not specify endiannesss.[39;00m
+[32m   5268[39m 
+[32m   5269[39m [38;5;66;03m# TODO: add checks to ensure that the right serializer is used for vlen data types[39;00m
+[32m   5270[39m [38;5;28;01mreturn[39;00m out_array_array, out_array_bytes, out_bytes_bytes
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/core/array.py:5263[39m, in [36m<genexpr>[39m[34m(.0)[39m
+[32m   5260[39m     [38;5;28;01melse[39;00m:
+[32m   5261[39m         maybe_bytes_bytes = cast([33m"[39m[33mIterable[Codec | dict[str, JSON]][39m[33m"[39m, compressors)
+[32m-> [39m[32m5263[39m     out_bytes_bytes = [38;5;28mtuple[39m([43m_parse_bytes_bytes_codec[49m[43m([49m[43mc[49m[43m)[49m [38;5;28;01mfor[39;00m c [38;5;129;01min[39;00m maybe_bytes_bytes)
+[32m   5265[39m [38;5;66;03m# TODO: ensure that the serializer is compatible with the ndarray produced by the[39;00m
+[32m   5266[39m [38;5;66;03m# array-array codecs. For example, if a sequence of array-array codecs produces an[39;00m
+[32m   5267[39m [38;5;66;03m# array with a single-byte data type, then the serializer should not specify endiannesss.[39;00m
+[32m   5268[39m 
+[32m   5269[39m [38;5;66;03m# TODO: add checks to ensure that the right serializer is used for vlen data types[39;00m
+[32m   5270[39m [38;5;28;01mreturn[39;00m out_array_array, out_array_bytes, out_bytes_bytes
+
+[36mFile [39m[32m~/micromamba/envs/DEVELOP/lib/python3.11/site-packages/zarr/registry.py:214[39m, in [36m_parse_bytes_bytes_codec[39m[34m(data)[39m
+[32m    212[39m [38;5;28;01melse[39;00m:
+[32m    213[39m     [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28misinstance[39m(data, BytesBytesCodec):
+[32m--> [39m[32m214[39m         [38;5;28;01mraise[39;00m [38;5;167;01mTypeError[39;00m([33mf[39m[33m"[39m[33mExpected a BytesBytesCodec. Got [39m[38;5;132;01m{[39;00m[38;5;28mtype[39m(data)[38;5;132;01m}[39;00m[33m instead.[39m[33m"[39m)
+[32m    215[39m     result = data
+[32m    216[39m [38;5;28;01mreturn[39;00m result
+
+[31mTypeError[39m: Expected a BytesBytesCodec. Got <class 'numcodecs.blosc.Blosc'> instead.
+

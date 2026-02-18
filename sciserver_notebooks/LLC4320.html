@@ -1,0 +1,816 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Plot surface streamlines on LLC4320 &#8212; Seaduck Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sciserver_notebooks/LLC4320';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OceInterp interpolation in the ECCO global state estimate." href="ECCO_plot_stations.html" />
+    <link rel="prev" title="Demonstrate eulerian.Position object with Fjord" href="KangerFjord.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Seaduck Tutorial - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Seaduck Tutorial - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_cite.html">How to cite</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get_started.html">Get started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../one_min_guide.html">One minute guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../network_of_object.html">Learn about <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> core objects and functions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../public_api_reference.html">Public API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceData.html">seaduck.OceData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_topology.html">seaduck.topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian.html">seaduck.eulerian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_lagrangian.html">seaduck.lagrangian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_OceInterp.html">seaduck.OceInterp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_kernelNweight.html">seaduck.kernel_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_eulerian_budget.html">seaduck.eulerian_budget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_lagrangian_budget.html">seaduck.lagrangian_budget</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal_api_reference.html">Internal API reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_smartread.html">seaduck.smart_read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_getmasks.html">seaduck.get_masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_utils.html">seaduck.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/apiref_RelCoord.html">seaduck.ocedata.RelCoord and subclasses</a></li>
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ideal_test.html">Examples using idealized fields</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/hor_stream.html">Horizontal stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/ver_stream.html">Vertical stream function conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../idealize_test/tilted_stream.html">Tilted solid-body rotation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ocean_example.html">Examples using ocean datasets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/global_ECCO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.OceInterp</span></code> with ECCO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/AVISO.html">Use <code class="docutils literal notranslate"><span class="pre">seaduck.Particle</span></code> with AVISO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/ASTE_sd.Particle_example.html">Using <code>seaduck.Particle</code> with ASTE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebook/topology_tutorial.html">Topology tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../sciserver_example.html">Examples using SciServer ocean datasets</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="IGPwinter.html"><code class="docutils literal notranslate"><span class="pre">Particle</span></code> in an East Greenland regional simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KangerFjord.html">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Plot surface streamlines on LLC4320</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ECCO_plot_stations.html"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bud_tut.html">Tutorials for Lagrangian tracer budget</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../budget_tutorial/mean_eul_budg.html">Calculating the mean Eulerian salinity budget in ECCOv4r4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../budget_tutorial/particle_bud_tut.html">Tracking Labrador Sea Water’s with Lagrangian budget</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide_for_developer.html">A guide for new contributors</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/use_git.html">Using Git and Github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/prep_env.html">Prepare the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_cod.html">Contributing to codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/contr_doc.html">Contributing to documentation🦆</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/report_iss.html">Report Issues on GitHub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribute/tidyNpr.html">Tidy it up and make Pull Request</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/sciserver_notebooks/LLC4320.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Plot surface streamlines on LLC4320</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-streamlines-online">Calculate the streamlines online</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-preparation">Plotting Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voila">Voila!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-arctic">Looking from the Arctic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-antarctic">Looking from the Antarctic</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="plot-surface-streamlines-on-llc4320">
+<h1>Plot surface streamlines on LLC4320<a class="headerlink" href="#plot-surface-streamlines-on-llc4320" title="Permalink to this heading">#</a></h1>
+<p>Author: Wenrui Jiang 14 June, 2023</p>
+<blockquote>
+<div><p><strong>Warning</strong>⚠️ : the notebook was last ran on <strong>2026-01-07</strong> with <strong>seaduck 1.0.3</strong>. You can find the executable version at <a class="github reference external" href="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320.ipynb">MaceKuailv/seaduck_sciserver_notebook</a>.
+The LLC4320 ocean circulation model solution is a kilometer-scale, global simulation with complex grid topology. This is a good dataset to test the performance of the <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> package.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.crs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ccrs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineCollection</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oceanspy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ospy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaduck</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sd</span>
+
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">600</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-access-llc4320 admonition">
+<p class="admonition-title">Access LLC4320</p>
+<p>The global MITgcm run is the LLC4320 simulation <a class="reference external" href="https://journals.ametsoc.org/view/journals/phoc/46/2/jpo-d-15-0087.1.xml">(Rocha
+et al. 2016)</a> and is publicly available on <a class="reference external" href="https://sciserver.org/">SciServer</a> (from the Oceanography container). The simulation output can be opened using the <a class="reference external" href="https://github.com/hainegroup/oceanspy">OceanSpy</a> package using the <a class="reference external" href="https://oceanspy.readthedocs.io/en/latest/generated/oceanspy.open_oceandataset.from_catalog.html"><code class="docutils literal notranslate"><span class="pre">from_catalog</span></code></a> method.</p>
+<p><code class="docutils literal notranslate"><span class="pre">od</span> <span class="pre">=</span> <span class="pre">ospy.open_oceandataset.from_catalog(&quot;LLC4320&quot;)</span></code></p>
+<p>Click <a class="reference external" href="https://dev-poseidon-ocean.pantheonsite.io/products/datasets/">here</a> for a full list of the SciServer datasets.</p>
+</div>
+<section id="calculate-the-streamlines-online">
+<h2>Calculate the streamlines online<a class="headerlink" href="#calculate-the-streamlines-online" title="Permalink to this heading">#</a></h2>
+<p>First we get the dataset into <code class="docutils literal notranslate"><span class="pre">OceData</span></code> object with help from <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code>. This step requires the grid to be loaded into memory as <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays and then create the cKD tree on top of that, so it’s going to take some time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">od</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;LLC4320&quot;</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">_ds</span>
+<span class="n">oce</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">OceData</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Initiate the particles randomly, so that they’re distributed evenly on the globe. Use <span class="math notranslate nohighlight">\(N = 1.5 \times 10^5\)</span> particles.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1.5e5</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">4320</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">xx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">yy</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">zz</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">zz</span> <span class="o">/</span> <span class="n">r</span><span class="p">))</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">)</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">80</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">80</span><span class="p">]</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span>
+    <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">Orthographic</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=-</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">central_latitude</span><span class="o">=</span><span class="mf">45.0</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_6_0.png?raw=true" /></p>
+<p>We’ll use just one vertical layer (the first one, which is at the surface) of a single snapshot (the first one) to make the streamlines.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oce</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;U&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">oce</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oce</span><span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>By setting <code class="docutils literal notranslate"><span class="pre">wname</span> <span class="pre">=</span> <span class="pre">None</span></code>, we fix particles to move on a horizontal surface. Think of isobaric floats.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">Particle</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span>
+    <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">oce</span><span class="p">,</span>
+    <span class="n">uname</span><span class="o">=</span><span class="s2">&quot;u&quot;</span><span class="p">,</span>
+    <span class="n">vname</span><span class="o">=</span><span class="s2">&quot;v&quot;</span><span class="p">,</span>
+    <span class="n">wname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The package knows that LLC4320 is a large dataset, so by default it doesn’t prefetch data. Otherwise, <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> is overwhelmed. In general, this is a smart thing to do.</p>
+<p>However, since we are using a static 2D velocity field here, which is much smaller than the 3D time-varying field, we actually have enough memory to prefetch. So tell <code class="docutils literal notranslate"><span class="pre">seaduck</span></code> this bit of LLC4320 isn’t overwhelmingly big:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">too_large</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">uarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">oce</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">])</span>
+<span class="n">p</span><span class="o">.</span><span class="n">varray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">oce</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Everything went well. Now, we are going to compute trajectories with a 3 hour timestep for 30 days. This will take a while: time for a nap…</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="mi">10800</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">240</span>
+<span class="n">dest</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="o">*</span> <span class="n">step</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">stops</span><span class="p">,</span> <span class="n">raw</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">to_list_of_time</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">update_stops</span><span class="o">=</span><span class="p">[])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It took around 1.5 hours to run a month of simulation for <span class="math notranslate nohighlight">\(1.5\times 10^{5}\)</span> particles. We can now extract the things we need to plot, namely longitude, latitude, and horizontal speed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
+<span class="n">lats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">lat</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
+<span class="n">spds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u</span> <span class="o">*</span> <span class="n">i</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">v</span> <span class="o">*</span> <span class="n">i</span><span class="o">.</span><span class="n">dy</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you would like to save the data for plotting, you can change the following raw block to code block and run it.</p>
+<p>If the location and speed is already pre-computed, they can be loaded by:</p>
+</section>
+<section id="plotting-preparation">
+<h2>Plotting Preparation<a class="headerlink" href="#plotting-preparation" title="Permalink to this heading">#</a></h2>
+<p>The <a class="reference external" href="https://www.ncei.noaa.gov/products/etopo-global-relief-model">ETOPO</a> topography dataset is also accessible on SciServer using <code class="docutils literal notranslate"><span class="pre">OceanSpy</span></code>. This will give us absolutely beautiful plots.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">etopo</span> <span class="o">=</span> <span class="n">ospy</span><span class="o">.</span><span class="n">open_oceandataset</span><span class="o">.</span><span class="n">from_catalog</span><span class="p">(</span><span class="s2">&quot;ETOPO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For this notebook, we only need the land, because there is already so much going on in the water. So clip the <code class="docutils literal notranslate"><span class="pre">etopo</span></code> data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">etopo</span> <span class="o">=</span> <span class="n">etopo</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">etopo</span><span class="o">.</span><span class="n">_ds</span><span class="o">.</span><span class="n">Depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is the function for plotting. The lines will be colored with speed. This part is going to take some time, but I hope you think it’s worth the wait.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pretty_stream_plot</span><span class="p">(</span>
+    <span class="n">lats</span><span class="p">,</span>
+    <span class="n">lons</span><span class="p">,</span>
+    <span class="n">spds</span><span class="p">,</span>
+    <span class="n">projection</span><span class="p">,</span>
+    <span class="n">particle_bins</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">north</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">south</span><span class="o">=-</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">plot_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">save_as</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+    <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+    <span class="n">axs</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="o">-</span><span class="mf">1e4</span><span class="p">,</span> <span class="mf">1e4</span><span class="p">,</span> <span class="n">south</span><span class="p">,</span> <span class="n">north</span><span class="p">],</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">axs</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span>
+        <span class="n">etopo</span><span class="o">.</span><span class="n">X</span><span class="p">[::</span><span class="n">bins</span><span class="p">],</span>
+        <span class="n">etopo</span><span class="o">.</span><span class="n">Y</span><span class="p">[::</span><span class="n">bins</span><span class="p">],</span>
+        <span class="n">etopo</span><span class="o">.</span><span class="n">Depth</span><span class="p">[::</span><span class="n">bins</span><span class="p">,</span> <span class="p">::</span><span class="n">bins</span><span class="p">],</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;bone&quot;</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=-</span><span class="mi">3000</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="mi">4500</span><span class="p">,</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">rasterized</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">axs</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s2">&quot;lightsteelblue&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;finished making the map&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">plot_lines</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;skipping the lines&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="c1"># To speed up the computation, we transform the</span>
+    <span class="c1"># latlon outside the for plotting for-loop.</span>
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">projection</span><span class="o">.</span><span class="n">transform_points</span><span class="p">(</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">yy</span> <span class="o">=</span> <span class="n">yy</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lons</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">particle_bins</span><span class="p">)):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">yy</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">300</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">360</span>
+        <span class="n">dydx</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">spds</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">spds</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">:]))[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># first derivative</span>
+
+        <span class="c1"># Create a set of line segments so that we can color them individually</span>
+        <span class="c1"># This creates the points as a N x 1 x 2 array so that we can stack points</span>
+        <span class="c1"># together easily to get the segments. The segments array for line collection</span>
+        <span class="c1"># needs to be (numlines) x (points per line) x 2 (for x and y)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">points</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">:]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Create a continuous norm to map from data points to colors</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lc</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">segments</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;GnBu_r&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+        <span class="c1"># Set the values used for colormapping</span>
+        <span class="n">lc</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">dydx</span><span class="p">)</span>
+        <span class="n">lc</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+        <span class="n">lc</span><span class="o">.</span><span class="n">set_rasterized</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">axs</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lc</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span><span class="n">dpi</span> <span class="o">=</span> <span class="mi">300</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="voila">
+<h2>Voila!<a class="headerlink" href="#voila" title="Permalink to this heading">#</a></h2>
+<section id="looking-from-the-arctic">
+<h3>Looking from the Arctic<a class="headerlink" href="#looking-from-the-arctic" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">north_projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">NorthPolarStereo</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">38.0</span><span class="p">)</span>
+<span class="n">pretty_stream_plot</span><span class="p">(</span>
+    <span class="n">lats</span><span class="p">,</span>
+    <span class="n">lons</span><span class="p">,</span>
+    <span class="n">spds</span><span class="p">,</span>
+    <span class="n">north_projection</span><span class="p">,</span>
+    <span class="n">south</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+    <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;LLC4320_files/LLC4320_29_2.png&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_29_2.png?raw=true" /></p>
+<p><strong>Fig.1</strong> Streamlines of 150,000 particles released at 00:00 Apr 25, 2012 in LLC4320 simulated for 30 days. The color shading shows the current speed. This is looking from the North Pole.</p>
+</section>
+<section id="looking-from-the-antarctic">
+<h3>Looking from the Antarctic<a class="headerlink" href="#looking-from-the-antarctic" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">south_projection</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">SouthPolarStereo</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">38.0</span><span class="p">)</span>
+<span class="n">pretty_stream_plot</span><span class="p">(</span>
+    <span class="n">lats</span><span class="p">,</span>
+    <span class="n">lons</span><span class="p">,</span>
+    <span class="n">spds</span><span class="p">,</span>
+    <span class="n">south_projection</span><span class="p">,</span>
+    <span class="n">north</span><span class="o">=-</span><span class="mf">6.5</span><span class="p">,</span>
+    <span class="n">save_as</span><span class="o">=</span><span class="s2">&quot;LLC4320_files/LLC4320_32_2.png&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="png" src="https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/LLC4320_files/LLC4320_32_2.png?raw=true" /></p>
+<p><strong>Fig.2</strong> Similar to <strong>Fig.1</strong>, but looking from the South Pole.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "oceanography"
+        },
+        kernelOptions: {
+            name: "oceanography",
+            path: "./sciserver_notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'oceanography'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="KangerFjord.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Demonstrate <code class="docutils literal notranslate"><span class="pre">eulerian.Position</span></code> object with Fjord</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ECCO_plot_stations.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">OceInterp</span></code> interpolation in the ECCO global state estimate.</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-streamlines-online">Calculate the streamlines online</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-preparation">Plotting Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voila">Voila!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-arctic">Looking from the Arctic</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-from-the-antarctic">Looking from the Antarctic</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Wenrui Jiang
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
