@@ -3,7 +3,7 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
-- jupyter-book
+- jupyter-book=0.15.1
 - make
 - matplotlib
 - mypy
