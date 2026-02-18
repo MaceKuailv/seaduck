@@ -44,6 +44,10 @@ parts:
     - file: sciserver_notebooks/KangerFjord
     - file: sciserver_notebooks/LLC4320
     - file: sciserver_notebooks/ECCO_plot_stations
+  - file: bud_tut
+    sections:
+    - file: budget_tutorial/mean_eul_budg
+    - file: budget_tutorial/particle_bud_tut
 - caption: Contributing
   chapters:
   - file: guide_for_developer
