@@ -24,7 +24,7 @@ make docs-build
 
 6. Run `make docs-serve` to start a live preview server at `http://localhost:3000`. This automatically rebuilds and reloads your changes in the browser whenever you edit files. Perfect for iterative development! If you see issues, edit and save—the page refreshes automatically.
 
-7. When you are happy with the result, you can [tidy things up and make a pull request](tidyNpr.md). After approval, your changes will be {ref}`deployed <deploy_doc>`.
+1. When you are happy with the result, you can [tidy things up and make a pull request](tidyNpr.md). After approval, your changes will be {ref}`deployed <deploy_doc>`.
 
 ## Notebooks that could be run any where
 
@@ -39,7 +39,7 @@ Another option is to generate the dataset using mathematical expressions out of 
 The procedure is similar to [text files](#text_file), with one additional step:
 
 1. Follow steps 1-4 in the [previous](#text_file) section.
-2. Run
+1. Run
 
 ```bash
 make qa
@@ -48,7 +48,7 @@ make qa
 This step runs code quality checks with `pre-commit` and strips notebook outputs (keeping notebooks clean in git). If it fails the first time, pre-commit will automatically fix most issues. Run it again - it should pass on the second attempt. If errors persist, check the error messages.
 
 3. The notebooks will be automatically executed at build time (`make docs-build`) with outputs embedded in the HTML.
-4. [Tidy things up and make a pull request](tidyNpr.md)
+1. [Tidy things up and make a pull request](tidyNpr.md)
 
 ## Cooler (Sciserver) notebooks
 
@@ -101,7 +101,7 @@ All the existing sciserver notebooks will be in `seaduck_sciserver_notebook`. If
 
 2. Create and execute your notebooks. **Important**: Always use `plt.show()` after plots so they render correctly.
 
-3. In `seaduck_sciserver_notebook`, run the conversion script
+1. In `seaduck_sciserver_notebook`, run the conversion script
 
 ```bash
 python convert_ipynb.py
@@ -111,7 +111,7 @@ This script converts `.ipynb` files to `.md` files and adds metadata about when 
 
 4. The generated markdown files will reference plots via GitHub URLs (e.g., `https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/notebook_files/plot.png?raw=true`). These links will only work once the markdown files are merged to the main branch. Commit your changes and make a pull request to the `seaduck_sciserver_notebook` repo. Once merged to `main`, verify the pages render correctly in your browser.
 
-5. Copy the generated markdown files to seaduck:
+1. Copy the generated markdown files to seaduck:
 
 ```bash
 cp *.md ../seaduck/docs/sciserver_notebooks/
@@ -119,7 +119,7 @@ cp *.md ../seaduck/docs/sciserver_notebooks/
 
 6. Go back to the seaduck directory and run `make docs-build` to verify the pages build correctly. Use `make docs-serve` for interactive preview.
 
-7. Before the changes are merged, check if the external links work by running:
+1. Before the changes are merged, check if the external links work by running:
 
 ```bash
 make link-check
@@ -131,8 +131,9 @@ This check could have some persistent false positive, because some website don't
 
 ## Deploy documentation
 
-The documentation is automatically deployed to GitHub Pages when changes are merged to the main branch via CI/CD. The static HTML files in `docs/_build/html/` are built with `make docs-build` and deployed by GitHub Actions. 
+The documentation is automatically deployed to GitHub Pages when changes are merged to the main branch via CI/CD. The static HTML files in `docs/_build/html/` are built with `make docs-build` and deployed by GitHub Actions.
 
 For more details on manual deployment or customizing the deployment process, see:
+
 - [GitHub Pages documentation](https://pages.github.com/)
 - [MyST deployment guide](https://mystmd.org/guide/publishing)
