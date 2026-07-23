@@ -31,8 +31,8 @@ readme = "README.md"
 branch = true
 
 [tool.mypy]
-strict = false
 allow_untyped_calls = true
+strict = false
 
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
