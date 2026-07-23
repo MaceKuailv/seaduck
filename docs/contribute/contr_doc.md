@@ -1,10 +1,10 @@
 # Contributing to documentation🦆
 
-We are using [Jupyter Book](https://jupyterbook.org/en/stable/intro.html#)📙 to build the documentation. The online documentaion is hosted by [github pages](https://pages.github.com/).
+We are using [MyST](https://mystmd.org)📙 (the engine behind Jupyter Book 2) to build the documentation. The online documentation is hosted by [github pages](https://pages.github.com/).
 
 ## Add/Modify
 
-[Jupyter Book](https://jupyterbook.org/en/stable/intro.html#)📗 support several different kinds of files as input, including [.md files](https://jupyterbook.org/en/stable/reference/cheatsheet.html#tags)⬇️ [.rst files](https://docutils.sourceforge.io/docs/user/rst/cheatsheet.html)📜, [.ipynb files](https://www.ibm.com/docs/en/watson-studio-local/1.2.3?topic=notebooks-markdown-jupyter-cheatsheet)🐍, etc. Executable ones generally requires a slightly different procedures to the narrative files. Here are some instruction on how to work with each of them.
+MyST supports several different kinds of files as input, including [Markdown (.md files)](https://mystmd.org/guide/quickstart)⬇️, [reStructuredText (.rst files)](https://docutils.sourceforge.io/docs/user/rst/cheatsheet.html)📜, and [Jupyter Notebooks (.ipynb files)](https://jupyter.org/)🐍. Notebooks are executed at build time to generate outputs. Here are instructions on how to work with each type.
 
 (text_file)=
 
@@ -13,17 +13,18 @@ We are using [Jupyter Book](https://jupyterbook.org/en/stable/intro.html#)📙 t
 Adding files (markdown, reStructuredText, etc) are not very different from contributing code.
 
 1. [Clone the git repository to your local machine](./use_git)
-1. [Build the environment](prep_env.md). If you do not run this step, the API references and notebooks can not be properly build.
-1. Add or change the files. A useful cheat sheet can be found here: [markdown/MyST](https://jupyterbook.org/en/stable/reference/cheatsheet.html#tags), [reStructuredText](https://docutils.sourceforge.io/docs/user/rst/cheatsheet.html). [Commit](use_git.md) the changes you did along the way.
-1. If you added a new file, in `docs/_toc.yml`, add the name of your new file in the corresponding location. This [tutorial](https://jupyterbook.org/en/stable/structure/toc.html) will be helpful, if the file structure is not self-explanatory.
+1. [Build the environment](prep_env.md). If you do not run this step, the API references and notebooks cannot be properly built.
+1. Add or change the files. A useful cheat sheet can be found here: [MyST Markdown](https://mystmd.org/guide/quickstart), [reStructuredText](https://docutils.sourceforge.io/docs/user/rst/cheatsheet.html). [Commit](use_git.md) the changes you did along the way.
+1. If you added a new file, add it to `docs/myst.yml` in the appropriate location within the table of contents structure. The file should include a `file:` entry with the relative path to your markdown or notebook file.
 1. Change directory to seaduck, and run
 
 ```none
 make docs-build
 ```
 
-6. Go to `seaduck/docs/_build/html`, you can either open `index.html` or the html file with the same name to the one that you have made changes to. See if it looks right to you. If not, iterate a little. Send me a message if you need help.
-1. When you are happy with the result, you can [tidy things up and make a pull request](tidyNpr.md). After approval, your changes will be {ref}`deployed <deploy_doc>`.
+6. Run `make docs-serve` to start a live preview server at `http://localhost:3000`. This automatically rebuilds and reloads your changes in the browser whenever you edit files. Perfect for iterative development! If you see issues, edit and save—the page refreshes automatically.
+
+7. When you are happy with the result, you can [tidy things up and make a pull request](tidyNpr.md). After approval, your changes will be {ref}`deployed <deploy_doc>`.
 
 ## Notebooks that could be run any where
 
@@ -35,19 +36,19 @@ ds = seaduck.utils.get_dataset(name)
 
 Another option is to generate the dataset using mathematical expressions out of thin air. Since this kind of notebook is executed whenever the github action is triggered, it is preferrable that these notebooks run very fast. For example, do not perform heavy calculations in those notebooks and please do not install packages within them.
 
-The procedure is slightly different from that of [non-executable files](#text_file).
+The procedure is similar to [text files](#text_file), with one additional step:
 
-1. Follow step 1 to 6 in the [previous](#text_file) section.
-1. Run
+1. Follow steps 1-4 in the [previous](#text_file) section.
+2. Run
 
-```none
+```bash
 make qa
 ```
 
-This step will "style" all the files and crucially strip the output of the notebooks. The first time running it is almost certainly going to fail. Don't worry, `pre-commit`, the thing under the hood, will automatically fix most of the problems.
+This step runs code quality checks with `pre-commit` and strips notebook outputs (keeping notebooks clean in git). If it fails the first time, pre-commit will automatically fix most issues. Run it again - it should pass on the second attempt. If errors persist, check the error messages.
 
-Now, run it again. If this time it still has an error, look at the error message and see what you can do.
-3\. Now, you can [tidy things up and make a pull request](tidyNpr.md)
+3. The notebooks will be automatically executed at build time (`make docs-build`) with outputs embedded in the HTML.
+4. [Tidy things up and make a pull request](tidyNpr.md)
 
 ## Cooler (Sciserver) notebooks
 
@@ -62,14 +63,13 @@ od = ospy.open_oceandataset.from_catalog("NameOfDataset")
 ds = od._ds
 ```
 
-Note that since you are using an `Oceanography` image, most packages are already downloaded. We still need two dependencies just to convert the notebooks.
+Note that since you are using the `Oceanography` image on SciServer, most packages are already installed. You only need one dependency to convert notebooks to markdown:
 
-```
-pip install -U jupyter-book
+```bash
 pip install jupytext
 ```
 
-And that's it, you don't have to follow the steps of preparing environment.
+That's it—you don't need to set up the local environment.
 
 Now, follow these steps:
 
@@ -99,26 +99,29 @@ git clone https://github.com/YourGithubNickname/seaduck_sciserver_notebook.git
 
 All the existing sciserver notebooks will be in `seaduck_sciserver_notebook`. If you want to create new ones, put them in there as well.
 
-2. Have all the fun with your notebooks. However, whenever you plot, **always** use `plt.show()`.
+2. Create and execute your notebooks. **Important**: Always use `plt.show()` after plots so they render correctly.
 
-1. In `seaduck_sciserver_notebook`, run the python script
+3. In `seaduck_sciserver_notebook`, run the conversion script
 
-```shell
+```bash
 python convert_ipynb.py
 ```
 
-> This step will add when and which version the notebook was last run on. It will search the file with the string **Wenrui Jiang** (How egoistic?!), and put the information in the next line. It is a bit ad hoc. If I am not the author of the notebook, simply include: "Wenrui Jiang is a good boy" or something like that after putting your name.
+This script converts `.ipynb` files to `.md` files and adds metadata about when the notebook was last run. The script looks for your name in the file and adds a timestamp note on the next line. If you're not the original author, just add a comment with your name.
 
-4. You will realize that the markdown files created may not be able to render properly. This is because the new plots you have are local, but the link we put in the markdown files are what they would look like if the plots are already uploaded. Now, commit all the changes and make a pull request to the `seaduck_sciserver_notebook` repo. Once the changes are merged into the `main` branch. Open the file and see if it look as you intended. If so,
+4. The generated markdown files will reference plots via GitHub URLs (e.g., `https://github.com/MaceKuailv/seaduck_sciserver_notebook/blob/master/notebook_files/plot.png?raw=true`). These links will only work once the markdown files are merged to the main branch. Commit your changes and make a pull request to the `seaduck_sciserver_notebook` repo. Once merged to `main`, verify the pages render correctly in your browser.
 
-```shell
+5. Copy the generated markdown files to seaduck:
+
+```bash
 cp *.md ../seaduck/docs/sciserver_notebooks/
 ```
 
-5. Change directory back to seaduck. Follow step 4 to 7 in the [previous](#text_file) section.
-1. Before the changes are merged, check if the external links work by
+6. Go back to the seaduck directory and run `make docs-build` to verify the pages build correctly. Use `make docs-serve` for interactive preview.
 
-```shell
+7. Before the changes are merged, check if the external links work by running:
+
+```bash
 make link-check
 ```
 
@@ -128,4 +131,8 @@ This check could have some persistent false positive, because some website don't
 
 ## Deploy documentation
 
-https://jupyterbook.org/en/stable/start/publish.html#publish-your-book-online-with-github-pages
+The documentation is automatically deployed to GitHub Pages when changes are merged to the main branch via CI/CD. The static HTML files in `docs/_build/html/` are built with `make docs-build` and deployed by GitHub Actions. 
+
+For more details on manual deployment or customizing the deployment process, see:
+- [GitHub Pages documentation](https://pages.github.com/)
+- [MyST deployment guide](https://mystmd.org/guide/publishing)
