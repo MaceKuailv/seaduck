@@ -154,10 +154,7 @@ def ver_div(tub, xgcmgrd, zfluxname):
         tub["Vol"]
     except KeyError:
         tub._add_missing_vol()
-    vConv = (
-        xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", fill_value=0.0)
-        / tub["Vol"]
-    )
+    vConv = xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", fill_value=0.0) / tub["Vol"]
     return -vConv
 
 
@@ -191,9 +188,7 @@ def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):
     vstrmy = strmy * np.array(tub["dxG"])
     print(vstrmy.dims, vstrmx.dims)
 
-    xy_diff = xgcmgrd.diff_2d_vector(
-        {"X": vstrmx, "Y": vstrmy}, fill_value=0.0
-    )
+    xy_diff = xgcmgrd.diff_2d_vector({"X": vstrmx, "Y": vstrmy}, fill_value=0.0)
     x_diff = xy_diff["X"]
     y_diff = xy_diff["Y"]
     hDiv = x_diff + y_diff
