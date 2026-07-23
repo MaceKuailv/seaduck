@@ -83,7 +83,7 @@ def create_ecco_grid(ds, for_outer=False):
         # xgcm trying to be smart.
         xgcmgrd = xgcm.Grid(
             ds,
-            periodic=False,
+            padding="fill",
             face_connections=face_connections,
             coords=coords,
             autoparse_metadata=False,
