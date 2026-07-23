@@ -5,10 +5,6 @@ jupytext:
     format_name: myst
     format_version: 0.13
     jupytext_version: 1.18.1
-kernelspec:
-  display_name: Oceanography
-  language: python
-  name: oceanography
 ---
 
 # `OceInterp` interpolation in the ECCO global state estimate.

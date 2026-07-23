@@ -1,0 +1,16 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "The documentation is built with [**mystmd**](https://mystmd.org) (the engine behind Jupyter Book 2). It replaced the old Sphinx-based Jupyter Book v1 setup (`_config.yml` + `_toc.yml`), which is why there is no `conf.py` anymore.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "mystmd": "^1.10.1"
+  }
+}
