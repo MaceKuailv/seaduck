@@ -35,9 +35,9 @@ ds = seaduck.utils.get_dataset(name)
 
 Another option is to generate the dataset using mathematical expressions out of thin air. Since this kind of notebook is executed whenever the github action is triggered, it is preferrable that these notebooks run very fast. For example, do not perform heavy calculations in those notebooks and please do not install packages within them.
 
-The procedure is slightly different from that of [non-executable files](text_file).
+The procedure is slightly different from that of [non-executable files](#text_file).
 
-1. Follow step 1 to 6 in the [previous](text_file) section.
+1. Follow step 1 to 6 in the [previous](#text_file) section.
 1. Run
 
 ```none
@@ -115,7 +115,7 @@ python convert_ipynb.py
 cp *.md ../seaduck/docs/sciserver_notebooks/
 ```
 
-5. Change directory back to seaduck. Follow step 4 to 7 in the [previous](text_file) section.
+5. Change directory back to seaduck. Follow step 4 to 7 in the [previous](#text_file) section.
 1. Before the changes are merged, check if the external links work by
 
 ```shell

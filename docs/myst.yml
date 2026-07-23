@@ -1,0 +1,77 @@
+version: 1
+
+project:
+  title: Seaduck Tutorial
+  authors:
+    - name: Wenrui Jiang
+  github: https://github.com/MaceKuailv/seaduck
+  # Notebooks are executed at build time (see the docs-build make target).
+  jupyter: true
+  toc:
+    - file: intro.md
+    # -- Tutorial ---------------------------------------------------------
+    - title: Tutorial
+      children:
+        - file: how_to_install.md
+        - file: how_to_cite.md
+        - file: get_started.md
+          children:
+            - file: one_min_guide.ipynb
+            - file: network_of_object.md
+        - file: public_api_reference.md
+          children:
+            - file: api/OceData.md
+            - file: api/topology.md
+            - file: api/eulerian.md
+            - file: api/lagrangian.md
+            - file: api/OceInterp.md
+            - file: api/kernelNweight.md
+            - file: api/eulerian_budget.md
+            - file: api/lagrangian_budget.md
+        - file: internal_api_reference.md
+          children:
+            - file: api/smartread.md
+            - file: api/getmasks.md
+            - file: api/utils.md
+            - file: api/RelCoord.md
+    # -- Examples ---------------------------------------------------------
+    - title: Examples
+      children:
+        - file: ideal_test.md
+          children:
+            - file: idealize_test/hor_stream.ipynb
+            - file: idealize_test/ver_stream.ipynb
+            - file: idealize_test/tilted_stream.ipynb
+        - file: ocean_example.md
+          children:
+            - file: notebook/global_ECCO.ipynb
+            - file: notebook/AVISO.ipynb
+            - file: notebook/ASTE_sd.Particle_example.ipynb
+            - file: notebook/topology_tutorial.ipynb
+        - file: sciserver_example.md
+          children:
+            - file: sciserver_notebooks/IGPwinter.md
+            - file: sciserver_notebooks/KangerFjord.md
+            - file: sciserver_notebooks/LLC4320.md
+            - file: sciserver_notebooks/ECCO_plot_stations.md
+        - file: bud_tut.md
+          children:
+            - file: budget_tutorial/mean_eul_budg.ipynb
+            - file: budget_tutorial/particle_bud_tut.ipynb
+    # -- Contributing -----------------------------------------------------
+    - title: Contributing
+      children:
+        - file: guide_for_developer.md
+          children:
+            - file: contribute/use_git.md
+            - file: contribute/prep_env.md
+            - file: contribute/contr_cod.md
+            - file: contribute/contr_doc.md
+            - file: contribute/report_iss.md
+            - file: contribute/tidyNpr.md
+
+site:
+  template: book-theme
+  options:
+    logo: logo.png
+    logo_text: Seaduck
