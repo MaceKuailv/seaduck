@@ -359,9 +359,15 @@ seaduck/version.py
 paper/*.pdf
 *.zar*
 *ls_mode*
-*myst*
+
+# macOS
+.DS_Store
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,vim,visualstudiocode,pycharm
 
-# MyST build outputs
+# MyST / Jupyter Book 2 build outputs
 _build
+docs/_build/
+# API reference pages generated from docstrings by docs/generate_api.py.
+# Docstrings live only in seaduck/*.py; these files are regenerated on build.
+docs/api/

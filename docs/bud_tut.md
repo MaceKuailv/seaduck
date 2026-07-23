@@ -3,13 +3,9 @@
 The following notebooks shows how you can close a tracer budget with Lagrangian particles. They focuses on how this method is implemented in `seaduck`'s `eulerian_budget` and `lagrangian_budget` modules, rather than the rigorous derivation. Interested readers should refer to [our paper "Tracer budgets on Lagrangian Trajectories" published on JAMES](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2024MS004848).
 
 ::::{grid} 1 1 1 2
-:class-container: text-center
-:gutter: 2
 
 :::{grid-item-card}
-:link: budget_tutorial/mean_eul_budg
-:link-type: doc
-:class-header: bg-light
+:link: budget_tutorial/mean_eul_budg.ipynb
 
 Preparing the mean salinity budget in ECCO
 ^^^
@@ -21,9 +17,7 @@ Preparing the mean salinity budget in ECCO
 :::
 
 :::{grid-item-card}
-:link: budget_tutorial/particle_bud_tut
-:link-type: doc
-:class-header: bg-light
+:link: budget_tutorial/particle_bud_tut.ipynb
 
 Lagrangian budget of mean salinity
 ^^^

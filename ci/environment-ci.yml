@@ -3,11 +3,14 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
-- jupyter-book=0.15.1
+- jupyter
+- ipykernel
 - make
 - matplotlib
 - mypy
 - netCDF4
+- numpydoc
+- nodejs
 - pandas-stubs
 - pooch
 - pre-commit

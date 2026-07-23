@@ -1,5 +1,5 @@
 # Examples using idealized fields
 
-```{tableofcontents}
-
-```
+- [Horizontal streamfunction conservation](idealize_test/hor_stream.ipynb)
+- [Vertical streamfunction conservation](idealize_test/ver_stream.ipynb)
+- [Tilted solid-body rotation](idealize_test/tilted_stream.ipynb)
