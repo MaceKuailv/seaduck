@@ -129,7 +129,6 @@ def hor_div(tub, xgcmgrd, xfluxname, yfluxname):
         tub._add_missing_vol()
     xy_diff = xgcmgrd.diff_2d_vector(
         {"X": tub[xfluxname].fillna(0), "Y": tub[yfluxname].fillna(0)},
-        boundary="fill",
         fill_value=0.0,
     )
     x_diff = xy_diff["X"]
@@ -156,7 +155,7 @@ def ver_div(tub, xgcmgrd, zfluxname):
     except KeyError:
         tub._add_missing_vol()
     vConv = (
-        xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", boundary="fill", fill_value=0.0)
+        xgcmgrd.diff(tub[zfluxname].fillna(0), "Z", fill_value=0.0)
         / tub["Vol"]
     )
     return -vConv
@@ -185,15 +184,15 @@ def bolus_vel_from_psi(tub, xgcmgrd, psixname="GM_PsiX", psiyname="GM_PsiY"):
     strmx = tub[psixname].fillna(0)
     strmy = tub[psiyname].fillna(0)
 
-    u = xgcmgrd.diff(strmx, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
-    v = xgcmgrd.diff(strmy, "Z", boundary="fill", fill_value=0.0) / tub["drF"]
+    u = xgcmgrd.diff(strmx, "Z", fill_value=0.0) / tub["drF"]
+    v = xgcmgrd.diff(strmy, "Z", fill_value=0.0) / tub["drF"]
 
     vstrmx = strmx * np.array(tub["dyG"])  # there is some fucking problem with xgcm
     vstrmy = strmy * np.array(tub["dxG"])
     print(vstrmy.dims, vstrmx.dims)
 
     xy_diff = xgcmgrd.diff_2d_vector(
-        {"X": vstrmx, "Y": vstrmy}, boundary="fill", fill_value=0.0
+        {"X": vstrmx, "Y": vstrmy}, fill_value=0.0
     )
     x_diff = xy_diff["X"]
     y_diff = xy_diff["Y"]
