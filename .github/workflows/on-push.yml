@@ -118,6 +118,15 @@ jobs:
     - name: Install package
       run: |
         python -m pip install --no-deps -e .
+    - name: Setup Node.js for mystmd
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: 'docs/package-lock.json'
+    - name: Install mystmd dependencies
+      run: |
+        cd docs && npm ci
     - name: Build documentation
       run: |
         make docs-build
