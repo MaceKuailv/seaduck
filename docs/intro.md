@@ -7,3 +7,6 @@ Seaduck is a python package that helps you interpolate in an ocean dataset in bo
 "..."
 
 Check out the content pages bundled with this sample book to see more.
+
+```{tableofcontents}
+```
