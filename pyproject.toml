@@ -32,12 +32,16 @@ branch = true
 
 [tool.mypy]
 strict = false
+allow_untyped_calls = true
 
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
 module = [
   "matplotlib.*",
   "numba",
+  "numpydoc",
+  "numpydoc.docscrape",
+  "pandas",
   "pooch",
   "scipy",
   "scipy.interpolate",
