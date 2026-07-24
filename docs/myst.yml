@@ -72,6 +72,7 @@ project:
 
 site:
   template: book-theme
+  baseurl: /seaduck/
   options:
     logo: logo.png
     logo_text: Seaduck
