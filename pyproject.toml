@@ -31,6 +31,7 @@ readme = "README.md"
 branch = true
 
 [tool.mypy]
+allow_untyped_calls = true
 strict = false
 
 [[tool.mypy.overrides]]
@@ -38,6 +39,9 @@ ignore_missing_imports = true
 module = [
   "matplotlib.*",
   "numba",
+  "numpydoc",
+  "numpydoc.docscrape",
+  "pandas",
   "pooch",
   "scipy",
   "scipy.interpolate",

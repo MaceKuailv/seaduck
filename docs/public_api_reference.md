@@ -2,23 +2,23 @@
 
 ## Dataset-related object
 
-[OceData](api_reference/apiref_OceData.rst)
-[topology](api_reference/apiref_topology.rst)
+[OceData](api/OceData.md)
+[topology](api/topology.md)
 
 ## Point/particle object
 
-[eulerian](api_reference/apiref_eulerian.rst)
-[lagrangian](api_reference/apiref_lagrangian.rst)
+[eulerian](api/eulerian.md)
+[lagrangian](api/lagrangian.md)
 
 ## High-level function
 
-[OceInterp](api_reference/apiref_OceInterp.rst)
+[OceInterp](api/OceInterp.md)
 
 ## Kernel object
 
-[Kernal_and_Weight](api_reference/apiref_kernelNweight.rst)
+[Kernal_and_Weight](api/kernelNweight.md)
 
 ## Calculate budget
 
-[Eulerian budget](api_reference/apiref_eulerian_budget.rst)
-[Lagrangian budget](api_reference/apiref_lagrangian_budget.rst)
+[Eulerian budget](api/eulerian_budget.md)
+[Lagrangian budget](api/lagrangian_budget.md)

@@ -5,13 +5,9 @@ For a extremely quick start, read this [one minute guide](./one_min_guide.ipynb)
 If you have questions about any function, you can always go to [API references](./public_api_reference.md). Or you could checkout the following examples. More example can be found [here](ideal_test.md) and [here](ocean_example.md)
 
 ::::{grid} 1 1 1 3
-:class-container: text-center
-:gutter: 3
 
 :::{grid-item-card}
-:link: sciserver_notebooks/IGPwinter
-:link-type: doc
-:class-header: bg-light
+:link: sciserver_notebooks/IGPwinter.md
 
 Running Lagrangian particle on regional dataset
 ^^^
@@ -23,9 +19,7 @@ Running Lagrangian particle on regional dataset
 :::
 
 :::{grid-item-card}
-:link: sciserver_notebooks/LLC4320
-:link-type: doc
-:class-header: bg-light
+:link: sciserver_notebooks/LLC4320.md
 
 Example with complex grid (LLC4320)
 ^^^
@@ -37,9 +31,7 @@ Example with complex grid (LLC4320)
 :::
 
 :::{grid-item-card}
-:link: sciserver_notebooks/KangerFjord
-:link-type: doc
-:class-header: bg-light
+:link: sciserver_notebooks/KangerFjord.md
 
 Interpolation near a fjord in Eastern Greenland
 ^^^
