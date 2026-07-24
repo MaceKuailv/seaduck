@@ -128,6 +128,8 @@ jobs:
       run: |
         cd docs && npm ci
     - name: Build documentation
+      env:
+        BASE_URL: /seaduck/
       run: |
         make docs-build
     - name: Deploy documentation
