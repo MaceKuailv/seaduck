@@ -1,1 +1,1 @@
-import{a}from"/build/_shared/chunk-AX3VL2BW.js";import"/build/_shared/chunk-OZE3FFNP.js";export default a();
+import{a}from"/seaduck//build/_shared/chunk-AX3VL2BW.js";import"/seaduck//build/_shared/chunk-OZE3FFNP.js";export default a();

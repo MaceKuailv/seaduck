@@ -136,7 +136,7 @@ get_weight_cascade(rx, ry, pk, kernel_large=array([[ 0,  0],
        [-1,  0],
        [-2,  0],
        [ 1,  0],
-       [ 2,  0]]), inheritance=[[0, 1, 2, 3, 4, 5, 6, 7, 8], [0, 1, 2, 3, 5, 7, 8], [0, 1, 3, 5, 7], [0]], funcs=[<function kernel_weight_x.<locals>.the_interp_func at 0x7f9bd92ca160>, <function kernel_weight_x.<locals>.the_interp_func at 0x7f9bd92ca3e0>, <function kernel_weight_x.<locals>.the_interp_func at 0x7f9bd92ca480>, <function kernel_weight_x.<locals>.the_y_maxorder_func at 0x7f9bd92ca5c0>])
+       [ 2,  0]]), inheritance=[[0, 1, 2, 3, 4, 5, 6, 7, 8], [0, 1, 2, 3, 5, 7, 8], [0, 1, 3, 5, 7], [0]], funcs=[<function kernel_weight_x.<locals>.the_interp_func at 0x7fe71efa6160>, <function kernel_weight_x.<locals>.the_interp_func at 0x7fe71efa63e0>, <function kernel_weight_x.<locals>.the_interp_func at 0x7fe71efa6480>, <function kernel_weight_x.<locals>.the_y_maxorder_func at 0x7fe71efa65c0>])
 ```
 
 Compute the weight.
