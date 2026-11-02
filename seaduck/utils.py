@@ -114,11 +114,12 @@ def get_dataset(name):
     Parameters
     ----------
     name: string
-        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste", "eul_bud_mean", "lag_budg"
+        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste", "eul_bud_mean", "lag_budg", "pop"
     """
     pooch_testdata, pooch_fetch_kwargs = pooch_prepare(dataset_name=name)
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
-    ds = xr.open_zarr(os.path.commonpath(fnames))
+    # POP uses a noleap calendar, process_pop expects the raw time.
+    ds = xr.open_zarr(os.path.commonpath(fnames), decode_times=name != "pop")
     if name == "ecco":
         return process_ecco(ds)
     return ds
