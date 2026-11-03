@@ -139,7 +139,7 @@ def _x_per_ind_tend(ind, tend, iymax, ixmax):
     if (iy > iymax) or (iy < 0):
         return (-1, -1)
     if ix > ixmax:
-        return (iy, ix - ixmax)
+        return (iy, ix - ixmax - 1)
     if ix < 0:
         return (iy, ixmax + ix + 1)
     return (iy, ix)

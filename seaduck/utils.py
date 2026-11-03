@@ -114,11 +114,12 @@ def get_dataset(name):
     Parameters
     ----------
     name: string
-        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste", "eul_bud_mean", "lag_budg"
+        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste", "eul_bud_mean", "lag_budg", "pop"
     """
     pooch_testdata, pooch_fetch_kwargs = pooch_prepare(dataset_name=name)
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
-    ds = xr.open_zarr(os.path.commonpath(fnames))
+    # POP uses a noleap calendar, process_pop expects the raw time.
+    ds = xr.open_zarr(os.path.commonpath(fnames), decode_times=name != "pop")
     if name == "ecco":
         return process_ecco(ds)
     return ds
@@ -681,6 +682,96 @@ def missing_cs_sn(ds, return_xr=False):
         return cs, sn
     else:
         return cs, sn
+
+
+def process_pop(ds):
+    """Convert a POP (CESM) dataset into the MITgcm-like layout seaduck uses.
+
+    POP stores quantities on the east/north face (and the NE corner) of T cell
+    (j, i), while seaduck expects them on the west/south face (and SW corner).
+    Variables are located using their ``grid_loc`` attribute, shifted, and put
+    on the Xp1/Yp1/Zl dimensions. Xp1 has the same length as X (POP grids are
+    zonally periodic), and Yp1 has one more point than Y.
+
+    Grid variables are converted to meters, depth is negative upward, and time
+    is converted to seconds since the reference date of POP's time units. The
+    data variables are copied without changing their units.
+
+    Parameters
+    ----------
+    ds: xarray.Dataset
+        POP output opened with ``decode_times=False``, carrying the grid
+        variables (TLONG, TLAT, ULONG, ULAT, TAREA, HTE, HTN, KMT, z_t, z_w_top,
+        z_w_bot, dz) that are written in every POP history file.
+
+    Returns
+    -------
+    out: xarray.Dataset
+        Dataset that can be passed to seaduck.OceData.
+    """
+    if not np.issubdtype(ds["time"].dtype, np.number):
+        raise ValueError("Open the POP dataset with decode_times=False.")
+    if not ds["time"].attrs.get("units", "days").startswith("days"):
+        raise NotImplementedError("Only POP time in days is supported.")
+
+    def _x_shift(arr):
+        # east face of cell i is the west face of cell i+1
+        return np.roll(np.asarray(arr), 1, axis=-1)
+
+    def _y_pad(arr, first):
+        # north face of cell j is the south face of cell j+1
+        arr = np.asarray(arr)
+        return np.concatenate([first(arr), arr], axis=-2)
+
+    out = xr.Dataset()
+    out["XC"] = (("Y", "X"), np.asarray(ds["TLONG"]))
+    out["YC"] = (("Y", "X"), np.asarray(ds["TLAT"]))
+    # the bottom row of corners is south of the grid, which is land in POP.
+    for name, pop_name in [("XG", "ULONG"), ("YG", "ULAT")]:
+        out[name] = (
+            ("Yp1", "Xp1"),
+            _y_pad(_x_shift(ds[pop_name]), lambda a: 2 * a[:1] - a[1:2]),
+        )
+    if "ANGLET" in ds.variables:
+        out["CS"] = (("Y", "X"), np.cos(np.asarray(ds["ANGLET"])))
+        out["SN"] = (("Y", "X"), np.sin(np.asarray(ds["ANGLET"])))
+    out["rA"] = (("Y", "X"), np.asarray(ds["TAREA"]) * 1e-4)
+    out["dxG"] = (("Yp1", "X"), _y_pad(ds["HTN"], lambda a: a[:1]) * 1e-2)
+    out["dyG"] = (("Y", "Xp1"), _x_shift(ds["HTE"]) * 1e-2)
+
+    z_t = np.asarray(ds["z_t"]) * 1e-2
+    z_w = np.append(np.asarray(ds["z_w_top"]), ds["z_w_bot"][-1]) * 1e-2
+    out = out.assign_coords(Z=("Z", -z_t), Zl=("Zl", -z_w[:-1]), Zp1=("Zp1", -z_w))
+    out["drF"] = ("Z", np.asarray(ds["dz"]) * 1e-2)
+    out["drC"] = ("Zp1", np.diff(np.concatenate([[0], z_t, z_w[-1:]])))
+    out["maskC"] = (
+        ("Z", "Y", "X"),
+        np.arange(len(z_t))[:, None, None] < np.asarray(ds["KMT"]),
+    )
+
+    if "time" in ds.dims:
+        time = ds["time"]
+        if "time_bound" in ds.variables:
+            # POP time stamps are at the end of the averaging period
+            time = ds["time_bound"].mean(ds["time_bound"].dims[-1])
+        out = out.assign_coords(time=("time", np.asarray(time) * 86400.0))
+
+    dim_rename = {"nlat": "Y", "nlon": "X", "z_t": "Z", "z_w_top": "Zl"}
+    for name, da in ds.data_vars.items():
+        loc = da.attrs.get("grid_loc", "")
+        if len(loc) != 4 or not {"nlat", "nlon"} <= set(da.dims):
+            continue
+        if not set(da.dims) <= set(dim_rename) | {"time"}:
+            continue  # e.g. z_t_150m or z_w_bot
+        da = da.drop_vars(list(da.coords))
+        # grid_loc is (ndim, x, y, z), where 2 means on the east/north/top face
+        if loc[1] == "2":
+            da = da.roll(nlon=1).rename(nlon="Xp1")
+        if loc[2] == "2":
+            da = xr.concat([xr.zeros_like(da.isel(nlat=slice(1))), da], dim="nlat")
+            da = da.rename(nlat="Yp1")
+        out[name] = da.rename({k: v for k, v in dim_rename.items() if k in da.dims})
+    return out
 
 
 def convert_time(time):
