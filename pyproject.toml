@@ -23,7 +23,7 @@ dependencies = [
 ]
 description = "A python package that interpolates data from ocean dataset from both Eulerian and Lagrangian perspective. "
 dynamic = ["version"]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 name = "seaduck"
 readme = "README.md"
 
