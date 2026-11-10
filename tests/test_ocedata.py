@@ -81,18 +81,22 @@ def test_not_h_ready(ds):
         sd.OceData(temp)
 
 
+@pytest.mark.parametrize("cartesian", [True, False])
 @pytest.mark.parametrize("incomplete_data", ["drop_YG"], indirect=True)
 @pytest.mark.parametrize("lat", list(np.linspace(70, 70.618, 3)))
 @pytest.mark.parametrize("lon", list(np.linspace(-17, -13.618, 3)))
-def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon):
+def test_accurate_reproduce_local_cartesian(incomplete_data, lat, lon, cartesian):
     tub = sd.OceData(incomplete_data)
     lon = np.array([lon])
     lat = np.array([lat])
-    hrel = tub._find_rel_h(lon, lat)
+    hrel = tub._find_rel_h(lon, lat, cartesian=cartesian)
     assert isinstance(hrel, sd.ocedata.HRel)
     assert "=" in repr(hrel)
     face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by = hrel.values()
-    new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
+    if cartesian:
+        new_lon, new_lat = sd.utils.rel2latlon_cartesian(rx, ry, cs, sn, dx, dy, bx, by)
+    else:
+        new_lon, new_lat = sd.utils.rel2latlon(rx, ry, cs, sn, dx, dy, bx, by)
     assert np.allclose(new_lon, lon)
     assert np.allclose(new_lat, lat)
 

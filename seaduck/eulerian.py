@@ -14,6 +14,7 @@ from seaduck.utils import (
     find_px_py,
     get_key_by_value,
     local_to_latlon,
+    rel2latlon_oceanparcel,
     to_180,
     weight_f_node,
 )
@@ -135,7 +136,7 @@ class Position:
         else:
             object.__setattr__(self, attr, value)
 
-    def from_latlon(self, x=None, y=None, z=None, t=None, data=None):
+    def from_latlon(self, x=None, y=None, z=None, t=None, data=None, cartesian=True):
         """Fill in the coord info using lat-lon-dep-time dims.
 
         Use the methods from the ocedata to transform
@@ -148,7 +149,14 @@ class Position:
             1D array of the lat-lon-dep-time coords
         data: OceData object
             The field where the Positions are defined on.
+        cartesian: bool, default True
+            Whether to convert between longitude/latitude and the position
+            within a grid cell in 3D Cartesian coordinates. This is accurate
+            at all latitudes, including cells around the poles. Set to False
+            to use the older scheme based on longitude and latitude
+            differences. It has no effect on rectilinear (lat-lon) grids.
         """
+        self.cartesian = cartesian
         if data is None:
             try:
                 self.ocedata
@@ -182,7 +190,9 @@ class Position:
         if (x is not None) and (y is not None):
             self.lon = copy.deepcopy(x)
             self.lat = copy.deepcopy(y)
-            self.rel.update(self.ocedata._find_rel_h(self.lon, self.lat))
+            self.rel.update(
+                self.ocedata._find_rel_h(self.lon, self.lat, cartesian=cartesian)
+            )
         else:
             self.rel.update(HRel._make([None for i in range(11)]))
             self.lon = None
@@ -217,7 +227,13 @@ class Position:
         return self
 
     def from_bool_array(
-        self, t=None, data=None, bool_array=None, num=None, random_seed=None
+        self,
+        t=None,
+        data=None,
+        bool_array=None,
+        num=None,
+        random_seed=None,
+        cartesian=True,
     ):
         """Update/Generate new object with random points in given grid boxes.
 
@@ -238,7 +254,10 @@ class Position:
             Total number of particles to seed (approximately).
         random_seed: int optional
             The random seed used for reproducible results.
+        cartesian: bool, default True
+            See from_latlon.
         """
+        self.cartesian = cartesian
         if random_seed is not None:
             np.random.seed(random_seed)
 
@@ -292,9 +311,9 @@ class Position:
         # set lon temporaily
         self.lon = bx
         px, py = self.get_px_py()
-        w = self.get_f_node_weight()
-        self.lon = np.einsum("nj,nj->n", w, px.T)
-        self.lat = np.einsum("nj,nj->n", w, py.T)
+        self.lon, self.lat = rel2latlon_oceanparcel(
+            rx, ry, px, py, lon_ref=bx, cartesian=cartesian
+        )
 
         self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         self.rel.update(self.ocedata._find_rel_v(self.dep))

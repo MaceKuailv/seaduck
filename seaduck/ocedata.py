@@ -419,7 +419,7 @@ class OceData:
         if self.readiness["time"]:
             self._tgrid2array()
 
-    def _find_rel_h(self, x, y):
+    def _find_rel_h(self, x, y, cartesian=True):
         """Find the horizontal rel-coordinate.
 
         Find the horizontal rel-coordinate of the given 4-D position based on readiness['h'].
@@ -428,6 +428,12 @@ class OceData:
         ----------
         x, y: np.ndarray
             1D array of longitude and latitude.
+        cartesian: bool, default True
+            Whether to locate the points within the cell in 3D Cartesian
+            coordinates, which works at all latitudes including the poles.
+            If False, use differences in longitude and latitude instead.
+            Ignored for rectilinear (lat-lon) grids, where the cells are
+            bounded by meridians and parallels and lon/lat is exact.
 
         Returns
         -------
@@ -448,10 +454,20 @@ class OceData:
                 self.YG,
                 self.tree,
                 self.tp,
+                cartesian=cartesian,
             )
         elif self.readiness["h"] == "local_cartesian":
             h_rel_tuple = find_rel_h_naive(
-                x, y, self.XC, self.YC, self.dX, self.dY, self.CS, self.SN, self.tree
+                x,
+                y,
+                self.XC,
+                self.YC,
+                self.dX,
+                self.dY,
+                self.CS,
+                self.SN,
+                self.tree,
+                cartesian=cartesian,
             )
         elif self.readiness["h"] == "rectilinear":
             h_rel_tuple = find_rel_h_rectilinear(x, y, self.lon, self.lat)
