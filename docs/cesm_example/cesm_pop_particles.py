@@ -123,5 +123,7 @@ ax.set_title(
 )
 fig.savefig("cesm_pop_trajectories.png", dpi=200, bbox_inches="tight")
 
-print(f"{p.N} particles, depth range at the end: {deps[:, -1].min():.1f} to "
-      f"{deps[:, -1].max():.1f} m")
+print(
+    f"{p.N} particles, depth range at the end: {deps[:, -1].min():.1f} to "
+    f"{deps[:, -1].max():.1f} m"
+)
