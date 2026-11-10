@@ -26,6 +26,8 @@ def pooch_prepare(dataset_name=""):
     doi = "10.5281/zenodo.15884732"
     if dataset_name in ("eul_bud_mean", "lag_budg"):
         doi = "10.5281/zenodo.21536496"
+    elif dataset_name == "pop":
+        doi = "10.5281/zenodo.24107542"
     pooch_testdata = pooch.create(
         path=pooch.os_cache("seaduck"),
         base_url=f"doi:{doi}",
