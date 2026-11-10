@@ -20,18 +20,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
     - name: Install packages
       run: |
-        $CONDA/bin/python -m pip install build twine
+        python -m pip install build twine
     - name: Build distributions
       run: |
-        $CONDA/bin/python -m build
+        python -m build
     - name: Check wheels
       run: |
         cd dist || exit
-        $CONDA/bin/python -m pip install seaduck*.whl || exit
-        $CONDA/bin/python -m twine check * || exit
-        $CONDA/bin/python -c "import seaduck"
+        python -m pip install seaduck*.whl || exit
+        python -m twine check * || exit
+        python -c "import seaduck"
     - name: Publish a Python distribution to PyPI
       if: success() && github.event_name == 'release'
       uses: pypa/gh-action-pypi-publish@release/v1

@@ -24,12 +24,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+    # The runner image does not provide conda ($CONDA is empty), so install
+    # conda-merge into a Python set up by setup-python instead.
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
     - name: Install conda-merge
+      shell: bash
       run: |
-        $CONDA/bin/python -m pip install conda-merge
+        python -m pip install conda-merge
     - name: Combine environments
+      shell: bash
       run: |
-        $CONDA/bin/conda-merge ci/environment-ci.yml environment.yml > ci/combined-environment-ci.yml
+        conda-merge ci/environment-ci.yml environment.yml > ci/combined-environment-ci.yml
     - name: Archive combined environments
       uses: actions/upload-artifact@v7
       with:
