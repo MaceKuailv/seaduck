@@ -32,6 +32,8 @@ branch = true
 
 [tool.mypy]
 allow_untyped_calls = true
+# example scripts, not part of the package
+exclude = ["^docs/cesm_example/"]
 strict = false
 
 [[tool.mypy.overrides]]
