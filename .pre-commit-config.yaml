@@ -28,9 +28,9 @@ repos:
   - id: blackdoc
     additional_dependencies: [black==22.3.0]
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.12.2
+  rev: v0.17.4
   hooks:
-  - id: ruff
+  - id: ruff-check
     args: [--fix]
 - repo: https://github.com/executablebooks/mdformat
   rev: 0.7.22

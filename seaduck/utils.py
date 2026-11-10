@@ -26,6 +26,8 @@ def pooch_prepare(dataset_name=""):
     doi = "10.5281/zenodo.15884732"
     if dataset_name in ("eul_bud_mean", "lag_budg"):
         doi = "10.5281/zenodo.21536496"
+    elif dataset_name == "pop":
+        doi = "10.5281/zenodo.24107542"
     pooch_testdata = pooch.create(
         path=pooch.os_cache("seaduck"),
         base_url=f"doi:{doi}",
@@ -114,11 +116,13 @@ def get_dataset(name):
     Parameters
     ----------
     name: string
-        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste", "eul_bud_mean", "lag_budg"
+        The name of dataset, now support "ecco", "aviso", "curv", "rect", "aste",
+        "eul_bud_mean", "lag_budg", "pop"
     """
     pooch_testdata, pooch_fetch_kwargs = pooch_prepare(dataset_name=name)
     fnames = pooch_testdata.fetch(f"{name}.tar.gz", pooch.Untar(), **pooch_fetch_kwargs)
-    ds = xr.open_zarr(os.path.commonpath(fnames))
+    # POP uses a noleap calendar, process_pop expects the raw time.
+    ds = xr.open_zarr(os.path.commonpath(fnames), decode_times=name != "pop")
     if name == "ecco":
         return process_ecco(ds)
     return ds
@@ -526,18 +530,71 @@ def find_rx_ry_naive(x, y, bx, by, cs, sn, dx, dy):
     return rx, ry
 
 
-@compileable
-def find_rx_ry_oceanparcel(x, y, px, py):
-    """Find the non-dimensional horizontal distance.
+def latlon2xyz(lat, lon):
+    """Convert latitude and longitude in degrees to unit vectors.
 
-    This is done using the oceanparcel scheme.
+    Parameters
+    ----------
+    lat, lon: numpy.ndarray
+        Latitude and longitude in degrees, any (matching) shape.
+
+    Returns
+    -------
+    xyz: numpy.ndarray
+        Array of shape (3,) + lat.shape. The components are
+        x toward (0N, 0E), y toward (0N, 90E) and z toward the North Pole.
+    """
+    lat = np.deg2rad(np.asarray(lat, dtype="float64"))
+    lon = np.deg2rad(np.asarray(lon, dtype="float64"))
+    return np.stack([np.cos(lat) * np.cos(lon), np.cos(lat) * np.sin(lon), np.sin(lat)])
+
+
+def xyz2latlon(xyz, lon_ref=None):
+    """Convert vectors (not necessarily unit length) to latitude and longitude.
+
+    Parameters
+    ----------
+    xyz: numpy.ndarray
+        Array of shape (3, ...).
+    lon_ref: numpy.ndarray, optional
+        If given, the longitude is shifted by multiples of 360 degrees to be
+        within 180 degrees of lon_ref, so that trajectories stay continuous.
+
+    Returns
+    -------
+    lat, lon: numpy.ndarray
+        Latitude in [-90, 90] and longitude in degrees.
+    """
+    x, y, z = xyz
+    lat = np.rad2deg(np.arctan2(z, np.hypot(x, y)))
+    lon = np.rad2deg(np.arctan2(y, x))
+    if lon_ref is not None:
+        lon = lon_ref + to_180(lon - lon_ref)
+    return lat, lon
+
+
+def _local_frame(bx, by):
+    """Return unit vectors of the local up, east and north directions at (bx, by)."""
+    lam = np.deg2rad(np.asarray(bx, dtype="float64"))
+    phi = np.deg2rad(np.asarray(by, dtype="float64"))
+    up = np.stack([np.cos(phi) * np.cos(lam), np.cos(phi) * np.sin(lam), np.sin(phi)])
+    east = np.stack([-np.sin(lam), np.cos(lam), np.zeros_like(lam)])
+    north = np.stack(
+        [-np.sin(phi) * np.cos(lam), -np.sin(phi) * np.sin(lam), np.cos(phi)]
+    )
+    return up, east, north
+
+
+@compileable
+def _bilinear_inverse(x, y, px, py):
+    """Invert the bilinear map from the unit square to a quadrilateral.
+
+    The corners px[k], py[k] are ordered as (0,0), (1,0), (1,1), (0,1)
+    and the returned rx, ry are shifted to be in [-1/2, 1/2] for points
+    inside the quadrilateral.
     """
     rx = np.ones_like(x) * 0.0
     ry = np.ones_like(y) * 0.0
-    x0 = px[0]
-
-    x = to_180(x - x0)
-    px = to_180(px - x0)
 
     invA = np.array(
         [
@@ -572,7 +629,134 @@ def find_rx_ry_oceanparcel(x, y, px, py):
     return rx - 1 / 2, ry - 1 / 2
 
 
-def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
+@compileable
+def find_rx_ry_oceanparcel(x, y, px, py):
+    """Find the non-dimensional horizontal distance.
+
+    This is done using the oceanparcel scheme, i.e. bilinear interpolation
+    between the corner longitudes and latitudes.
+    """
+    x0 = px[0]
+    x = to_180(x - x0)
+    px = to_180(px - x0)
+    return _bilinear_inverse(x, y, px, py)
+
+
+def _corner_xyz(px, py):
+    """Return unit vectors of the 4 corners, shape (3, 4, N)."""
+    return latlon2xyz(py, px)
+
+
+def find_rx_ry_oceanparcel_cartesian(x, y, px, py):
+    """Find the non-dimensional horizontal distance in 3D Cartesian space.
+
+    The cell is the bilinear surface spanned by the 3D unit vectors of its
+    four corners, P(rx, ry) = sum_k w_k(rx, ry) X_k, and a point is located
+    on it by the radial projection through the center of the Earth. On a
+    face shared by two cells, P only depends on the two shared corners, so
+    the location is consistent between neighbors. Unlike
+    find_rx_ry_oceanparcel, nothing depends on the longitude convention,
+    so this also works for cells around or next to the poles.
+
+    Parameters
+    ----------
+    x, y: numpy.ndarray
+        Longitude and latitude of the points in degrees, shape (N,).
+    px, py: numpy.ndarray
+        Longitude and latitude of the corners in degrees, shape (4, N),
+        ordered as in find_px_py.
+
+    Returns
+    -------
+    rx, ry: numpy.ndarray
+        Non-dimensional position, in [-1/2, 1/2] inside the cell.
+    """
+    point = latlon2xyz(y, x)
+    corners = _corner_xyz(px, py)
+    # Solve sum_k w_k X_k = mu * point. Projecting onto two directions
+    # perpendicular to point removes mu and leaves a 2D bilinear inverse.
+    # e1 is along the grid x direction so that (e1, e2) has the same
+    # orientation as the (rx, ry) axes.
+    gx = corners[:, 1] + corners[:, 2] - corners[:, 0] - corners[:, 3]
+    e1 = gx - np.sum(gx * point, axis=0) * point
+    e1 /= np.linalg.norm(e1, axis=0)
+    e2 = np.cross(point, e1, axis=0)
+    # scale to cell size, so the tolerances in _bilinear_inverse work
+    scale = 0.5 * np.linalg.norm(gx, axis=0)
+    qx = np.einsum("cn,ckn->kn", e1, corners) / scale
+    qy = np.einsum("cn,ckn->kn", e2, corners) / scale
+    zero = np.zeros(qx.shape[1])
+    return _bilinear_inverse(zero, zero.copy(), qx, qy)
+
+
+def rel2latlon_oceanparcel(rx, ry, px, py, lon_ref=None, cartesian=True):
+    """Translate the rel-coords into longitude and latitude (oceanparcel scheme).
+
+    Parameters
+    ----------
+    rx, ry: numpy.ndarray
+        Non-dimensional position in the cell, shape (N,).
+    px, py: numpy.ndarray
+        Longitude and latitude of the corners in degrees, shape (4, N).
+    lon_ref: numpy.ndarray, optional
+        Reference longitude to keep the output continuous (cartesian only).
+    cartesian: bool, default True
+        If True, interpolate the 3D unit vectors of the corners and project
+        back to the sphere. If False, interpolate longitude and latitude
+        directly (px is assumed to be already unwrapped).
+
+    Returns
+    -------
+    lon, lat: numpy.ndarray
+    """
+    w = weight_f_node(rx, ry)
+    if not cartesian:
+        lon = np.einsum("nj,nj->n", w, px.T)
+        lat = np.einsum("nj,nj->n", w, py.T)
+        return lon, lat
+    xyz = np.einsum("nk,ckn->cn", w, _corner_xyz(px, py))
+    lat, lon = xyz2latlon(xyz, lon_ref)
+    return lon, lat
+
+
+R_EARTH = 6371e3
+
+
+def find_rx_ry_naive_cartesian(x, y, bx, by, cs, sn, dx, dy):
+    """Find the non-dimensional coords using the local cartesian scheme in 3D.
+
+    The point is projected (gnomonic projection) onto the plane tangent to
+    the sphere at the cell center, where the local east and north
+    displacements are well defined at all latitudes.
+    """
+    point = latlon2xyz(y, x)
+    up, east, north = _local_frame(bx, by)
+    point = point / np.sum(point * up, axis=0) - up
+    de = R_EARTH * np.sum(point * east, axis=0)
+    dn = R_EARTH * np.sum(point * north, axis=0)
+    rx = (de * cs + dn * sn) / dx
+    ry = (dn * cs - de * sn) / dy
+    return rx, ry
+
+
+def rel2latlon_cartesian(rx, ry, cs, sn, dx, dy, bx, by, lon_ref=None):
+    """Translate the rel-coords into lat-lon (local cartesian scheme, 3D).
+
+    This is the inverse of find_rx_ry_naive_cartesian.
+    """
+    temp_x = rx * dx
+    temp_y = ry * dy
+    de = temp_x * cs - temp_y * sn
+    dn = temp_x * sn + temp_y * cs
+    up, east, north = _local_frame(bx, by)
+    xyz = up + (de * east + dn * north) / R_EARTH
+    lat, lon = xyz2latlon(xyz, lon_ref)
+    return lon, lat
+
+
+def find_rel_h_naive(
+    lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree, cartesian=True
+):
     """Find the rel-coords in the horizontal.
 
     very similar to find_rel_time/v
@@ -583,6 +767,10 @@ def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
 
     cs,sn is just the cos and sin of the grid orientation.
     It will come in handy when we transfer vectors.
+
+    If cartesian is True (default), the displacement from the cell center
+    is computed in 3D (see find_rx_ry_naive_cartesian), otherwise from the
+    differences in longitude and latitude.
     """
     if NoneIn([lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree]):
         raise ValueError("Some of the required variables are missing")
@@ -593,7 +781,10 @@ def find_rel_h_naive(lon, lat, some_x, some_y, some_dx, some_dy, CS, SN, tree):
     else:
         ind = (iy, ix)
     cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
-    rx, ry = find_rx_ry_naive(lon, lat, bx, by, cs, sn, dx, dy)
+    if cartesian:
+        rx, ry = find_rx_ry_naive_cartesian(lon, lat, bx, by, cs, sn, dx, dy)
+    else:
+        rx, ry = find_rx_ry_naive(lon, lat, bx, by, cs, sn, dx, dy)
     return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
@@ -610,9 +801,14 @@ def find_rel_h_rectilinear(x, y, lon, lat):
 
 
 def find_rel_h_oceanparcel(
-    x, y, some_x, some_y, some_dx, some_dy, CS, SN, XG, YG, tree, tp
+    x, y, some_x, some_y, some_dx, some_dy, CS, SN, XG, YG, tree, tp, cartesian=True
 ):
-    """Find the rel-coords using the rectilinear scheme."""
+    """Find the rel-coords using the oceanparcel scheme.
+
+    If cartesian is True (default), the position in the cell is found in 3D
+    (see find_rx_ry_oceanparcel_cartesian), otherwise by bilinear
+    interpolation of the corner longitudes and latitudes.
+    """
     if NoneIn([x, y, some_x, some_y, XG, YG, tree]):
         raise ValueError("Some of the required variables are missing")
     h_shape = some_x.shape
@@ -623,7 +819,10 @@ def find_rel_h_oceanparcel(
         ind = (iy, ix)
     cs, sn, dx, dy, bx, by = _read_h(some_x, some_y, some_dx, some_dy, CS, SN, ind)
     px, py = find_px_py(XG, YG, tp, ind)
-    rx, ry = find_rx_ry_oceanparcel(x, y, px, py)
+    if cartesian:
+        rx, ry = find_rx_ry_oceanparcel_cartesian(x, y, px, py)
+    else:
+        rx, ry = find_rx_ry_oceanparcel(x, y, px, py)
     return face, iy, ix, rx, ry, cs, sn, dx, dy, bx, by
 
 
@@ -681,6 +880,96 @@ def missing_cs_sn(ds, return_xr=False):
         return cs, sn
     else:
         return cs, sn
+
+
+def process_pop(ds):
+    """Convert a POP (CESM) dataset into the MITgcm-like layout seaduck uses.
+
+    POP stores quantities on the east/north face (and the NE corner) of T cell
+    (j, i), while seaduck expects them on the west/south face (and SW corner).
+    Variables are located using their ``grid_loc`` attribute, shifted, and put
+    on the Xp1/Yp1/Zl dimensions. Xp1 has the same length as X (POP grids are
+    zonally periodic), and Yp1 has one more point than Y.
+
+    Grid variables are converted to meters, depth is negative upward, and time
+    is converted to seconds since the reference date of POP's time units. The
+    data variables are copied without changing their units.
+
+    Parameters
+    ----------
+    ds: xarray.Dataset
+        POP output opened with ``decode_times=False``, carrying the grid
+        variables (TLONG, TLAT, ULONG, ULAT, TAREA, HTE, HTN, KMT, z_t, z_w_top,
+        z_w_bot, dz) that are written in every POP history file.
+
+    Returns
+    -------
+    out: xarray.Dataset
+        Dataset that can be passed to seaduck.OceData.
+    """
+    if not np.issubdtype(ds["time"].dtype, np.number):
+        raise ValueError("Open the POP dataset with decode_times=False.")
+    if not ds["time"].attrs.get("units", "days").startswith("days"):
+        raise NotImplementedError("Only POP time in days is supported.")
+
+    def _x_shift(arr):
+        # east face of cell i is the west face of cell i+1
+        return np.roll(np.asarray(arr), 1, axis=-1)
+
+    def _y_pad(arr, first):
+        # north face of cell j is the south face of cell j+1
+        arr = np.asarray(arr)
+        return np.concatenate([first(arr), arr], axis=-2)
+
+    out = xr.Dataset()
+    out["XC"] = (("Y", "X"), np.asarray(ds["TLONG"]))
+    out["YC"] = (("Y", "X"), np.asarray(ds["TLAT"]))
+    # the bottom row of corners is south of the grid, which is land in POP.
+    for name, pop_name in [("XG", "ULONG"), ("YG", "ULAT")]:
+        out[name] = (
+            ("Yp1", "Xp1"),
+            _y_pad(_x_shift(ds[pop_name]), lambda a: 2 * a[:1] - a[1:2]),
+        )
+    if "ANGLET" in ds.variables:
+        out["CS"] = (("Y", "X"), np.cos(np.asarray(ds["ANGLET"])))
+        out["SN"] = (("Y", "X"), np.sin(np.asarray(ds["ANGLET"])))
+    out["rA"] = (("Y", "X"), np.asarray(ds["TAREA"]) * 1e-4)
+    out["dxG"] = (("Yp1", "X"), _y_pad(ds["HTN"], lambda a: a[:1]) * 1e-2)
+    out["dyG"] = (("Y", "Xp1"), _x_shift(ds["HTE"]) * 1e-2)
+
+    z_t = np.asarray(ds["z_t"]) * 1e-2
+    z_w = np.append(np.asarray(ds["z_w_top"]), ds["z_w_bot"][-1]) * 1e-2
+    out = out.assign_coords(Z=("Z", -z_t), Zl=("Zl", -z_w[:-1]), Zp1=("Zp1", -z_w))
+    out["drF"] = ("Z", np.asarray(ds["dz"]) * 1e-2)
+    out["drC"] = ("Zp1", np.diff(np.concatenate([[0], z_t, z_w[-1:]])))
+    out["maskC"] = (
+        ("Z", "Y", "X"),
+        np.arange(len(z_t))[:, None, None] < np.asarray(ds["KMT"]),
+    )
+
+    if "time" in ds.dims:
+        time = ds["time"]
+        if "time_bound" in ds.variables:
+            # POP time stamps are at the end of the averaging period
+            time = ds["time_bound"].mean(ds["time_bound"].dims[-1])
+        out = out.assign_coords(time=("time", np.asarray(time) * 86400.0))
+
+    dim_rename = {"nlat": "Y", "nlon": "X", "z_t": "Z", "z_w_top": "Zl"}
+    for name, da in ds.data_vars.items():
+        loc = da.attrs.get("grid_loc", "")
+        if len(loc) != 4 or not {"nlat", "nlon"} <= set(da.dims):
+            continue
+        if not set(da.dims) <= set(dim_rename) | {"time"}:
+            continue  # e.g. z_t_150m or z_w_bot
+        da = da.drop_vars(list(da.coords))
+        # grid_loc is (ndim, x, y, z), where 2 means on the east/north/top face
+        if loc[1] == "2":
+            da = da.roll(nlon=1).rename(nlon="Xp1")
+        if loc[2] == "2":
+            da = xr.concat([xr.zeros_like(da.isel(nlat=slice(1))), da], dim="nlat")
+            da = da.rename(nlat="Yp1")
+        out[name] = da.rename({k: v for k, v in dim_rename.items() if k in da.dims})
+    return out
 
 
 def convert_time(time):

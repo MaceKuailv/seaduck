@@ -279,3 +279,54 @@ def test_kick_back(kick_back_p):
     tend = kick_back_p.analytical_step(-1e10)
     kick_back_p.cross_cell_wall(tend)
     assert np.isclose(kick_back_p.rzl_lin, 0.5).any()
+
+
+@pytest.mark.parametrize("cartesian", [True, False])
+def test_cartesian_toggle_propagates(cartesian):
+    od = sd.OceData(utils.get_dataset("ecco"))
+    pt = sd.Particle(x=x, y=y, z=zz, t=t, data=od, transport=True, cartesian=cartesian)
+    assert pt.cartesian is cartesian
+    assert pt.subset(np.arange(3)).cartesian is cartesian
+    assert pt.deepcopy().cartesian is cartesian
+    pos = sd.Position().from_latlon(x=x, y=y, z=zz, t=t, data=od, cartesian=cartesian)
+    assert pos.cartesian is cartesian
+
+
+def test_cartesian_and_lonlat_agree_away_from_pole():
+    od = sd.OceData(utils.get_dataset("ecco"))
+    out = []
+    for cartesian in [True, False]:
+        pt = sd.Particle(
+            x=x, y=y, z=zz, t=t, data=od, transport=True, cartesian=cartesian
+        )
+        pt.to_next_stop(tf)
+        out.append((pt.lon, pt.lat))
+    (lon3, lat3), (lon2, lat2) = out
+    # 50-70S, the two schemes only differ by the curvature within a cell
+    assert np.allclose(utils.to_180(lon3 - lon2), 0, atol=0.05)
+    assert np.allclose(lat3, lat2, atol=0.05)
+
+
+def test_particle_near_pole_consistent_aste():
+    # Near the pole, the lon/lat of a particle (cartesian scheme) maps back
+    # to the same cell and position in the cell after crossing walls.
+    od = sd.OceData(utils.get_dataset("aste"))
+    lon = np.array([7.0, 100.0, -80.0, 150.0])
+    lat = np.array([89.95, 89.9, 89.85, 89.8])
+    pt = sd.Particle(
+        x=lon,
+        y=lat,
+        z=None,
+        t=np.zeros(4),
+        data=od,
+        uname="UVELMASS",
+        vname="VVELMASS",
+        wname=None,
+    )
+    pt.to_next_stop(60 * 86400.0)
+    assert (np.abs(pt.lat - lat) > 0.1).all()  # the particles did move
+    hrel = od._find_rel_h(pt.lon, pt.lat)
+    for name in ["face", "iy", "ix"]:
+        assert np.array_equal(getattr(hrel, name), getattr(pt, name))
+    assert np.allclose(hrel.rx, pt.rx, atol=1e-8)
+    assert np.allclose(hrel.ry, pt.ry, atol=1e-8)

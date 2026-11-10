@@ -173,3 +173,107 @@ def test_ray_trace():
     ys = np.array([0.1, 1, 10, 0.6])
     ans = np.array([True, False, False, True])
     assert np.allclose(sd.utils.parallelpointinpolygon(xs, ys, poly), ans)
+
+
+# ---------------------------------------------------------------------
+# 3D Cartesian conversion between lon/lat and the position in a cell
+# ---------------------------------------------------------------------
+def _polar_cell(lat=89.5):
+    # A cell with the North Pole in its interior, corners ordered
+    # SW, SE, NE, NW (counter-clockwise seen from above).
+    px = np.array([225.0, 315.0, 45.0, 135.0])
+    py = np.full(4, lat)
+    return px, py
+
+
+def _tile(corner, n):
+    return np.tile(np.asarray(corner, float)[:, None], n)
+
+
+@pytest.mark.parametrize("lon_ref", [None, 700.0])
+def test_xyz_latlon_round_trip(lon_ref):
+    lat = np.array([-89.0, -30.0, 0.0, 45.0, 89.9])
+    lon = np.array([-179.0, -20.0, 0.0, 170.0, 359.0])
+    new_lat, new_lon = sd.utils.xyz2latlon(sd.utils.latlon2xyz(lat, lon), lon_ref)
+    assert np.allclose(new_lat, lat)
+    assert np.allclose(sd.utils.to_180(new_lon - lon), 0)
+    if lon_ref is not None:
+        assert np.all(np.abs(new_lon - lon_ref) <= 180)
+
+
+def test_oceanparcel_cartesian_round_trip_pole_cell():
+    np.random.seed(0)
+    n = 50
+    rx, ry = np.random.uniform(-0.5, 0.5, (2, n))
+    px, py = (_tile(c, n) for c in _polar_cell())
+    lon, lat = sd.utils.rel2latlon_oceanparcel(rx, ry, px, py)
+    new_rx, new_ry = sd.utils.find_rx_ry_oceanparcel_cartesian(lon, lat, px, py)
+    assert np.allclose(new_rx, rx, atol=1e-10)
+    assert np.allclose(new_ry, ry, atol=1e-10)
+    # the center of this symmetric cell is the pole
+    _, lat_c = sd.utils.rel2latlon_oceanparcel(
+        np.zeros(1), np.zeros(1), px[:, :1], py[:, :1]
+    )
+    assert np.isclose(lat_c[0], 90.0)
+
+
+def test_oceanparcel_cartesian_shared_face():
+    # cell A is the pole cell, cell B is its northern neighbor (across the
+    # NE-NW face, which is on the other side of the pole).
+    s = np.linspace(-0.45, 0.45, 7)
+    n = len(s)
+    pxa, pya = _polar_cell()
+    pxb = np.array([135.0, 45.0, 45.0, 135.0])
+    pyb = np.array([89.5, 89.5, 88.5, 88.5])
+    lon, lat = sd.utils.rel2latlon_oceanparcel(
+        s, np.full(n, 0.5), _tile(pxa, n), _tile(pya, n)
+    )
+    rx, ry = sd.utils.find_rx_ry_oceanparcel_cartesian(
+        lon, lat, _tile(pxb, n), _tile(pyb, n)
+    )
+    assert np.allclose(ry, -0.5, atol=1e-10)
+    assert np.allclose(rx, s, atol=1e-10)
+
+
+def test_oceanparcel_cartesian_close_to_lonlat_for_small_cells():
+    np.random.seed(1)
+    n = 20
+    rx, ry = np.random.uniform(-0.5, 0.5, (2, n))
+    px = _tile([10.0, 10.1, 10.12, 10.02], n)
+    py = _tile([30.0, 30.01, 30.11, 30.1], n)
+    lon, lat = sd.utils.rel2latlon_oceanparcel(rx, ry, px, py, cartesian=False)
+    rx3, ry3 = sd.utils.find_rx_ry_oceanparcel_cartesian(lon, lat, px, py)
+    # the two schemes only differ by the curvature within a cell
+    assert np.allclose(rx3, rx, atol=1e-3)
+    assert np.allclose(ry3, ry, atol=1e-3)
+
+
+@pytest.mark.parametrize("by", [0.0, 60.0, 89.95])
+def test_naive_cartesian_round_trip(by):
+    np.random.seed(2)
+    n = 20
+    rx, ry = np.random.uniform(-0.5, 0.5, (2, n))
+    bx = np.full(n, 100.0)
+    by = np.full(n, by)
+    cs = np.full(n, np.cos(0.3))
+    sn = np.full(n, np.sin(0.3))
+    dx = np.full(n, 20e3)
+    dy = np.full(n, 15e3)
+    lon, lat = sd.utils.rel2latlon_cartesian(rx, ry, cs, sn, dx, dy, bx, by)
+    new_rx, new_ry = sd.utils.find_rx_ry_naive_cartesian(
+        lon, lat, bx, by, cs, sn, dx, dy
+    )
+    assert np.allclose(new_rx, rx, atol=1e-10)
+    assert np.allclose(new_ry, ry, atol=1e-10)
+
+
+def test_naive_cartesian_close_to_lonlat():
+    # away from the pole, the 3D and lon/lat versions agree up to the
+    # earth radius used by the lon/lat version (utils.deg2m)
+    x, y = np.array([10.01]), np.array([20.02])
+    args = tuple(np.array([v]) for v in [10.0, 20.0, 1.0, 0.0, 1e4, 1e4])
+    rx3, ry3 = sd.utils.find_rx_ry_naive_cartesian(x, y, *args)
+    rx2, ry2 = sd.utils.find_rx_ry_naive(x, y, *args)
+    ratio = sd.utils.R_EARTH * np.pi / 180 / sd.utils.deg2m
+    assert np.allclose(rx3, rx2 * ratio, rtol=1e-3)
+    assert np.allclose(ry3, ry2 * ratio, rtol=1e-3)

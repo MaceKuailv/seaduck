@@ -14,8 +14,12 @@ from seaduck.utils import (
     _time2wall,
     _which_early,
     find_rel,
+    find_rx_ry_naive_cartesian,
     find_rx_ry_oceanparcel,
+    find_rx_ry_oceanparcel_cartesian,
     rel2latlon,
+    rel2latlon_cartesian,
+    rel2latlon_oceanparcel,
     to_180,
 )
 
@@ -63,6 +67,11 @@ class Particle(Position):
     ----------
     kwarg: dict
         The keyword argument that feed into Position.from_latlon method
+        (or Position.from_bool_array if bool_array is given). This includes
+        cartesian (default True), which controls whether the conversion
+        between longitude/latitude and the position in the grid cell is
+        done in 3D Cartesian coordinates (accurate near the poles) or with
+        longitude/latitude differences (the older scheme).
     uname, vname, wname: str
         The variable names for the velocity/mass-transport components.
         If transport is true, pass in names of the volume/mass transport
@@ -541,12 +550,28 @@ class Particle(Position):
         if self.rzl_lin is not None:
             self.dep = self.bzl_lin + self.dzl_lin * self.rzl_lin
         # Otherwise, keep depth the same.
+        cartesian = getattr(self, "cartesian", True)
         try:
             px, py = self.px, self.py
-            w = self.get_f_node_weight()
-            self.lon = np.einsum("nj,nj->n", w, px.T)
-            self.lat = np.einsum("nj,nj->n", w, py.T)
         except AttributeError:
+            px = py = None
+        if px is not None:
+            self.lon, self.lat = rel2latlon_oceanparcel(
+                self.rx, self.ry, px, py, self.lon, cartesian=cartesian
+            )
+        elif cartesian and self.ocedata.readiness["h"] != "rectilinear":
+            self.lon, self.lat = rel2latlon_cartesian(
+                self.rx,
+                self.ry,
+                self.cs,
+                self.sn,
+                self.dx,
+                self.dy,
+                self.bx,
+                self.by,
+                self.lon,
+            )
+        else:
             self.lon, self.lat = rel2latlon(
                 self.rx,
                 self.ry,
@@ -685,9 +710,26 @@ class Particle(Position):
         if self.rzl_lin is not None:
             self.rzl_lin = (self.dep - self.bzl_lin) / self.dzl_lin
 
+        cartesian = getattr(self, "cartesian", True)
         if self.ocedata.readiness["h"] == "oceanparcel":
-            self.rx, self.ry = find_rx_ry_oceanparcel(
-                self.lon, self.lat, self.px, self.py
+            if cartesian:
+                self.rx, self.ry = find_rx_ry_oceanparcel_cartesian(
+                    self.lon, self.lat, self.px, self.py
+                )
+            else:
+                self.rx, self.ry = find_rx_ry_oceanparcel(
+                    self.lon, self.lat, self.px, self.py
+                )
+        elif self.ocedata.readiness["h"] == "local_cartesian" and cartesian:
+            self.rx, self.ry = find_rx_ry_naive_cartesian(
+                self.lon,
+                self.lat,
+                self.bx,
+                self.by,
+                self.cs,
+                self.sn,
+                self.dx,
+                self.dy,
             )
         else:
             dlon = to_180(self.lon - self.bx)
@@ -727,6 +769,7 @@ class Particle(Position):
         p = super().__new__(type(self))
         p.ocedata = self.ocedata
         p.N = self.N
+        p.cartesian = getattr(self, "cartesian", True)
         varsdict = vars(self)
         keys = varsdict.keys()
         for i in keys:
